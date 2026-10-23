@@ -128,6 +128,26 @@ h1{margin:0;font-size:clamp(15px,5vw,26px);font-weight:900;letter-spacing:1px;co
 .card.about p{text-align:left}
 .gate-q{white-space:nowrap;font-size:clamp(22px,8vw,34px)}
 .danger{font-size:14px}
+.pet-stage{width:min(60vw,36vh,300px);aspect-ratio:1;display:grid;place-items:center;cursor:pointer}
+.pet-stage svg{width:100%;height:100%;overflow:visible;animation:petIdle 2.4s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes petIdle{50%{transform:translateY(-4px)}}
+.pet-stage.pop svg{animation:jump .6s ease}
+.pet-name{font-size:22px;font-weight:900;text-align:center;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.35),0 0 6px rgba(0,0,0,.4)}
+.pet-name small{display:block;font-size:14px;font-weight:700}
+.pet-bar{width:min(70vw,300px);height:12px;border-radius:6px;background:rgba(255,255,255,.5);overflow:hidden;border:1px solid var(--line)}
+.pet-bar i{display:block;height:100%;background:var(--sun);border-radius:6px;transition:width .3s}
+.pet-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;max-width:420px}
+.pet-card{background:var(--panel);border:2px solid var(--line);border-radius:20px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:900;font-size:15px;box-shadow:0 4px 0 rgba(0,0,0,.08)}
+.pet-card .emo{font-size:40px;line-height:1}
+.pet-card small{font-size:12px;color:var(--muted);font-weight:700;text-align:center;text-wrap:balance}
+.gear{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%;max-width:420px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:10px}
+.gear-t{flex-basis:100%;text-align:center;font-size:13px;color:var(--muted);font-weight:700}
+.gear button{width:84px;min-height:70px;border-radius:14px;border:1px solid var(--line);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:700;padding:6px 4px;text-align:center;line-height:1.2}
+.gear button .emo{font-size:26px;line-height:1}
+.gear button[aria-pressed=true]{border-color:var(--hour);background:#e4efff}
+.gear button[aria-disabled=true]{opacity:.5}
+.gear button small{color:var(--muted);font-size:11px}
+.pet-scroll{width:100%;flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:8px;padding-bottom:8px}
 .legal{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}
 #fx{position:fixed;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
 .link-btn{min-height:44px;padding:0 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-weight:900;font-size:16px;box-shadow:0 2px 0 rgba(0,0,0,.08)}
@@ -189,7 +209,7 @@ h1{margin:0;font-size:clamp(15px,5vw,26px);font-weight:900;letter-spacing:1px;co
 <section class="screen" id="s-menu">
   <div class="top">
     <h1 data-t="title"></h1>
-    <div style="display:flex;gap:8px"><button class="chip" id="go-quest" type="button"><span aria-hidden="true">📋</span><b id="q-count"></b></button><button class="icon-btn" id="go-map" type="button" data-ta="menu.map">🗺️</button><button class="icon-btn" id="go-set" type="button" data-ta="menu.set">⚙️</button></div>
+    <div style="display:flex;gap:8px"><button class="chip" id="go-pet" type="button" data-ta="menu.pet"><span aria-hidden="true">🌰</span><b id="b-acorn">0</b></button><button class="chip" id="go-quest" type="button"><span aria-hidden="true">📋</span><b id="q-count"></b></button><button class="icon-btn" id="go-map" type="button" data-ta="menu.map">🗺️</button><button class="icon-btn" id="go-set" type="button" data-ta="menu.set">⚙️</button></div>
   </div>
   <div class="clock-wrap" id="clock"></div>
   <div class="timecard">
@@ -275,6 +295,23 @@ h1{margin:0;font-size:clamp(15px,5vw,26px);font-weight:900;letter-spacing:1px;co
   </div>
 </div>
 
+<section class="screen" id="s-pet" hidden>
+  <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights"><span aria-hidden="true">🌰</span><span id="pet-acorn">0</span></div></div>
+  <div class="pet-scroll">
+    <div id="pet-pick" hidden>
+      <div class="task" style="margin-bottom:10px"><span class="emo">🥚</span><div class="say" data-t="pet.pick"></div></div>
+      <div class="pet-cards" id="pet-cards"></div>
+    </div>
+    <div id="pet-show" hidden>
+      <div class="pet-stage" id="pet-stage" role="button" tabindex="0"></div>
+      <div class="pet-name" id="pet-name"></div>
+      <div class="pet-bar" id="pet-barwrap"><i id="pet-bar"></i></div>
+      <button class="btn" type="button" id="pet-feed" style="margin:6px 0"></button>
+      <div class="gear" id="pet-gear"></div>
+    </div>
+  </div>
+</section>
+
 <section class="screen" id="s-map" hidden>
   <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights" id="map-count"></div></div>
   <div class="map-wrap" id="map"></div>
@@ -327,6 +364,7 @@ h1{margin:0;font-size:clamp(15px,5vw,26px);font-weight:900;letter-spacing:1px;co
     <h4 data-t="help.vsT"></h4><ul data-th="help.vs"></ul>
     <h4 data-t="help.mapT"></h4><ul data-th="help.map"></ul>
     <h4 data-t="help.questT"></h4><ul data-th="help.quest"></ul>
+    <h4 data-t="help.petT"></h4><ul data-th="help.pet"></ul>
   </div>
 </div>
 
@@ -399,6 +437,13 @@ const STR = {
     'hint.carry': '先走到整點：{t1} 到 {h3} 點是 {a} 分，再走剩下的 {b} 分。', 'hint.minNear': '很接近了！再一格就對了。', 'hint.hourOff': '烏龜的位置看一下虛線喔。', 'hint.other': '虛線是正確的位置，照著撥撥看。',
     'vs.title': '兩個人一起', 'vs.who': '跟誰比？', 'vs.opp.cpu': '機器人', 'vs.opp.human': '另一個人', 'vs.hard': '上面那位大人加難', 'vs.rule': '各撥各的鐘，先撥對的人拿一分，5 分就贏了！', 'vs.start': '開始',
     'vs.task': '撥到', 'vs.win': '{who}贏了！', 'vs.cpuWin': '這次是機器人快一點，再比一次？', 'vs.again': '再一局', 'vs.p1': '小隊長', 'vs.p2': '挑戰者', 'vs.cpu': '機器人', 'q.vs': '跟機器人或朋友比一局',
+    'menu.pet': '寵物', 'pet.pick': '選一顆蛋，牠會住在鐘樓裡。答對題目會掉橡果，拿來餵牠。', 'pet.feed': '餵橡果 ×{n}', 'pet.feedLack': '還差 {d} 顆橡果', 'pet.grow': '{name}長大了！變成{stage}', 'pet.hello': '{name}來了！答對題目就能餵牠',
+    'kind.owl': '貓頭鷹', 'kind.squirrel': '松鼠', 'kind.bear': '小熊', 'kname.owl': '咕咕', 'kname.squirrel': '小松', 'kname.bear': '熊熊',
+    'stage.0': '蛋', 'stage.1': '幼體', 'stage.2': '少年', 'stage.3': '成體', 'stage.4': '究極',
+    'gear.title': '配件（集到幾個徽章就能戴）', 'gear.need': '完成每日任務，收集徽章就能戴喔！（還差 {n} 個）', 'gear.badges': '徽章 ×{n}',
+    'gear.bow': '蝴蝶結', 'gear.scarf': '圍巾', 'gear.glasses': '墨鏡', 'gear.hat': '帽子', 'gear.star': '星星髮夾', 'gear.crown': '皇冠',
+    'q.acorn': '橡果 +{n}',
+    'help.petT': '寵物', 'help.pet': '<li>答對題目會掉<b>橡果</b>，到寵物頁餵牠，餵夠了牠就長大：蛋 → 幼體 → 少年 → 成體 → 究極。</li><li>每日任務的徽章集到幾個，就能給牠戴配件。</li><li>不餵也不會怎樣，牠會乖乖等你。</li>',
     'match.say': '翻兩張牌，找出一樣的時刻！', 'match.prog': '{n}/{t}', 'match.done': '全部配對好了！', 'match.p': '翻了 {n} 次牌。', 'q.match': '完成一次「配對」',
     'quest.title': '今日任務', 'quest.badges': '徽章 ×{n}', 'quest.streak': '連續 {n} 天', 'quest.doneOne': '任務完成！', 'quest.doneAll': '今天的任務都完成了！徽章 +1',
     'q.day': '做完「小鎮的一天」', 'q.read': '讀對 {n} 個時刻', 'q.set': '幫動物撥對 {n} 次', 'q.star': '點亮 {n} 顆新星星',
@@ -452,6 +497,13 @@ const STR = {
     'hint.carry': 'Go to the next hour first: {t1} to {h3} o\'clock is {a} minutes. Then {b} more.', 'hint.minNear': 'So close! One more tick.', 'hint.hourOff': 'Check where the dotted Tortoise is.', 'hint.other': 'The dotted hands show the right spot. Try it!',
     'vs.title': 'Two players', 'vs.who': 'Play against…', 'vs.opp.cpu': 'the robot', 'vs.opp.human': 'a friend', 'vs.hard': 'Harder for the grown-up on top', 'vs.rule': 'Each sets their own clock. First to set it right gets a point. 5 points wins!', 'vs.start': 'Start',
     'vs.task': 'Set to', 'vs.win': '{who} wins!', 'vs.cpuWin': 'The robot was a bit faster this time. Again?', 'vs.again': 'Play again', 'vs.p1': 'Captain', 'vs.p2': 'Challenger', 'vs.cpu': 'Robot', 'q.vs': 'Play a round against the robot or a friend',
+    'menu.pet': 'Pet', 'pet.pick': 'Pick an egg. It will live in the clock tower. Right answers drop acorns to feed it.', 'pet.feed': 'Feed ×{n} acorns', 'pet.feedLack': '{d} more acorns', 'pet.grow': '{name} grew! Now: {stage}', 'pet.hello': '{name} is here! Answer questions to feed it',
+    'kind.owl': 'Owl', 'kind.squirrel': 'Squirrel', 'kind.bear': 'Bear', 'kname.owl': 'Hoot', 'kname.squirrel': 'Nutty', 'kname.bear': 'Bruno',
+    'stage.0': 'Egg', 'stage.1': 'Baby', 'stage.2': 'Kid', 'stage.3': 'Grown-up', 'stage.4': 'Ultimate',
+    'gear.title': 'Outfits (unlock with badges)', 'gear.need': 'Finish daily missions to collect badges! ({n} more to go)', 'gear.badges': 'Badges ×{n}',
+    'gear.bow': 'Bow', 'gear.scarf': 'Scarf', 'gear.glasses': 'Sunglasses', 'gear.hat': 'Hat', 'gear.star': 'Star clip', 'gear.crown': 'Crown',
+    'q.acorn': 'Acorns +{n}',
+    'help.petT': 'Pet', 'help.pet': '<li>Right answers drop <b>acorns</b>. Feed your pet on the pet page and it grows: Egg → Baby → Kid → Grown-up → Ultimate.</li><li>Collect badges from daily missions to unlock outfits.</li><li>Nothing bad happens if you don\'t feed it. It will wait for you.</li>',
     'match.say': 'Flip two cards and find the same time!', 'match.prog': '{n}/{t}', 'match.done': 'All matched!', 'match.p': 'You flipped {n} times.', 'q.match': 'Finish a round of Match',
     'quest.title': "Today's missions", 'quest.badges': 'Badges ×{n}', 'quest.streak': '{n} days in a row', 'quest.doneOne': 'Mission done!', 'quest.doneAll': 'All missions done today! Badge +1',
     'q.day': "Finish a Town's Day", 'q.read': 'Read {n} times right', 'q.set': 'Set the clock right {n} times', 'q.star': 'Light {n} new stars',
@@ -505,6 +557,13 @@ const STR = {
     'hint.carry': 'まず つぎの 時まで：{t1}から {h3}時までは {a}分。それから あと {b}分。', 'hint.minNear': 'もう ちょっと！ あと 1つだよ。', 'hint.hourOff': 'てんせんの かめを 見てね。', 'hint.other': 'てんせんが ただしい ばしょだよ。あわせてみてね。',
     'vs.title': 'ふたりで', 'vs.who': 'だれと？', 'vs.opp.cpu': 'ロボット', 'vs.opp.human': 'ともだち', 'vs.hard': '上の 大人は むずかしく', 'vs.rule': 'じぶんの とけいを あわせて、早く できた人が 1点。5点で かち！', 'vs.start': 'スタート',
     'vs.task': 'あわせて：', 'vs.win': '{who}の かち！', 'vs.cpuWin': 'こんどは ロボットが ちょっと 早かったね。もう一回？', 'vs.again': 'もう一回', 'vs.p1': 'キャプテン', 'vs.p2': 'チャレンジャー', 'vs.cpu': 'ロボット', 'q.vs': 'ロボットか ともだちと 1回 しょうぶ',
+    'menu.pet': 'ペット', 'pet.pick': 'たまごを えらんでね。とけいとうに すむよ。正かいすると どんぐりが もらえて、あげられるよ。', 'pet.feed': 'どんぐりを あげる ×{n}', 'pet.feedLack': 'あと どんぐり {d}こ', 'pet.grow': '{name}が 大きくなった！{stage}になったよ', 'pet.hello': '{name}が 来たよ！正かいすると どんぐりを あげられるよ',
+    'kind.owl': 'ふくろう', 'kind.squirrel': 'りす', 'kind.bear': 'くま', 'kname.owl': 'ホーホー', 'kname.squirrel': 'リスリス', 'kname.bear': 'クマタ',
+    'stage.0': 'たまご', 'stage.1': 'あかちゃん', 'stage.2': 'こども', 'stage.3': 'おとな', 'stage.4': 'きゅうきょく',
+    'gear.title': 'きせかえ（バッジが 集まると つけられる）', 'gear.need': '毎日の ミッションを クリアして、バッジを 集めよう！（あと {n}こ）', 'gear.badges': 'バッジ ×{n}',
+    'gear.bow': 'リボン', 'gear.scarf': 'マフラー', 'gear.glasses': 'サングラス', 'gear.hat': 'ぼうし', 'gear.star': '星の ヘアピン', 'gear.crown': 'かんむり',
+    'q.acorn': 'どんぐり +{n}',
+    'help.petT': 'ペット', 'help.pet': '<li>正かいすると <b>どんぐり</b>が もらえるよ。ペットの ページで あげると 大きくなるよ：たまご → あかちゃん → こども → おとな → きゅうきょく。</li><li>毎日の ミッションで バッジを 集めると、きせかえが つけられるよ。</li><li>あげなくても だいじょうぶ。ちゃんと まっていてくれるよ。</li>',
     'match.say': '2まい めくって、おなじ 時こくを さがそう！', 'match.prog': '{n}/{t}', 'match.done': 'ぜんぶ そろったよ！', 'match.p': '{n}回 めくったよ。', 'q.match': '「ペアさがし」を 1回',
     'quest.title': '今日の ミッション', 'quest.badges': 'バッジ ×{n}', 'quest.streak': '{n}日 つづけて', 'quest.doneOne': 'ミッション クリア！', 'quest.doneAll': '今日の ミッションは ぜんぶ クリア！ バッジ +1',
     'q.day': '「まちの一日」を さいごまで', 'q.read': '{n}こ よむ', 'q.set': 'とけいを {n}回 あわせる', 'q.star': '新しい 星を {n}こ つける',
@@ -554,7 +613,22 @@ function setLang() { LANG = STR[DB.set.lang] ? DB.set.lang : langAuto(); applySt
 const KEY = 'tick-town-v1';
 const ERRS = ['hourLate', 'minIndex', 'handSwap', 'halfHour', 'minNear', 'hourOff', 'minOne', 'carry', 'ampm', 'read12', 'other'];   // 撥鐘／讀鐘的錯法（minNear 差一格、hourOff 小時差很多、carry 跨整點、other 判不出來）
 const QIDS = ['day', 'read', 'set', 'star', 'match', 'vs'];
-const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, level: 2 }, daily: {}, pet: {}, retest: [], town: { lit: [] }, free: 7 * 60, hinted: false });
+// ---------- 寵物資料：住在鐘樓的動物。圖檔 assets/pets/{kind}-{stage}.png（還沒有圖時用 emoji 代替）
+const PET_KINDS = Object.create(null); Object.assign(PET_KINDS, { owl: { e: '🦉', c: '#8a6fd1' }, squirrel: { e: '🐿️', c: '#e38b4f' }, bear: { e: '🐻', c: '#8c5a3c' } });
+const PET_STAGES = [0, 30, 100, 250, 500];   // fed 到幾顆升到幼體、少年、成體、究極
+const FEED = 10;
+const petStage = fed => PET_STAGES.reduce((st, at, i) => fed >= at ? i : st, 0);
+// 配件：徽章門檻；圖檔 assets/gear/{id}.png（沒有圖時用 emoji）；place 回 [中心 x, 中心 y, 寬]（120 單位）
+const GEAR = [
+  { id: 'bow', at: 1, slot: 'head', e: '🎀', place: (hx, hy, hr) => [hx - hr * 0.6, hy - hr * 0.75, hr * 0.9] },
+  { id: 'scarf', at: 2, slot: 'neck', e: '🧣', place: (hx, hy, hr) => [hx, hy + hr * 1.05, hr * 1.2] },
+  { id: 'glasses', at: 4, slot: 'face', e: '🕶️', place: (hx, hy, hr) => [hx, hy - hr * 0.2, hr * 1.5] },
+  { id: 'hat', at: 6, slot: 'head', e: '🎩', place: (hx, hy, hr) => [hx, hy - hr * 1.1, hr * 1.3] },
+  { id: 'star', at: 8, slot: 'head', e: '⭐', place: (hx, hy, hr) => [hx + hr * 0.6, hy - hr * 0.8, hr * 0.8] },
+  { id: 'crown', at: 12, slot: 'head', e: '👑', place: (hx, hy, hr) => [hx, hy - hr * 1.1, hr * 1.2] },
+];
+const GEAR_BY = Object.create(null); GEAR.forEach(g => { GEAR_BY[g.id] = g; });
+const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, level: 2 }, daily: {}, pet: { kind: '', fed: 0, acorn: 0, wear: { head: '', face: '', neck: '' } }, retest: [], town: { lit: [] }, free: 7 * 60, hinted: false });
 let DB = fresh();
 const num = (v, d = 0) => (typeof v === 'number' && Number.isFinite(v)) ? v : d;
 function loadDB() {
@@ -570,6 +644,7 @@ function loadDB() {
   if (!Array.isArray(D.tasks) || D.tasks.length !== 3 || !D.tasks.every(q => q && typeof q === 'object' && QIDS.includes(q.id) && num(q.n) > 0)) D.date = ''; else D.tasks = D.tasks.map(q => ({ id: q.id, n: num(q.n), p: clamp(num(q.p), 0, num(q.n)), done: !!q.done }));
   D.badges = clamp(num(D.badges), 0, 1e6); D.streak = clamp(num(D.streak), 0, 1e6); D.starBase = num(D.starBase); if (typeof D.date !== 'string') D.date = ''; if (typeof D.lastDone !== 'string') D.lastDone = '';
   if (!Object.prototype.hasOwnProperty.call(STR, f.set.lang)) f.set.lang = '';
+  const P = f.pet; if (!PET_KINDS[P.kind]) P.kind = ''; P.fed = clamp(num(P.fed), 0, 1e6); P.acorn = clamp(num(P.acorn), 0, 1e6); if (!P.wear || typeof P.wear !== 'object') P.wear = {}; for (const sl of ['head', 'face', 'neck']) if (typeof P.wear[sl] !== 'string' || (P.wear[sl] && !GEAR_BY[P.wear[sl]])) P.wear[sl] = '';
   DB = f;
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
@@ -837,7 +912,7 @@ const Day = (() => {
   function good() {
     const k = S.tasks[S.i]; clearTimeout(judgeT); clock2.ghost(null); clock2.countStop();
     if (S.tries === 0) record(k.from !== undefined ? `e:${k.from}:${k.d}` : `s:${Math.floor(k.t / 60)}:${k.t % 60}`, true, 0, null, inducible(Math.floor(k.t / 60), k.t % 60));   // 錯過的已經在 judge() 記過了
-    S.lit++; lights(); SFX.bell(); if (S.tries === 0) Quest.add('set'); Quest.add('star');
+    S.lit++; lights(); SFX.bell(); if (S.tries === 0) { Quest.add('set'); Pet.earn(1); } Quest.add('star');
     const emo = $('#day-emo'); emo.classList.remove('jump'); void emo.offsetWidth; emo.classList.add('jump');
     const r = $('#clock2').getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 36);
     const el = $('#day-hint'); el.className = 'bubble good'; el.textContent = tx(S.i === S.tasks.length - 1 ? 'day.okLast' : 'day.ok', { who: tx('who.' + k.who) }); el.hidden = false;
@@ -904,7 +979,7 @@ const Read = (() => {
   function wrong(type) { const q = S.q; if (!q.wrong) { q.wrong = true; record(key(q.h, q.m), false, 0, type, null); } hint(type, q.h, q.m); }
   function good(x, y) {
     const q = S.q; if (q.done) return; q.done = true; clock3.countStop(); if (!q.wrong) { S.right++; record(key(q.h, q.m), true, Math.max(0, (q.fk || now()) - q.at), null, inducible(q.h, q.m)); }
-    prog(); SFX.ding(); FX.burst(x, y, 24); if (!q.wrong) Quest.add('read'); Quest.add('star'); const emo = $('#read-emo'); emo.classList.remove('jump'); void emo.offsetWidth; emo.classList.add('jump');
+    prog(); SFX.ding(); FX.burst(x, y, 24); if (!q.wrong) { Quest.add('read'); Pet.earn(1); } Quest.add('star'); const emo = $('#read-emo'); emo.classList.remove('jump'); void emo.offsetWidth; emo.classList.add('jump');
     const el = $('#read-hint'); el.className = 'bubble good'; el.textContent = `${q.h}:${String(q.m).padStart(2, '0')}`; el.hidden = false;
     const me = S; setTimeout(() => { if (S !== me) return; if (++S.i < N) next(); else finish(); }, 900);
   }
@@ -964,7 +1039,7 @@ const Quest = (() => {
   function add(id, v = 1) {
     ensure(); const D = DB.daily, q = D.tasks.find(q => q.id === id && !q.done); if (!q) return;
     q.p = id === 'star' ? Math.max(0, stars() - D.starBase) : q.p + v;
-    if (q.p >= q.n) { q.done = true; q.p = q.n; toast(tx('quest.doneOne')); SFX.ding(); if (D.tasks.every(x => x.done)) { D.badges = num(D.badges) + 1; D.streak = D.lastDone === yesterday() ? num(D.streak) + 1 : 1; D.lastDone = today(); setTimeout(() => { toast(tx('quest.doneAll')); FX.confetti(60); }, 1200); } }
+    if (q.p >= q.n) { q.done = true; q.p = q.n; toast(tx('quest.doneOne')); SFX.ding(); Pet.earn(10); if (D.tasks.every(x => x.done)) { D.badges = num(D.badges) + 1; Pet.earn(30); D.streak = D.lastDone === yesterday() ? num(D.streak) + 1 : 1; D.lastDone = today(); setTimeout(() => { toast(tx('quest.doneAll')); FX.confetti(60); }, 1200); } }
     save(); if (mode === 'menu') refreshMenu();
   }
   function render() {
@@ -980,7 +1055,7 @@ const Quest = (() => {
   $('#about-close').addEventListener('click', () => { $('#o-about').hidden = true; $('#o-set').hidden = false; });
   return { ensure, add, render, stars };
 })();
-function refreshMenu() { Quest.ensure(); const D = DB.daily, done = D.tasks.filter(q => q.done).length, all = done === 3; const c = $('#go-quest'); c.classList.toggle('todo', !all); c.classList.toggle('ok', all); $('#q-count').textContent = all ? '✓' : `${done}/3`; }
+function refreshMenu() { Quest.ensure(); $('#b-acorn').textContent = DB.pet.acorn; const D = DB.daily, done = D.tasks.filter(q => q.done).length, all = done === 3; const c = $('#go-quest'); c.classList.toggle('todo', !all); c.classList.toggle('ok', all); $('#q-count').textContent = all ? '✓' : `${done}/3`; }
 
 // ---------- 配對（翻牌）：指針鐘、數字鐘、文字三種樣子配成對
 const Match = (() => {
@@ -1017,7 +1092,7 @@ const Match = (() => {
     const [a, b] = S.open.map(j => S.cards[j]), ea = $(`#mgrid .mcard[data-i="${S.open[0]}"]`);
     if (a.i === b.i || (a.t[0] === b.t[0] && a.t[1] === b.t[1])) {
       a.done = b.done = true; S.done++; S.open = []; el.classList.add('done'); ea.classList.add('done'); prog(); SFX.ding(); const r = el.getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 20);
-      const an = a.r === 'a' ? a : b.r === 'a' ? b : null; if (an) record(`r:${an.t[0]}:${an.t[1]}`, true, 0, null, inducible(an.t[0], an.t[1]));
+      Pet.earn(1); const an = a.r === 'a' ? a : b.r === 'a' ? b : null; if (an) record(`r:${an.t[0]}:${an.t[1]}`, true, 0, null, inducible(an.t[0], an.t[1]));
       if (S.done === PAIRS) { const me = S; setTimeout(() => { if (S !== me) return; $('#mdone-p').textContent = tx('match.p', { n: S.flips }); $('#o-mdone').hidden = false; FX.confetti(60); DB.best.matches = num(DB.best.matches) + 1; save(); Quest.add('match'); }, 700); }
       return;
     }
@@ -1046,7 +1121,7 @@ const Versus = (() => {
   }
   function point(k) {
     S.score[k]++; dots(); SFX.ding(); const half = $(k === 'A' ? '#v-bottom' : '#v-top'); const r = half.getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 24);
-    if (k === 'A') { const t = S.t.A; record(`s:${Math.floor(t / 60)}:${t % 60}`, true, now() - S.at.A, null, inducible(Math.floor(t / 60) % 12 || 12, t % 60)); S.times.push(now() - S.at.A); Quest.add('set'); Quest.add('star'); }
+    if (k === 'A') { const t = S.t.A; record(`s:${Math.floor(t / 60)}:${t % 60}`, true, now() - S.at.A, null, inducible(Math.floor(t / 60) % 12 || 12, t % 60)); S.times.push(now() - S.at.A); Quest.add('set'); Quest.add('star'); Pet.earn(1); }
     if (S.score[k] >= WIN) { finish(k); return; } give(k);
   }
   // 機器人：想的時間跟著孩子的速度（最近幾次撥對的時間 ×1.1），落後就快一點、領先就慢一點
@@ -1076,6 +1151,44 @@ const Versus = (() => {
   $('#vdone-again').addEventListener('click', () => { ac(); start(); }); $('#vdone-home').addEventListener('click', () => { $('#o-vdone').hidden = true; goHome(); });
   $('#s-versus').addEventListener('gesturestart', e => e.preventDefault());
   return { open, start, stop, s: () => S, setOpp: o => { opp = o; } };
+})();
+
+// ---------- 寵物：答對掉橡果，餵了會長大；徽章解鎖配件。沒有飢餓、沒有倒扣
+let PET_IMG = false; { const im = new Image(); im.onload = () => { PET_IMG = true; if (mode === 'pet') Pet.render(); }; im.src = 'assets/pets/owl-0.png'; }   // 有圖檔就用圖，沒有就用 emoji
+// 頭的位置（120 單位：中心 x、中心 y、半徑），有圖之後依每張圖重量（照九九的 PET_HEAD）
+const PET_HEAD = { 0: [60, 50, 24], 1: [60, 52, 26], 2: [60, 46, 28], 3: [60, 40, 30], 4: [60, 36, 32] };
+function petSVG(kind, st, wear) {
+  const K = PET_KINDS[kind]; if (!K) return '';
+  const [hx, hy, hr] = PET_HEAD[st], size = 50 + st * 14;
+  const body = PET_IMG ? `<image href="assets/pets/${kind}-${st}.png" x="10" y="0" width="100" height="117"/>` : (st === 0 ? `<ellipse cx="60" cy="72" rx="${26 + st * 2}" ry="${34 + st * 2}" fill="${K.c}" opacity=".85"/><ellipse cx="52" cy="60" rx="7" ry="10" fill="#fff" opacity=".5"/>` : `<text x="60" y="${hy + hr * 1.4}" text-anchor="middle" font-size="${size}">${K.e}</text>`);
+  const gear = sl => { const id = wear && wear[sl]; const g = id && GEAR_BY[id]; if (!g || st === 0) return ''; const [cx, cy, w] = g.place(hx, hy, hr); return `<text x="${cx}" y="${cy + w * 0.35}" text-anchor="middle" font-size="${w}">${g.e}</text>`; };
+  return `<svg viewBox="0 0 120 120"><ellipse cx="60" cy="112" rx="34" ry="6" fill="rgba(0,0,0,.15)"/>${body}${gear('neck')}${gear('head')}${gear('face')}</svg>`;
+}
+const Pet = (() => {
+  const P = () => DB.pet, name = () => tx('kname.' + P().kind);
+  function earn(n) { P().acorn += n; save(); if (mode === 'menu') $('#b-acorn').textContent = P().acorn; }
+  function open() { show('pet'); Town.set(clock.get().tot); render(); }
+  function render() {
+    const p = P(), has = !!PET_KINDS[p.kind]; $('#pet-acorn').textContent = p.acorn; $('#pet-pick').hidden = has; $('#pet-show').hidden = !has;
+    if (!has) { $('#pet-cards').innerHTML = Object.keys(PET_KINDS).map(k => `<button type="button" class="pet-card" data-kind="${k}"><span class="emo">🥚</span>${tx('kind.' + k)}<small>${tx('kname.' + k)}</small></button>`).join(''); return; }
+    const st = petStage(p.fed), next = PET_STAGES[st + 1], prev = PET_STAGES[st];
+    $('#pet-stage').innerHTML = petSVG(p.kind, st, p.wear); $('#pet-name').innerHTML = `${name()}<small>${tx('stage.' + st)}</small>`;
+    $('#pet-barwrap').hidden = !next; $('#pet-bar').style.width = next ? Math.round((p.fed - prev) / (next - prev) * 100) + '%' : '100%';
+    $('#pet-feed').hidden = !next; $('#pet-feed').disabled = p.acorn < FEED; $('#pet-feed').textContent = p.acorn < FEED ? tx('pet.feedLack', { d: FEED - p.acorn }) : tx('pet.feed', { n: FEED });
+    const badges = num(DB.daily.badges);
+    $('#pet-gear').innerHTML = `<div class="gear-t">${tx('gear.title')}</div>` + GEAR.map(g => { const ok = badges >= g.at, on = p.wear[g.slot] === g.id; return `<button type="button" data-gear="${g.id}" aria-pressed="${on}"${ok ? '' : ' aria-disabled="true"'}><span class="emo">${g.e}</span>${tx('gear.' + g.id)}<small>${ok ? '' : tx('gear.badges', { n: g.at })}</small></button>`; }).join('');
+  }
+  function feed() {
+    const p = P(); if (p.acorn < FEED || !PET_KINDS[p.kind]) return; const before = petStage(p.fed); p.acorn -= FEED; p.fed += FEED; save(); render();
+    const st = petStage(p.fed), el = $('#pet-stage'); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); const r = el.getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 16); SFX.ding();
+    if (st > before) setTimeout(() => { if (mode !== 'pet') return; toast(tx('pet.grow', { name: name(), stage: tx('stage.' + st) })); FX.confetti(50); SFX.bell(); }, 350);
+  }
+  $('#pet-cards').addEventListener('click', e => { const b = e.target.closest('[data-kind]'); if (!b) return; ac(); DB.pet.kind = b.dataset.kind; DB.pet.fed = 0; save(); render(); toast(tx('pet.hello', { name: name() })); SFX.ding(); });
+  $('#pet-feed').addEventListener('click', () => { ac(); feed(); });
+  $('#pet-gear').addEventListener('click', e => { const b = e.target.closest('[data-gear]'); if (!b) return; ac(); const g = GEAR_BY[b.dataset.gear]; if (num(DB.daily.badges) < g.at) { toast(tx('gear.need', { n: g.at - num(DB.daily.badges) })); return; } DB.pet.wear[g.slot] = DB.pet.wear[g.slot] === g.id ? '' : g.id; save(); render(); SFX.tick(); });
+  $('#pet-stage').addEventListener('click', () => { const el = $('#pet-stage'); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); SFX.tick(); });
+  $('#go-pet').addEventListener('click', () => { ac(); open(); });
+  return { open, render, earn };
 })();
 
 // ---------- 鐘面星圖：12 片（每片 5 分）× 12 圈（裡面 1 點、外面 12 點）
@@ -1127,7 +1240,7 @@ loadDB(); setLang(); Town.resize();
 if (DB.hinted) $('#hintline').hidden = true; refreshMenu();
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, Map: StarMap, Quest, Gate, classifySet };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, Map: StarMap, Quest, Gate, Pet, classifySet };   // 給測試用
 })();
 </script>
 </body>
