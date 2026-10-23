@@ -4,7 +4,7 @@
 
 ## 現況
 
-- 單檔 `index.html`（HTML + CSS + JS），無建置步驟，開檔即玩。**不連任何外部網域**。字型自行託管在 `assets/fonts/`（Lilita One 數字、Chiron GoRound TC 中英、Zen Maru Gothic 日文，OFL；`tools/make-fonts.py` 從 Google Fonts 的 GitHub 倉庫切子集，**改了介面文字要重跑**）。字型檔還沒切之前用系統字型 fallback。
+- 單檔 `index.html`（HTML + CSS + JS），無建置步驟，開檔即玩。**不連任何外部網域**。字型自行託管在 `assets/fonts/`（Lilita One 數字、Chiron GoRound TC 中英、Zen Maru Gothic 日文，OFL；`tools/make-fonts.py` 從 Google Fonts 的 GitHub 倉庫切子集，**改了介面文字要重跑**）。已切過一次；改字串後重跑 `python3 tools/make-fonts.py <來源目錄>`（來源 ttf 從 Google Fonts 的 GitHub 倉庫下載）。
 - 網頁版**全部免費**（已定案）。App 版（之後用 Capacitor 包）才有解鎖，規則照九九流星隊：免費的部分永遠夠玩，付費只解鎖額外玩法，購買在家長關卡後面，孩子看得到的文字不提價錢、不叫孩子去找大人買。
 - 存檔 `localStorage` key `tick-town-v1`（多人時 `tick-town-v1:<id>`，`tick-town-who`）。
 - 三語：繁體中文（預設、台灣用語、不得出現簡體字）、英文（美國小一到小三）、日文（小一到小三，漢字以三年級前學過的為主，其他用假名）。文字全部在 `STR[語言][key]`，`tx(key, 參數)` 取；HTML 用 `data-t`／`data-th`／`data-ta` 標 key，`applyStr()` 填。`STR` 的 `ja` 區塊必須是 `\n  ja: {` 開頭、`\n  },` 結尾（切字腳本靠這個找）。
@@ -64,4 +64,6 @@
 - [x] 家長關卡 `Gate.open(fn, hard)` 與設定家長區「清除所有紀錄」（語言留著）
 - [x] 配對（`Match`：4 對 8 張，指針／數字／文字兩兩不同樣子；一半機會放一對容易搞混的；配錯時若一張是指針鐘且錯法看得出來才記讀錯＋提示，兩張都不是指針只是記性不記）
 - [x] 兩個人一起（`Versus`：上下分割各撥各的鐘，先撥對拿一分、5 分贏；機器人想的時間跟著孩子最近 4 次撥對的時間 ×1.1、夾 3～12 秒、落後 ×1.3／領先 ×0.8，鐘面會慢慢轉到答案；另一個人時上半旋轉 180°、可選大人加難（1 分）；只記小隊長那邊）
-- [ ] 遊戲說明、關於頁（隱私）、寵物（徽章換配件）、三語校對、字型、App 版、商店文案
+- [x] 遊戲說明（`#o-help`，從設定開、✕ 回設定）、關於頁（`#o-about`：練什麼、三個等級、隱私、製作、字型授權；版本號寫在 `about.made`）
+- [x] 字型切子集（`assets/fonts/`，約 600 KB）
+- [ ] 寵物（徽章換配件）、三語校對、App 版、商店文案、GitHub Actions 建 APK

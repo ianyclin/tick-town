@@ -106,6 +106,14 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 .opt-row button{min-height:48px;border-radius:14px;border:2px solid var(--line);background:#fff;font-weight:900;font-size:16px}
 .opt-row button[aria-pressed=true]{border-color:var(--hour);background:#e4efff;color:var(--hour)}
 @media (max-height:640px){.half .clock-wrap{width:min(50vw,27vh,220px)}.robot{font-size:44px}.vtask{font-size:14px}.vtask b{font-size:20px}}
+.help h4{margin:10px 0 4px;font-size:17px;color:var(--hour)}
+.help ul{margin:0;padding-left:18px;font-size:15px;line-height:1.55}
+.help li{margin-bottom:4px;text-wrap:pretty}
+.help li b{color:#c0392b}
+.about p{text-align:left;font-size:15px;line-height:1.55}
+.about h4{margin:8px 0 2px;font-size:16px}
+.linkrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.linkrow .link-btn{text-align:center}
 .legal{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}
 #fx{position:fixed;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
 .link-btn{min-height:44px;padding:0 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-weight:900;font-size:16px;box-shadow:0 2px 0 rgba(0,0,0,.08)}
@@ -289,9 +297,34 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
     <div class="lab" data-t="set.level"></div>
     <div class="langs" id="set-level"></div>
     <div class="row"><span class="lab" data-t="set.sound"></span><button class="sw" type="button" data-set="sound" aria-pressed="true" data-t="on"></button></div>
+    <div class="linkrow"><button class="link-btn" type="button" id="go-help" data-t="set.help"></button><button class="link-btn" type="button" id="go-about" data-t="set.about"></button></div>
     <div class="lab parent" data-t="set.parent"></div>
     <div class="row"><span class="lab" data-t="set.resetP"></span><button class="danger" type="button" id="set-reset" data-t="set.reset"></button></div>
     <div class="legal" data-t="legal"></div>
+  </div>
+</div>
+
+<div class="overlay" id="o-help" hidden>
+  <div class="card help">
+    <div class="hhead"><h3 data-t="help.title"></h3><button class="xbtn" type="button" id="help-close" data-ta="close">✕</button></div>
+    <h4 data-t="help.clockT"></h4><ul data-th="help.clock"></ul>
+    <h4 data-t="help.dayT"></h4><ul data-th="help.day"></ul>
+    <h4 data-t="help.readT"></h4><ul data-th="help.read"></ul>
+    <h4 data-t="help.matchT"></h4><ul data-th="help.match"></ul>
+    <h4 data-t="help.vsT"></h4><ul data-th="help.vs"></ul>
+    <h4 data-t="help.mapT"></h4><ul data-th="help.map"></ul>
+    <h4 data-t="help.questT"></h4><ul data-th="help.quest"></ul>
+  </div>
+</div>
+
+<div class="overlay" id="o-about" hidden>
+  <div class="card about">
+    <div class="hhead"><h3 data-t="about.title"></h3><button class="xbtn" type="button" id="about-close" data-ta="close">✕</button></div>
+    <h4 data-t="about.whyT"></h4><p data-t="about.why"></p>
+    <h4 data-t="about.levelT"></h4><p data-t="about.level"></p>
+    <h4 data-t="about.privT"></h4><p data-t="about.priv"></p>
+    <h4 data-t="about.madeT"></h4><p data-t="about.made"></p>
+    <div class="legal" data-t="about.fonts"></div>
   </div>
 </div>
 
@@ -356,6 +389,21 @@ const STR = {
     'match.say': '翻兩張牌，找出一樣的時刻！', 'match.prog': '{n}/{t}', 'match.done': '全部配對好了！', 'match.p': '翻了 {n} 次牌。', 'q.match': '完成一次「配對」',
     'quest.title': '今日任務', 'quest.badges': '徽章 ×{n}', 'quest.streak': '連續 {n} 天', 'quest.doneOne': '任務完成！', 'quest.doneAll': '今天的任務都完成了！徽章 +1',
     'q.day': '做完「小鎮的一天」', 'q.read': '讀對 {n} 個時刻', 'q.set': '幫動物撥對 {n} 次', 'q.star': '點亮 {n} 顆新星星',
+    'set.help': '遊戲說明', 'set.about': '關於',
+    'help.title': '遊戲說明',
+    'help.clockT': '鐘', 'help.clock': '<li>短的是<b>烏龜</b>，走得慢，管「幾點」。</li><li>長的是<b>兔子</b>，跑得快，管「幾分」。</li><li>用手拖兔子，它跑一格就是 5 分；烏龜會慢慢跟著走。</li><li>主選單的鐘可以隨便撥，小鎮會跟著變：太陽、燈、動物都不一樣。</li>',
+    'help.dayT': '小鎮的一天', 'help.day': '<li>動物們一天有 7 件事。看牠要幾點做，把鐘撥好。</li><li>撥對了，牠就出門，牠家的燈會亮。</li><li>撥錯沒關係，等一下會有虛線告訴你正確的位置，再撥一次就好。</li><li>7 盞燈全亮，小鎮會放煙火！</li>',
+    'help.readT': '幾點了？', 'help.read': '<li>看鐘，從三張卡片裡選出正確的時刻。</li><li>選錯沒關係，可以再選。</li><li>讀得很熟的時刻，會改成按數字打出來：先打幾點，再打幾分，按「好了」。</li>',
+    'help.matchT': '配對', 'help.match': '<li>翻兩張牌，找出一樣的時刻。</li><li>指針鐘、數字鐘、文字，三種樣子都可能出現。</li>',
+    'help.vsT': '兩個人一起', 'help.vs': '<li>上下各一座鐘，各撥各的，先撥對的拿一分，5 分就贏。</li><li>可以跟機器人比，也可以跟另一個人比（上面那座是倒過來的）。</li>',
+    'help.mapT': '星圖', 'help.map': '<li>每個時刻一顆星，讀對、撥對幾次就會亮。</li><li>裡面那圈是 1 點，最外面是 12 點，一片是 5 分。</li><li>點一片，看那幾分的題哪些亮了。</li>',
+    'help.questT': '今日任務', 'help.quest': '<li>每天 3 個任務，做完徽章 +1。</li><li>沒做完也沒關係，明天會有新的。</li>',
+    'about.title': '關於',
+    'about.whyT': '這個遊戲在練什麼', 'about.why': '看時鐘、撥時鐘、算經過的時間。孩子常犯的錯有固定幾種（時針快到下一格就讀成下一個小時、把分針指的數字當成幾分、時針分針搞反、半點時時針在中間……）。遊戲在背後記的不是「哪一題錯」，是「哪一種錯」，然後多出會誘發那種錯的時刻，提示也對著那種錯來講。星圖頁會寫出孩子最常搞混的是哪一種。',
+    'about.levelT': '三個等級', 'about.level': '設定裡「要練什麼」：整點、半點（約一年級）；幾點幾分（約二年級，5 分一格）；過了多久（約三年級，1 分一格，加上「出發後走了幾分鐘，幾點到」）。預設是第二級。',
+    'about.privT': '隱私', 'about.priv': '沒有廣告、沒有追蹤、不收集任何個人資料。遊戲紀錄只存在這台裝置上，不會上傳；玩的時候不需要網路。設定的家長區可以清掉所有紀錄。',
+    'about.madeT': '製作', 'about.made': '指數三寶飯（ianyclin）。版本 0.1。意見請寄 gigigagagogogege@gmail.com。',
+    'about.fonts': '字型：Lilita One、Chiron GoRound TC、Zen Maru Gothic（SIL Open Font License）。',
     'set.parent': '家長區', 'set.resetP': '清掉這台裝置上的所有紀錄', 'set.reset': '清除所有紀錄', 'reset.done': '紀錄清掉了',
     'gate.title': '請大人來', 'gate.p': '請大人算這一題，才能繼續。', 'gate.cancel': '取消', 'gate.wait': '錯太多次了，等 30 秒再試',
     'menu.map': '星圖', 'map.count': '{n}/{t}', 'map.aria': '亮了 {n} 顆星，一共 {t} 顆', 'map.legend': '裡面那圈是 1 點，外面是 12 點；一片是 5 分',
@@ -394,6 +442,21 @@ const STR = {
     'match.say': 'Flip two cards and find the same time!', 'match.prog': '{n}/{t}', 'match.done': 'All matched!', 'match.p': 'You flipped {n} times.', 'q.match': 'Finish a round of Match',
     'quest.title': "Today's missions", 'quest.badges': 'Badges ×{n}', 'quest.streak': '{n} days in a row', 'quest.doneOne': 'Mission done!', 'quest.doneAll': 'All missions done today! Badge +1',
     'q.day': "Finish a Town's Day", 'q.read': 'Read {n} times right', 'q.set': 'Set the clock right {n} times', 'q.star': 'Light {n} new stars',
+    'set.help': 'How to play', 'set.about': 'About',
+    'help.title': 'How to play',
+    'help.clockT': 'The clock', 'help.clock': '<li>The short hand is <b>Tortoise</b>. It moves slowly and tells the hour.</li><li>The long hand is <b>Rabbit</b>. It moves fast and tells the minutes.</li><li>Drag Rabbit. Each number is 5 minutes. Tortoise follows slowly.</li><li>On the menu you can spin the clock any way you like. Watch the sun, the lights and the animals change!</li>',
+    'help.dayT': "Town's Day", 'help.day': '<li>The animals have 7 things to do each day. Set the clock to the right time.</li><li>Set it right and the animal goes out. Its house lights up.</li><li>Got it wrong? No worries. Dotted hands will show the right spot. Try again!</li><li>Light all 7 and the town sets off fireworks!</li>',
+    'help.readT': 'What time?', 'help.read': '<li>Look at the clock and pick the right time from three cards.</li><li>Picked wrong? Just pick again.</li><li>Times you know well switch to typing: type the hour, then the minutes, then tap "Done".</li>',
+    'help.matchT': 'Match', 'help.match': '<li>Flip two cards and find the same time.</li><li>Clocks, digital times and words can all show up.</li>',
+    'help.vsT': 'Two players', 'help.vs': '<li>Two clocks, one on each side. Set yours right first to get a point. 5 points wins.</li><li>Play against the robot, or a friend (the top clock is upside down for them).</li>',
+    'help.mapT': 'Star map', 'help.map': '<li>Every time has a star. Read it or set it right a few times and it lights up.</li><li>The inner ring is 1 o\'clock, the outer ring is 12. Each slice is 5 minutes.</li><li>Tap a slice to see which times are lit.</li>',
+    'help.questT': 'Missions', 'help.quest': '<li>3 missions a day. Finish them all for a badge.</li><li>Didn\'t finish? That\'s fine. New ones come tomorrow.</li>',
+    'about.title': 'About',
+    'about.whyT': 'What this game practices', 'about.why': 'Reading a clock, setting a clock, and working out how much time has passed. Kids make a few typical mistakes (reading the next hour when the hour hand is almost there, taking the number the minute hand points to as the minutes, swapping the hands, the half-past position). The game tracks which kind of mistake, not just which question, shows more of the times that trigger it, and gives hints aimed at that mistake. The star map tells you which one your child mixes up most.',
+    'about.levelT': 'Three levels', 'about.level': 'In Settings, "Practice": o\'clock and half past (about 1st grade); hours and minutes (about 2nd grade, 5-minute steps); how long (about 3rd grade, 1-minute steps, plus "left at …, walked for … minutes, arrived at?"). The default is level 2.',
+    'about.privT': 'Privacy', 'about.priv': 'No ads, no tracking, no personal data collected. Progress is saved only on this device and never uploaded. No internet is needed to play. A grown-up can erase everything from Settings.',
+    'about.madeT': 'Made by', 'about.made': 'ianyclin. Version 0.1. Feedback: gigigagagogogege@gmail.com.',
+    'about.fonts': 'Fonts: Lilita One, Chiron GoRound TC, Zen Maru Gothic (SIL Open Font License).',
     'set.parent': 'For grown-ups', 'set.resetP': 'Erase all progress on this device', 'set.reset': 'Erase everything', 'reset.done': 'Progress erased',
     'gate.title': 'Ask a grown-up', 'gate.p': 'A grown-up needs to solve this to continue.', 'gate.cancel': 'Cancel', 'gate.wait': 'Too many misses. Try again in 30 seconds',
     'menu.map': 'Star map', 'map.count': '{n}/{t}', 'map.aria': '{n} of {t} stars lit', 'map.legend': 'Inner ring is 1 o\'clock, outer is 12; each slice is 5 minutes',
@@ -432,6 +495,21 @@ const STR = {
     'match.say': '2まい めくって、おなじ 時こくを さがそう！', 'match.prog': '{n}/{t}', 'match.done': 'ぜんぶ そろったよ！', 'match.p': '{n}回 めくったよ。', 'q.match': '「ペアさがし」を 1回',
     'quest.title': '今日の ミッション', 'quest.badges': 'バッジ ×{n}', 'quest.streak': '{n}日 つづけて', 'quest.doneOne': 'ミッション クリア！', 'quest.doneAll': '今日の ミッションは ぜんぶ クリア！ バッジ +1',
     'q.day': '「まちの一日」を さいごまで', 'q.read': '{n}こ よむ', 'q.set': 'とけいを {n}回 あわせる', 'q.star': '新しい 星を {n}こ つける',
+    'set.help': 'あそびかた', 'set.about': 'このアプリについて',
+    'help.title': 'あそびかた',
+    'help.clockT': 'とけい', 'help.clock': '<li>みじかい はりは <b>かめ</b>。ゆっくり うごいて「何時」を おしえるよ。</li><li>長い はりは <b>うさぎ</b>。はやく うごいて「何分」を おしえるよ。</li><li>うさぎを ゆびで うごかそう。1つ すすむと 5分。かめも ゆっくり ついてくるよ。</li><li>メニューの とけいは じゆうに まわせるよ。太ようや あかりや どうぶつが かわるよ！</li>',
+    'help.dayT': 'まちの一日', 'help.day': '<li>どうぶつたちは 一日に 7つ やることが あるよ。何時に するか 見て、とけいを あわせよう。</li><li>あわせられたら、どうぶつは 出かけて、おうちの あかりが つくよ。</li><li>まちがえても だいじょうぶ。てんせんが ただしい ばしょを おしえてくれるよ。</li><li>7つ ぜんぶ ついたら、はなびが あがるよ！</li>',
+    'help.readT': 'いま何時？', 'help.read': '<li>とけいを 見て、3まいの カードから ただしい 時こくを えらぼう。</li><li>まちがえても、もういちど えらべるよ。</li><li>よく よめる 時こくは、すうじで うつように なるよ：何時、何分の じゅんに うって「できた」。</li>',
+    'help.matchT': 'ペアさがし', 'help.match': '<li>2まい めくって、おなじ 時こくを さがそう。</li><li>はりの とけい、すうじの とけい、ことば、3つの かたちが 出るよ。</li>',
+    'help.vsT': 'ふたりで', 'help.vs': '<li>上と下に とけいが 1つずつ。早く あわせた人が 1点。5点で かち。</li><li>ロボットとも、ともだちとも あそべるよ（上の とけいは さかさまだよ）。</li>',
+    'help.mapT': '星マップ', 'help.map': '<li>どの 時こくにも 星が 1つ。何回か 正かいすると 光るよ。</li><li>内がわが 1時、いちばん外が 12時。1まいが 5分。</li><li>タップすると、その 分の もんだいが どれだけ 光ったか わかるよ。</li>',
+    'help.questT': '今日の ミッション', 'help.quest': '<li>毎日 3つの ミッション。ぜんぶ できたら バッジ +1。</li><li>できなくても だいじょうぶ。明日は 新しい ミッションが あるよ。</li>',
+    'about.title': 'このアプリについて',
+    'about.whyT': 'なにを 練習するか', 'about.why': '時計を読む、時計を合わせる、経過した時間を考える練習です。子どもがよくするまちがいは数種類に決まっています（短針が次の数字に近いと次の時刻と読む、長針の指す数字をそのまま「分」にする、2本の針を逆に見る、何時半のときの短針の位置など）。ゲームは「どの問題をまちがえたか」ではなく「どの種類のまちがいか」を記録し、そのまちがいが出やすい時刻を多めに出題し、ヒントもその種類に合わせます。星マップにいちばん混同しやすい種類を表示します。',
+    'about.levelT': '3つのレベル', 'about.level': '設定の「なにを れんしゅうする？」：何時・何時半（1年生ごろ）、何時何分（2年生ごろ、5分きざみ）、どれくらいたった？（3年生ごろ、1分きざみ、「出発して何分歩いたら何時」も出ます）。初期設定はレベル2です。',
+    'about.privT': 'プライバシー', 'about.priv': '広告なし、トラッキングなし、個人情報は一切集めません。記録はこの端末の中だけに保存され、アップロードされません。遊ぶのにインターネットは不要です。設定の「おうちの人へ」から記録をすべて消せます。',
+    'about.madeT': '制作', 'about.made': 'ianyclin。バージョン 0.1。ご意見は gigigagagogogege@gmail.com へ。',
+    'about.fonts': 'フォント：Lilita One、Chiron GoRound TC、Zen Maru Gothic（SIL Open Font License）。',
     'set.parent': 'おうちの人へ', 'set.resetP': 'この たんまつの きろくを ぜんぶ けす', 'set.reset': 'ぜんぶ けす', 'reset.done': 'きろくを けしました',
     'gate.title': 'おうちの人を よんでね', 'gate.p': 'つづけるには、おうちの人が この もんだいを といてください。', 'gate.cancel': 'やめる', 'gate.wait': 'まちがいが おおいので、30びょう まってね',
     'menu.map': '星マップ', 'map.count': '{n}/{t}', 'map.aria': '星が {t}こ中 {n}こ ついた', 'map.legend': '内がわが 1時、外がわが 12時。1まいが 5分',
@@ -641,7 +719,7 @@ $('#set-close').addEventListener('click', () => { $('#o-set').hidden = true; });
 $('#set-lang').addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (!b) return; DB.set.lang = b.dataset.lang; save(); setLang(); renderSet(); showTime(clock.get().tot); SFX.ding(); });
 $('#set-level').addEventListener('click', e => { const b = e.target.closest('[data-level]'); if (!b) return; DB.set.level = +b.dataset.level; save(); clock.setSnap(DB.set.level === 3 ? 1 : 5); renderSet(); SFX.ding(); });
 $('.sw[data-set=sound]').addEventListener('click', () => { DB.set.sound = !DB.set.sound; save(); renderSet(); SFX.ding(); });
-document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for (const id of ['#o-quest', '#o-set']) if (!$(id).hidden) { $(id).hidden = true; return; } });
+document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for (const id of ['#o-help', '#o-about', '#o-quest', '#o-set']) if (!$(id).hidden) { $(id).hidden = true; if (id === '#o-help' || id === '#o-about') $('#o-set').hidden = false; return; } });
 
 // ---------- 模式（還在蓋）
 let toastT = 0;
@@ -868,6 +946,10 @@ const Quest = (() => {
   }
   $('#go-quest').addEventListener('click', () => { render(); $('#o-quest').hidden = false; });
   $('#quest-close').addEventListener('click', () => { $('#o-quest').hidden = true; });
+  $('#go-help').addEventListener('click', () => { $('#o-set').hidden = true; $('#o-help').hidden = false; $('#o-help .card').scrollTop = 0; });
+  $('#help-close').addEventListener('click', () => { $('#o-help').hidden = true; $('#o-set').hidden = false; });
+  $('#go-about').addEventListener('click', () => { $('#o-set').hidden = true; $('#o-about').hidden = false; $('#o-about .card').scrollTop = 0; });
+  $('#about-close').addEventListener('click', () => { $('#o-about').hidden = true; $('#o-set').hidden = false; });
   return { ensure, add, render, stars };
 })();
 function refreshMenu() { Quest.ensure(); const D = DB.daily, done = D.tasks.filter(q => q.done).length, all = done === 3; const c = $('#go-quest'); c.classList.toggle('todo', !all); c.classList.toggle('ok', all); $('#q-count').textContent = all ? '✓' : `${done}/3`; }
