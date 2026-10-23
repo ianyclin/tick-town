@@ -619,13 +619,14 @@ const PET_STAGES = [0, 30, 100, 250, 500];   // fed 到幾顆升到幼體、少�
 const FEED = 10;
 const petStage = fed => PET_STAGES.reduce((st, at, i) => fed >= at ? i : st, 0);
 // 配件：徽章門檻；圖檔 assets/gear/{id}.png（沒有圖時用 emoji）；place 回 [中心 x, 中心 y, 寬]（120 單位）
+// place(hx, hy, hr, top, ny, f) 回 [中心 x, 中心 y, 寬, 旋轉]；f 是臉：ex 臉中心 x、ey 眼睛高度、ew 兩眼外緣距離、hb 帽沿高度、hw 帽寬
 const GEAR = [
-  { id: 'bow', at: 1, slot: 'head', e: '🎀', place: (hx, hy, hr) => [hx - hr * 0.6, hy - hr * 0.75, hr * 0.9] },
-  { id: 'scarf', at: 2, slot: 'neck', e: '🧣', place: (hx, hy, hr) => [hx, hy + hr * 1.05, hr * 1.2] },
-  { id: 'glasses', at: 4, slot: 'face', e: '🕶️', place: (hx, hy, hr) => [hx, hy - hr * 0.2, hr * 1.5] },
-  { id: 'hat', at: 6, slot: 'head', e: '🎩', place: (hx, hy, hr) => [hx, hy - hr * 1.1, hr * 1.3] },
-  { id: 'star', at: 8, slot: 'head', e: '⭐', place: (hx, hy, hr) => [hx + hr * 0.6, hy - hr * 0.8, hr * 0.8] },
-  { id: 'crown', at: 12, slot: 'head', e: '👑', place: (hx, hy, hr) => [hx, hy - hr * 1.1, hr * 1.2] },
+  { id: 'bow', at: 1, slot: 'head', e: '🎀', ar: 1.196, place: (hx, hy, hr, top, ny, f) => [f.ex - f.hw * 0.38, f.hb + hr * 0.05, f.hw * 0.5, -15] },
+  { id: 'scarf', at: 2, slot: 'neck', e: '🧣', ar: 0.949, place: (hx, hy, hr, top, ny, f) => { const w = f.hw * 0.62; return [f.ex, ny + w / 0.949 * 0.4, w, 0]; } },
+  { id: 'glasses', at: 4, slot: 'face', e: '🕶️', ar: 2.695, place: (hx, hy, hr, top, ny, f) => [f.ex, f.ey, f.ew * 1.3, 0] },
+  { id: 'hat', at: 6, slot: 'head', e: '🎩', ar: 1.225, place: (hx, hy, hr, top, ny, f) => { const w = f.hw * 0.95; return [f.ex, f.hb - w / 1.225 * 0.38, w, 0]; } },
+  { id: 'star', at: 8, slot: 'head', e: '⭐', ar: 1.455, place: (hx, hy, hr, top, ny, f) => [f.ex + f.hw * 0.38, f.hb + hr * 0.05, f.hw * 0.45, 15] },
+  { id: 'crown', at: 12, slot: 'head', e: '👑', ar: 1.231, place: (hx, hy, hr, top, ny, f) => { const w = f.hw * 0.65; return [f.ex, f.hb - w / 1.231 * 0.38, w, 0]; } },
 ];
 const GEAR_BY = Object.create(null); GEAR.forEach(g => { GEAR_BY[g.id] = g; });
 const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, level: 2 }, daily: {}, pet: { kind: '', fed: 0, acorn: 0, wear: { head: '', face: '', neck: '' } }, retest: [], town: { lit: [] }, free: 7 * 60, hinted: false });
@@ -1155,14 +1156,31 @@ const Versus = (() => {
 
 // ---------- 寵物：答對掉橡果，餵了會長大；徽章解鎖配件。沒有飢餓、沒有倒扣
 let PET_IMG = false; { const im = new Image(); im.onload = () => { PET_IMG = true; if (mode === 'pet') Pet.render(); }; im.src = 'assets/pets/owl-0.png'; }   // 有圖檔就用圖，沒有就用 emoji
-// 頭的位置（120 單位：中心 x、中心 y、半徑），有圖之後依每張圖重量（照九九的 PET_HEAD）
-const PET_HEAD = { 0: [60, 50, 24], 1: [60, 52, 26], 2: [60, 46, 28], 3: [60, 40, 30], 4: [60, 36, 32] };
+// 每隻每階段的頭：[hx, hy, hr, top, ny]（120 單位：頭中心、頭半徑、圖最高點、下巴高度），由 tools/pet-sheet.cjs 的格線圖目測
+// 臉 PET_FACE：{ ex 臉中心 x, ey 眼睛高度, ew 兩眼外緣距離, hb 帽沿高度, hw 帽寬 }；null 用 faceOf() 從頭圓推算
+const PET_HEAD = {
+  owl: [[60, 94, 17, 72, 108], [61, 93, 22, 72, 100], [60, 67, 20, 47, 87], [60, 47, 20, 27, 67], [60, 33, 21, 3, 55]],
+  squirrel: [[60, 94, 17, 70, 108], [48, 86, 15, 66, 100], [47, 66, 19, 40, 85], [43, 42, 18, 20, 60], [42, 36, 19, 3, 55]],
+  bear: [[60, 94, 17, 69, 108], [60, 88, 14, 71, 102], [61, 63, 17, 46, 80], [60, 28, 18, 10, 47], [60, 27, 18, 3, 45]],
+};
+const faceOf = (hx, hy, hr) => ({ ex: hx, ey: hy - hr * 0.2, ew: hr * 1.3, hb: hy - hr * 0.55, hw: hr * 1.7 });
+const PET_FACE = {
+  owl: [null, { ex: 61, ey: 92, ew: 26, hb: 73, hw: 44 }, { ex: 60, ey: 69, ew: 35, hb: 54, hw: 48 }, { ex: 60, ey: 50, ew: 35, hb: 35, hw: 46 }, { ex: 60, ey: 35, ew: 40, hb: 20, hw: 50 }],
+  squirrel: [null, { ex: 48, ey: 87, ew: 23, hb: 75, hw: 32 }, { ex: 47, ey: 70, ew: 32, hb: 52, hw: 40 }, { ex: 43, ey: 45, ew: 30, hb: 30, hw: 40 }, { ex: 42, ey: 40, ew: 30, hb: 23, hw: 40 }],
+  bear: [null, { ex: 60, ey: 87, ew: 25, hb: 76, hw: 34 }, { ex: 61, ey: 65, ew: 30, hb: 51, hw: 40 }, { ex: 60, ey: 30, ew: 30, hb: 15, hw: 42 }, { ex: 60, ey: 28, ew: 30, hb: 13, hw: 44 }],
+};
+function gearSVG(id, hx, hy, hr, top, ny, f) {
+  const g = GEAR_BY[id]; if (!g) return '';
+  const [cx, cy, w, rot] = g.place(hx, hy, hr, top, ny, f), h = w / g.ar;
+  if (!PET_IMG) return `<text x="${cx}" y="${cy + w * 0.35}" text-anchor="middle" font-size="${w}">${g.e}</text>`;
+  return `<image href="assets/gear/${id}.png" x="${(cx - w / 2).toFixed(1)}" y="${(cy - h / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}"${rot ? ` transform="rotate(${rot} ${cx.toFixed(1)} ${cy.toFixed(1)})"` : ''}/>`;
+}
 function petSVG(kind, st, wear) {
   const K = PET_KINDS[kind]; if (!K) return '';
-  const [hx, hy, hr] = PET_HEAD[st], size = 50 + st * 14;
-  const body = PET_IMG ? `<image href="assets/pets/${kind}-${st}.png" x="10" y="0" width="100" height="117"/>` : (st === 0 ? `<ellipse cx="60" cy="72" rx="${26 + st * 2}" ry="${34 + st * 2}" fill="${K.c}" opacity=".85"/><ellipse cx="52" cy="60" rx="7" ry="10" fill="#fff" opacity=".5"/>` : `<text x="60" y="${hy + hr * 1.4}" text-anchor="middle" font-size="${size}">${K.e}</text>`);
-  const gear = sl => { const id = wear && wear[sl]; const g = id && GEAR_BY[id]; if (!g || st === 0) return ''; const [cx, cy, w] = g.place(hx, hy, hr); return `<text x="${cx}" y="${cy + w * 0.35}" text-anchor="middle" font-size="${w}">${g.e}</text>`; };
-  return `<svg viewBox="0 0 120 120"><ellipse cx="60" cy="112" rx="34" ry="6" fill="rgba(0,0,0,.15)"/>${body}${gear('neck')}${gear('head')}${gear('face')}</svg>`;
+  const [hx, hy, hr, top, ny] = PET_HEAD[kind][st], f = PET_FACE[kind][st] || faceOf(hx, hy, hr), size = 50 + st * 14;
+  const body = PET_IMG ? `<image href="assets/pets/${kind}-${st}.png" x="0" y="0" width="120" height="120"/>` : (st === 0 ? `<ellipse cx="60" cy="72" rx="26" ry="34" fill="${K.c}" opacity=".85"/><ellipse cx="52" cy="60" rx="7" ry="10" fill="#fff" opacity=".5"/>` : `<text x="60" y="${hy + hr * 1.4}" text-anchor="middle" font-size="${size}">${K.e}</text>`);
+  const gear = sl => { const id = wear && wear[sl]; return id && GEAR_BY[id] && st > 0 ? gearSVG(id, hx, hy, hr, top, ny, f) : ''; };
+  return `<svg viewBox="0 0 120 120"><ellipse cx="60" cy="116" rx="34" ry="5" fill="rgba(0,0,0,.15)"/>${body}${gear('neck')}${gear('head')}${gear('face')}</svg>`;
 }
 const Pet = (() => {
   const P = () => DB.pet, name = () => tx('kname.' + P().kind);
@@ -1240,7 +1258,7 @@ loadDB(); setLang(); Town.resize();
 if (DB.hinted) $('#hintline').hidden = true; refreshMenu();
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, Map: StarMap, Quest, Gate, Pet, classifySet };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet };   // 給測試用
 })();
 </script>
 </body>

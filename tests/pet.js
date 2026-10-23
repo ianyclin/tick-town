@@ -20,7 +20,7 @@ const SHOT = process.argv[2];
     await p.evaluate(() => { window.__tt.Pet.earn(100); window.__tt.Pet.render(); }); await p.click('#pet-feed'); await p.waitForTimeout(500);
     d = await db(); ok(d.pet.fed === 30 && /幼體|Baby|あかちゃん/.test(await p.textContent('#pet-name')) && await p.isVisible('#toast'), `${lang} 餵到 30 升幼體：${await p.textContent('#toast')}`);
     // 配件：徽章 5 → 蝴蝶結、圍巾、墨鏡可戴，帽子不行
-    await p.click('[data-gear=glasses]'); await p.waitForTimeout(100); d = await db(); ok(d.pet.wear.face === 'glasses' && (await p.innerHTML('#pet-stage')).includes('🕶'), `${lang} 戴墨鏡`);
+    await p.click('[data-gear=glasses]'); await p.waitForTimeout(100); d = await db(); ok(d.pet.wear.face === 'glasses' && /glasses\.png|🕶/.test(await p.innerHTML('#pet-stage')), `${lang} 戴墨鏡`);
     await p.click('[data-gear=hat]', { force: true }); await p.waitForTimeout(100); d = await db(); ok(d.pet.wear.head === '' && /1/.test(await p.textContent('#toast')), `${lang} 帽子還差 1 個徽章：${await p.textContent('#toast')}`);
     await p.click('[data-gear=glasses]'); d = await db(); ok(d.pet.wear.face === '', `${lang} 再點脫掉`);
     if (SHOT) { await p.click('[data-gear=bow]'); await p.waitForTimeout(100); await p.screenshot({ path: `${SHOT}/pet-${lang}.png` }); }

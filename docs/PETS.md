@@ -34,12 +34,12 @@
 - 同一隻五個階段的顏色、臉要像同一個角色。生出來不像的那一張，叫 ChatGPT「只重畫第 N 隻，其他不變」通常沒用，直接整張重生比較快。
 - 檔名存成 `owl.png`、`squirrel.png`、`bear.png`、`gear.png`，放到一個資料夾，跑 `python3 tools/cut-pets.py <資料夾>`、`python3 tools/cut-gear.py <資料夾>/gear.png`。
 
-## 配件（先用 emoji，之後再換圖）
+## 配件（圖已到位）
 
 徽章門檻：蝴蝶結 1、圍巾 2、墨鏡 4、帽子 6、星星髮夾 8、皇冠 12。圖檔 `assets/gear/{id}.png`，切圖用 `tools/cut-gear.py`（貼紙圖，白底）。換成圖之後要重量每隻每階段的頭位置 `PET_HEAD`（照九九的做法，用 Playwright 截四隻 × 五階段戴墨鏡看位置）。
 
-## 圖到位之後要改的程式
+## 對位（2026-10 已量）
 
-- `PET_HEAD`：目前是通用值，改成每隻每階段量過的 `[hx, hy, hr]`。
-- `petSVG()`：把 emoji 的 `<text>` 換成 `<image href="assets/gear/…">`，照九九的 `gearSVG()`。
+- `tools/pet-sheet.cjs <輸出.png> [glasses,hat,scarf]`：三隻 × 五階段放大加 120 單位格線，可戴配件截圖看位置（要先開本機 8124）。
+- `PET_HEAD`、`PET_FACE` 是照格線目測的；換圖要重量。
 - 著作權：AI 生成的插畫保護不明確，上架前留存生成紀錄。

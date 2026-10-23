@@ -1,15 +1,14 @@
-"""把 ChatGPT 生成的配件貼紙圖（兩列五樣、白底）切成 10 張透明 PNG 到 assets/gear/。
+"""把 ChatGPT 生成的配件貼紙圖（一列六樣、白底）切成 6 張透明 PNG 到 assets/gear/。
 
 用法：python3 tools/cut-gear.py <來源圖.png>
-順序：第一列 蝴蝶結、圍巾、墨鏡、氣球、棒球帽；第二列 圓框眼鏡、領結、星星髮夾、魔法師帽、彩虹光環。
-圍巾在 1.3 換成金牌（圍巾要繞脖子，放不好），這支跳過圍巾那格；金牌用 tools/cut-one.py 從單張圖切。
+順序由左到右：蝴蝶結、圍巾、墨鏡、禮帽、星星髮夾、皇冠。
 輸出各自裁到邊緣、最長邊 256px、256 色。結束時印出每張的寬高比，拿去填 index.html 的 GEAR 表 ar 欄位。
 """
 import sys, os, json
 import numpy as np
 from PIL import Image
 from collections import deque
-IDS = [['bow', '_scarf', 'glasses', 'balloon', 'cap'], ['specs', 'bowtie', 'star', 'wizard', 'halo']]
+IDS = [['bow', 'scarf', 'glasses', 'hat', 'star', 'crown']]
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'gear') + '/'
 
 def remove_bg(img):
@@ -57,12 +56,10 @@ for y in range(h):
                 for ny, nx in ((cy-1,cx),(cy+1,cx),(cy,cx-1),(cy,cx+1)):
                     if 0 <= ny < h and 0 <= nx < w and al[ny, nx] and not lab[ny, nx]: lab[ny, nx] = cid; q.append((ny, nx))
             comps.append([n, x0, y0, x1 + 1, y1 + 1])
-comps.sort(reverse=True); comps = comps[:10]
+comps.sort(reverse=True); comps = comps[:6]
 # 小碎片（例如髮夾的夾子跟星星分開）：併進最近的大物件
-rest = sorted(comps[10:], reverse=True) if len(comps) > 10 else []
-ymid = np.median([(c[2] + c[4]) / 2 for c in comps])
-rows = [sorted([c for c in comps if (c[2] + c[4]) / 2 < ymid], key=lambda c: c[1]), sorted([c for c in comps if (c[2] + c[4]) / 2 >= ymid], key=lambda c: c[1])]
-assert [len(r) for r in rows] == [5, 5], [len(r) for r in rows]
+rows = [sorted(comps, key=lambda c: c[1])]
+assert len(rows[0]) == 6, len(rows[0])
 meta = {}
 for r, row in enumerate(rows):
     for c, (_, x0, y0, x1, y1) in enumerate(row):
