@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="description" content="滴答小鎮：給小學生看時鐘、撥時鐘、算時間的遊戲。沒有廣告、不用網路。">
 <title>滴答小鎮</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23fffaf0' stroke='%23e8c98f' stroke-width='4'/%3E%3Cpath d='M32 32V14' stroke='%23e8514f' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M32 32l12 7' stroke='%233a7bd5' stroke-width='7' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='32' r='3' fill='%235b4a3a'/%3E%3C/svg%3E">
 <style>
 @font-face{font-family:'Lilita';src:url(assets/fonts/lilita.woff2) format('woff2');font-display:swap}
 @font-face{font-family:'Chiron';src:url(assets/fonts/chiron-400.woff2) format('woff2');font-weight:400;font-display:swap}
@@ -29,8 +30,9 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 [hidden]{display:none!important}
 #town{position:fixed;inset:0;width:100%;height:100%;z-index:0}
 .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:10px 16px;z-index:1;gap:8px}
-.top{width:100%;max-width:520px;display:flex;align-items:center;justify-content:space-between}
-h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.18),0 0 18px rgba(255,255,255,.4)}
+.top{width:100%;max-width:520px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.top>div{flex:none}
+h1{margin:0;font-size:clamp(15px,5vw,26px);font-weight:900;letter-spacing:1px;color:#fff;white-space:nowrap;flex:1;min-width:0;overflow:hidden;text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 8px rgba(0,0,0,.45)}
 .icon-btn{min-width:44px;min-height:44px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:22px;display:grid;place-items:center;box-shadow:0 2px 0 rgba(0,0,0,.08)}
 .clock-wrap{width:min(78vw,44vh,360px);aspect-ratio:1;position:relative;margin-top:4px}
 .clock-wrap svg{width:100%;height:100%;overflow:visible;display:block;touch-action:none}
@@ -42,9 +44,10 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 .words{font-size:18px;font-weight:900;margin-top:2px;text-wrap:balance}
 .scene{font-size:17px;font-weight:700;color:var(--muted);margin-top:2px;min-height:24px}
 .scene .emo{font-size:22px;vertical-align:-2px;margin-right:4px}
-.hintline{color:#fff;font-weight:900;font-size:15px;text-shadow:0 1px 0 rgba(0,0,0,.25);text-align:center;text-wrap:balance;margin-top:-2px}
+.hintline{color:#fff;font-weight:900;font-size:15px;text-shadow:0 1px 0 rgba(0,0,0,.35),0 0 6px rgba(0,0,0,.4);text-align:center;text-wrap:balance;margin-top:-2px}
+@media (max-height:620px){.hintline{display:none}}   /* 矮螢幕放不下這一行，模式鈕會被擠出去 */
 .modes{margin-top:auto;width:100%;max-width:520px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding-bottom:6px}
-.mode{background:var(--panel);border:1px solid var(--line);border-radius:20px;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:900;font-size:14px;line-height:1.2;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,.08);text-wrap:balance;padding:6px 4px}
+.mode{background:var(--panel);border:1px solid var(--line);border-radius:20px;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:900;font-size:clamp(12px,3.6vw,14px);line-height:1.2;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,.08);text-wrap:balance;padding:6px 4px}
 .mode .emo{font-size:30px;line-height:1}
 .mode:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.08)}
 .mode.soon{opacity:.55}
@@ -60,9 +63,10 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 .langs button[aria-pressed=true],.sw[aria-pressed=true]{border-color:var(--hour);background:#e4efff;color:var(--hour)}
 .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .sw{min-width:72px;padding:0 14px}
+.toast.mid{bottom:auto;top:calc(50% - 60px)}   /* 拔河時放中線上面，不蓋到下面那位的鐘 */
 .toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom));transform:translateX(-50%);background:rgba(59,47,47,.92);color:#fff;padding:12px 18px;border-radius:999px;font-weight:900;font-size:16px;z-index:9;max-width:calc(100% - 32px);text-align:center;text-wrap:balance;pointer-events:none;animation:toastIn .25s ease}
 @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}}
-.chip{min-height:44px;border-radius:999px;background:var(--panel);border:1px solid var(--line);padding:0 14px;font-weight:900;font-size:15px;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 0 rgba(0,0,0,.08);position:relative}
+.chip{min-height:44px;border-radius:999px;background:var(--panel);border:1px solid var(--line);padding:0 11px;font-weight:900;font-size:15px;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 0 rgba(0,0,0,.08);position:relative}
 .chip.todo::after{content:'';position:absolute;top:-2px;right:-2px;width:12px;height:12px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 2px #fff}
 .chip.ok{background:#dff7ea;border-color:var(--mint)}
 .qlist{display:flex;flex-direction:column;gap:8px}
@@ -91,13 +95,13 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 #s-versus{padding:0;touch-action:none;gap:0}
 .half{flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 12px;min-height:0;position:relative}
 .half.flip{transform:rotate(180deg);background:rgba(255,255,255,.12)}
-.half .clock-wrap{width:min(56vw,30vh,260px);margin:0}
+.half .clock-wrap{width:min(62vw,32vh,280px);margin:0}
 .vtask{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 16px;font-weight:900;font-size:17px;display:flex;align-items:center;gap:8px}
 .vtask b{font-family:var(--f-num);font-size:24px;color:var(--hour);font-weight:400}
 .vtask .emo{font-size:22px}
-.vmid{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px 10px;font-family:var(--f-num);font-size:22px;position:relative}
-.vmid .dots{display:flex;gap:5px}.vmid .dots i{width:14px;height:14px;border-radius:50%;background:rgba(0,0,0,.12)}.vmid .dots i.on{background:var(--sun);box-shadow:0 0 6px var(--sun)}
-.vmid .link-btn{position:absolute;left:10px;top:50%;transform:translateY(-50%);min-height:36px;font-size:14px;padding:0 10px}
+.vmid{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px 8px;font-family:var(--f-num);font-size:22px}
+.vmid .dots{display:flex;gap:4px}.vmid .dots i{width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.12)}.vmid .dots i.on{background:var(--sun);box-shadow:0 0 6px var(--sun)}
+.vmid .link-btn{min-height:44px;font-size:14px;padding:0 10px;margin-right:auto;white-space:nowrap}
 .robot{font-size:64px;line-height:1;transition:transform .2s}.robot.think{animation:robotThink 1s ease-in-out infinite}
 @keyframes robotThink{50%{transform:rotate(6deg) translateY(-3px)}}
 .vbar{width:160px;height:10px;border-radius:5px;background:rgba(0,0,0,.1);overflow:hidden}.vbar i{display:block;height:100%;background:var(--mint);width:0}
@@ -105,7 +109,7 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 .opt-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .opt-row button{min-height:48px;border-radius:14px;border:2px solid var(--line);background:#fff;font-weight:900;font-size:16px}
 .opt-row button[aria-pressed=true]{border-color:var(--hour);background:#e4efff;color:var(--hour)}
-@media (max-height:640px){.half .clock-wrap{width:min(50vw,27vh,220px)}.robot{font-size:44px}.vtask{font-size:14px}.vtask b{font-size:20px}}
+@media (max-height:640px){.half .clock-wrap{width:min(56vw,29vh,220px)}.robot{font-size:44px}.vtask{font-size:14px}.vtask b{font-size:20px}}
 .help h4{margin:10px 0 4px;font-size:17px;color:var(--hour)}
 .help ul{margin:0;padding-left:18px;font-size:15px;line-height:1.55}
 .help li{margin-bottom:4px;text-wrap:pretty}
@@ -114,6 +118,16 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 .about h4{margin:8px 0 2px;font-size:16px}
 .linkrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .linkrow .link-btn{text-align:center}
+:lang(ja) .toast,:lang(ja) .mode,:lang(ja) .bubble,:lang(ja) .say,:lang(ja) .btn,:lang(ja) .langs button,:lang(ja) .link-btn,:lang(ja) .danger{word-break:keep-all;overflow-wrap:anywhere}   /* 日文在空格處斷行，不在詞中間 */
+#s-read .clock-wrap.small{width:min(58vw,30vh,300px)}
+@media (max-height:640px){#s-read .clock-wrap.small{width:min(50vw,22vh,220px)}.pad .keys{gap:6px}.pad .key{min-height:44px;font-size:22px}.padin{font-size:28px;padding:6px 18px}}
+.pad .key,.pad .padin{background:var(--paper)}
+.ghost{stroke:#ff7a6b;stroke-width:5;stroke-dasharray:7 5;stroke-linecap:round;fill:none;opacity:.95;paint-order:stroke}
+.ghost.under{stroke:#fff;stroke-width:9;stroke-dasharray:none;opacity:.9}
+.legend span{background:rgba(40,30,20,.35);border-radius:999px;padding:3px 9px}
+.card.about p{text-align:left}
+.gate-q{white-space:nowrap;font-size:clamp(22px,8vw,34px)}
+.danger{font-size:14px}
 .legal{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}
 #fx{position:fixed;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
 .link-btn{min-height:44px;padding:0 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-weight:900;font-size:16px;box-shadow:0 2px 0 rgba(0,0,0,.08)}
@@ -131,7 +145,6 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 .timecard.small .words{font-size:20px;margin:0}
 .bubble{background:#fff;border:2px solid var(--sun);border-radius:18px;padding:10px 14px;font-weight:900;font-size:16px;max-width:520px;width:100%;text-align:center;text-wrap:pretty;line-height:1.4;box-shadow:0 4px 0 rgba(0,0,0,.08);animation:toastIn .25s ease}
 .bubble.good{border-color:var(--mint)}
-.ghost{stroke:#9a8c7c;stroke-width:4;stroke-dasharray:6 5;stroke-linecap:round;fill:none;opacity:.9}
 .cnt{font-family:var(--f-num);font-size:11px;fill:#c0392b;font-weight:700;text-anchor:middle}
 .btn{min-height:52px;padding:0 24px;border-radius:999px;background:var(--sun);color:#3b2f2f;font-weight:900;font-size:19px;box-shadow:0 5px 0 #d4922a}
 .btn.alt{background:#fff;box-shadow:0 5px 0 rgba(0,0,0,.12)}
@@ -397,7 +410,7 @@ const STR = {
     'help.matchT': '配對', 'help.match': '<li>翻兩張牌，找出一樣的時刻。</li><li>指針鐘、數字鐘、文字，三種樣子都可能出現。</li>',
     'help.vsT': '兩個人一起', 'help.vs': '<li>上下各一座鐘，各撥各的，先撥對的拿一分，5 分就贏。</li><li>可以跟機器人比，也可以跟另一個人比（上面那座是倒過來的）。</li>',
     'help.mapT': '星圖', 'help.map': '<li>每個時刻一顆星，讀對、撥對幾次就會亮。</li><li>裡面那圈是 1 點，最外面是 12 點，一片是 5 分。</li><li>點一片，看那幾分的題哪些亮了。</li>',
-    'help.questT': '今日任務', 'help.quest': '<li>每天 3 個任務，做完徽章 +1。</li><li>沒做完也沒關係，明天會有新的。</li>',
+    'help.questT': '今日任務', 'help.quest': '<li>每天 3 個任務，做完徽章 +1。</li><li>沒做完也沒關係。</li>',
     'about.title': '關於',
     'about.whyT': '這個遊戲在練什麼', 'about.why': '看時鐘、撥時鐘、算經過的時間。孩子常犯的錯有固定幾種（時針快到下一格就讀成下一個小時、把分針指的數字當成幾分、時針分針搞反、半點時時針在中間……）。遊戲在背後記的不是「哪一題錯」，是「哪一種錯」，然後多出會誘發那種錯的時刻，提示也對著那種錯來講。星圖頁會寫出孩子最常搞混的是哪一種。',
     'about.levelT': '三個等級', 'about.level': '設定裡「要練什麼」：整點、半點（約一年級）；幾點幾分（約二年級，5 分一格）；過了多久（約三年級，1 分一格，加上「出發後走了幾分鐘，幾點到」）。預設是第二級。',
@@ -411,17 +424,17 @@ const STR = {
     'err.hourLate': '時針快到下一格的時候', 'err.minIndex': '把分針指的數字當成幾分', 'err.handSwap': '時針和分針搞反', 'err.halfHour': '半點的時候時針在中間', 'err.minNear': '差一格', 'err.hourOff': '小時看錯', 'err.read12': '12 點附近', 'err.minOne': '1 分的小格', 'err.carry': '跨過整點的時間', 'err.ampm': '上午和下午', 'err.other': '其他',
     'st.new': '還沒遇過', 'st.learn': '熟悉中', 'st.weak': '容易錯', 'st.star': '已點亮',
     'read.say': '{who}問：現在幾點了？', 'read.sayKeys': '{who}問：現在幾點了？按數字打出來。', 'read.prog': '{n}/{t}', 'read.done': '你讀對了 {n} 個時刻！', 'read.doneAll': '全部都對！太厲害了！', 'read.again': '再玩一次', 'key.ok': '好了', 'key.del': '刪掉',
-    'hint.read12': '烏龜指著 12，就是 12 點喔。', 'hint.tryAgain': '再選一次看看！',
+    'hint.read12': '烏龜指著 12，就是 12 點喔。', 'hint.tryAgain': '再選一次看看！', 'hint.tryKeys': '再打一次看看！',
     'scene.sleep': '大家都在睡覺', 'scene.wake': '小熊起床了', 'scene.breakfast': '吃早餐', 'scene.school': '去上學', 'scene.lunch': '吃午餐',
     'scene.class': '下午的課', 'scene.park': '去公園玩', 'scene.dinner': '吃晚餐', 'scene.bath': '洗澡澡', 'scene.story': '聽故事', 'scene.owl': '貓頭鷹醒著，小熊睡了',
   },
   en: {
     title: 'Tick-Tock Town', 'menu.set': 'Settings', close: 'Close', on: 'On', off: 'Off',
     'menu.hint': 'Drag the rabbit (long hand) or the tortoise (short hand). Watch the town change!',
-    'mode.day': "Town's Day", 'mode.read': 'What time?', 'mode.match': 'Match', 'mode.versus': 'Two players',
+    'mode.day': 'Town Day', 'mode.read': 'What time?', 'mode.match': 'Match', 'mode.versus': 'Two players',
     soon: 'Still being built. Play with the clock for now!',
     'set.title': 'Settings', 'set.lang': 'Language', 'set.level': 'Practice', 'set.sound': 'Sound',
-    'level.1': "O'clock & half", 'level.2': 'Hours & minutes', 'level.3': 'How long?',
+    'level.1': "O'clock, half", 'level.2': 'Minutes', 'level.3': 'How long?',
     legal: '© ianyclin · No ads · No internet needed',
     't.oclock': "{h} o'clock", 't.half': 'half past {h}', 't.hm': '{h}:{mm}',
     'p.night': 'night', 'p.morning': 'morning', 'p.noon': 'noon', 'p.afternoon': 'afternoon', 'p.evening': 'evening',
@@ -450,7 +463,7 @@ const STR = {
     'help.matchT': 'Match', 'help.match': '<li>Flip two cards and find the same time.</li><li>Clocks, digital times and words can all show up.</li>',
     'help.vsT': 'Two players', 'help.vs': '<li>Two clocks, one on each side. Set yours right first to get a point. 5 points wins.</li><li>Play against the robot, or a friend (the top clock is upside down for them).</li>',
     'help.mapT': 'Star map', 'help.map': '<li>Every time has a star. Read it or set it right a few times and it lights up.</li><li>The inner ring is 1 o\'clock, the outer ring is 12. Each slice is 5 minutes.</li><li>Tap a slice to see which times are lit.</li>',
-    'help.questT': 'Missions', 'help.quest': '<li>3 missions a day. Finish them all for a badge.</li><li>Didn\'t finish? That\'s fine. New ones come tomorrow.</li>',
+    'help.questT': 'Missions', 'help.quest': '<li>3 missions a day. Finish them all for a badge.</li><li>Didn\'t finish? That\'s fine too.</li>',
     'about.title': 'About',
     'about.whyT': 'What this game practices', 'about.why': 'Reading a clock, setting a clock, and working out how much time has passed. Kids make a few typical mistakes (reading the next hour when the hour hand is almost there, taking the number the minute hand points to as the minutes, swapping the hands, the half-past position). The game tracks which kind of mistake, not just which question, shows more of the times that trigger it, and gives hints aimed at that mistake. The star map tells you which one your child mixes up most.',
     'about.levelT': 'Three levels', 'about.level': 'In Settings, "Practice": o\'clock and half past (about 1st grade); hours and minutes (about 2nd grade, 5-minute steps); how long (about 3rd grade, 1-minute steps, plus "left at …, walked for … minutes, arrived at?"). The default is level 2.',
@@ -464,7 +477,7 @@ const STR = {
     'err.hourLate': 'when the hour hand is almost at the next number', 'err.minIndex': 'reading the number the minute hand points to as minutes', 'err.handSwap': 'mixing up the two hands', 'err.halfHour': 'where the hour hand is at half past', 'err.minNear': 'one tick off', 'err.hourOff': 'the hour', 'err.read12': 'around 12 o\'clock', 'err.minOne': 'the little 1-minute ticks', 'err.carry': 'time that passes the hour', 'err.ampm': 'AM and PM', 'err.other': 'other things',
     'st.new': 'New', 'st.learn': 'Learning', 'st.weak': 'Tricky', 'st.star': 'Lit',
     'read.say': '{who} asks: What time is it?', 'read.sayKeys': '{who} asks: What time is it? Type it with the keys.', 'read.prog': '{n}/{t}', 'read.done': 'You read {n} times right!', 'read.doneAll': 'All of them! Amazing!', 'read.again': 'Play again', 'key.ok': 'Done', 'key.del': 'Delete',
-    'hint.read12': "Tortoise points at 12, so it's 12 o'clock.", 'hint.tryAgain': 'Try another one!',
+    'hint.read12': "Tortoise points at 12, so it's 12 o'clock.", 'hint.tryAgain': 'Try another one!', 'hint.tryKeys': 'Try typing it again!',
     'scene.sleep': 'Everyone is asleep', 'scene.wake': 'Bear wakes up', 'scene.breakfast': 'Breakfast time', 'scene.school': 'Off to school', 'scene.lunch': 'Lunch time',
     'scene.class': 'Afternoon class', 'scene.park': 'Playing at the park', 'scene.dinner': 'Dinner time', 'scene.bath': 'Bath time', 'scene.story': 'Story time', 'scene.owl': 'Owl is up, Bear is asleep',
   },
@@ -474,7 +487,7 @@ const STR = {
     'mode.day': 'まちの一日', 'mode.read': 'いま何時？', 'mode.match': 'ペアさがし', 'mode.versus': 'ふたりで',
     soon: 'ここは まだ じゅんび中。まずは とけいで あそんでね！',
     'set.title': 'せってい', 'set.lang': 'ことば Language', 'set.level': 'なにを れんしゅうする？', 'set.sound': 'おと',
-    'level.1': '何時・何時半', 'level.2': '何時何分', 'level.3': 'どれくらい たった？',
+    'level.1': '何時・何時半', 'level.2': '何時何分', 'level.3': 'たった時間',
     legal: '© ianyclin・広告なし・ネットふよう',
     't.oclock': '{h}時', 't.half': '{h}時半', 't.hm': '{h}時{m}分',
     'p.night': 'よなか', 'p.morning': 'あさ', 'p.noon': 'ひる', 'p.afternoon': 'ごご', 'p.evening': 'よる',
@@ -495,7 +508,7 @@ const STR = {
     'match.say': '2まい めくって、おなじ 時こくを さがそう！', 'match.prog': '{n}/{t}', 'match.done': 'ぜんぶ そろったよ！', 'match.p': '{n}回 めくったよ。', 'q.match': '「ペアさがし」を 1回',
     'quest.title': '今日の ミッション', 'quest.badges': 'バッジ ×{n}', 'quest.streak': '{n}日 つづけて', 'quest.doneOne': 'ミッション クリア！', 'quest.doneAll': '今日の ミッションは ぜんぶ クリア！ バッジ +1',
     'q.day': '「まちの一日」を さいごまで', 'q.read': '{n}こ よむ', 'q.set': 'とけいを {n}回 あわせる', 'q.star': '新しい 星を {n}こ つける',
-    'set.help': 'あそびかた', 'set.about': 'このアプリについて',
+    'set.help': 'あそびかた', 'set.about': 'このアプリ',
     'help.title': 'あそびかた',
     'help.clockT': 'とけい', 'help.clock': '<li>みじかい はりは <b>かめ</b>。ゆっくり うごいて「何時」を おしえるよ。</li><li>長い はりは <b>うさぎ</b>。はやく うごいて「何分」を おしえるよ。</li><li>うさぎを ゆびで うごかそう。1つ すすむと 5分。かめも ゆっくり ついてくるよ。</li><li>メニューの とけいは じゆうに まわせるよ。太ようや あかりや どうぶつが かわるよ！</li>',
     'help.dayT': 'まちの一日', 'help.day': '<li>どうぶつたちは 一日に 7つ やることが あるよ。何時に するか 見て、とけいを あわせよう。</li><li>あわせられたら、どうぶつは 出かけて、おうちの あかりが つくよ。</li><li>まちがえても だいじょうぶ。てんせんが ただしい ばしょを おしえてくれるよ。</li><li>7つ ぜんぶ ついたら、はなびが あがるよ！</li>',
@@ -503,7 +516,7 @@ const STR = {
     'help.matchT': 'ペアさがし', 'help.match': '<li>2まい めくって、おなじ 時こくを さがそう。</li><li>はりの とけい、すうじの とけい、ことば、3つの かたちが 出るよ。</li>',
     'help.vsT': 'ふたりで', 'help.vs': '<li>上と下に とけいが 1つずつ。早く あわせた人が 1点。5点で かち。</li><li>ロボットとも、ともだちとも あそべるよ（上の とけいは さかさまだよ）。</li>',
     'help.mapT': '星マップ', 'help.map': '<li>どの 時こくにも 星が 1つ。何回か 正かいすると 光るよ。</li><li>内がわが 1時、いちばん外が 12時。1まいが 5分。</li><li>タップすると、その 分の もんだいが どれだけ 光ったか わかるよ。</li>',
-    'help.questT': '今日の ミッション', 'help.quest': '<li>毎日 3つの ミッション。ぜんぶ できたら バッジ +1。</li><li>できなくても だいじょうぶ。明日は 新しい ミッションが あるよ。</li>',
+    'help.questT': '今日の ミッション', 'help.quest': '<li>毎日 3つの ミッション。ぜんぶ できたら バッジ +1。</li><li>できなくても だいじょうぶ。</li>',
     'about.title': 'このアプリについて',
     'about.whyT': 'なにを 練習するか', 'about.why': '時計を読む、時計を合わせる、経過した時間を考える練習です。子どもがよくするまちがいは数種類に決まっています（短針が次の数字に近いと次の時刻と読む、長針の指す数字をそのまま「分」にする、2本の針を逆に見る、何時半のときの短針の位置など）。ゲームは「どの問題をまちがえたか」ではなく「どの種類のまちがいか」を記録し、そのまちがいが出やすい時刻を多めに出題し、ヒントもその種類に合わせます。星マップにいちばん混同しやすい種類を表示します。',
     'about.levelT': '3つのレベル', 'about.level': '設定の「なにを れんしゅうする？」：何時・何時半（1年生ごろ）、何時何分（2年生ごろ、5分きざみ）、どれくらいたった？（3年生ごろ、1分きざみ、「出発して何分歩いたら何時」も出ます）。初期設定はレベル2です。',
@@ -517,7 +530,7 @@ const STR = {
     'err.hourLate': 'みじかい はりが つぎの数字に ちかい とき', 'err.minIndex': '長い はりの さす数字を そのまま 分に する', 'err.handSwap': '2本の はりを はんたいに 見る', 'err.halfHour': '何時半の ときの みじかい はり', 'err.minNear': '1つ ずれる', 'err.hourOff': '何時かを まちがえる', 'err.read12': '12時の ちかく', 'err.minOne': '1分の 小さい めもり', 'err.carry': '時を またぐ 時間', 'err.ampm': 'ごぜんと ごご', 'err.other': 'そのほか',
     'st.new': 'まだ', 'st.learn': 'れんしゅう中', 'st.weak': 'まちがえやすい', 'st.star': '光った',
     'read.say': '{who}：いま 何時？', 'read.sayKeys': '{who}：いま 何時？ すうじで うってね。', 'read.prog': '{n}/{t}', 'read.done': '{n}こ よめたよ！', 'read.doneAll': 'ぜんぶ せいかい！ すごい！', 'read.again': 'もういちど', 'key.ok': 'できた', 'key.del': 'けす',
-    'hint.read12': 'かめが 12を さしているから、12時だよ。', 'hint.tryAgain': 'もういちど えらんでみよう！',
+    'hint.read12': 'かめが 12を さしているから、12時だよ。', 'hint.tryAgain': 'もういちど えらんでみよう！', 'hint.tryKeys': 'もういちど うってみよう！',
     'scene.sleep': 'みんな ねているよ', 'scene.wake': 'くまくんが おきたよ', 'scene.breakfast': 'あさごはん', 'scene.school': '学校へ いくよ', 'scene.lunch': 'おひるごはん',
     'scene.class': 'ごごの じゅぎょう', 'scene.park': 'こうえんで あそぶよ', 'scene.dinner': 'ばんごはん', 'scene.bath': 'おふろ', 'scene.story': 'えほんの 時間', 'scene.owl': 'ふくろうは おきてる、くまくんは ねたよ',
   },
@@ -574,7 +587,7 @@ const SFX = {
 
 // ---------- 鐘面元件：烏龜是時針（短、慢、藍）、兔子是分針（長、快、紅）
 function Clock(el, opts = {}) {
-  const C = 100, snap = () => opts.snap || 5;
+  const C = 100, snap = () => opts.snap || 5, KR = opts.knob || 23;
   const svgNS = 'http://www.w3.org/2000/svg';
   const mk = (n, a = {}) => { const e = document.createElementNS(svgNS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
   const svg = mk('svg', { viewBox: '0 0 200 200', role: 'img' });
@@ -591,7 +604,7 @@ function Clock(el, opts = {}) {
   tort.appendChild(mk('path', { d: 'M-7 -3 Q0 -9 7 -3 M-4 2 Q0 5 4 2', fill: 'none', stroke: '#4f8f2a', 'stroke-width': 1.5 }));
   tort.appendChild(mk('circle', { cx: -4, cy: -2, r: 1.8, fill: '#223' })); tort.appendChild(mk('circle', { cx: 4, cy: -2, r: 1.8, fill: '#223' }));
   gh.appendChild(tort);
-  gh.appendChild(mk('circle', { class: 'knob', cx: C, cy: C - 52, r: 23 }));
+  gh.appendChild(mk('circle', { class: 'knob', cx: C, cy: C - 52, r: KR }));
   // 分針：兔子
   const gm = mk('g', { class: 'hand minute' });
   gm.appendChild(mk('rect', { x: C - 3.5, y: C - 76, width: 7, height: 84, rx: 3.5, fill: 'var(--minute)' }));
@@ -602,7 +615,7 @@ function Clock(el, opts = {}) {
   rab.appendChild(mk('circle', { cx: -3.5, cy: -1.5, r: 1.8, fill: '#223' })); rab.appendChild(mk('circle', { cx: 3.5, cy: -1.5, r: 1.8, fill: '#223' }));
   rab.appendChild(mk('ellipse', { cx: 0, cy: 3, rx: 2, ry: 1.4, fill: '#f08a8a' }));
   gm.appendChild(rab);
-  gm.appendChild(mk('circle', { class: 'knob', cx: C, cy: C - 78, r: 23 }));
+  gm.appendChild(mk('circle', { class: 'knob', cx: C, cy: C - 78, r: KR }));
   svg.appendChild(gh); svg.appendChild(gm);
   svg.appendChild(mk('circle', { cx: C, cy: C, r: 6, fill: '#5b4a3a' }));
   el.appendChild(svg);
@@ -633,7 +646,7 @@ function Clock(el, opts = {}) {
   const up = e => { if (!drag || (e && e.pointerId !== undefined && e.pointerId !== drag.id)) return; tot = drag.which === 'm' ? snapped(tot) : hourSnap(); (drag.which === 'm' ? gm : gh).classList.remove('on'); drag = null; render(); if (api.onChange) api.onChange(tot, false); };
   // 虛線指針：提示正確位置（畫在真的指針下面）
   const gg = mk('g', { class: 'ghostg' }); svg.insertBefore(gg, gh);
-  api.ghost = (h, m) => { gg.innerHTML = ''; if (h === null || h === undefined) return; const ma = (m % 60) * 6, ha = ((h % 12) + m / 60) * 30; gg.appendChild(mk('line', { class: 'ghost', x1: C, y1: C, x2: C, y2: C - 50, transform: `rotate(${ha} ${C} ${C})` })); gg.appendChild(mk('line', { class: 'ghost', x1: C, y1: C, x2: C, y2: C - 76, transform: `rotate(${ma} ${C} ${C})` })); };
+  api.ghost = (h, m) => { gg.innerHTML = ''; if (h === null || h === undefined) return; const ma = (m % 60) * 6, ha = ((h % 12) + m / 60) * 30; for (const cls of ['ghost under', 'ghost']) { gg.appendChild(mk('line', { class: cls, x1: C, y1: C, x2: C, y2: C - 50, transform: `rotate(${ha} ${C} ${C})` })); gg.appendChild(mk('line', { class: cls, x1: C, y1: C, x2: C, y2: C - 76, transform: `rotate(${ma} ${C} ${C})` })); } };
   // 從 12 開始一格一格數 5、10、15…到 m（minIndex 的提示）
   const gc = mk('g'); svg.appendChild(gc); let cntT = [];
   api.countTo = (m, step = 320) => { api.countStop(); const n = Math.round(m / 5); for (let i = 1; i <= n; i++) cntT.push(setTimeout(() => { const a = i * 30 * Math.PI / 180, t = mk('text', { class: 'cnt', x: C + 88 * Math.sin(a), y: C - 88 * Math.cos(a) + 4 }); t.textContent = i * 5; gc.appendChild(t); SFX.tick(); }, i * step)); cntT.push(setTimeout(() => { gc.innerHTML = ''; }, n * step + 2600)); };
@@ -734,7 +747,7 @@ document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for 
 
 // ---------- 模式（還在蓋）
 let toastT = 0;
-function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, 2200); }
+function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = false; el.classList.toggle('mid', mode === 'versus'); clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, 2200); }
 $('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (!b) return; ac(); if (b.dataset.mode === 'day') { Day.start(); return; } if (b.dataset.mode === 'read') { Read.start(); return; } if (b.dataset.mode === 'match') { Match.start(); return; } if (b.dataset.mode === 'versus') { Versus.open(); return; } toast(tx('soon')); SFX.ding(); });
 
 // ---------- 畫面切換
@@ -877,13 +890,13 @@ const Read = (() => {
     clock3.set(H, m); Town.set(H * 60 + m); clock3.ghost(null); clock3.countStop();
     $('#read-emo').textContent = EMO[who]; $('#read-emo').className = 'emo'; $('#read-say').textContent = tx(keys ? 'read.sayKeys' : 'read.say', { who: tx('who.' + who) });
     $('#read-hint').hidden = true; prog();
-    $('#read-opts').hidden = keys; $('#read-pad').hidden = !keys;
+    $('#read-opts').hidden = keys; $('#read-pad').hidden = !keys; $('#clock3').classList.toggle('small', keys);
     if (keys) { renderPad(); } else $('#read-opts').innerHTML = options(h, m).map(o => `<button type="button" class="opt" data-t="${o[0]}" data-h="${o[1]}" data-m="${o[2]}">${o[1]}:${String(o[2]).padStart(2, '0')}</button>`).join('');
   }
   function renderPad() { $('#read-in').textContent = fmt(S.q.typed); $('#read-in').className = 'padin'; if (!$('#read-keys').children.length) $('#read-keys').innerHTML = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'del', 0, 'ok'].map(k => `<button type="button" class="key${k === 'ok' ? ' ok' : ''}" data-k="${k}">${k === 'ok' ? tx('key.ok') : k === 'del' ? '⌫' : k}</button>`).join(''); $('#read-keys .ok').textContent = tx('key.ok'); }
   const fmt = t => t.length <= 2 ? (t || '·') : t.slice(0, -2) + ':' + t.slice(-2);   // 720 → 7:20、1230 → 12:30
   function hint(type, h, m) {
-    const h1 = h, h2 = h % 12 + 1, kk = ['hourLate', 'halfHour', 'minIndex', 'handSwap', 'minNear', 'hourOff', 'read12'].includes(type) ? 'hint.' + type : 'hint.tryAgain';
+    const h1 = h, h2 = h % 12 + 1, kk = ['hourLate', 'halfHour', 'minIndex', 'handSwap', 'minNear', 'hourOff', 'read12'].includes(type) ? 'hint.' + type : S.q.keys ? 'hint.tryKeys' : 'hint.tryAgain';
     const el = $('#read-hint'); el.className = 'bubble'; el.textContent = tx(kk, { h1, h2 }); el.hidden = false;
     if (type === 'minIndex') clock3.countTo(m);
     const emo = $('#read-emo'); emo.classList.remove('tilt'); void emo.offsetWidth; emo.classList.add('tilt'); SFX.hm();
@@ -1019,7 +1032,7 @@ const Match = (() => {
 })();
 
 // ---------- 兩個人一起：上下分割，各撥各的鐘，先撥對拿一分，5 分贏；可以跟機器人比
-const clockA = Clock($('#clockA'), { snap: 5 }), clockB = Clock($('#clockB'), { snap: 5 });
+const clockA = Clock($('#clockA'), { snap: 5, knob: 28 }), clockB = Clock($('#clockB'), { snap: 5, knob: 28 });   // 鐘比較小，把手大一點
 const Versus = (() => {
   const WIN = 5, rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
   let S = null, opp = 'cpu', hard = false, raf = 0;

@@ -48,7 +48,7 @@
 - 改規則同一次 commit 更新遊戲說明（`help.*`）。說明要 ELI5。
 - 存檔向下相容。
 - commit 訊息用繁體中文，一句話說清楚改了什麼。
-- 三種語言版面要一樣（320×568 到 1920×1080）。
+- 三種語言版面要一樣（320×568 到 1920×1080；`tests/layout.js` 量 9 種尺寸 × 三語）：標題 `h1` 一行、放不下就縮（`flex:1;min-width:0`，右邊的 chip 與圖示鈕 `flex:none`，不然會被推出畫面）；矮螢幕（≤ 620px）主選單那行提示藏起來；讀鐘打數字時鐘縮小（`.clock-wrap.small`，≤ 640px 高再縮到 22vh）、鍵盤不透明；雙人把手 `knob: 28`（鐘比較小）、中線的返回鈕 44px 不折行、toast 放中線上面（`.toast.mid`）；日文 `word-break:keep-all`（在空格處斷行，不在詞中間）；虛線指針是珊瑚色加白底線（細灰線孩子看不到）。
 - 測試用 Playwright（chromium 在 `/opt/pw-browsers/chromium`，`NODE_PATH=/opt/node-tools/node_modules:$(npm root -g)`），本機 `python3 -m http.server 8124`。
 - 派 agent：試玩、截圖、量版面用 sonnet；批次跑腳本用 haiku；程式碼審查、破壞性測試用 opus。
 

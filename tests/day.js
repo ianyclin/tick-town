@@ -33,7 +33,7 @@ const SHOT = process.argv[2];
       const T = toTot(parse), wrong = (T + 60) % 1440;   // 撥成下一個小時
       await setAns(Math.floor(wrong / 60), wrong % 60); await p.waitForTimeout(2300);
       ok(await p.isVisible('#day-hint'), `${lang} 撥錯 2 秒後出現提示「${await p.textContent('#day-hint')}」`);
-      ok(await p.evaluate(() => document.querySelectorAll('#clock2 .ghost').length === 2), `${lang} 虛線指針出現`);
+      ok(await p.evaluate(() => document.querySelectorAll('#clock2 .ghost').length >= 2), `${lang} 虛線指針出現`);
       if (SHOT) await p.screenshot({ path: `${SHOT}/day-${lang}-hint.png` });
       const errsAfter = await p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-v1')).errs); const top = Object.entries(errsAfter).sort((a, b) => b[1] - a[1])[0]; ok(top && top[1] > 0, `${lang} 錯誤類型有記錄：${JSON.stringify(errsAfter)}`);
       await setAns(Math.floor(T / 60), T % 60); await p.waitForTimeout(300);
