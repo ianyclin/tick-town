@@ -75,6 +75,19 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 .gate-a{display:flex;justify-content:center;gap:8px}.gate-a i{width:40px;height:50px;border-radius:12px;border:2px solid var(--line);background:#fff;display:grid;place-items:center;font-family:var(--f-num);font-size:28px;font-style:normal}
 .danger{min-height:44px;border-radius:999px;border:2px solid var(--coral);color:#c0392b;font-weight:900;font-size:15px;padding:0 16px;background:#fff}
 .lab.parent{margin-top:8px;border-top:1px solid var(--line);padding-top:10px}
+.mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;max-width:420px;margin-top:4px}
+.mcard{aspect-ratio:1;perspective:600px;min-height:44px}
+.mcard .inner{position:relative;width:100%;height:100%;transition:transform .35s;transform-style:preserve-3d}
+.mcard.open .inner,.mcard.done .inner{transform:rotateY(180deg)}
+.mcard .f{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:grid;place-items:center;border:2px solid var(--line);box-shadow:0 4px 0 rgba(0,0,0,.08)}
+.mcard .bk{background:linear-gradient(160deg,#ffd27a,#ffb340);font-size:34px}
+.mcard .fr{background:var(--panel);transform:rotateY(180deg);overflow:hidden;padding:6px}
+.mcard .fr svg{width:100%;height:100%;overflow:visible}
+.mcard .fr .dg{font-family:var(--f-num);font-size:clamp(20px,7vw,32px);color:var(--hour)}
+.mcard .fr .wd{font-weight:900;font-size:clamp(13px,4vw,17px);text-align:center;line-height:1.3;text-wrap:balance}
+.mcard.done .fr{background:#dff7ea;border-color:var(--mint)}
+.mcard.no .inner{animation:tilt .5s ease}
+@media (prefers-reduced-motion:reduce){.mcard .inner{transition:none}}
 .legal{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}
 #fx{position:fixed;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
 .link-btn{min-height:44px;padding:0 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-weight:900;font-size:16px;box-shadow:0 2px 0 rgba(0,0,0,.08)}
@@ -170,6 +183,23 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
   <div class="pad" id="read-pad" hidden><div class="padin" id="read-in"></div><div class="keys" id="read-keys"></div></div>
   <div class="bubble" id="read-hint" hidden></div>
 </section>
+
+<section class="screen" id="s-match" hidden>
+  <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights" id="match-prog" aria-live="polite"></div></div>
+  <div class="task"><span class="emo" id="match-emo">🐿️</span><div class="say" data-t="match.say"></div></div>
+  <div class="mgrid" id="mgrid"></div>
+  <div class="bubble" id="match-hint" hidden></div>
+</section>
+
+<div class="overlay" id="o-mdone" hidden>
+  <div class="card">
+    <div class="big">🎉</div>
+    <h3 style="margin:0;text-align:center;font-size:24px" data-t="match.done"></h3>
+    <p id="mdone-p"></p>
+    <button class="btn" type="button" id="mdone-again" data-t="read.again"></button>
+    <button class="btn alt" type="button" id="mdone-home" data-t="home"></button>
+  </div>
+</div>
 
 <section class="screen" id="s-map" hidden>
   <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights" id="map-count"></div></div>
@@ -268,6 +298,7 @@ const STR = {
     'hint.hourLate': '烏龜還沒走到 {h2} 喔！它還在 {h1} 和 {h2} 中間。', 'hint.halfHour': '「{h1} 點半」的時候，烏龜在 {h1} 和 {h2} 的中間。',
     'hint.minIndex': '兔子跑一格是 5 分：5、10、15……數數看！', 'hint.handSwap': '短的是烏龜，管「幾點」；長的是兔子，管「幾分」。',
     'hint.minNear': '很接近了！再一格就對了。', 'hint.hourOff': '烏龜的位置看一下虛線喔。', 'hint.other': '虛線是正確的位置，照著撥撥看。',
+    'match.say': '翻兩張牌，找出一樣的時刻！', 'match.prog': '{n}/{t}', 'match.done': '全部配對好了！', 'match.p': '翻了 {n} 次牌。', 'q.match': '完成一次「配對」',
     'quest.title': '今日任務', 'quest.badges': '徽章 ×{n}', 'quest.streak': '連續 {n} 天', 'quest.doneOne': '任務完成！', 'quest.doneAll': '今天的任務都完成了！徽章 +1',
     'q.day': '做完「小鎮的一天」', 'q.read': '讀對 {n} 個時刻', 'q.set': '幫動物撥對 {n} 次', 'q.star': '點亮 {n} 顆新星星',
     'set.parent': '家長區', 'set.resetP': '清掉這台裝置上的所有紀錄', 'set.reset': '清除所有紀錄', 'reset.done': '紀錄清掉了',
@@ -303,6 +334,7 @@ const STR = {
     'hint.hourLate': "Tortoise hasn't reached {h2} yet! It's still between {h1} and {h2}.", 'hint.halfHour': 'At half past {h1}, Tortoise is right between {h1} and {h2}.',
     'hint.minIndex': 'Rabbit hops 5 minutes per number: 5, 10, 15… Count along!', 'hint.handSwap': 'The short hand is Tortoise (hours). The long hand is Rabbit (minutes).',
     'hint.minNear': 'So close! One more tick.', 'hint.hourOff': 'Check where the dotted Tortoise is.', 'hint.other': 'The dotted hands show the right spot. Try it!',
+    'match.say': 'Flip two cards and find the same time!', 'match.prog': '{n}/{t}', 'match.done': 'All matched!', 'match.p': 'You flipped {n} times.', 'q.match': 'Finish a round of Match',
     'quest.title': "Today's missions", 'quest.badges': 'Badges ×{n}', 'quest.streak': '{n} days in a row', 'quest.doneOne': 'Mission done!', 'quest.doneAll': 'All missions done today! Badge +1',
     'q.day': "Finish a Town's Day", 'q.read': 'Read {n} times right', 'q.set': 'Set the clock right {n} times', 'q.star': 'Light {n} new stars',
     'set.parent': 'For grown-ups', 'set.resetP': 'Erase all progress on this device', 'set.reset': 'Erase everything', 'reset.done': 'Progress erased',
@@ -338,6 +370,7 @@ const STR = {
     'hint.hourLate': 'かめは まだ {h2}に ついてないよ！{h1}と {h2}の あいだだよ。', 'hint.halfHour': '「{h1}時半」の とき、かめは {h1}と {h2}の まん中だよ。',
     'hint.minIndex': 'うさぎは 1つで 5分：5、10、15…… かぞえてみよう！', 'hint.handSwap': 'みじかい はりが かめ（何時）、長い はりが うさぎ（何分）だよ。',
     'hint.minNear': 'もう ちょっと！ あと 1つだよ。', 'hint.hourOff': 'てんせんの かめを 見てね。', 'hint.other': 'てんせんが ただしい ばしょだよ。あわせてみてね。',
+    'match.say': '2まい めくって、おなじ 時こくを さがそう！', 'match.prog': '{n}/{t}', 'match.done': 'ぜんぶ そろったよ！', 'match.p': '{n}回 めくったよ。', 'q.match': '「ペアさがし」を 1回',
     'quest.title': '今日の ミッション', 'quest.badges': 'バッジ ×{n}', 'quest.streak': '{n}日 つづけて', 'quest.doneOne': 'ミッション クリア！', 'quest.doneAll': '今日の ミッションは ぜんぶ クリア！ バッジ +1',
     'q.day': '「まちの一日」を さいごまで', 'q.read': '{n}こ よむ', 'q.set': 'とけいを {n}回 あわせる', 'q.star': '新しい 星を {n}こ つける',
     'set.parent': 'おうちの人へ', 'set.resetP': 'この たんまつの きろくを ぜんぶ けす', 'set.reset': 'ぜんぶ けす', 'reset.done': 'きろくを けしました',
@@ -554,13 +587,13 @@ document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for 
 // ---------- 模式（還在蓋）
 let toastT = 0;
 function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, 2200); }
-$('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (!b) return; ac(); if (b.dataset.mode === 'day') { Day.start(); return; } if (b.dataset.mode === 'read') { Read.start(); return; } toast(tx('soon')); SFX.ding(); });
-$$('.mode:not([data-mode=day]):not([data-mode=read])').forEach(b => b.classList.add('soon'));
+$('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (!b) return; ac(); if (b.dataset.mode === 'day') { Day.start(); return; } if (b.dataset.mode === 'read') { Read.start(); return; } if (b.dataset.mode === 'match') { Match.start(); return; } toast(tx('soon')); SFX.ding(); });
+$$('.mode[data-mode=versus]').forEach(b => b.classList.add('soon'));
 
 // ---------- 畫面切換
 function show(name) { $$('.screen').forEach(sc => sc.hidden = sc.id !== 's-' + name); mode = name; $('#toast').hidden = true; }
 $$('[data-home]').forEach(b => b.addEventListener('click', goHome));
-function goHome() { Day.stop(); Read.stop(); show('menu'); refreshMenu(); showTime(clock.get().tot); }
+function goHome() { Day.stop(); Read.stop(); Match.stop(); show('menu'); refreshMenu(); showTime(clock.get().tot); }
 
 // ---------- 粒子（慶祝用）
 const FX = (() => {
@@ -754,7 +787,7 @@ $('#set-reset').addEventListener('click', () => Gate.open(() => { const lang = D
 
 // ---------- 每日任務：每天 3 個，做完徽章 +1、連續天數；沒有懲罰、沒有過期提醒
 const Quest = (() => {
-  const POOL = [{ id: 'day', n: 1, em: '🏘️' }, { id: 'read', n: 8, em: '⏰' }, { id: 'set', n: 5, em: '🐢' }, { id: 'star', n: 2, em: '⭐' }];
+  const POOL = [{ id: 'day', n: 1, em: '🏘️' }, { id: 'read', n: 8, em: '⏰' }, { id: 'set', n: 5, em: '🐢' }, { id: 'star', n: 2, em: '⭐' }, { id: 'match', n: 1, em: '🃏' }];
   const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const yesterday = () => { const d = new Date(); d.setDate(d.getDate() - 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const stars = () => { let n = 0; for (let h = 1; h <= 12; h++) for (let m = 0; m < 60; m += 5) if (Map.stateOf(h, m) === 'star') n++; return n; };
@@ -780,6 +813,55 @@ const Quest = (() => {
   return { ensure, add, render, stars };
 })();
 function refreshMenu() { Quest.ensure(); const D = DB.daily, done = D.tasks.filter(q => q.done).length, all = done === 3; const c = $('#go-quest'); c.classList.toggle('todo', !all); c.classList.toggle('ok', all); $('#q-count').textContent = all ? '✓' : `${done}/3`; }
+
+// ---------- 配對（翻牌）：指針鐘、數字鐘、文字三種樣子配成對
+const Match = (() => {
+  const PAIRS = 4, rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1)), shuffle = a => a.sort(() => Math.random() - 0.5);
+  let S = null, lock = false;
+  function times() {
+    const L = DB.set.level, step = L === 1 ? 30 : 5, out = [], has = (h, m) => out.some(t => t[0] === h && t[1] === m);
+    const h0 = rnd(1, 12), m0 = Math.floor(Math.random() * (60 / step)) * step; out.push([h0, m0]);
+    // 一半的機會放一對容易搞混的（時針快到下一格、兩針對調），孩子才真的要看鐘
+    if (Math.random() < 0.5) { if (m0 >= 35) out.push([h0 % 12 + 1, m0]); else if (m0 % 5 === 0 && m0 / 5 >= 1 && h0 * 5 < 60 && L > 1) out.push([m0 / 5, h0 * 5]); }
+    while (out.length < PAIRS) { const h = rnd(1, 12), m = Math.floor(Math.random() * (60 / step)) * step; if (!has(h, m)) out.push([h, m]); }
+    return out;
+  }
+  const reps = (h, m) => { const r = ['a', 'd']; if (LANG !== 'en' || m % 30 === 0) r.push('w'); return shuffle(r).slice(0, 2); };   // 英文的文字跟數字鐘一樣（7:20），只有整點半點才用
+  function face(t, rep) {
+    const [h, m] = t;
+    if (rep === 'd') return `<span class="dg">${h}:${String(m).padStart(2, '0')}</span>`;
+    if (rep === 'w') return `<span class="wd">${timeWords(h * 60 + m).main}</span>`;
+    const d = document.createElement('div'); const c = Clock(d, { drag: false, snap: 1 }); c.set(h, m); return d.innerHTML;
+  }
+  function start() {
+    const ts = times(), cards = [];
+    ts.forEach((t, i) => reps(t[0], t[1]).forEach(r => cards.push({ t, r, i })));
+    S = { cards: shuffle(cards), open: [], done: 0, flips: 0 }; lock = false;
+    $('#mgrid').innerHTML = S.cards.map((c, i) => `<button type="button" class="mcard" data-i="${i}" aria-label="?"><div class="inner"><div class="f bk">🐾</div><div class="f fr">${face(c.t, c.r)}</div></div></button>`).join('');
+    $('#match-hint').hidden = true; $('#o-mdone').hidden = true; prog(); show('match'); Town.set(clock.get().tot);
+  }
+  function stop() { S = null; }
+  function prog() { $('#match-prog').innerHTML = `<span aria-hidden="true">🃏</span>${tx('match.prog', { n: S.done, t: PAIRS })}`; }
+  function flip(i) {
+    if (!S || lock) return; const c = S.cards[i], el = $(`#mgrid .mcard[data-i="${i}"]`); if (c.done || S.open.includes(i)) return;
+    el.classList.add('open'); S.open.push(i); S.flips++; SFX.tick(); $('#match-hint').hidden = true;
+    if (S.open.length < 2) return;
+    const [a, b] = S.open.map(j => S.cards[j]), ea = $(`#mgrid .mcard[data-i="${S.open[0]}"]`);
+    if (a.i === b.i) {
+      a.done = b.done = true; S.done++; S.open = []; el.classList.add('done'); ea.classList.add('done'); prog(); SFX.ding(); const r = el.getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 20);
+      const an = a.r === 'a' ? a : b.r === 'a' ? b : null; if (an) record(`r:${an.t[0]}:${an.t[1]}`, true, 0, null, inducible(an.t[0], an.t[1]));
+      if (S.done === PAIRS) { const me = S; setTimeout(() => { if (S !== me) return; $('#mdone-p').textContent = tx('match.p', { n: S.flips }); $('#o-mdone').hidden = false; FX.confetti(60); DB.best.matches = num(DB.best.matches) + 1; save(); Quest.add('match'); }, 700); }
+      return;
+    }
+    // 配錯：一張是指針鐘、另一張不是，而且錯法看得出來，才算讀錯（兩張都是數字鐘只是記性）
+    lock = true; const an = a.r === 'a' && b.r !== 'a' ? [a, b] : b.r === 'a' && a.r !== 'a' ? [b, a] : null;
+    if (an) { const type = classifySet((an[0].t[0] % 12) * 60 + an[0].t[1], (an[1].t[0] % 12) * 60 + an[1].t[1]); if (['hourLate', 'halfHour', 'minIndex', 'handSwap', 'read12', 'minNear'].includes(type)) { record(`r:${an[0].t[0]}:${an[0].t[1]}`, false, 0, type, null); const h1 = an[0].t[0], hb = $('#match-hint'); hb.className = 'bubble'; hb.textContent = tx('hint.' + type, { h1, h2: h1 % 12 + 1 }); hb.hidden = false; } }
+    SFX.hm(); const me = S; setTimeout(() => { if (S !== me) return; S.open.forEach(j => $(`#mgrid .mcard[data-i="${j}"]`).classList.remove('open')); el.classList.add('no'); setTimeout(() => el.classList.remove('no'), 500); S.open = []; lock = false; }, 900);
+  }
+  $('#mgrid').addEventListener('click', e => { const b = e.target.closest('.mcard'); if (b) { ac(); flip(+b.dataset.i); } });
+  $('#mdone-again').addEventListener('click', start); $('#mdone-home').addEventListener('click', () => { $('#o-mdone').hidden = true; goHome(); });
+  return { start, stop, s: () => S };
+})();
 
 // ---------- 鐘面星圖：12 片（每片 5 分）× 12 圈（裡面 1 點、外面 12 點）
 const Map = (() => {
@@ -830,7 +912,7 @@ loadDB(); setLang(); Town.resize();
 if (DB.hinted) $('#hintline').hidden = true; refreshMenu();
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Map, Quest, Gate, classifySet };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Map, Quest, Gate, classifySet };   // 給測試用
 })();
 </script>
 </body>

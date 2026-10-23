@@ -17,7 +17,7 @@ const solve = async p => { const q = await p.textContent('#gate-q'); const ans =
     if (SHOT) await p.screenshot({ path: `${SHOT}/quest-${lang}.png` });
     await p.keyboard.press('Escape'); ok(await p.isHidden('#o-quest'), `${lang} Esc 關任務卡`);
     // 用 Quest.add 推進：讀對 8 題 → 完成 read 任務（若有抽到）
-    await p.evaluate(() => { for (let i = 0; i < 8; i++) window.__tt.Quest.add('read'); for (let i = 0; i < 5; i++) window.__tt.Quest.add('set'); window.__tt.Quest.add('day'); });
+    await p.evaluate(() => { for (let i = 0; i < 8; i++) window.__tt.Quest.add('read'); for (let i = 0; i < 5; i++) window.__tt.Quest.add('set'); window.__tt.Quest.add('day'); window.__tt.Quest.add('match'); });
     await p.waitForTimeout(200); D = (await db()).daily; const done = D.tasks.filter(t => t.done).length, starQ = D.tasks.find(t => t.id === 'star');
     ok(done === (starQ ? 2 : 3), `${lang} 推進後完成 ${done} 項（${starQ ? '有' : '沒有'}點亮星星任務）`);
     if (starQ) { await p.evaluate(() => { const DB = window.__tt.DB(); for (let i = 1; i <= 3; i++) DB.facts['r:' + i + ':0'] = { n: 4, err: 0, w: 0, t: 1000 }; window.__tt.Quest.add('star'); }); await p.waitForTimeout(200); D = (await db()).daily; }
