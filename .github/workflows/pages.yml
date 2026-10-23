@@ -20,6 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true   # 第一次跑會自己把 Pages 打開（來源 GitHub Actions）
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
