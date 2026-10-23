@@ -88,6 +88,24 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 .mcard.done .fr{background:#dff7ea;border-color:var(--mint)}
 .mcard.no .inner{animation:tilt .5s ease}
 @media (prefers-reduced-motion:reduce){.mcard .inner{transition:none}}
+#s-versus{padding:0;touch-action:none;gap:0}
+.half{flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 12px;min-height:0;position:relative}
+.half.top{transform:rotate(180deg);background:rgba(255,255,255,.12)}
+.half .clock-wrap{width:min(56vw,30vh,260px);margin:0}
+.vtask{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 16px;font-weight:900;font-size:17px;display:flex;align-items:center;gap:8px}
+.vtask b{font-family:var(--f-num);font-size:24px;color:var(--hour);font-weight:400}
+.vtask .emo{font-size:22px}
+.vmid{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px 10px;font-family:var(--f-num);font-size:22px;position:relative}
+.vmid .dots{display:flex;gap:5px}.vmid .dots i{width:14px;height:14px;border-radius:50%;background:rgba(0,0,0,.12)}.vmid .dots i.on{background:var(--sun);box-shadow:0 0 6px var(--sun)}
+.vmid .link-btn{position:absolute;left:10px;top:50%;transform:translateY(-50%);min-height:36px;font-size:14px;padding:0 10px}
+.robot{font-size:64px;line-height:1;transition:transform .2s}.robot.think{animation:robotThink 1s ease-in-out infinite}
+@keyframes robotThink{50%{transform:rotate(6deg) translateY(-3px)}}
+.vbar{width:160px;height:10px;border-radius:5px;background:rgba(0,0,0,.1);overflow:hidden}.vbar i{display:block;height:100%;background:var(--mint);width:0}
+.vgot{animation:jump .6s ease}
+.opt-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt-row button{min-height:48px;border-radius:14px;border:2px solid var(--line);background:#fff;font-weight:900;font-size:16px}
+.opt-row button[aria-pressed=true]{border-color:var(--hour);background:#e4efff;color:var(--hour)}
+@media (max-height:640px){.half .clock-wrap{width:min(50vw,27vh,220px)}.robot{font-size:44px}.vtask{font-size:14px}.vtask b{font-size:20px}}
 .legal{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}
 #fx{position:fixed;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
 .link-btn{min-height:44px;padding:0 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-weight:900;font-size:16px;box-shadow:0 2px 0 rgba(0,0,0,.08)}
@@ -201,6 +219,41 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
   </div>
 </div>
 
+<section class="screen" id="s-versus" hidden>
+  <div class="half top" id="v-top">
+    <div class="vtask" id="v-task2"><span class="emo" id="v-emo2">🤖</span><span data-t="vs.task"></span><b id="v-t2"></b></div>
+    <div class="clock-wrap" id="clockB"></div>
+    <div class="robot" id="v-robot" hidden>🤖</div>
+    <div class="vbar" id="v-bar" hidden><i></i></div>
+  </div>
+  <div class="vmid"><button class="link-btn" type="button" data-home data-t="back"></button><span id="v-emoA">🐻</span><span class="dots" id="v-dotsA"></span><span>:</span><span class="dots" id="v-dotsB"></span><span id="v-emoB">🤖</span></div>
+  <div class="half" id="v-bottom">
+    <div class="vtask" id="v-task1"><span class="emo" id="v-emo1">🐻</span><span data-t="vs.task"></span><b id="v-t1"></b></div>
+    <div class="clock-wrap" id="clockA"></div>
+  </div>
+</section>
+
+<div class="overlay" id="o-vs" hidden>
+  <div class="card">
+    <h3 style="margin:0;text-align:center;font-size:24px" data-t="vs.title"></h3>
+    <div class="lab" data-t="vs.who"></div>
+    <div class="opt-row" id="vs-opp"><button type="button" data-opp="cpu" aria-pressed="true" data-t="vs.opp.cpu"></button><button type="button" data-opp="human" aria-pressed="false" data-t="vs.opp.human"></button></div>
+    <div class="row" id="vs-hardrow" hidden><span class="lab" data-t="vs.hard"></span><button class="sw" type="button" id="vs-hard" aria-pressed="false" data-t="off"></button></div>
+    <p data-t="vs.rule"></p>
+    <button class="btn" type="button" id="vs-start" data-t="vs.start"></button>
+    <button class="btn alt" type="button" id="vs-cancel" data-t="home"></button>
+  </div>
+</div>
+
+<div class="overlay" id="o-vdone" hidden>
+  <div class="card">
+    <div class="big" id="vdone-emo">🏆</div>
+    <h3 style="margin:0;text-align:center;font-size:24px" id="vdone-h"></h3>
+    <button class="btn" type="button" id="vdone-again" data-t="vs.again"></button>
+    <button class="btn alt" type="button" id="vdone-home" data-t="home"></button>
+  </div>
+</div>
+
 <section class="screen" id="s-map" hidden>
   <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights" id="map-count"></div></div>
   <div class="map-wrap" id="map"></div>
@@ -298,6 +351,8 @@ const STR = {
     'hint.hourLate': '烏龜還沒走到 {h2} 喔！它還在 {h1} 和 {h2} 中間。', 'hint.halfHour': '「{h1} 點半」的時候，烏龜在 {h1} 和 {h2} 的中間。',
     'hint.minIndex': '兔子跑一格是 5 分：5、10、15……數數看！', 'hint.handSwap': '短的是烏龜，管「幾點」；長的是兔子，管「幾分」。',
     'hint.minNear': '很接近了！再一格就對了。', 'hint.hourOff': '烏龜的位置看一下虛線喔。', 'hint.other': '虛線是正確的位置，照著撥撥看。',
+    'vs.title': '兩個人一起', 'vs.who': '跟誰比？', 'vs.opp.cpu': '機器人', 'vs.opp.human': '另一個人', 'vs.hard': '上面那位大人加難', 'vs.rule': '各撥各的鐘，先撥對的人拿一分，5 分就贏了！', 'vs.start': '開始',
+    'vs.task': '撥到', 'vs.win': '{who}贏了！', 'vs.cpuWin': '這次是機器人快一點，再比一次？', 'vs.again': '再一局', 'vs.p1': '小隊長', 'vs.p2': '挑戰者', 'vs.cpu': '機器人', 'q.vs': '跟機器人或朋友比一局',
     'match.say': '翻兩張牌，找出一樣的時刻！', 'match.prog': '{n}/{t}', 'match.done': '全部配對好了！', 'match.p': '翻了 {n} 次牌。', 'q.match': '完成一次「配對」',
     'quest.title': '今日任務', 'quest.badges': '徽章 ×{n}', 'quest.streak': '連續 {n} 天', 'quest.doneOne': '任務完成！', 'quest.doneAll': '今天的任務都完成了！徽章 +1',
     'q.day': '做完「小鎮的一天」', 'q.read': '讀對 {n} 個時刻', 'q.set': '幫動物撥對 {n} 次', 'q.star': '點亮 {n} 顆新星星',
@@ -334,6 +389,8 @@ const STR = {
     'hint.hourLate': "Tortoise hasn't reached {h2} yet! It's still between {h1} and {h2}.", 'hint.halfHour': 'At half past {h1}, Tortoise is right between {h1} and {h2}.',
     'hint.minIndex': 'Rabbit hops 5 minutes per number: 5, 10, 15… Count along!', 'hint.handSwap': 'The short hand is Tortoise (hours). The long hand is Rabbit (minutes).',
     'hint.minNear': 'So close! One more tick.', 'hint.hourOff': 'Check where the dotted Tortoise is.', 'hint.other': 'The dotted hands show the right spot. Try it!',
+    'vs.title': 'Two players', 'vs.who': 'Play against…', 'vs.opp.cpu': 'the robot', 'vs.opp.human': 'a friend', 'vs.hard': 'Harder for the grown-up on top', 'vs.rule': 'Each sets their own clock. First to set it right gets a point. 5 points wins!', 'vs.start': 'Start',
+    'vs.task': 'Set to', 'vs.win': '{who} wins!', 'vs.cpuWin': 'The robot was a bit faster this time. Again?', 'vs.again': 'Play again', 'vs.p1': 'Captain', 'vs.p2': 'Challenger', 'vs.cpu': 'Robot', 'q.vs': 'Play a round against the robot or a friend',
     'match.say': 'Flip two cards and find the same time!', 'match.prog': '{n}/{t}', 'match.done': 'All matched!', 'match.p': 'You flipped {n} times.', 'q.match': 'Finish a round of Match',
     'quest.title': "Today's missions", 'quest.badges': 'Badges ×{n}', 'quest.streak': '{n} days in a row', 'quest.doneOne': 'Mission done!', 'quest.doneAll': 'All missions done today! Badge +1',
     'q.day': "Finish a Town's Day", 'q.read': 'Read {n} times right', 'q.set': 'Set the clock right {n} times', 'q.star': 'Light {n} new stars',
@@ -370,6 +427,8 @@ const STR = {
     'hint.hourLate': 'かめは まだ {h2}に ついてないよ！{h1}と {h2}の あいだだよ。', 'hint.halfHour': '「{h1}時半」の とき、かめは {h1}と {h2}の まん中だよ。',
     'hint.minIndex': 'うさぎは 1つで 5分：5、10、15…… かぞえてみよう！', 'hint.handSwap': 'みじかい はりが かめ（何時）、長い はりが うさぎ（何分）だよ。',
     'hint.minNear': 'もう ちょっと！ あと 1つだよ。', 'hint.hourOff': 'てんせんの かめを 見てね。', 'hint.other': 'てんせんが ただしい ばしょだよ。あわせてみてね。',
+    'vs.title': 'ふたりで', 'vs.who': 'だれと？', 'vs.opp.cpu': 'ロボット', 'vs.opp.human': 'ともだち', 'vs.hard': '上の 大人は むずかしく', 'vs.rule': 'じぶんの とけいを あわせて、早く できた人が 1点。5点で かち！', 'vs.start': 'スタート',
+    'vs.task': 'あわせて：', 'vs.win': '{who}の かち！', 'vs.cpuWin': 'こんどは ロボットが ちょっと 早かったね。もう一回？', 'vs.again': 'もう一回', 'vs.p1': 'キャプテン', 'vs.p2': 'チャレンジャー', 'vs.cpu': 'ロボット', 'q.vs': 'ロボットか ともだちと 1回 しょうぶ',
     'match.say': '2まい めくって、おなじ 時こくを さがそう！', 'match.prog': '{n}/{t}', 'match.done': 'ぜんぶ そろったよ！', 'match.p': '{n}回 めくったよ。', 'q.match': '「ペアさがし」を 1回',
     'quest.title': '今日の ミッション', 'quest.badges': 'バッジ ×{n}', 'quest.streak': '{n}日 つづけて', 'quest.doneOne': 'ミッション クリア！', 'quest.doneAll': '今日の ミッションは ぜんぶ クリア！ バッジ +1',
     'q.day': '「まちの一日」を さいごまで', 'q.read': '{n}こ よむ', 'q.set': 'とけいを {n}回 あわせる', 'q.star': '新しい 星を {n}こ つける',
@@ -587,13 +646,12 @@ document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for 
 // ---------- 模式（還在蓋）
 let toastT = 0;
 function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, 2200); }
-$('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (!b) return; ac(); if (b.dataset.mode === 'day') { Day.start(); return; } if (b.dataset.mode === 'read') { Read.start(); return; } if (b.dataset.mode === 'match') { Match.start(); return; } toast(tx('soon')); SFX.ding(); });
-$$('.mode[data-mode=versus]').forEach(b => b.classList.add('soon'));
+$('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (!b) return; ac(); if (b.dataset.mode === 'day') { Day.start(); return; } if (b.dataset.mode === 'read') { Read.start(); return; } if (b.dataset.mode === 'match') { Match.start(); return; } if (b.dataset.mode === 'versus') { Versus.open(); return; } toast(tx('soon')); SFX.ding(); });
 
 // ---------- 畫面切換
 function show(name) { $$('.screen').forEach(sc => sc.hidden = sc.id !== 's-' + name); mode = name; $('#toast').hidden = true; }
 $$('[data-home]').forEach(b => b.addEventListener('click', goHome));
-function goHome() { Day.stop(); Read.stop(); Match.stop(); show('menu'); refreshMenu(); showTime(clock.get().tot); }
+function goHome() { Day.stop(); Read.stop(); Match.stop(); Versus.stop(); show('menu'); refreshMenu(); showTime(clock.get().tot); }
 
 // ---------- 粒子（慶祝用）
 const FX = (() => {
@@ -787,7 +845,7 @@ $('#set-reset').addEventListener('click', () => Gate.open(() => { const lang = D
 
 // ---------- 每日任務：每天 3 個，做完徽章 +1、連續天數；沒有懲罰、沒有過期提醒
 const Quest = (() => {
-  const POOL = [{ id: 'day', n: 1, em: '🏘️' }, { id: 'read', n: 8, em: '⏰' }, { id: 'set', n: 5, em: '🐢' }, { id: 'star', n: 2, em: '⭐' }, { id: 'match', n: 1, em: '🃏' }];
+  const POOL = [{ id: 'day', n: 1, em: '🏘️' }, { id: 'read', n: 8, em: '⏰' }, { id: 'set', n: 5, em: '🐢' }, { id: 'star', n: 2, em: '⭐' }, { id: 'match', n: 1, em: '🃏' }, { id: 'vs', n: 1, em: '🤝' }];
   const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const yesterday = () => { const d = new Date(); d.setDate(d.getDate() - 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const stars = () => { let n = 0; for (let h = 1; h <= 12; h++) for (let m = 0; m < 60; m += 5) if (Map.stateOf(h, m) === 'star') n++; return n; };
@@ -863,6 +921,52 @@ const Match = (() => {
   return { start, stop, s: () => S };
 })();
 
+// ---------- 兩個人一起：上下分割，各撥各的鐘，先撥對拿一分，5 分贏；可以跟機器人比
+const clockA = Clock($('#clockA'), { snap: 5 }), clockB = Clock($('#clockB'), { snap: 5 });
+const Versus = (() => {
+  const WIN = 5, rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  let S = null, opp = 'cpu', hard = false, raf = 0;
+  const task = h => { const L = DB.set.level, step = h ? 1 : L === 1 ? 30 : L === 3 ? 1 : 5; const H = rnd(6, 21), m = Math.floor(Math.random() * (60 / step)) * step; return H * 60 + m; };
+  const fmt = t => `${Math.floor(t / 60) % 12 || 12}:${String(t % 60).padStart(2, '0')}`;
+  function dots() { ['A', 'B'].forEach(k => { $('#v-dots' + k).innerHTML = Array.from({ length: WIN }, (_, i) => `<i class="${i < S.score[k] ? 'on' : ''}"></i>`).join(''); }); }
+  function give(k) {
+    const t = task(k === 'B' && opp === 'human' && hard); S.t[k] = t; S.at[k] = now();
+    const c = k === 'A' ? clockA : clockB, start = (t + 180 + rnd(0, 300)) % 1440; c.set(Math.floor(start / 60), start % 60); $(k === 'A' ? '#v-t1' : '#v-t2').textContent = fmt(t);
+    if (k === 'B' && opp === 'cpu') cpuGo();
+  }
+  function point(k) {
+    S.score[k]++; dots(); SFX.ding(); const half = $(k === 'A' ? '#v-bottom' : '#v-top'); const r = half.getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 24);
+    if (k === 'A') { const t = S.t.A; record(`s:${Math.floor(t / 60)}:${t % 60}`, true, now() - S.at.A, null, inducible(Math.floor(t / 60) % 12 || 12, t % 60)); S.times.push(now() - S.at.A); Quest.add('set'); Quest.add('star'); }
+    if (S.score[k] >= WIN) { finish(k); return; } give(k);
+  }
+  // 機器人：想的時間跟著孩子的速度（最近幾次撥對的時間 ×1.1），落後就快一點、領先就慢一點
+  function cpuGo() {
+    cancelAnimationFrame(raf); const avg = S.times.length ? S.times.slice(-4).reduce((a, b) => a + b, 0) / Math.min(4, S.times.length) : 6000;
+    let d = clamp(avg * 1.1, 3000, 12000) * (S.score.A - S.score.B >= 2 ? 0.8 : S.score.B - S.score.A >= 2 ? 1.3 : 1) * (0.8 + Math.random() * 0.45);
+    const t0 = now(), from = clockB.get().tot, to = S.t.B, fw = ((to - from) % 1440 + 1440) % 1440, me = S;
+    $('#v-robot').classList.add('think');
+    const step = () => { if (S !== me) return; const k = Math.min(1, (now() - t0) / d); $('#v-bar i').style.width = Math.round(k * 100) + '%'; const cur = (from + fw * (k < 0.3 ? 0 : (k - 0.3) / 0.7)) % 1440; clockB.set(Math.floor(cur / 60), cur % 60); if (k < 1) raf = requestAnimationFrame(step); else { $('#v-robot').classList.remove('think'); clockB.set(Math.floor(to / 60), to % 60); point('B'); } };
+    raf = requestAnimationFrame(step);
+  }
+  function start() {
+    S = { score: { A: 0, B: 0 }, t: {}, at: {}, times: [] }; $('#o-vs').hidden = true; $('#o-vdone').hidden = true; show('versus');
+    const cpu = opp === 'cpu'; $('#v-top').classList.toggle('top', !cpu); $('#v-robot').hidden = !cpu; $('#v-bar').hidden = !cpu; clockB.drag = !cpu; $('#clockB').hidden = false;
+    $('#v-emoB').textContent = cpu ? '🤖' : '🐰'; $('#v-emo2').textContent = cpu ? '🤖' : '🐰'; clockA.setSnap(DB.set.level === 3 ? 1 : 5); clockB.setSnap(!cpu && hard ? 1 : DB.set.level === 3 ? 1 : 5); dots(); give('A'); give('B');
+  }
+  function stop() { cancelAnimationFrame(raf); S = null; }
+  function finish(k) { cancelAnimationFrame(raf); const cpu = opp === 'cpu'; const win = k === 'A' || !cpu; $('#vdone-emo').textContent = win ? '🏆' : '🤖'; $('#vdone-h').textContent = k === 'A' ? tx('vs.win', { who: tx('vs.p1') }) : cpu ? tx('vs.cpuWin') : tx('vs.win', { who: tx('vs.p2') }); if (win) FX.confetti(60); $('#o-vdone').hidden = false; const me = S; S = null; DB.best.vs = num(DB.best.vs) + 1; save(); Quest.add('vs'); }
+  clockA.onChange = (tot, dragging) => { if (!S || dragging) return; if (tot % 720 === S.t.A % 720) point('A'); };
+  clockB.onChange = (tot, dragging) => { if (!S || dragging || opp === 'cpu') return; if (tot % 720 === S.t.B % 720) point('B'); };
+  clockA.onSnap = clockB.onSnap = () => SFX.tick();
+  function open() { $('#o-vs').hidden = false; $('#vs-hardrow').hidden = opp === 'cpu'; }
+  $('#vs-opp').addEventListener('click', e => { const b = e.target.closest('[data-opp]'); if (!b) return; opp = b.dataset.opp; $$('#vs-opp button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); $('#vs-hardrow').hidden = opp === 'cpu'; });
+  $('#vs-hard').addEventListener('click', () => { hard = !hard; $('#vs-hard').setAttribute('aria-pressed', String(hard)); $('#vs-hard').textContent = tx(hard ? 'on' : 'off'); });
+  $('#vs-start').addEventListener('click', () => { ac(); start(); }); $('#vs-cancel').addEventListener('click', () => { $('#o-vs').hidden = true; });
+  $('#vdone-again').addEventListener('click', () => { ac(); start(); }); $('#vdone-home').addEventListener('click', () => { $('#o-vdone').hidden = true; goHome(); });
+  $('#s-versus').addEventListener('gesturestart', e => e.preventDefault());
+  return { open, start, stop, s: () => S, setOpp: o => { opp = o; } };
+})();
+
 // ---------- 鐘面星圖：12 片（每片 5 分）× 12 圈（裡面 1 點、外面 12 點）
 const Map = (() => {
   const svgNS = 'http://www.w3.org/2000/svg', C = 100, R0 = 26, R1 = 92;
@@ -912,7 +1016,7 @@ loadDB(); setLang(); Town.resize();
 if (DB.hinted) $('#hintline').hidden = true; refreshMenu();
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Map, Quest, Gate, classifySet };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, Map, Quest, Gate, classifySet };   // 給測試用
 })();
 </script>
 </body>
