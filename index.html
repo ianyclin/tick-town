@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="description" content="滴答小鎮：給小學生看時鐘、撥時鐘、算時間的遊戲。沒有廣告、不用網路。">
+<title>滴答小鎮</title>
+<style>
+@font-face{font-family:'Lilita';src:url(assets/fonts/lilita.woff2) format('woff2');font-display:swap}
+@font-face{font-family:'Chiron';src:url(assets/fonts/chiron-400.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Chiron';src:url(assets/fonts/chiron-700.woff2) format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Chiron';src:url(assets/fonts/chiron-900.woff2) format('woff2');font-weight:900;font-display:swap}
+@font-face{font-family:'ZenMaru';src:url(assets/fonts/zenmaru-400.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'ZenMaru';src:url(assets/fonts/zenmaru-700.woff2) format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'ZenMaru';src:url(assets/fonts/zenmaru-900.woff2) format('woff2');font-weight:900;font-display:swap}
+:root{
+  --f-num:'Lilita','Chiron',"Arial Rounded MT Bold",system-ui,sans-serif;
+  --f-zh:'Chiron',"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  --ink:#3b2f2f;--muted:#7a6a5a;--paper:#fff8ea;--panel:rgba(255,255,255,.82);--line:rgba(90,60,30,.18);
+  --sun:#ffb340;--hour:#3a7bd5;--minute:#e8514f;--mint:#5fcf9a;--coral:#ff7a6b;
+  --face:#fffaf0;--face-rim:#e8c98f;
+  padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);
+}
+:lang(ja){--f-zh:'ZenMaru',"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif;--f-num:'Lilita','ZenMaru',system-ui,sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overscroll-behavior:none}
+body{font-family:var(--f-zh);color:var(--ink);background:#8fd0ff;overflow:hidden;position:fixed;inset:0;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+[hidden]{display:none!important}
+#town{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:10px 16px;z-index:1;gap:8px}
+.top{width:100%;max-width:520px;display:flex;align-items:center;justify-content:space-between}
+h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.18),0 0 18px rgba(255,255,255,.4)}
+.icon-btn{min-width:44px;min-height:44px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:22px;display:grid;place-items:center;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.clock-wrap{width:min(78vw,44vh,360px);aspect-ratio:1;position:relative;margin-top:4px}
+.clock-wrap svg{width:100%;height:100%;overflow:visible;display:block;touch-action:none}
+.hand{cursor:grab}.hand.on{cursor:grabbing}
+.knob{fill:transparent;pointer-events:all}
+.timecard{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:8px 18px;text-align:center;min-width:200px;max-width:100%;box-shadow:0 4px 0 rgba(0,0,0,.06);backdrop-filter:blur(6px)}
+.digital{font-family:var(--f-num);font-size:40px;line-height:1;letter-spacing:1px}
+.digital small{font-size:18px;color:var(--muted);margin-left:6px;font-family:var(--f-zh);font-weight:700}
+.words{font-size:18px;font-weight:900;margin-top:2px;text-wrap:balance}
+.scene{font-size:17px;font-weight:700;color:var(--muted);margin-top:2px;min-height:24px}
+.scene .emo{font-size:22px;vertical-align:-2px;margin-right:4px}
+.hintline{color:#fff;font-weight:900;font-size:15px;text-shadow:0 1px 0 rgba(0,0,0,.25);text-align:center;text-wrap:balance;margin-top:-2px}
+.modes{margin-top:auto;width:100%;max-width:520px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding-bottom:6px}
+.mode{background:var(--panel);border:1px solid var(--line);border-radius:20px;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:900;font-size:14px;line-height:1.2;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,.08);text-wrap:balance;padding:6px 4px}
+.mode .emo{font-size:30px;line-height:1}
+.mode:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.mode.soon{opacity:.55}
+.overlay{position:fixed;inset:0;background:rgba(40,30,20,.45);display:grid;place-items:center;z-index:6;padding:16px}
+.card{background:var(--paper);border-radius:24px;padding:18px;width:100%;max-width:420px;max-height:calc(100% - 20px);overflow-y:auto;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.card>*{flex-shrink:0}
+.hhead{display:flex;align-items:center;justify-content:space-between;position:sticky;top:-18px;background:var(--paper);padding-top:2px;margin-top:-2px;z-index:1}
+.hhead h3{margin:0;font-size:22px;font-weight:900}
+.xbtn{min-width:44px;min-height:44px;border-radius:999px;font-size:22px;background:rgba(0,0,0,.06)}
+.lab{font-size:14px;color:var(--muted);font-weight:700}
+.langs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.langs button,.sw{min-height:44px;border-radius:14px;border:2px solid var(--line);font-weight:900;font-size:16px;background:#fff}
+.langs button[aria-pressed=true],.sw[aria-pressed=true]{border-color:var(--hour);background:#e4efff;color:var(--hour)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sw{min-width:72px;padding:0 14px}
+.toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom));transform:translateX(-50%);background:rgba(59,47,47,.92);color:#fff;padding:12px 18px;border-radius:999px;font-weight:900;font-size:16px;z-index:9;max-width:calc(100% - 32px);text-align:center;text-wrap:balance;pointer-events:none;animation:toastIn .25s ease}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}}
+.legal{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}
+@media (max-height:640px){.digital{font-size:32px}.words{font-size:16px}.mode{min-height:64px}.mode .emo{font-size:24px}h1{font-size:22px}}
+@media (min-width:700px) and (min-height:700px){.clock-wrap{width:min(60vw,48vh,440px)}.modes{max-width:600px}.mode{min-height:92px;font-size:16px}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<canvas id="town"></canvas>
+
+<section class="screen" id="s-menu">
+  <div class="top">
+    <h1 data-t="title"></h1>
+    <button class="icon-btn" id="go-set" type="button" data-ta="menu.set">⚙️</button>
+  </div>
+  <div class="clock-wrap" id="clock"></div>
+  <div class="timecard">
+    <div class="digital" id="digital"></div>
+    <div class="words" id="words"></div>
+    <div class="scene" id="scene"></div>
+  </div>
+  <div class="hintline" id="hintline" data-t="menu.hint"></div>
+  <div class="modes" id="modes">
+    <button class="mode" type="button" data-mode="day"><span class="emo">🏘️</span><span data-t="mode.day"></span></button>
+    <button class="mode" type="button" data-mode="read"><span class="emo">⏰</span><span data-t="mode.read"></span></button>
+    <button class="mode" type="button" data-mode="match"><span class="emo">🃏</span><span data-t="mode.match"></span></button>
+    <button class="mode" type="button" data-mode="versus"><span class="emo">🤝</span><span data-t="mode.versus"></span></button>
+  </div>
+</section>
+
+<div class="overlay" id="o-set" hidden>
+  <div class="card">
+    <div class="hhead"><h3 data-t="set.title"></h3><button class="xbtn" type="button" id="set-close" data-ta="close">✕</button></div>
+    <div class="lab" data-t="set.lang"></div>
+    <div class="langs" id="set-lang"></div>
+    <div class="lab" data-t="set.level"></div>
+    <div class="langs" id="set-level"></div>
+    <div class="row"><span class="lab" data-t="set.sound"></span><button class="sw" type="button" data-set="sound" aria-pressed="true" data-t="on"></button></div>
+    <div class="legal" data-t="legal"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const now = () => performance.now();
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---------- 介面文字（三語；ja 區塊的 '\n  ja: {' 到 '\n  },' 給切字腳本找）
+const STR = {
+  'zh-Hant': {
+    title: '滴答小鎮', 'menu.set': '設定', close: '關閉', on: '開', off: '關',
+    'menu.hint': '用手拖兔子（長針）或烏龜（短針），小鎮會跟著變！',
+    'mode.day': '小鎮的一天', 'mode.read': '幾點了？', 'mode.match': '配對', 'mode.versus': '兩個人一起',
+    soon: '這裡還在蓋，先玩上面的鐘吧！',
+    'set.title': '設定', 'set.lang': '語言 Language', 'set.level': '要練什麼', 'set.sound': '音效',
+    'level.1': '整點、半點', 'level.2': '幾點幾分', 'level.3': '過了多久',
+    legal: '© 指數三寶飯（ianyclin）・沒有廣告・不用網路',
+    // 時刻的說法
+    't.oclock': '{h} 點', 't.half': '{h} 點半', 't.hm': '{h} 點 {m} 分',
+    'p.night': '半夜', 'p.morning': '早上', 'p.noon': '中午', 'p.afternoon': '下午', 'p.evening': '晚上',
+    'ampm.am': '上午', 'ampm.pm': '下午',
+    // 小鎮的作息
+    'scene.sleep': '大家都在睡覺', 'scene.wake': '小熊起床了', 'scene.breakfast': '吃早餐', 'scene.school': '去上學', 'scene.lunch': '吃午餐',
+    'scene.class': '下午的課', 'scene.park': '去公園玩', 'scene.dinner': '吃晚餐', 'scene.bath': '洗澡澡', 'scene.story': '聽故事', 'scene.owl': '貓頭鷹醒著，小熊睡了',
+  },
+  en: {
+    title: 'Tick-Tock Town', 'menu.set': 'Settings', close: 'Close', on: 'On', off: 'Off',
+    'menu.hint': 'Drag the rabbit (long hand) or the tortoise (short hand). Watch the town change!',
+    'mode.day': "Town's Day", 'mode.read': 'What time?', 'mode.match': 'Match', 'mode.versus': 'Two players',
+    soon: 'Still being built. Play with the clock for now!',
+    'set.title': 'Settings', 'set.lang': 'Language', 'set.level': 'Practice', 'set.sound': 'Sound',
+    'level.1': "O'clock & half", 'level.2': 'Hours & minutes', 'level.3': 'How long?',
+    legal: '© ianyclin · No ads · No internet needed',
+    't.oclock': "{h} o'clock", 't.half': 'half past {h}', 't.hm': '{h}:{mm}',
+    'p.night': 'night', 'p.morning': 'morning', 'p.noon': 'noon', 'p.afternoon': 'afternoon', 'p.evening': 'evening',
+    'ampm.am': 'AM', 'ampm.pm': 'PM',
+    'scene.sleep': 'Everyone is asleep', 'scene.wake': 'Bear wakes up', 'scene.breakfast': 'Breakfast time', 'scene.school': 'Off to school', 'scene.lunch': 'Lunch time',
+    'scene.class': 'Afternoon class', 'scene.park': 'Playing at the park', 'scene.dinner': 'Dinner time', 'scene.bath': 'Bath time', 'scene.story': 'Story time', 'scene.owl': 'Owl is up, Bear is asleep',
+  },
+  ja: {
+    title: 'チクタクタウン', 'menu.set': 'せってい', close: 'とじる', on: 'オン', off: 'オフ',
+    'menu.hint': 'うさぎ（長いはり）か かめ（みじかいはり）を ゆびで うごかしてみよう！',
+    'mode.day': 'まちの一日', 'mode.read': 'いま何時？', 'mode.match': 'ペアさがし', 'mode.versus': 'ふたりで',
+    soon: 'ここは まだ じゅんび中。まずは とけいで あそんでね！',
+    'set.title': 'せってい', 'set.lang': 'ことば Language', 'set.level': 'なにを れんしゅうする？', 'set.sound': 'おと',
+    'level.1': '何時・何時半', 'level.2': '何時何分', 'level.3': 'どれくらい たった？',
+    legal: '© ianyclin・広告なし・ネットふよう',
+    't.oclock': '{h}時', 't.half': '{h}時半', 't.hm': '{h}時{m}分',
+    'p.night': 'よなか', 'p.morning': 'あさ', 'p.noon': 'ひる', 'p.afternoon': 'ごご', 'p.evening': 'よる',
+    'ampm.am': 'ごぜん', 'ampm.pm': 'ごご',
+    'scene.sleep': 'みんな ねているよ', 'scene.wake': 'くまくんが おきたよ', 'scene.breakfast': 'あさごはん', 'scene.school': '学校へ いくよ', 'scene.lunch': 'おひるごはん',
+    'scene.class': 'ごごの じゅぎょう', 'scene.park': 'こうえんで あそぶよ', 'scene.dinner': 'ばんごはん', 'scene.bath': 'おふろ', 'scene.story': 'えほんの 時間', 'scene.owl': 'ふくろうは おきてる、くまくんは ねたよ',
+  },
+};
+let LANG = 'zh-Hant';
+const langAuto = () => { const l = (navigator.language || '').toLowerCase(); return l.startsWith('zh') ? 'zh-Hant' : l.startsWith('ja') ? 'ja' : 'en'; };
+function tx(key, p) {
+  let s = STR[LANG][key]; if (s === undefined) s = STR['zh-Hant'][key]; if (s === undefined) return key;
+  if (typeof s === 'function') s = s(p || {});
+  return p ? String(s).replace(/\{(\w+)\}/g, (_, k) => k in p ? p[k] : `{${k}}`) : s;
+}
+function applyStr() {
+  document.documentElement.lang = LANG;
+  $$('[data-t]').forEach(el => el.textContent = tx(el.dataset.t));
+  $$('[data-th]').forEach(el => el.innerHTML = tx(el.dataset.th));
+  $$('[data-ta]').forEach(el => el.setAttribute('aria-label', tx(el.dataset.ta)));
+}
+function setLang() { LANG = STR[DB.set.lang] ? DB.set.lang : langAuto(); applyStr(); }
+
+// ---------- 存檔
+const KEY = 'tick-town-v1';
+const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, level: 2 }, daily: {}, pet: {}, retest: [], town: { lit: [] }, free: 7 * 60, hinted: false });
+let DB = fresh();
+const num = (v, d = 0) => (typeof v === 'number' && Number.isFinite(v)) ? v : d;
+function loadDB() {
+  let d = {}; try { d = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { d = {}; }
+  const f = fresh(); if (d && typeof d === 'object') { for (const k of Object.keys(f)) if (k in d) f[k] = (f[k] && typeof f[k] === 'object' && !Array.isArray(f[k])) ? Object.assign(f[k], (d[k] && typeof d[k] === 'object') ? d[k] : {}) : d[k]; }
+  f.set.level = [1, 2, 3].includes(f.set.level) ? f.set.level : 2; f.set.sound = f.set.sound !== false; if (typeof f.set.lang !== 'string') f.set.lang = '';
+  f.free = clamp(Math.round(num(f.free, 7 * 60)), 0, 1439);
+  DB = f;
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
+
+// ---------- 音效（Web Audio 合成，沒有音檔）
+let AC = null;
+const ac = () => { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (AC && AC.state === 'suspended') AC.resume(); return AC; };
+const SFX = {
+  tone(f, t, len, type = 'sine', gain = 0.2, sweep) { const c = ac(); if (!c || !DB.set.sound) return; const o = c.createOscillator(), g = c.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); if (sweep) o.frequency.exponentialRampToValueAtTime(sweep, t + len); g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(0.0001, t + len); o.connect(g).connect(c.destination); o.start(t); o.stop(t + len + 0.02); },
+  tick() { const c = ac(); if (!c) return; this.tone(1400, c.currentTime, 0.035, 'square', 0.06, 700); },
+  bell() { const c = ac(); if (!c) return; const t = c.currentTime; this.tone(880, t, 1.4, 'sine', 0.22); this.tone(1320, t, 1.0, 'sine', 0.1); this.tone(2640, t, 0.5, 'sine', 0.05); this.tone(440, t, 1.6, 'triangle', 0.08); },
+  ding() { const c = ac(); if (!c) return; const t = c.currentTime; this.tone(1047, t, 0.25, 'triangle', 0.18); this.tone(1568, t + 0.08, 0.3, 'triangle', 0.14); },
+};
+
+// ---------- 鐘面元件：烏龜是時針（短、慢、藍）、兔子是分針（長、快、紅）
+function Clock(el, opts = {}) {
+  const C = 100, snap = () => opts.snap || 5;
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const mk = (n, a = {}) => { const e = document.createElementNS(svgNS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const svg = mk('svg', { viewBox: '0 0 200 200', role: 'img' });
+  // 鐘面
+  svg.appendChild(mk('circle', { cx: C, cy: C, r: 96, fill: '#e8c98f' }));
+  svg.appendChild(mk('circle', { cx: C, cy: C, r: 90, fill: 'var(--face)' }));
+  for (let i = 0; i < 60; i++) { const big = i % 5 === 0, a = i * 6 * Math.PI / 180, r1 = big ? 78 : 83, r2 = 87; svg.appendChild(mk('line', { x1: C + r1 * Math.sin(a), y1: C - r1 * Math.cos(a), x2: C + r2 * Math.sin(a), y2: C - r2 * Math.cos(a), stroke: big ? '#5b4a3a' : '#b9a58c', 'stroke-width': big ? 3 : 1.5, 'stroke-linecap': 'round' })); }
+  for (let n = 1; n <= 12; n++) { const a = n * 30 * Math.PI / 180, t = mk('text', { x: C + 66 * Math.sin(a), y: C - 66 * Math.cos(a) + 7, 'text-anchor': 'middle', 'font-size': 19, 'font-weight': 900, fill: '#3b2f2f', 'font-family': 'var(--f-num)' }); t.textContent = n; svg.appendChild(t); }
+  // 時針：烏龜
+  const gh = mk('g', { class: 'hand hour' });
+  gh.appendChild(mk('rect', { x: C - 5, y: C - 50, width: 10, height: 58, rx: 5, fill: 'var(--hour)' }));
+  const tort = mk('g', { transform: `translate(${C} ${C - 52})` });
+  tort.appendChild(mk('ellipse', { cx: 0, cy: 0, rx: 12, ry: 10, fill: '#7fc24a', stroke: '#4f8f2a', 'stroke-width': 2 }));
+  tort.appendChild(mk('path', { d: 'M-7 -3 Q0 -9 7 -3 M-4 2 Q0 5 4 2', fill: 'none', stroke: '#4f8f2a', 'stroke-width': 1.5 }));
+  tort.appendChild(mk('circle', { cx: -4, cy: -2, r: 1.8, fill: '#223' })); tort.appendChild(mk('circle', { cx: 4, cy: -2, r: 1.8, fill: '#223' }));
+  gh.appendChild(tort);
+  gh.appendChild(mk('circle', { class: 'knob', cx: C, cy: C - 52, r: 23 }));
+  // 分針：兔子
+  const gm = mk('g', { class: 'hand minute' });
+  gm.appendChild(mk('rect', { x: C - 3.5, y: C - 76, width: 7, height: 84, rx: 3.5, fill: 'var(--minute)' }));
+  const rab = mk('g', { transform: `translate(${C} ${C - 78})` });
+  rab.appendChild(mk('ellipse', { cx: -4, cy: -13, rx: 3, ry: 8, fill: '#fff', stroke: '#e3a3a3', 'stroke-width': 1.5 }));
+  rab.appendChild(mk('ellipse', { cx: 4, cy: -13, rx: 3, ry: 8, fill: '#fff', stroke: '#e3a3a3', 'stroke-width': 1.5 }));
+  rab.appendChild(mk('circle', { cx: 0, cy: 0, r: 10, fill: '#fff', stroke: '#e3a3a3', 'stroke-width': 2 }));
+  rab.appendChild(mk('circle', { cx: -3.5, cy: -1.5, r: 1.8, fill: '#223' })); rab.appendChild(mk('circle', { cx: 3.5, cy: -1.5, r: 1.8, fill: '#223' }));
+  rab.appendChild(mk('ellipse', { cx: 0, cy: 3, rx: 2, ry: 1.4, fill: '#f08a8a' }));
+  gm.appendChild(rab);
+  gm.appendChild(mk('circle', { class: 'knob', cx: C, cy: C - 78, r: 23 }));
+  svg.appendChild(gh); svg.appendChild(gm);
+  svg.appendChild(mk('circle', { cx: C, cy: C, r: 6, fill: '#5b4a3a' }));
+  el.appendChild(svg);
+
+  let tot = 0;   // 一天裡的第幾分鐘（0～1439），可以是小數（拖的時候）
+  const api = { el: svg, onChange: null, onSnap: null, drag: opts.drag !== false };
+  const render = () => { const m = tot % 60, h = (tot / 60) % 12; gm.setAttribute('transform', `rotate(${m * 6} ${C} ${C})`); gh.setAttribute('transform', `rotate(${h * 30} ${C} ${C})`); };
+  const snapped = v => ((Math.round(v / snap()) * snap()) % 1440 + 1440) % 1440;
+  api.set = (h, m) => { tot = ((h * 60 + m) % 1440 + 1440) % 1440; render(); };
+  api.get = () => { const s = snapped(tot); return { h: Math.floor(s / 60), m: s % 60, tot: s }; };
+  api.setSnap = v => { opts.snap = v; };
+  // 拖：用連續角度累計，跨 12 點時小時跟著進位；時針拖的時候吸附到半點
+  let drag = null;
+  const ang = e => { const r = svg.getBoundingClientRect(), x = e.clientX - r.left - r.width / 2, y = e.clientY - r.top - r.height / 2; return Math.atan2(x, -y) * 180 / Math.PI; };
+  const down = which => e => {
+    if (!api.drag) return; e.preventDefault(); ac();
+    drag = { which, prev: ang(e), last: snapped(tot) }; svg.setPointerCapture(e.pointerId); (which === 'm' ? gm : gh).classList.add('on');
+  };
+  svg.addEventListener('pointermove', e => {
+    if (!drag) return; const a = ang(e); let d = a - drag.prev; d = ((d + 540) % 360) - 180; drag.prev = a;
+    tot = ((tot + (drag.which === 'm' ? d / 6 : d * 2)) % 1440 + 1440) % 1440;   // 分針一度 = 1/6 分；時針一度 = 2 分
+    const s = drag.which === 'm' ? snapped(tot) : ((Math.round(tot / 30) * 30) % 1440);
+    if (s !== drag.last) { const bell = s % 60 === 0; drag.last = s; if (api.onSnap) api.onSnap(s, bell); }
+    const showTot = drag.which === 'm' ? tot : Math.round(tot / 30) * 30; const keep = tot; tot = showTot; render(); tot = keep;
+    if (api.onChange) api.onChange(s, true);
+  });
+  const up = e => { if (!drag) return; tot = drag.which === 'm' ? snapped(tot) : ((Math.round(tot / 30) * 30) % 1440); (drag.which === 'm' ? gm : gh).classList.remove('on'); drag = null; render(); if (api.onChange) api.onChange(tot, false); };
+  gm.addEventListener('pointerdown', down('m')); gh.addEventListener('pointerdown', down('h'));
+  svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
+  render();
+  return api;
+}
+
+// ---------- 小鎮（canvas 背景）：天空、太陽／月亮、山、房子、路燈、動物都跟著時刻變
+const Town = (() => {
+  const cv = $('#town'), g = cv.getContext('2d'); let W = 0, H = 0, DPR = 1, t = 7 * 60, stars = [];
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const hex = c => [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)];
+  const mix = (a, b, k) => { const A = hex(a), B = hex(b); return `rgb(${Math.round(lerp(A[0], B[0], k))},${Math.round(lerp(A[1], B[1], k))},${Math.round(lerp(A[2], B[2], k))})`; };
+  // 天空關鍵影格：[小時, 上色, 下色, 亮度]
+  const KF = [[0, '#141c3f', '#2a3566', 0.25], [4.5, '#141c3f', '#2a3566', 0.25], [6, '#6c6aa8', '#ffb98a', 0.6], [7.5, '#8fc9ff', '#ffe9c9', 0.95], [12, '#7ec4ff', '#eaf7ff', 1], [16.5, '#86c3ff', '#ffe3b8', 0.95], [18, '#f29a6a', '#ffd3a0', 0.75], [19.5, '#4a3f7a', '#d2786e', 0.45], [21, '#141c3f', '#2a3566', 0.25], [24, '#141c3f', '#2a3566', 0.25]];
+  const sky = h => { let i = 0; while (i < KF.length - 2 && KF[i + 1][0] <= h) i++; const a = KF[i], b = KF[i + 1], k = clamp((h - a[0]) / (b[0] - a[0]), 0, 1); return { top: mix(a[1], b[1], k), bot: mix(a[2], b[2], k), br: lerp(a[3], b[3], k) }; };
+  function resize() { DPR = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; cv.style.width = W + 'px'; cv.style.height = H + 'px'; g.setTransform(DPR, 0, 0, DPR, 0, 0); stars = Array.from({ length: 70 }, () => [Math.random() * W, Math.random() * H * 0.55, Math.random() * 1.4 + 0.5]); draw(); }
+  const dim = (c, br) => { const [r, gg, b] = typeof c === 'string' && c[0] === '#' ? hex(c) : c.match(/\d+/g).map(Number); return `rgb(${Math.round(r * br)},${Math.round(gg * br)},${Math.round(b * br)})`; };
+  function draw() {
+    const h = t / 60, S = sky(h), br = S.br, night = br < 0.5;
+    const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, S.top); gr.addColorStop(1, S.bot); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    // 星星
+    const sa = clamp((0.55 - br) / 0.3, 0, 1); if (sa > 0) { g.fillStyle = `rgba(255,255,255,${0.9 * sa})`; stars.forEach(([x, y, r]) => { g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); }); }
+    // 太陽（6:00～18:30 在天上）與月亮（18:30～6:00）
+    const arc = (from, to, col, glow, r) => { let k = (h - from) / (to - from); if (h < from) k = (h + 24 - from) / (to - from); if (k < 0 || k > 1) return; const x = lerp(W * 0.1, W * 0.9, k), y = H * 0.42 - Math.sin(k * Math.PI) * H * 0.33; const rg = g.createRadialGradient(x, y, r * 0.6, x, y, r * 3); rg.addColorStop(0, glow); rg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = rg; g.fillRect(x - r * 3, y - r * 3, r * 6, r * 6); g.fillStyle = col; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); return [x, y]; };
+    arc(6, 18.5, '#ffd84d', 'rgba(255,220,100,.55)', Math.min(W, H) * 0.06);
+    const mp = arc(18.5, 30, '#fff4c8', 'rgba(255,255,220,.35)', Math.min(W, H) * 0.045);   // 月亮：18:30 → 隔天 6:00
+    if (!mp && h < 6) arc(-5.5, 6, '#fff4c8', 'rgba(255,255,220,.35)', Math.min(W, H) * 0.045);
+    // 遠山
+    const gy = H * 0.74;
+    g.fillStyle = dim('#8fcf7a', br); g.beginPath(); g.moveTo(0, gy); for (let x = 0; x <= W; x += 8) g.lineTo(x, gy - 40 - Math.sin(x / 90) * 22 - Math.sin(x / 37) * 8); g.lineTo(W, gy); g.fill();
+    g.fillStyle = dim('#6fbb63', br); g.beginPath(); g.moveTo(0, gy); for (let x = 0; x <= W; x += 8) g.lineTo(x, gy - 14 - Math.sin(x / 60 + 2) * 14); g.lineTo(W, gy); g.fill();
+    // 地面
+    g.fillStyle = dim('#79c35e', br); g.fillRect(0, gy, W, H - gy);
+    // 房子（6 間，中間留給鐘樓）
+    const n = 6, hw = Math.min(64, W / (n + 2)), gap = (W - n * hw) / (n + 1), lit = (h >= 17.5 && h < 22.5) || (h >= 5.5 && h < 7.5);
+    const cols = ['#ff8f6b', '#ffd36b', '#7fd3ff', '#c99bff', '#ffa6c9', '#9be7a8'];
+    for (let i = 0; i < n; i++) {
+      const x = gap + i * (hw + gap), hh = hw * 0.9, y = gy - hh;
+      g.fillStyle = dim(cols[i], br); g.fillRect(x, y, hw, hh);
+      g.fillStyle = dim('#a35a3a', br); g.beginPath(); g.moveTo(x - 6, y); g.lineTo(x + hw / 2, y - hw * 0.5); g.lineTo(x + hw + 6, y); g.fill();
+      g.fillStyle = lit ? '#ffe27a' : night ? dim('#5a6a8a', br) : dim('#bfe6ff', br); g.fillRect(x + hw * 0.18, y + hh * 0.22, hw * 0.25, hw * 0.25); g.fillRect(x + hw * 0.57, y + hh * 0.22, hw * 0.25, hw * 0.25);
+      if (lit) { g.fillStyle = 'rgba(255,226,122,.25)'; g.fillRect(x + hw * 0.1, y + hh * 0.12, hw * 0.8, hw * 0.45); }
+      g.fillStyle = dim('#7a4a2a', br); g.fillRect(x + hw * 0.38, y + hh * 0.58, hw * 0.24, hh * 0.42);
+    }
+    // 路燈
+    for (const x of [W * 0.2, W * 0.8]) { g.fillStyle = dim('#55606e', br); g.fillRect(x - 2, gy - 70, 4, 70); g.fillStyle = night ? '#ffe27a' : dim('#dde', br); g.beginPath(); g.arc(x, gy - 74, 6, 0, 7); g.fill(); if (night) { const rg = g.createRadialGradient(x, gy - 74, 4, x, gy - 74, 60); rg.addColorStop(0, 'rgba(255,226,122,.45)'); rg.addColorStop(1, 'rgba(255,226,122,0)'); g.fillStyle = rg; g.fillRect(x - 60, gy - 134, 120, 140); } }
+    // 動物（emoji）：依作息出現在不同地方；睡覺時只剩貓頭鷹
+    g.font = `${Math.min(34, W * 0.07)}px system-ui,sans-serif`; g.textAlign = 'center';
+    const sc = scene(t), em = { sleep: '🦉', owl: '🦉', wake: '🐻', breakfast: '🐻🥣', school: '🐰🎒', lunch: '🐿️🍙', class: '🐰📖', park: '🐻⚽', dinner: '🐿️🍲', bath: '🐰🛁', story: '🐻📚' }[sc];
+    g.fillText(em, W * 0.5, gy + 40);
+    if (sc === 'sleep' || sc === 'owl') { g.font = `${Math.min(22, W * 0.05)}px system-ui,sans-serif`; g.fillText('💤', W * 0.3, gy - 70); g.fillText('💤', W * 0.72, gy - 64); }
+  }
+  // 小鎮的作息（自由玩用）
+  function scene(min) { const h = min / 60; return h < 6 ? 'sleep' : h < 7 ? 'wake' : h < 8 ? 'breakfast' : h < 12 ? 'school' : h < 13 ? 'lunch' : h < 15.5 ? 'class' : h < 17.5 ? 'park' : h < 19 ? 'dinner' : h < 20 ? 'bath' : h < 21 ? 'story' : 'owl'; }
+  addEventListener('resize', resize);
+  return { set(min) { t = min; draw(); }, resize, scene };
+})();
+
+// ---------- 時刻的說法
+function timeWords(tot) {
+  const H = Math.floor(tot / 60), m = tot % 60, h12 = H % 12 === 0 ? 12 : H % 12;
+  const main = m === 0 ? tx('t.oclock', { h: h12 }) : m === 30 ? tx('t.half', { h: h12 }) : tx('t.hm', { h: h12, m, mm: String(m).padStart(2, '0') });
+  const period = H < 5 ? 'p.night' : H < 11 ? 'p.morning' : H < 13 ? 'p.noon' : H < 18 ? 'p.afternoon' : H < 23 ? 'p.evening' : 'p.night';
+  return { main, period: tx(period), digital: `${h12}:${String(m).padStart(2, '0')}`, ampm: tx(H < 12 ? 'ampm.am' : 'ampm.pm') };
+}
+
+// ---------- 主選單：自由玩的鐘
+const clock = Clock($('#clock'), { snap: 5 });
+function showTime(tot) {
+  const w = timeWords(tot);
+  $('#digital').innerHTML = `${w.digital}<small>${w.ampm}</small>`;
+  $('#words').textContent = LANG === 'en' ? `${w.main} (${w.period})` : LANG === 'ja' ? `${w.period}${w.main}` : `${w.period} ${w.main}`;
+  const sc = Town.scene(tot); $('#scene').innerHTML = `<span class="emo">${{ sleep: '💤', owl: '🦉', wake: '🐻', breakfast: '🥣', school: '🎒', lunch: '🍙', class: '📖', park: '⚽', dinner: '🍲', bath: '🛁', story: '📚' }[sc]}</span>${tx('scene.' + sc)}`;
+  Town.set(tot);
+}
+clock.onChange = (tot, dragging) => { showTime(tot); if (!dragging) { DB.free = tot; save(); } if (dragging && !$('#hintline').hidden) { DB.hinted = true; save(); $('#hintline').hidden = true; } };   // 拖過一次就不用再提示（矮螢幕那一行會蓋到動物）
+clock.onSnap = (tot, bell) => { if (bell) SFX.bell(); else SFX.tick(); };
+
+// ---------- 設定
+const LANGS = { 'zh-Hant': '繁體中文', en: 'English', ja: '日本語' };
+function renderSet() {
+  $('#set-lang').innerHTML = Object.keys(LANGS).map(k => `<button type="button" data-lang="${k}" aria-pressed="${LANG === k}">${LANGS[k]}</button>`).join('');
+  $('#set-level').innerHTML = [1, 2, 3].map(l => `<button type="button" data-level="${l}" aria-pressed="${DB.set.level === l}">${tx('level.' + l)}</button>`).join('');
+  const sw = $('.sw[data-set=sound]'); sw.setAttribute('aria-pressed', String(DB.set.sound)); sw.textContent = tx(DB.set.sound ? 'on' : 'off');
+}
+$('#go-set').addEventListener('click', () => { renderSet(); $('#o-set').hidden = false; });
+$('#set-close').addEventListener('click', () => { $('#o-set').hidden = true; });
+$('#set-lang').addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (!b) return; DB.set.lang = b.dataset.lang; save(); setLang(); renderSet(); showTime(clock.get().tot); SFX.ding(); });
+$('#set-level').addEventListener('click', e => { const b = e.target.closest('[data-level]'); if (!b) return; DB.set.level = +b.dataset.level; save(); clock.setSnap(DB.set.level === 3 ? 1 : 5); renderSet(); SFX.ding(); });
+$('.sw[data-set=sound]').addEventListener('click', () => { DB.set.sound = !DB.set.sound; save(); renderSet(); SFX.ding(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#o-set').hidden) $('#o-set').hidden = true; });
+
+// ---------- 模式（還在蓋）
+let toastT = 0;
+function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, 2200); }
+$('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (!b) return; toast(tx('soon')); SFX.ding(); });
+$$('.mode').forEach(b => b.classList.add('soon'));
+
+// ---------- 開始
+loadDB(); setLang(); Town.resize();
+if (DB.hinted) $('#hintline').hidden = true;
+clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
+document.fonts && document.fonts.ready.then(() => Town.resize());
+window.__tt = { clock, DB: () => DB, Town, timeWords };   // 給測試用
+})();
+</script>
+</body>
+</html>
