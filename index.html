@@ -62,6 +62,19 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 .sw{min-width:72px;padding:0 14px}
 .toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom));transform:translateX(-50%);background:rgba(59,47,47,.92);color:#fff;padding:12px 18px;border-radius:999px;font-weight:900;font-size:16px;z-index:9;max-width:calc(100% - 32px);text-align:center;text-wrap:balance;pointer-events:none;animation:toastIn .25s ease}
 @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}}
+.chip{min-height:44px;border-radius:999px;background:var(--panel);border:1px solid var(--line);padding:0 14px;font-weight:900;font-size:15px;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 0 rgba(0,0,0,.08);position:relative}
+.chip.todo::after{content:'';position:absolute;top:-2px;right:-2px;width:12px;height:12px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 2px #fff}
+.chip.ok{background:#dff7ea;border-color:var(--mint)}
+.qlist{display:flex;flex-direction:column;gap:8px}
+.q{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 12px;font-weight:700;font-size:16px}
+.q .em{font-size:26px}.q .bar{flex:1;height:10px;border-radius:5px;background:rgba(0,0,0,.08);overflow:hidden}.q .bar i{display:block;height:100%;background:var(--mint);border-radius:5px}
+.q.done{background:#dff7ea;border-color:var(--mint)}
+.q small{color:var(--muted);font-family:var(--f-num);font-size:14px}
+.badges{display:flex;justify-content:space-between;font-weight:900;font-size:15px;color:var(--muted)}
+.gate-q{font-family:var(--f-num);font-size:34px;text-align:center;line-height:1.2}
+.gate-a{display:flex;justify-content:center;gap:8px}.gate-a i{width:40px;height:50px;border-radius:12px;border:2px solid var(--line);background:#fff;display:grid;place-items:center;font-family:var(--f-num);font-size:28px;font-style:normal}
+.danger{min-height:44px;border-radius:999px;border:2px solid var(--coral);color:#c0392b;font-weight:900;font-size:15px;padding:0 16px;background:#fff}
+.lab.parent{margin-top:8px;border-top:1px solid var(--line);padding-top:10px}
 .legal{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}
 #fx{position:fixed;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
 .link-btn{min-height:44px;padding:0 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-weight:900;font-size:16px;box-shadow:0 2px 0 rgba(0,0,0,.08)}
@@ -124,7 +137,7 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 <section class="screen" id="s-menu">
   <div class="top">
     <h1 data-t="title"></h1>
-    <div style="display:flex;gap:8px"><button class="icon-btn" id="go-map" type="button" data-ta="menu.map">🗺️</button><button class="icon-btn" id="go-set" type="button" data-ta="menu.set">⚙️</button></div>
+    <div style="display:flex;gap:8px"><button class="chip" id="go-quest" type="button"><span aria-hidden="true">📋</span><b id="q-count"></b></button><button class="icon-btn" id="go-map" type="button" data-ta="menu.map">🗺️</button><button class="icon-btn" id="go-set" type="button" data-ta="menu.set">⚙️</button></div>
   </div>
   <div class="clock-wrap" id="clock"></div>
   <div class="timecard">
@@ -193,7 +206,28 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
     <div class="lab" data-t="set.level"></div>
     <div class="langs" id="set-level"></div>
     <div class="row"><span class="lab" data-t="set.sound"></span><button class="sw" type="button" data-set="sound" aria-pressed="true" data-t="on"></button></div>
+    <div class="lab parent" data-t="set.parent"></div>
+    <div class="row"><span class="lab" data-t="set.resetP"></span><button class="danger" type="button" id="set-reset" data-t="set.reset"></button></div>
     <div class="legal" data-t="legal"></div>
+  </div>
+</div>
+
+<div class="overlay" id="o-quest" hidden>
+  <div class="card">
+    <div class="hhead"><h3 data-t="quest.title"></h3><button class="xbtn" type="button" id="quest-close" data-ta="close">✕</button></div>
+    <div class="qlist" id="quest-list"></div>
+    <div class="badges"><span id="quest-badges"></span><span id="quest-streak"></span></div>
+  </div>
+</div>
+
+<div class="overlay" id="o-gate" hidden>
+  <div class="card">
+    <h3 style="margin:0;text-align:center;font-size:22px" data-t="gate.title"></h3>
+    <p data-t="gate.p"></p>
+    <div class="gate-q" id="gate-q"></div>
+    <div class="gate-a" id="gate-a"></div>
+    <div class="keys" id="gate-keys"></div>
+    <button class="btn alt" type="button" id="gate-cancel" data-t="gate.cancel"></button>
   </div>
 </div>
 
@@ -234,6 +268,10 @@ const STR = {
     'hint.hourLate': '烏龜還沒走到 {h2} 喔！它還在 {h1} 和 {h2} 中間。', 'hint.halfHour': '「{h1} 點半」的時候，烏龜在 {h1} 和 {h2} 的中間。',
     'hint.minIndex': '兔子跑一格是 5 分：5、10、15……數數看！', 'hint.handSwap': '短的是烏龜，管「幾點」；長的是兔子，管「幾分」。',
     'hint.minNear': '很接近了！再一格就對了。', 'hint.hourOff': '烏龜的位置看一下虛線喔。', 'hint.other': '虛線是正確的位置，照著撥撥看。',
+    'quest.title': '今日任務', 'quest.badges': '徽章 ×{n}', 'quest.streak': '連續 {n} 天', 'quest.doneOne': '任務完成！', 'quest.doneAll': '今天的任務都完成了！徽章 +1',
+    'q.day': '做完「小鎮的一天」', 'q.read': '讀對 {n} 個時刻', 'q.set': '幫動物撥對 {n} 次', 'q.star': '點亮 {n} 顆新星星',
+    'set.parent': '家長區', 'set.resetP': '清掉這台裝置上的所有紀錄', 'set.reset': '清除所有紀錄', 'reset.done': '紀錄清掉了',
+    'gate.title': '請大人來', 'gate.p': '請大人算這一題，才能繼續。', 'gate.cancel': '取消', 'gate.wait': '錯太多次了，等 30 秒再試',
     'menu.map': '星圖', 'map.count': '{n}/{t}', 'map.aria': '亮了 {n} 顆星，一共 {t} 顆', 'map.legend': '裡面那圈是 1 點，外面是 12 點；一片是 5 分',
     'map.info': '每個時刻一顆星，讀對、撥對幾次就會亮。<b>裡面那圈是 1 點，最外面是 12 點</b>，一片是 5 分。點一片看看。', 'map.weak': '最常搞混的是：<b>{e}</b>。多玩幾次就會了！', 'map.sector': '<b>{m} 分</b>的題（1 點到 12 點）：',
     'err.hourLate': '時針快到下一格的時候', 'err.minIndex': '把分針指的數字當成幾分', 'err.handSwap': '時針和分針搞反', 'err.halfHour': '半點的時候時針在中間', 'err.minNear': '差一格', 'err.hourOff': '小時看錯', 'err.read12': '12 點附近', 'err.minOne': '1 分的小格', 'err.carry': '跨過整點的時間', 'err.ampm': '上午和下午', 'err.other': '其他',
@@ -265,6 +303,10 @@ const STR = {
     'hint.hourLate': "Tortoise hasn't reached {h2} yet! It's still between {h1} and {h2}.", 'hint.halfHour': 'At half past {h1}, Tortoise is right between {h1} and {h2}.',
     'hint.minIndex': 'Rabbit hops 5 minutes per number: 5, 10, 15… Count along!', 'hint.handSwap': 'The short hand is Tortoise (hours). The long hand is Rabbit (minutes).',
     'hint.minNear': 'So close! One more tick.', 'hint.hourOff': 'Check where the dotted Tortoise is.', 'hint.other': 'The dotted hands show the right spot. Try it!',
+    'quest.title': "Today's missions", 'quest.badges': 'Badges ×{n}', 'quest.streak': '{n} days in a row', 'quest.doneOne': 'Mission done!', 'quest.doneAll': 'All missions done today! Badge +1',
+    'q.day': "Finish a Town's Day", 'q.read': 'Read {n} times right', 'q.set': 'Set the clock right {n} times', 'q.star': 'Light {n} new stars',
+    'set.parent': 'For grown-ups', 'set.resetP': 'Erase all progress on this device', 'set.reset': 'Erase everything', 'reset.done': 'Progress erased',
+    'gate.title': 'Ask a grown-up', 'gate.p': 'A grown-up needs to solve this to continue.', 'gate.cancel': 'Cancel', 'gate.wait': 'Too many misses. Try again in 30 seconds',
     'menu.map': 'Star map', 'map.count': '{n}/{t}', 'map.aria': '{n} of {t} stars lit', 'map.legend': 'Inner ring is 1 o\'clock, outer is 12; each slice is 5 minutes',
     'map.info': 'Every time has a star. Read it or set it right a few times and it lights up. <b>The inner ring is 1 o\'clock, the outer ring is 12.</b> Each slice is 5 minutes. Tap a slice!', 'map.weak': 'Mixed up most often: <b>{e}</b>. A few more tries and you\'ll get it!', 'map.sector': '<b>{m} minutes</b> (1 to 12 o\'clock):',
     'err.hourLate': 'when the hour hand is almost at the next number', 'err.minIndex': 'reading the number the minute hand points to as minutes', 'err.handSwap': 'mixing up the two hands', 'err.halfHour': 'where the hour hand is at half past', 'err.minNear': 'one tick off', 'err.hourOff': 'the hour', 'err.read12': 'around 12 o\'clock', 'err.minOne': 'the little 1-minute ticks', 'err.carry': 'time that passes the hour', 'err.ampm': 'AM and PM', 'err.other': 'other things',
@@ -296,6 +338,10 @@ const STR = {
     'hint.hourLate': 'かめは まだ {h2}に ついてないよ！{h1}と {h2}の あいだだよ。', 'hint.halfHour': '「{h1}時半」の とき、かめは {h1}と {h2}の まん中だよ。',
     'hint.minIndex': 'うさぎは 1つで 5分：5、10、15…… かぞえてみよう！', 'hint.handSwap': 'みじかい はりが かめ（何時）、長い はりが うさぎ（何分）だよ。',
     'hint.minNear': 'もう ちょっと！ あと 1つだよ。', 'hint.hourOff': 'てんせんの かめを 見てね。', 'hint.other': 'てんせんが ただしい ばしょだよ。あわせてみてね。',
+    'quest.title': '今日の ミッション', 'quest.badges': 'バッジ ×{n}', 'quest.streak': '{n}日 つづけて', 'quest.doneOne': 'ミッション クリア！', 'quest.doneAll': '今日の ミッションは ぜんぶ クリア！ バッジ +1',
+    'q.day': '「まちの一日」を さいごまで', 'q.read': '{n}こ よむ', 'q.set': 'とけいを {n}回 あわせる', 'q.star': '新しい 星を {n}こ つける',
+    'set.parent': 'おうちの人へ', 'set.resetP': 'この たんまつの きろくを ぜんぶ けす', 'set.reset': 'ぜんぶ けす', 'reset.done': 'きろくを けしました',
+    'gate.title': 'おうちの人を よんでね', 'gate.p': 'つづけるには、おうちの人が この もんだいを といてください。', 'gate.cancel': 'やめる', 'gate.wait': 'まちがいが おおいので、30びょう まってね',
     'menu.map': '星マップ', 'map.count': '{n}/{t}', 'map.aria': '星が {t}こ中 {n}こ ついた', 'map.legend': '内がわが 1時、外がわが 12時。1まいが 5分',
     'map.info': 'どの時こくにも 星が 1つ。何回か 正かいすると 光るよ。<b>内がわの わが 1時、いちばん外が 12時</b>。1まいが 5分だよ。タップしてみてね。', 'map.weak': 'いちばん まちがえやすいのは：<b>{e}</b>。もう少し あそべば できるよ！', 'map.sector': '<b>{m}分</b>の もんだい（1時から 12時）：',
     'err.hourLate': 'みじかい はりが つぎの数字に ちかい とき', 'err.minIndex': '長い はりの さす数字を そのまま 分に する', 'err.handSwap': '2本の はりを はんたいに 見る', 'err.halfHour': '何時半の ときの みじかい はり', 'err.minNear': '1つ ずれる', 'err.hourOff': '何時かを まちがえる', 'err.read12': '12時の ちかく', 'err.minOne': '1分の 小さい めもり', 'err.carry': '時を またぐ 時間', 'err.ampm': 'ごぜんと ごご', 'err.other': 'そのほか',
@@ -503,7 +549,7 @@ $('#set-close').addEventListener('click', () => { $('#o-set').hidden = true; });
 $('#set-lang').addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (!b) return; DB.set.lang = b.dataset.lang; save(); setLang(); renderSet(); showTime(clock.get().tot); SFX.ding(); });
 $('#set-level').addEventListener('click', e => { const b = e.target.closest('[data-level]'); if (!b) return; DB.set.level = +b.dataset.level; save(); clock.setSnap(DB.set.level === 3 ? 1 : 5); renderSet(); SFX.ding(); });
 $('.sw[data-set=sound]').addEventListener('click', () => { DB.set.sound = !DB.set.sound; save(); renderSet(); SFX.ding(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#o-set').hidden) $('#o-set').hidden = true; });
+document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for (const id of ['#o-quest', '#o-set']) if (!$(id).hidden) { $(id).hidden = true; return; } });
 
 // ---------- 模式（還在蓋）
 let toastT = 0;
@@ -514,7 +560,7 @@ $$('.mode:not([data-mode=day]):not([data-mode=read])').forEach(b => b.classList.
 // ---------- 畫面切換
 function show(name) { $$('.screen').forEach(sc => sc.hidden = sc.id !== 's-' + name); mode = name; $('#toast').hidden = true; }
 $$('[data-home]').forEach(b => b.addEventListener('click', goHome));
-function goHome() { Day.stop(); Read.stop(); show('menu'); showTime(clock.get().tot); }
+function goHome() { Day.stop(); Read.stop(); show('menu'); refreshMenu(); showTime(clock.get().tot); }
 
 // ---------- 粒子（慶祝用）
 const FX = (() => {
@@ -596,13 +642,13 @@ const Day = (() => {
   function good() {
     const k = S.tasks[S.i]; clearTimeout(judgeT); clock2.ghost(null); clock2.countStop();
     record(`s:${Math.floor(k.t / 60)}:${k.t % 60}`, S.tries === 0, 0, null, inducible(Math.floor(k.t / 60), k.t % 60));
-    S.lit++; lights(); SFX.bell();
+    S.lit++; lights(); SFX.bell(); if (S.tries === 0) Quest.add('set'); Quest.add('star');
     const emo = $('#day-emo'); emo.classList.remove('jump'); void emo.offsetWidth; emo.classList.add('jump');
     const r = $('#clock2').getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 36);
     const el = $('#day-hint'); el.className = 'bubble good'; el.textContent = tx(S.i === S.tasks.length - 1 ? 'day.okLast' : 'day.ok', { who: tx('who.' + k.who) }); el.hidden = false;
     const me = S; setTimeout(() => { if (S !== me) return; if (S.i + 1 < S.tasks.length) { S.i++; next(); } else finish(); }, 1500);
   }
-  function finish() { FX.fireworks(); FX.confetti(80); $('#done-p').textContent = tx('day.doneP', { who: tx('who.bear') }); $('#o-done').hidden = false; DB.best.days = num(DB.best.days) + 1; save(); }
+  function finish() { FX.fireworks(); FX.confetti(80); $('#done-p').textContent = tx('day.doneP', { who: tx('who.bear') }); $('#o-done').hidden = false; DB.best.days = num(DB.best.days) + 1; save(); Quest.add('day'); }
   clock2.onChange = (tot, dragging) => { if (!S) return; words(tot); clearTimeout(judgeT); $('#day-hint').hidden = true; clock2.countStop(); if (dragging) return; if (tot % 720 === S.tasks[S.i].t % 720) good(); else judgeT = setTimeout(judge, 2000); };   // 鐘面是 12 小時的，上下午不管
   clock2.onSnap = (tot, bell) => { SFX.tick(); };
   $('#done-again').addEventListener('click', start); $('#done-home').addEventListener('click', () => { $('#o-done').hidden = true; goHome(); });
@@ -662,7 +708,7 @@ const Read = (() => {
   function wrong(type) { const q = S.q; if (!q.wrong) { q.wrong = true; record(key(q.h, q.m), false, 0, type, null); } hint(type, q.h, q.m); }
   function good(x, y) {
     const q = S.q; clock3.countStop(); if (!q.wrong) { S.right++; record(key(q.h, q.m), true, Math.max(0, (q.fk || now()) - q.at), null, inducible(q.h, q.m)); }
-    prog(); SFX.ding(); FX.burst(x, y, 24); const emo = $('#read-emo'); emo.classList.remove('jump'); void emo.offsetWidth; emo.classList.add('jump');
+    prog(); SFX.ding(); FX.burst(x, y, 24); if (!q.wrong) Quest.add('read'); Quest.add('star'); const emo = $('#read-emo'); emo.classList.remove('jump'); void emo.offsetWidth; emo.classList.add('jump');
     const el = $('#read-hint'); el.className = 'bubble good'; el.textContent = `${q.h}:${String(q.m).padStart(2, '0')}`; el.hidden = false;
     const me = S; setTimeout(() => { if (S !== me) return; if (++S.i < N) next(); else finish(); }, 900);
   }
@@ -688,6 +734,52 @@ const Read = (() => {
   $('#rdone-again').addEventListener('click', start); $('#rdone-home').addEventListener('click', () => { $('#o-rdone').hidden = true; goHome(); });
   return { start, stop, q: () => S && S.q };
 })();
+
+// ---------- 家長關卡：混合運算（先乘後加），答錯換題，連錯 3 次關掉 30 秒
+const Gate = (() => {
+  let fn = null, ans = 0, typed = '', miss = 0, waitUntil = 0;
+  const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  function make(hard) { const a = rnd(3, 9), b = rnd(3, 9), c = rnd(12, 19); if (!hard) { ans = a + b * c; return `${a} + ${b} × ${c} =`; } let d, e; do { d = rnd(2, 6); e = rnd(3, 9); } while (a + b * c - d * e < 10); ans = a + b * c - d * e; return `${a} + ${b} × ${c} − ${d} × ${e} =`; }
+  function render() { $('#gate-a').innerHTML = String(ans).split('').map((_, i) => `<i>${typed[i] || ''}</i>`).join(''); if (!$('#gate-keys').children.length) $('#gate-keys').innerHTML = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'del', 0, ''].map(k => k === '' ? '<span></span>' : `<button type="button" class="key" data-k="${k}">${k === 'del' ? '⌫' : k}</button>`).join(''); }
+  function open(f, hard = true) { if (now() < waitUntil) { toast(tx('gate.wait')); return; } fn = f; typed = ''; $('#gate-q').textContent = make(hard); $('#gate-q').dataset.hard = hard ? '1' : ''; render(); $('#o-gate').hidden = false; }
+  $('#gate-keys').addEventListener('click', e => {
+    const b = e.target.closest('.key'); if (!b) return; const k = b.dataset.k;
+    if (k === 'del') typed = typed.slice(0, -1); else typed += k; render();
+    if (typed.length === String(ans).length) { if (+typed === ans) { miss = 0; $('#o-gate').hidden = true; const f = fn; fn = null; f && f(); } else { miss++; typed = ''; if (miss >= 3) { miss = 0; waitUntil = now() + 30000; $('#o-gate').hidden = true; toast(tx('gate.wait')); return; } $('#gate-q').textContent = make(!!$('#gate-q').dataset.hard); render(); SFX.hm(); } }
+  });
+  $('#gate-cancel').addEventListener('click', () => { $('#o-gate').hidden = true; fn = null; });
+  return { open };
+})();
+$('#set-reset').addEventListener('click', () => Gate.open(() => { const lang = DB.set.lang; DB = fresh(); DB.set.lang = lang; save(); setLang(); renderSet(); clock.set(7, 0); showTime(clock.get().tot); Quest.ensure(); refreshMenu(); toast(tx('reset.done')); }, true));
+
+// ---------- 每日任務：每天 3 個，做完徽章 +1、連續天數；沒有懲罰、沒有過期提醒
+const Quest = (() => {
+  const POOL = [{ id: 'day', n: 1, em: '🏘️' }, { id: 'read', n: 8, em: '⏰' }, { id: 'set', n: 5, em: '🐢' }, { id: 'star', n: 2, em: '⭐' }];
+  const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+  const yesterday = () => { const d = new Date(); d.setDate(d.getDate() - 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+  const stars = () => { let n = 0; for (let h = 1; h <= 12; h++) for (let m = 0; m < 60; m += 5) if (Map.stateOf(h, m) === 'star') n++; return n; };
+  function ensure() {
+    const D = DB.daily, t = today(); if (D.date === t && Array.isArray(D.tasks) && D.tasks.length === 3) return;
+    const pool = POOL.slice().sort(() => Math.random() - 0.5).slice(0, 3);
+    D.date = t; D.tasks = pool.map(q => ({ id: q.id, n: q.n, p: 0, done: false })); D.starBase = stars(); D.badges = num(D.badges); D.streak = num(D.streak); save();
+  }
+  function text(q) { return tx('q.' + q.id, { n: q.n }); }
+  function add(id, v = 1) {
+    ensure(); const D = DB.daily, q = D.tasks.find(q => q.id === id && !q.done); if (!q) return;
+    q.p = id === 'star' ? Math.max(0, stars() - D.starBase) : q.p + v;
+    if (q.p >= q.n) { q.done = true; q.p = q.n; toast(tx('quest.doneOne')); SFX.ding(); if (D.tasks.every(x => x.done)) { D.badges = num(D.badges) + 1; D.streak = D.lastDone === yesterday() ? num(D.streak) + 1 : 1; D.lastDone = today(); setTimeout(() => { toast(tx('quest.doneAll')); FX.confetti(60); }, 1200); } }
+    save(); if (mode === 'menu') refreshMenu();
+  }
+  function render() {
+    ensure(); const D = DB.daily;
+    $('#quest-list').innerHTML = D.tasks.map(q => `<div class="q${q.done ? ' done' : ''}"><span class="em">${POOL.find(x => x.id === q.id).em}</span><span style="flex:1">${text(q)}<div class="bar"><i style="width:${Math.round(q.p / q.n * 100)}%"></i></div></span><small>${q.done ? '✓' : q.p + '/' + q.n}</small></div>`).join('');
+    $('#quest-badges').textContent = tx('quest.badges', { n: num(D.badges) }); $('#quest-streak').textContent = num(D.streak) > 1 ? tx('quest.streak', { n: D.streak }) : '';
+  }
+  $('#go-quest').addEventListener('click', () => { render(); $('#o-quest').hidden = false; });
+  $('#quest-close').addEventListener('click', () => { $('#o-quest').hidden = true; });
+  return { ensure, add, render, stars };
+})();
+function refreshMenu() { Quest.ensure(); const D = DB.daily, done = D.tasks.filter(q => q.done).length, all = done === 3; const c = $('#go-quest'); c.classList.toggle('todo', !all); c.classList.toggle('ok', all); $('#q-count').textContent = all ? '✓' : `${done}/3`; }
 
 // ---------- 鐘面星圖：12 片（每片 5 分）× 12 圈（裡面 1 點、外面 12 點）
 const Map = (() => {
@@ -735,10 +827,10 @@ $('#go-map').addEventListener('click', () => { ac(); Map.open(); });
 
 // ---------- 開始
 loadDB(); setLang(); Town.resize();
-if (DB.hinted) $('#hintline').hidden = true;
+if (DB.hinted) $('#hintline').hidden = true; refreshMenu();
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Map, classifySet };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Map, Quest, Gate, classifySet };   // 給測試用
 })();
 </script>
 </body>
