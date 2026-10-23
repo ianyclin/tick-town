@@ -99,6 +99,20 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 .key{min-height:52px;border-radius:16px;background:var(--panel);border:1px solid var(--line);font-family:var(--f-num);font-size:26px;box-shadow:0 3px 0 rgba(0,0,0,.08)}
 .key.ok{background:var(--sun);font-family:var(--f-zh);font-weight:900;font-size:20px;box-shadow:0 3px 0 #d4922a}
 .key:active{transform:translateY(2px)}
+.map-wrap{width:min(88vw,46vh,420px);aspect-ratio:1}
+.map-wrap svg{width:100%;height:100%;overflow:visible;display:block}
+.cell{stroke:rgba(255,255,255,.7);stroke-width:.6;cursor:pointer}
+.cell.new{fill:rgba(255,255,255,.35)}.cell.learn{fill:#ffcf7a}.cell.weak{fill:#ff8a7a}.cell.star{fill:#ffd23f}
+.cell.dim{opacity:.25}
+.sec-on .cell{opacity:.35}.sec-on .cell.on{opacity:1;stroke:#fff;stroke-width:1}
+.mlab{font-family:var(--f-num);font-size:9px;fill:#fff;text-anchor:middle;paint-order:stroke;stroke:rgba(0,0,0,.35);stroke-width:2px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;font-size:13px;font-weight:700;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.3)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-1px;margin-right:4px;border:1px solid rgba(255,255,255,.7)}
+.info{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:10px 14px;font-size:15px;line-height:1.5;width:100%;max-width:520px;min-height:48px;text-wrap:pretty;backdrop-filter:blur(6px)}
+.info b{color:var(--hour)}
+.hrow{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;margin-top:6px}
+.hrow span{display:grid;place-items:center;height:28px;border-radius:7px;font-family:var(--f-num);font-size:14px;background:rgba(255,255,255,.5)}
+.hrow span.learn{background:#ffcf7a}.hrow span.weak{background:#ff8a7a}.hrow span.star{background:#ffd23f}
 @media (max-height:640px){.key{min-height:46px;font-size:22px}.opt{min-height:54px;font-size:26px}.padin{font-size:30px}.task .emo{font-size:34px}.task .say{font-size:15px}.task .target{font-size:28px}.digital{font-size:32px}.words{font-size:16px}.mode{min-height:64px}.mode .emo{font-size:24px}h1{font-size:22px}}
 @media (min-width:700px) and (min-height:700px){.clock-wrap{width:min(60vw,48vh,440px)}.modes{max-width:600px}.mode{min-height:92px;font-size:16px}}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -110,7 +124,7 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
 <section class="screen" id="s-menu">
   <div class="top">
     <h1 data-t="title"></h1>
-    <button class="icon-btn" id="go-set" type="button" data-ta="menu.set">⚙️</button>
+    <div style="display:flex;gap:8px"><button class="icon-btn" id="go-map" type="button" data-ta="menu.map">🗺️</button><button class="icon-btn" id="go-set" type="button" data-ta="menu.set">⚙️</button></div>
   </div>
   <div class="clock-wrap" id="clock"></div>
   <div class="timecard">
@@ -142,6 +156,13 @@ h1{margin:0;font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;text-sh
   <div class="opts" id="read-opts"></div>
   <div class="pad" id="read-pad" hidden><div class="padin" id="read-in"></div><div class="keys" id="read-keys"></div></div>
   <div class="bubble" id="read-hint" hidden></div>
+</section>
+
+<section class="screen" id="s-map" hidden>
+  <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights" id="map-count"></div></div>
+  <div class="map-wrap" id="map"></div>
+  <div class="legend"><span><i style="background:rgba(255,255,255,.35)"></i><span data-t="st.new"></span></span><span><i style="background:#ffcf7a"></i><span data-t="st.learn"></span></span><span><i style="background:#ff8a7a"></i><span data-t="st.weak"></span></span><span><i style="background:#ffd23f"></i><span data-t="st.star"></span></span></div>
+  <div class="info" id="map-info"></div>
 </section>
 
 <div class="overlay" id="o-rdone" hidden>
@@ -213,6 +234,10 @@ const STR = {
     'hint.hourLate': '烏龜還沒走到 {h2} 喔！它還在 {h1} 和 {h2} 中間。', 'hint.halfHour': '「{h1} 點半」的時候，烏龜在 {h1} 和 {h2} 的中間。',
     'hint.minIndex': '兔子跑一格是 5 分：5、10、15……數數看！', 'hint.handSwap': '短的是烏龜，管「幾點」；長的是兔子，管「幾分」。',
     'hint.minNear': '很接近了！再一格就對了。', 'hint.hourOff': '烏龜的位置看一下虛線喔。', 'hint.other': '虛線是正確的位置，照著撥撥看。',
+    'menu.map': '星圖', 'map.count': '{n}/{t}', 'map.aria': '亮了 {n} 顆星，一共 {t} 顆', 'map.legend': '裡面那圈是 1 點，外面是 12 點；一片是 5 分',
+    'map.info': '每個時刻一顆星，讀對、撥對幾次就會亮。<b>裡面那圈是 1 點，最外面是 12 點</b>，一片是 5 分。點一片看看。', 'map.weak': '最常搞混的是：<b>{e}</b>。多玩幾次就會了！', 'map.sector': '<b>{m} 分</b>的題（1 點到 12 點）：',
+    'err.hourLate': '時針快到下一格的時候', 'err.minIndex': '把分針指的數字當成幾分', 'err.handSwap': '時針和分針搞反', 'err.halfHour': '半點的時候時針在中間', 'err.minNear': '差一格', 'err.hourOff': '小時看錯', 'err.read12': '12 點附近', 'err.minOne': '1 分的小格', 'err.carry': '跨過整點的時間', 'err.ampm': '上午和下午', 'err.other': '其他',
+    'st.new': '還沒遇過', 'st.learn': '熟悉中', 'st.weak': '容易錯', 'st.star': '已點亮',
     'read.say': '{who}問：現在幾點了？', 'read.sayKeys': '{who}問：現在幾點了？按數字打出來。', 'read.prog': '{n}/{t}', 'read.done': '你讀對了 {n} 個時刻！', 'read.doneAll': '全部都對！太厲害了！', 'read.again': '再玩一次', 'key.ok': '好了', 'key.del': '刪掉',
     'hint.read12': '烏龜指著 12，就是 12 點喔。', 'hint.tryAgain': '再選一次看看！',
     'scene.sleep': '大家都在睡覺', 'scene.wake': '小熊起床了', 'scene.breakfast': '吃早餐', 'scene.school': '去上學', 'scene.lunch': '吃午餐',
@@ -240,6 +265,10 @@ const STR = {
     'hint.hourLate': "Tortoise hasn't reached {h2} yet! It's still between {h1} and {h2}.", 'hint.halfHour': 'At half past {h1}, Tortoise is right between {h1} and {h2}.',
     'hint.minIndex': 'Rabbit hops 5 minutes per number: 5, 10, 15… Count along!', 'hint.handSwap': 'The short hand is Tortoise (hours). The long hand is Rabbit (minutes).',
     'hint.minNear': 'So close! One more tick.', 'hint.hourOff': 'Check where the dotted Tortoise is.', 'hint.other': 'The dotted hands show the right spot. Try it!',
+    'menu.map': 'Star map', 'map.count': '{n}/{t}', 'map.aria': '{n} of {t} stars lit', 'map.legend': 'Inner ring is 1 o\'clock, outer is 12; each slice is 5 minutes',
+    'map.info': 'Every time has a star. Read it or set it right a few times and it lights up. <b>The inner ring is 1 o\'clock, the outer ring is 12.</b> Each slice is 5 minutes. Tap a slice!', 'map.weak': 'Mixed up most often: <b>{e}</b>. A few more tries and you\'ll get it!', 'map.sector': '<b>{m} minutes</b> (1 to 12 o\'clock):',
+    'err.hourLate': 'when the hour hand is almost at the next number', 'err.minIndex': 'reading the number the minute hand points to as minutes', 'err.handSwap': 'mixing up the two hands', 'err.halfHour': 'where the hour hand is at half past', 'err.minNear': 'one tick off', 'err.hourOff': 'the hour', 'err.read12': 'around 12 o\'clock', 'err.minOne': 'the little 1-minute ticks', 'err.carry': 'time that passes the hour', 'err.ampm': 'AM and PM', 'err.other': 'other things',
+    'st.new': 'New', 'st.learn': 'Learning', 'st.weak': 'Tricky', 'st.star': 'Lit',
     'read.say': '{who} asks: What time is it?', 'read.sayKeys': '{who} asks: What time is it? Type it with the keys.', 'read.prog': '{n}/{t}', 'read.done': 'You read {n} times right!', 'read.doneAll': 'All of them! Amazing!', 'read.again': 'Play again', 'key.ok': 'Done', 'key.del': 'Delete',
     'hint.read12': "Tortoise points at 12, so it's 12 o'clock.", 'hint.tryAgain': 'Try another one!',
     'scene.sleep': 'Everyone is asleep', 'scene.wake': 'Bear wakes up', 'scene.breakfast': 'Breakfast time', 'scene.school': 'Off to school', 'scene.lunch': 'Lunch time',
@@ -267,6 +296,10 @@ const STR = {
     'hint.hourLate': 'かめは まだ {h2}に ついてないよ！{h1}と {h2}の あいだだよ。', 'hint.halfHour': '「{h1}時半」の とき、かめは {h1}と {h2}の まん中だよ。',
     'hint.minIndex': 'うさぎは 1つで 5分：5、10、15…… かぞえてみよう！', 'hint.handSwap': 'みじかい はりが かめ（何時）、長い はりが うさぎ（何分）だよ。',
     'hint.minNear': 'もう ちょっと！ あと 1つだよ。', 'hint.hourOff': 'てんせんの かめを 見てね。', 'hint.other': 'てんせんが ただしい ばしょだよ。あわせてみてね。',
+    'menu.map': '星マップ', 'map.count': '{n}/{t}', 'map.aria': '星が {t}こ中 {n}こ ついた', 'map.legend': '内がわが 1時、外がわが 12時。1まいが 5分',
+    'map.info': 'どの時こくにも 星が 1つ。何回か 正かいすると 光るよ。<b>内がわの わが 1時、いちばん外が 12時</b>。1まいが 5分だよ。タップしてみてね。', 'map.weak': 'いちばん まちがえやすいのは：<b>{e}</b>。もう少し あそべば できるよ！', 'map.sector': '<b>{m}分</b>の もんだい（1時から 12時）：',
+    'err.hourLate': 'みじかい はりが つぎの数字に ちかい とき', 'err.minIndex': '長い はりの さす数字を そのまま 分に する', 'err.handSwap': '2本の はりを はんたいに 見る', 'err.halfHour': '何時半の ときの みじかい はり', 'err.minNear': '1つ ずれる', 'err.hourOff': '何時かを まちがえる', 'err.read12': '12時の ちかく', 'err.minOne': '1分の 小さい めもり', 'err.carry': '時を またぐ 時間', 'err.ampm': 'ごぜんと ごご', 'err.other': 'そのほか',
+    'st.new': 'まだ', 'st.learn': 'れんしゅう中', 'st.weak': 'まちがえやすい', 'st.star': '光った',
     'read.say': '{who}：いま 何時？', 'read.sayKeys': '{who}：いま 何時？ すうじで うってね。', 'read.prog': '{n}/{t}', 'read.done': '{n}こ よめたよ！', 'read.doneAll': 'ぜんぶ せいかい！ すごい！', 'read.again': 'もういちど', 'key.ok': 'できた', 'key.del': 'けす',
     'hint.read12': 'かめが 12を さしているから、12時だよ。', 'hint.tryAgain': 'もういちど えらんでみよう！',
     'scene.sleep': 'みんな ねているよ', 'scene.wake': 'くまくんが おきたよ', 'scene.breakfast': 'あさごはん', 'scene.school': '学校へ いくよ', 'scene.lunch': 'おひるごはん',
@@ -656,12 +689,56 @@ const Read = (() => {
   return { start, stop, q: () => S && S.q };
 })();
 
+// ---------- 鐘面星圖：12 片（每片 5 分）× 12 圈（裡面 1 點、外面 12 點）
+const Map = (() => {
+  const svgNS = 'http://www.w3.org/2000/svg', C = 100, R0 = 26, R1 = 92;
+  let sel = -1;
+  function stateOf(h, m) {   // 讀鐘 r:h:m 與撥鐘 s:H:m（H 是 24 小時，兩個都看）合起來
+    const fs = [DB.facts[`r:${h}:${m}`], DB.facts[`s:${h % 12}:${m}`], DB.facts[`s:${h % 12 + 12}:${m}`]].filter(Boolean);
+    if (!fs.length) return 'new';
+    const err = Math.max(...fs.map(f => f.err)), n = fs.reduce((a, f) => a + f.n, 0), w = fs.reduce((a, f) => a + f.w, 0);
+    if (err >= 0.45 || (err >= 0.25 && w >= 2)) return 'weak';
+    if (n >= 3 && err < 0.15) return 'star';
+    return 'learn';
+  }
+  const inLevel = m => DB.set.level === 1 ? m % 30 === 0 : true;
+  function render() {
+    const el = $('#map'); el.innerHTML = ''; const svg = document.createElementNS(svgNS, 'svg'); svg.setAttribute('viewBox', '0 0 200 200');
+    const mk = (n, a) => { const e = document.createElementNS(svgNS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+    const pt = (r, deg) => [C + r * Math.sin(deg * Math.PI / 180), C - r * Math.cos(deg * Math.PI / 180)];
+    let lit = 0, tot = 0;
+    for (let k = 0; k < 12; k++) for (let i = 0; i < 12; i++) {
+      const h = i + 1, m = k * 5, r0 = R0 + (R1 - R0) * i / 12, r1 = R0 + (R1 - R0) * (i + 1) / 12 - 0.4, a0 = k * 30 - 15 + 0.8, a1 = k * 30 + 15 - 0.8;
+      const [x0, y0] = pt(r0, a0), [x1, y1] = pt(r1, a0), [x2, y2] = pt(r1, a1), [x3, y3] = pt(r0, a1);
+      const st = stateOf(h, m), on = inLevel(m); if (on) { tot++; if (st === 'star') lit++; }
+      const pth = mk('path', { d: `M${x0} ${y0}L${x1} ${y1}A${r1} ${r1} 0 0 1 ${x2} ${y2}L${x3} ${y3}A${r0} ${r0} 0 0 0 ${x0} ${y0}Z`, class: `cell ${st}${on ? '' : ' dim'}${sel === k ? ' on' : ''}`, 'data-k': k });
+      svg.appendChild(pth);
+    }
+    for (let k = 0; k < 12; k++) { const [x, y] = pt(R1 + 7, k * 30); const t = mk('text', { x, y: y + 3, class: 'mlab' }); t.textContent = String(k * 5).padStart(2, '0'); svg.appendChild(t); }
+    const cc = mk('circle', { cx: C, cy: C, r: R0 - 3, fill: 'rgba(255,255,255,.75)' }); svg.appendChild(cc);
+    const t12 = mk('text', { x: C, y: C + 4, class: 'mlab', style: 'fill:#3b2f2f;stroke:none;font-size:11px' }); t12.textContent = '1→12'; svg.appendChild(t12);
+    svg.classList.toggle('sec-on', sel >= 0); el.appendChild(svg);
+    $('#map-count').innerHTML = `<span aria-hidden="true">⭐</span>${tx('map.count', { n: lit, t: tot })}`; $('#map-count').setAttribute('aria-label', tx('map.aria', { n: lit, t: tot }));
+    info();
+  }
+  function info() {
+    const el = $('#map-info');
+    if (sel >= 0) { const m = sel * 5; el.innerHTML = tx('map.sector', { m: String(m).padStart(2, '0') }) + `<div class="hrow">${Array.from({ length: 12 }, (_, i) => `<span class="${stateOf(i + 1, m)}">${i + 1}</span>`).join('')}</div>`; return; }
+    const top = Object.entries(DB.errs).filter(([k, v]) => ERRS.includes(k) && v >= 0.2).sort((a, b) => b[1] - a[1])[0];
+    el.innerHTML = tx('map.info') + (top ? '<br>' + tx('map.weak', { e: tx('err.' + top[0]) }) : '');
+  }
+  $('#map').addEventListener('click', e => { const c = e.target.closest('.cell'); if (!c) return; const k = +c.dataset.k; sel = sel === k ? -1 : k; render(); SFX.tick(); });
+  function open() { sel = -1; show('map'); Town.set(clock.get().tot); render(); }
+  return { open, stateOf, render };
+})();
+$('#go-map').addEventListener('click', () => { ac(); Map.open(); });
+
 // ---------- 開始
 loadDB(); setLang(); Town.resize();
 if (DB.hinted) $('#hintline').hidden = true;
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, classifySet };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Map, classifySet };   // 給測試用
 })();
 </script>
 </body>
