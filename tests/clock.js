@@ -28,10 +28,12 @@ const SHOT = process.argv[2];
     await dragArc(78, 270, 97, 40); t = await get(); ok(t.m === 15 || t.m === 20, `${lang} 吸附 5 分 → ${t.m}`);
     // 拖烏龜（時針，半徑 52）到 3 點方向 → 3:00（分針回 12）
     const hNow = await p.evaluate(() => +document.querySelector('.hour').getAttribute('transform').match(/rotate\(([\d.]+)/)[1]);
-    await dragArc(52, hNow, 90, 30); t = await get(); ok(t.h === 3 && t.m === 0, `${lang} 拖時針到 3 → ${t.h}:${t.m}`);
-    await dragArc(52, 90, 105, 10); t = await get(); ok(t.h === 3 && t.m === 30, `${lang} 時針拖到 3 和 4 中間 → 3:30 (${t.h}:${t.m})`);
+    await dragArc(52, hNow, 97, 30); t = await get(); ok(t.h === 3 && t.m === 15, `${lang} 拖時針到 3 → 分針不動 ${t.h}:${t.m}`);
+    await dragArc(52, 97, 110, 10); t = await get(); ok(t.h === 3 && t.m === 15, `${lang} 時針只拖一點點 → 還是 3:15 (${t.h}:${t.m})`);
+    // 輕點把手不會改時間
+    const [kx, ky] = at(97.5, 52); await p.mouse.click(kx, ky); t = await get(); ok(t.h === 3 && t.m === 15, `${lang} 輕點烏龜不變 ${t.h}:${t.m}`);
     // 存檔
-    await p.waitForTimeout(100); const saved = await p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-v1')).free); ok(saved === 210, `${lang} 存檔 free=${saved}`);
+    await p.waitForTimeout(100); const saved = await p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-v1')).free); ok(saved === 195, `${lang} 存檔 free=${saved}`);
     // 晚上：拖到 21:00 看天空變暗、場景換
     await p.evaluate(() => { window.__tt.clock.set(21, 0); window.__tt.clock.onChange(21 * 60, false); });
     const px = await p.evaluate(() => { const c = document.querySelector('#town'); const d = c.getContext('2d').getImageData(10, 10, 1, 1).data; return d[0] + d[1] + d[2]; }); ok(px < 300, `${lang} 21:00 天空暗 (${px})；場景「${await p.textContent('#scene')}」`);

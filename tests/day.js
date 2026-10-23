@@ -38,6 +38,8 @@ const SHOT = process.argv[2];
       const errsAfter = await p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-v1')).errs); const top = Object.entries(errsAfter).sort((a, b) => b[1] - a[1])[0]; ok(top && top[1] > 0, `${lang} 錯誤類型有記錄：${JSON.stringify(errsAfter)}`);
       await setAns(Math.floor(T / 60), T % 60); await p.waitForTimeout(300);
       ok(/1\/7/.test(await p.textContent('#day-lights')), `${lang} 撥對亮 1 盞燈：${await p.textContent('#day-lights')}`);
+      await setAns(Math.floor(T / 60), T % 60); await p.waitForTimeout(200); ok(/1\/7/.test(await p.textContent('#day-lights')), `${lang} 撥對後再放一次手不會多亮一盞`);
+      const f1 = await p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-v1')).facts); const fk = Object.keys(f1)[0]; ok(f1[fk].n === 1 && f1[fk].w === 1, `${lang} 錯一次再撥對只記一筆錯（${fk}: n=${f1[fk].n} w=${f1[fk].w}）`);
       ok(await p.evaluate(() => document.querySelectorAll('#clock2 .ghost').length === 0), `${lang} 虛線消失`);
       ok(await p.textContent('#day-hint') !== '' && /good/.test(await p.getAttribute('#day-hint', 'class')), `${lang} 成功語「${await p.textContent('#day-hint')}」`);
       await p.waitForTimeout(1600);

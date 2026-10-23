@@ -10,7 +10,7 @@ const SHOT = process.argv[2];
     await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(300);
     await p.click('[data-mode=versus]'); await p.waitForTimeout(200); ok(await p.isVisible('#o-vs') && await p.isHidden('#vs-hardrow'), `${lang} 選對手卡（機器人時沒有加難列）`);
     await p.click('#vs-start'); await p.waitForTimeout(300);
-    ok(await p.isVisible('#s-versus') && await p.isVisible('#v-robot') && !(await p.getAttribute('#v-top', 'class')).includes('top'), `${lang} 機器人局：上半不旋轉、有機器人`);
+    ok(await p.isVisible('#s-versus') && await p.isVisible('#v-robot') && !(await p.getAttribute('#v-top', 'class')).includes('flip'), `${lang} 機器人局：上半不旋轉、有機器人`);
     const S = () => p.evaluate(() => { const s = window.__tt.Versus.s(); return s && { score: s.score, t: s.t }; });
     let st = await S(); ok(st && st.t.A % 5 === 0 && st.t.B % 5 === 0, `${lang} 兩邊各有題 ${st && st.t.A}/${st && st.t.B}；文字 ${await p.textContent('#v-t1')}`);
     if (SHOT) await p.screenshot({ path: `${SHOT}/vs-${lang}.png` });
@@ -27,7 +27,7 @@ const SHOT = process.argv[2];
     await p.click('#vdone-home'); await p.waitForTimeout(200);
     // 雙人：上半旋轉、兩邊都能撥、大人加難
     await p.click('[data-mode=versus]'); await p.click('[data-opp=human]'); ok(await p.isVisible('#vs-hardrow'), `${lang} 另一個人：出現加難列`); await p.click('#vs-hard'); await p.click('#vs-start'); await p.waitForTimeout(300);
-    ok((await p.getAttribute('#v-top', 'class')).includes('top') && await p.isHidden('#v-robot'), `${lang} 雙人：上半旋轉、沒有機器人`);
+    ok((await p.getAttribute('#v-top', 'class')).includes('flip') && await p.isHidden('#v-robot'), `${lang} 雙人：上半旋轉、沒有機器人`);
     st = await S(); ok(st.t.B % 5 !== 0 || true, `${lang} 挑戰者的題 ${st.t.B}（加難：1 分）`);
     const setB = async t => p.evaluate(t => { const c = window.__tt.clockB; c.set(Math.floor(t / 60), t % 60); c.onChange(c.get().tot, false); }, t);
     await setB(st.t.B); await p.waitForTimeout(150); st = await S(); ok(st.score.B === 1, `${lang} 挑戰者撥對得分`);
