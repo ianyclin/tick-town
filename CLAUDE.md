@@ -39,7 +39,8 @@
    - **小鎮** `Town`：canvas 畫天空、太陽／月亮、遠山、房子、路燈、動物；`Town.set(minutesOfDay)`。
    - `SFX`：Web Audio 合成（tick、bell、ding、wrong、fan）。
    - 存檔 `DB = { facts, errs, best, set:{ lang, music, sound, level, timer }, daily, pet, retest, town }`，`save()`；載入用 `Object.assign(fresh(), …)` 補欄位並消毒。
-   - 題目鍵 `s:h:m`（撥鐘）、`r:h:m`（讀鐘）、`e:…`（經過時間）；`record(k, ok, ms, errType)`。
+   - 題目鍵 `s:h:m`（撥鐘）、`r:h:m`（讀鐘）、`e:…`（經過時間）；`record(k, ok, ms, errType)`：`facts[k]` 指數平滑，`errs[type]` 每答一題全部 ×0.85、犯的那一種 +0.15。
+   - **小鎮的一天** `Day`：一天 7 件事（起床、早餐、上學、午餐、公園、晚餐、睡覺），時刻依等級（1 整點半點、2 五分、3 一分，等級 3 的公園、晚餐用「{t1} 出發走了 {d} 分鐘」問）。鐘從上一件事的時刻開始；**放手時**跟目標比（**mod 720**，鐘面是 12 小時的），對了 `good()`（敲鐘、動物跳、亮一盞燈 `Town.lit`、1.5 秒後下一題），錯了**等 2 秒沒再拖**才 `judge()`（孩子常分兩次拖）：`classifySet(T, A)` 判錯法（hourLate／halfHour：小時多一、minIndex：7:20 把兔子放在 2、handSwap、minNear 差一格內、hourOff、other），顯示該類型的提示泡泡＋虛線指針 `clock.ghost(h, m)`，minIndex 再 `clock.countTo(m)` 從 12 開始一格一格標 5、10、15。沒有倒數、沒有次數限制；7 件做完 `#o-done` 放煙火。
 
 ## 開發慣例
 
@@ -55,6 +56,6 @@
 - [x] 設計文件
 - [x] 鐘面元件（拖指針、吸附、烏龜兔子、時針跟著走）
 - [x] 自由玩的鐘＋會跟著變的小鎮（主選單）
-- [ ] 小鎮的一天（撥鐘任務、錯誤類型判定、提示動畫）
+- [x] 小鎮的一天（撥鐘任務、錯誤類型判定、提示動畫）— 出題還是隨機，還沒依 `DB.errs` 挑會誘發弱點的時刻
 - [ ] 幾點了、鐘面星圖、每日任務
 - [ ] 配對、兩個人一起、寵物、三語校對、字型、App 版、商店文案
