@@ -470,6 +470,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
     <h4 data-t="help.mapT"></h4><ul data-th="help.map"></ul>
     <h4 data-t="help.questT"></h4><ul data-th="help.quest"></ul>
     <h4 data-t="help.petT"></h4><ul data-th="help.pet"></ul>
+    <h4 data-t="help.townT"></h4><ul data-th="help.town"></ul>
     <h4 data-t="help.whoT"></h4><ul data-th="help.who"></ul>
   </div>
 </div>
@@ -532,6 +533,7 @@ const STR = {
     't.oclock': '{h} 點', 't.half': '{h} 點半', 't.hm': '{h} 點 {m} 分',
     'read.say24': '{who}問：現在是{p}。用 24 小時制怎麼寫？', 'read.sayDur': '{who}{t1} 出門，鐘上是到的時間。走了幾分鐘？', 'hint.ok': '知道了', 'u.min': '{n} 分', 'u.h24': '24 小時制', 'hint.ampm': '{p}的時刻，24 小時制要加 12：{h} + 12 = {H}。', 'hint.ampmAm': '{p}的時刻，24 小時制不用加 12，就是 {h} 點。', 'hint.ampmSet': '{H} 點就是{p} {h} 點（{H} − 12 = {h}），烏龜要指著 {h}。', 'hint.minOne': '從 {m5} 分開始，一小格是 1 分鐘。數數看兔子又走了幾小格！',
     'hint.dur1': '從 {t1} 到 {t2}，數數看兔子走了幾分鐘。', 'help.read3': '<li>選「過了多久」時，還會問 24 小時制（下午 3 點 = 15 點），和「幾點出門、幾點到，走了幾分鐘」。</li>', 'help.day3': '<li>選「過了多久」時，有些時刻會寫成 24 小時制：15:20 就是下午 3:20，烏龜指著 3。</li>', 'about.level3': '選「過了多久」時還會練：24 小時制（讀鐘時寫成 15:20，撥鐘時看到 15:20 要撥到 3:20）、從幾點到幾點過了幾分鐘（跨過整點時，提示會畫一條時間線：先走到整點，再走剩下的）、1 分鐘的小格。',
+    'town.new': '小鎮多了{x}！', 'deco.flowers': '一片花', 'deco.tree': '一棵大樹', 'deco.bench': '一張長椅', 'deco.swing': '鞦韆', 'deco.fountain': '噴水池', 'deco.bakery': '麵包店', 'deco.windmill': '風車', 'deco.balloon': '熱氣球', 'help.townT': '小鎮', 'help.town': '<li>撥對時間，動物會從家裡走出去做事。</li><li>每玩完一次，小鎮就長大一點：花、大樹、長椅、鞦韆、噴水池、麵包店、風車、熱氣球。</li><li>鐘樓上的鐘，跟主選單的鐘一起走。</li>',
     'p.night': '半夜', 'p.morning': '早上', 'p.noon': '中午', 'p.afternoon': '下午', 'p.evening': '晚上',
     'ampm.am': '上午', 'ampm.pm': '下午',
     // 小鎮的作息
@@ -603,6 +605,7 @@ const STR = {
     'read.say24': '{who} asks: It\'s {p}. What is it in 24-hour time?', 'read.sayDur': '{who} left at {t1} and got there at the clock time. How many minutes?', 'hint.ok': 'Got it', 'u.min': '{n} min', 'u.h24': '24-hour time', 'hint.ampm': 'In the {p}, 24-hour time adds 12: {h} + 12 = {H}.', 'hint.ampmAm': 'In the {p}, 24-hour time stays the same: {h}.',
     'hint.ampmSet': '{H} is {h} in the {p} ({H} − 12 = {h}). Tortoise points at {h}.', 'hint.minOne': 'Start at {m5}. Each little tick is 1 minute. Count how many more ticks Rabbit went!', 'hint.dur1': 'From {t1} to {t2}: count how many minutes Rabbit went.', 'help.read3': '<li>With "How long?", you also get 24-hour time (3 PM = 15:00) and "left at…, got there at…, how many minutes?"</li>',
     'help.day3': '<li>With "How long?", some times are in 24-hour time: 15:20 means 3:20 PM, so Tortoise points at 3.</li>', 'about.level3': 'Level 3 also practices 24-hour time (write 15:20 when reading; set 3:20 when you see 15:20), minutes from one time to another (when it passes the hour, the hint draws a timeline: first to the hour, then the rest), and the little 1-minute ticks.',
+    'town.new': 'The town got {x}!', 'deco.flowers': 'some flowers', 'deco.tree': 'a big tree', 'deco.bench': 'a bench', 'deco.swing': 'a swing', 'deco.fountain': 'a fountain', 'deco.bakery': 'a bakery', 'deco.windmill': 'a windmill', 'deco.balloon': 'a hot air balloon', 'help.townT': 'The town', 'help.town': '<li>Set the time right and an animal walks out of its house.</li><li>Every game you finish makes the town grow: flowers, a big tree, a bench, a swing, a fountain, a bakery, a windmill, a hot air balloon.</li><li>The clock tower shows the same time as the menu clock.</li>',
     'p.night': 'night', 'p.morning': 'morning', 'p.noon': 'noon', 'p.afternoon': 'afternoon', 'p.evening': 'evening',
     'ampm.am': 'AM', 'ampm.pm': 'PM',
     back: '‹ Menu', home: 'Back to menu',
@@ -674,6 +677,7 @@ const STR = {
     't.oclock': '{h}時', 't.half': '{h}時半', 't.hm': '{h}時{m}分',
     'read.say24': '{who}が きいてるよ：いまは {p}。24時間せいで かくと？', 'read.sayDur': '{who}は {t1}に 出て、とけいの 時こくに ついたよ。なん分？', 'hint.ok': 'わかった', 'u.min': '{n}分', 'u.h24': '24時間せい', 'hint.ampm': '{p}の 時こくは、24時間せいだと 12を たすよ：{h} + 12 = {H}。', 'hint.ampmAm': '{p}の 時こくは、24時間せいでも そのまま {h}だよ。', 'hint.ampmSet': '{H}時は {p}{h}時（{H} − 12 = {h}）。かめは {h}を さすよ。',
     'hint.minOne': '{m5}分から、小さい めもり 1つが 1分。うさぎが あと いくつ すすんだか かぞえてね！', 'hint.dur1': '{t1}から {t2}まで、うさぎが なん分 すすんだか かぞえてね。', 'help.read3': '<li>「たった時間」では、24時間せい（ごご3時 = 15時）や「なん時に 出て、なん時に ついた？ なん分？」も 出るよ。</li>', 'help.day3': '<li>「たった時間」では、24時間せいで かいて ある 時こくも あるよ：15:20は ごご3:20。かめは 3を さすよ。</li>', 'about.level3': 'レベル3では、24時間制（読むときは 15:20 と書く、15:20 を見たら 3:20 に合わせる）、ある時刻から別の時刻まで何分か（ちょうどの時刻をまたぐときは、まずちょうどの時刻まで、次に残りという時間の線をヒントで描きます）、1分の小さい目もりも練習します。',
+    'town.new': 'まちに {x}が できたよ！', 'deco.flowers': 'お花', 'deco.tree': '大きな 木', 'deco.bench': 'ベンチ', 'deco.swing': 'ブランコ', 'deco.fountain': 'ふんすい', 'deco.bakery': 'パンやさん', 'deco.windmill': 'ふうしゃ', 'deco.balloon': 'ききゅう', 'help.townT': 'まち', 'help.town': '<li>時こくを あわせると、どうぶつが おうちから 出かけるよ。</li><li>ゲームを 1つ おえるたびに、まちが 大きく なるよ：お花、大きな 木、ベンチ、ブランコ、ふんすい、パンやさん、ふうしゃ、ききゅう。</li><li>とけいとうの とけいは、メニューの とけいと いっしょに うごくよ。</li>',
     'p.night': 'よなか', 'p.morning': 'あさ', 'p.noon': 'ひる', 'p.afternoon': 'ごご', 'p.evening': 'よる',
     'ampm.am': 'ごぜん', 'ampm.pm': 'ごご',
     back: '‹ メニュー', home: 'メニューへ',
@@ -744,6 +748,7 @@ const STR = {
     't.oclock': '{h}시', 't.half': '{h}시 반', 't.hm': '{h}시 {m}분',
     'read.say24': '{who}가 물어봐: {p} 시각이야. 24시간제로 어떻게 쓸까?', 'read.sayDur': '{who}가 {t1}에 나가서 시계 시각에 도착했어. 몇 분?', 'hint.ok': '알겠어', 'u.min': '{n}분', 'u.h24': '24시간제', 'hint.ampm': '{p} 시각은 24시간제로 쓰면 12를 더해: {h} + 12 = {H}.', 'hint.ampmAm': '{p} 시각은 24시간제로 써도 그대로 {h}시.', 'hint.ampmSet': '{H}시 = {p} {h}시 ({H} − 12 = {h}). 거북이 자리: {h}.',
     'hint.minOne': '{m5}분부터 작은 눈금 하나가 1분이야. 토끼가 몇 칸 더 갔는지 세어 봐!', 'hint.dur1': '{t1}부터 {t2}까지 토끼가 몇 분 갔는지 세어 봐.', 'help.read3': '<li>"얼마나 지났지?"를 고르면 24시간제(오후 3시 = 15시)와 "몇 시에 나가서 몇 시에 도착했어? 몇 분?"도 나와.</li>', 'help.day3': '<li>"얼마나 지났지?"에서는 24시간제로 쓴 시각도 있어: 15:20 = 오후 3:20. 거북이 자리는 3이야.</li>', 'about.level3': '3단계에서는 24시간제(읽을 때는 15:20으로 쓰기, 15:20을 보면 3:20으로 맞추기), 어떤 시각부터 다른 시각까지 몇 분인지(정각을 넘어갈 때는 힌트로 먼저 정각까지, 그다음 나머지를 시간 막대로 그려 줍니다), 1분짜리 작은 눈금도 연습합니다.',
+    'town.new': '마을에 {x} 생겼어!', 'deco.flowers': '꽃밭이', 'deco.tree': '큰 나무가', 'deco.bench': '벤치가', 'deco.swing': '그네가', 'deco.fountain': '분수가', 'deco.bakery': '빵집이', 'deco.windmill': '풍차가', 'deco.balloon': '열기구가', 'help.townT': '마을', 'help.town': '<li>시간을 맞게 맞추면 동물이 집에서 나와 일하러 가.</li><li>게임을 하나 끝낼 때마다 마을이 조금씩 커져: 꽃밭, 큰 나무, 벤치, 그네, 분수, 빵집, 풍차, 열기구.</li><li>시계탑의 시계는 메뉴의 시계랑 같이 움직여.</li>',
     'p.night': '밤', 'p.morning': '아침', 'p.noon': '낮', 'p.afternoon': '오후', 'p.evening': '저녁',
     'ampm.am': '오전', 'ampm.pm': '오후',
     back: '‹ 메뉴', home: '메뉴로',
@@ -814,6 +819,7 @@ const STR = {
     'read.say24': '{who} pregunta: es {p}. ¿Cómo es en formato de 24 horas?', 'read.sayDur': '{who} salió a las {t1} y llegó a la hora del reloj. ¿Cuántos minutos?', 'hint.ok': 'Entendido', 'u.min': '{n} min', 'u.h24': 'formato 24 horas', 'hint.ampm': 'Si es {p}, en formato de 24 horas se suma 12: {h} + 12 = {H}.', 'hint.ampmAm': 'Si es {p}, en formato de 24 horas se queda igual: {h}.',
     'hint.ampmSet': 'Las {H} son las {h} {p} ({H} − 12 = {h}). La tortuga apunta al {h}.', 'hint.minOne': 'Empieza en {m5}. Cada rayita es 1 minuto. ¡Cuenta cuántas rayitas más avanzó el conejo!', 'hint.dur1': 'De {t1} a {t2}: cuenta cuántos minutos avanzó el conejo.', 'help.read3': '<li>En "¿Cuánto tiempo?" también sale el formato de 24 horas (3 p. m. = 15:00) y "salió a las…, llegó a las…, ¿cuántos minutos?".</li>',
     'help.day3': '<li>En "¿Cuánto tiempo?" algunas horas están en formato de 24 horas: 15:20 son las 3:20 p. m., así que la tortuga apunta al 3.</li>', 'about.level3': 'El nivel 3 también practica el formato de 24 horas (escribir 15:20 al leer; poner 3:20 al ver 15:20), los minutos entre dos horas (si pasa por la hora en punto, la pista dibuja una línea de tiempo: primero hasta la hora en punto y luego el resto) y las rayitas de 1 minuto.',
+    'town.new': '¡El pueblo tiene {x}!', 'deco.flowers': 'flores', 'deco.tree': 'un árbol grande', 'deco.bench': 'una banca', 'deco.swing': 'un columpio', 'deco.fountain': 'una fuente', 'deco.bakery': 'una panadería', 'deco.windmill': 'un molino', 'deco.balloon': 'un globo aerostático', 'help.townT': 'El pueblo', 'help.town': '<li>Si pones bien la hora, un animal sale de su casa.</li><li>Cada juego que terminas hace crecer el pueblo: flores, un árbol grande, una banca, un columpio, una fuente, una panadería, un molino y un globo aerostático.</li><li>El reloj de la torre marca la misma hora que el reloj del menú.</li>',
     'p.night': 'de la noche', 'p.morning': 'de la mañana', 'p.noon': 'del mediodía', 'p.afternoon': 'de la tarde', 'p.evening': 'de la noche',
     'ampm.am': 'a. m.', 'ampm.pm': 'p. m.',
     back: '‹ Menú', home: 'Volver al menú',
@@ -941,6 +947,7 @@ function loadDB() {
   const f = fresh(); if (d && typeof d === 'object') { for (const k of Object.keys(f)) if (k in d) f[k] = (f[k] && typeof f[k] === 'object' && !Array.isArray(f[k])) ? Object.assign(f[k], (d[k] && typeof d[k] === 'object') ? d[k] : {}) : d[k]; }
   f.set.level = [1, 2, 3].includes(f.set.level) ? f.set.level : 2; f.set.sound = f.set.sound !== false; f.set.ring = f.set.ring !== false; f.set.music = f.set.music !== false; f.set.chime = f.set.chime !== false; if (typeof f.set.lang !== 'string') f.set.lang = '';
   f.free = clamp(Math.round(num(f.free, 7 * 60)), 0, 1439);
+  if (!f.town || typeof f.town !== 'object' || Array.isArray(f.town)) f.town = { lit: [] }; f.town.seen = clamp(Math.round(num(f.town.seen)), 0, 99);
   f.tut = had ? !(d && d.tut === false) : false;   // 教學看過了沒：有教學以前的舊存檔當作看過，全新的才從教學開始
   if (!f.facts || typeof f.facts !== 'object') f.facts = {};
   for (const [k, v] of Object.entries(f.facts)) { if (!v || typeof v !== 'object' || !/^[rseag]:\d+:\d+$/.test(k)) delete f.facts[k]; else f.facts[k] = { n: clamp(num(v.n), 0, 1e6), w: clamp(num(v.w), 0, 1e6), err: clamp(num(v.err), 0, 1), t: clamp(num(v.t), 0, 6e5) }; }
@@ -1128,6 +1135,46 @@ const Town = (() => {
   const sky = h => { let i = 0; while (i < KF.length - 2 && KF[i + 1][0] <= h) i++; const a = KF[i], b = KF[i + 1], k = clamp((h - a[0]) / (b[0] - a[0]), 0, 1); return { top: mix(a[1], b[1], k), bot: mix(a[2], b[2], k), br: lerp(a[3], b[3], k) }; };
   function resize() { DPR = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; cv.style.width = W + 'px'; cv.style.height = H + 'px'; g.setTransform(DPR, 0, 0, DPR, 0, 0); stars = Array.from({ length: 70 }, () => [Math.random() * W, Math.random() * H * 0.55, Math.random() * 1.4 + 0.5]); draw(); }
   const dim = (c, br) => { const [r, gg, b] = typeof c === 'string' && c[0] === '#' ? hex(c) : c.match(/\d+/g).map(Number); return `rgb(${Math.round(r * br)},${Math.round(gg * br)},${Math.round(b * br)})`; };
+  const rr = (x, y, w, hh, r) => { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + hh, r); g.arcTo(x + w, y + hh, x, y + hh, r); g.arcTo(x, y + hh, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); };
+  // 圖：動物借用寵物圖（成體），兔子和裝飾在 assets/town/；沒有圖就畫 emoji
+  const IMG = {}, SRC = { bear: 'assets/pets/bear-3.png', squirrel: 'assets/pets/squirrel-3.png', owl: 'assets/pets/owl-3.png' };
+  for (const k of ['bunny', 'tree', 'flowers', 'bench', 'fountain', 'swing', 'windmill', 'balloon', 'bakery']) SRC[k] = `assets/town/${k}.png`;
+  for (const [k, u] of Object.entries(SRC)) { const im = new Image(); im.onload = () => { IMG[k] = im; draw(); }; im.src = u; }
+  const EMO = { bear: '🐻', bunny: '🐰', squirrel: '🐿️', owl: '🦉', tree: '🌳', flowers: '🌷', bench: '🪑', fountain: '⛲', swing: '🎠', windmill: '🎡', balloon: '🎈', bakery: '🏪' };
+  // 畫一樣東西：底部中間在 (x, y)，高 sz；有圖用圖，沒圖用 emoji；dir = -1 左右翻
+  function thing(k, x, y, sz, br, dir = 1) {
+    const im = IMG[k];
+    if (im) { const w = sz * im.width / im.height; g.save(); g.translate(x, y); if (dir < 0) g.scale(-1, 1); if (br < 0.9) g.filter = `brightness(${Math.max(0.45, br)})`; g.drawImage(im, -w / 2, -sz, w, sz); g.restore(); }
+    else { g.save(); g.font = `${sz * 0.8}px system-ui,sans-serif`; g.textAlign = 'center'; g.textBaseline = 'bottom'; if (br < 0.9) g.globalAlpha = Math.max(0.55, br); g.fillText(EMO[k] || '', x, y); g.restore(); }
+  }
+  function critter(k, x, y, sz, br, prop, dir) { thing(k, x, y, sz, br, dir); if (prop) { g.save(); g.font = `${sz * 0.42}px system-ui,sans-serif`; g.textAlign = 'center'; g.textBaseline = 'bottom'; g.fillText(prop, x + sz * 0.45, y - sz * 0.05); g.restore(); } }
+  // 鐘樓：鐘面跟著現在的時刻
+  function tower(x, gy, tw, br, night) {
+    const th = tw * 2.0, y = gy - th;
+    g.fillStyle = dim('#f3e3c3', br); rr(x - tw / 2, y, tw, th, 4); g.fill(); g.strokeStyle = dim('#c9a86a', br); g.lineWidth = 2; g.stroke();
+    g.fillStyle = dim('#d9534f', br); g.beginPath(); g.moveTo(x - tw / 2 - 6, y + 2); g.lineTo(x, y - tw * 0.75); g.lineTo(x + tw / 2 + 6, y + 2); g.closePath(); g.fill();
+    const cr = tw * 0.34, cy = y + tw * 0.5; g.fillStyle = '#fffaf0'; g.beginPath(); g.arc(x, cy, cr, 0, 7); g.fill(); g.strokeStyle = dim('#8a6a3a', br); g.lineWidth = 2; g.stroke();
+    const mA = (t % 60) / 60 * Math.PI * 2, hA = ((t / 60) % 12) / 12 * Math.PI * 2; g.lineCap = 'round';
+    g.strokeStyle = '#3a6fd8'; g.lineWidth = 3; g.beginPath(); g.moveTo(x, cy); g.lineTo(x + Math.sin(hA) * cr * 0.5, cy - Math.cos(hA) * cr * 0.5); g.stroke();
+    g.strokeStyle = '#e5534b'; g.lineWidth = 2; g.beginPath(); g.moveTo(x, cy); g.lineTo(x + Math.sin(mA) * cr * 0.8, cy - Math.cos(mA) * cr * 0.8); g.stroke();
+    g.fillStyle = night ? '#ffe27a' : dim('#bfe6ff', br); rr(x - tw * 0.16, y + tw * 1.05, tw * 0.32, tw * 0.36, 6); g.fill();   // 窗
+    g.fillStyle = dim('#7a4a2a', br); rr(x - tw * 0.2, gy - tw * 0.5, tw * 0.4, tw * 0.5, 8); g.fill();   // 門
+  }
+  // 小鎮會長大：玩完越多次，多越多東西（每個人的小鎮各自長）
+  function deco(gy, hw, br, layer) {
+    const k = DECOR.filter(d => townPts() >= d.at).map(d => d.id), has = id => k.includes(id);
+    if (layer === 'back') {
+      if (has('tree')) thing('tree', W * 0.035 + hw * 0.4, gy + 2, hw * 1.5, br);
+      if (has('windmill')) thing('windmill', W - hw * 0.55, gy + 2, hw * 1.9, br);
+      if (has('bakery')) thing('bakery', W * 0.5 - hw * 1.55, gy + 4, hw * 1.15, br);
+      return;
+    }
+    if (has('flowers')) { thing('flowers', W * 0.07, gy + hw * 0.45, hw * 0.7, br); thing('flowers', W * 0.93, gy + hw * 0.45, hw * 0.7, br); }
+    if (has('bench')) thing('bench', W * 0.68, gy + hw * 1.35, hw * 0.85, br);
+    if (has('swing')) thing('swing', W * 0.86, gy + hw * 1.6, hw * 1.3, br);
+    if (has('fountain')) thing('fountain', W * 0.5, gy + hw * 1.45, hw * 1.15, br);
+    if (has('balloon')) thing('balloon', W * 0.16, H * 0.3 + Math.sin(t / 37) * 8, hw * 1.1, Math.max(br, 0.7));
+  }
   function draw() {
     const h = t / 60, S = sky(h), br = S.br, night = br < 0.5;
     const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, S.top); gr.addColorStop(1, S.bot); g.fillStyle = gr; g.fillRect(0, 0, W, H);
@@ -1144,32 +1191,63 @@ const Town = (() => {
     g.fillStyle = dim('#6fbb63', br); g.beginPath(); g.moveTo(0, gy); for (let x = 0; x <= W; x += 8) g.lineTo(x, gy - 14 - Math.sin(x / 60 + 2) * 14); g.lineTo(W, gy); g.fill();
     // 地面
     g.fillStyle = dim('#79c35e', br); g.fillRect(0, gy, W, H - gy);
-    // 房子（6 間，中間留給鐘樓）
-    const n = 6, hw = Math.min(64, W / (n + 2)), gap = (W - n * hw) / (n + 1), lit = (h >= 17.5 && h < 22.5) || (h >= 5.5 && h < 7.5);
+    // 房子：左右各 3 間，中間是鐘樓（鐘樓上的鐘跟著現在的時刻走）
+    const n = 6, hw = Math.min(64, W / (n + 3)), tw = hw * 1.15, lit = (h >= 17.5 && h < 22.5) || (h >= 5.5 && h < 7.5);
+    const side = (W - tw) / 2, gapS = (side - 3 * hw) / 4, HX = [];
+    for (let i = 0; i < 3; i++) HX.push(gapS + i * (hw + gapS)); for (let i = 0; i < 3; i++) HX.push(W / 2 + tw / 2 + gapS + i * (hw + gapS));
     const cols = ['#ff8f6b', '#ffd36b', '#7fd3ff', '#c99bff', '#ffa6c9', '#9be7a8'];
+    deco(gy, hw, br, 'back');   // 房子後面的（樹、風車、麵包店）
+    tower(W / 2, gy, tw, br, night);
     for (let i = 0; i < n; i++) {
-      const x = gap + i * (hw + gap), hh = hw * 0.9, y = gy - hh;
-      g.fillStyle = dim(cols[i], br); g.fillRect(x, y, hw, hh);
-      g.fillStyle = dim('#a35a3a', br); g.beginPath(); g.moveTo(x - 6, y); g.lineTo(x + hw / 2, y - hw * 0.5); g.lineTo(x + hw + 6, y); g.fill();
+      const x = HX[i], hh = hw * 0.9, y = gy - hh;
+      g.fillStyle = dim('#8a4a32', br); g.fillRect(x + hw * 0.66, y - hw * 0.42, hw * 0.13, hw * 0.3);   // 煙囪
+      g.fillStyle = dim(cols[i], br); rr(x, y, hw, hh, 4); g.fill();
+      g.fillStyle = 'rgba(0,0,0,.08)'; g.fillRect(x, y + hh * 0.86, hw, hh * 0.14);
+      g.fillStyle = dim('#a35a3a', br); g.beginPath(); g.moveTo(x - 6, y + 2); g.lineTo(x + hw / 2, y - hw * 0.5); g.lineTo(x + hw + 6, y + 2); g.closePath(); g.fill();
+      g.strokeStyle = dim('#7c3f28', br); g.lineWidth = 2; g.stroke();
       const on = lit || (mode === 'day' && litT && i < Math.round(litN / litT * n));   // 小鎮的一天：做完幾件事就亮幾間
-      g.fillStyle = on ? '#ffe27a' : night ? dim('#5a6a8a', br) : dim('#bfe6ff', br); g.fillRect(x + hw * 0.18, y + hh * 0.22, hw * 0.25, hw * 0.25); g.fillRect(x + hw * 0.57, y + hh * 0.22, hw * 0.25, hw * 0.25);
-      if (on) { g.fillStyle = 'rgba(255,226,122,.25)'; g.fillRect(x + hw * 0.1, y + hh * 0.12, hw * 0.8, hw * 0.45); }
-      g.fillStyle = dim('#7a4a2a', br); g.fillRect(x + hw * 0.38, y + hh * 0.58, hw * 0.24, hh * 0.42);
+      g.fillStyle = on ? '#ffe27a' : night ? dim('#5a6a8a', br) : dim('#bfe6ff', br); rr(x + hw * 0.16, y + hh * 0.2, hw * 0.26, hw * 0.26, 3); g.fill(); rr(x + hw * 0.58, y + hh * 0.2, hw * 0.26, hw * 0.26, 3); g.fill();
+      if (on) { g.fillStyle = 'rgba(255,226,122,.25)'; g.fillRect(x + hw * 0.08, y + hh * 0.1, hw * 0.84, hw * 0.48); }
+      g.fillStyle = dim('#7a4a2a', br); rr(x + hw * 0.37, y + hh * 0.56, hw * 0.26, hh * 0.44, 5); g.fill();   // 門
+      g.fillStyle = dim('#ffd36b', br); g.beginPath(); g.arc(x + hw * 0.57, y + hh * 0.8, 1.8, 0, 7); g.fill();
     }
     // 路燈
-    for (const x of [W * 0.2, W * 0.8]) { g.fillStyle = dim('#55606e', br); g.fillRect(x - 2, gy - 70, 4, 70); g.fillStyle = night ? '#ffe27a' : dim('#dde', br); g.beginPath(); g.arc(x, gy - 74, 6, 0, 7); g.fill(); if (night) { const rg = g.createRadialGradient(x, gy - 74, 4, x, gy - 74, 60); rg.addColorStop(0, 'rgba(255,226,122,.45)'); rg.addColorStop(1, 'rgba(255,226,122,0)'); g.fillStyle = rg; g.fillRect(x - 60, gy - 134, 120, 140); } }
-    // 動物（emoji）：依作息出現在不同地方；睡覺時只剩貓頭鷹
-    g.font = `${Math.min(34, W * 0.07)}px system-ui,sans-serif`; g.textAlign = 'center';
-    const sc = scene(t), em = { sleep: '🦉', owl: '🦉', wake: '🐻', breakfast: '🐻🥣', school: '🐰🎒', lunch: '🐿️🍙', class: '🐰📖', park: '🐻⚽', dinner: '🐿️🍲', bath: '🐰🛁', story: '🐻📚' }[sc];
-    g.fillText(em, W * 0.5, gy + 40);
-    if (sc === 'sleep' || sc === 'owl') { g.font = `${Math.min(22, W * 0.05)}px system-ui,sans-serif`; g.fillText('💤', W * 0.3, gy - 70); g.fillText('💤', W * 0.72, gy - 64); }
+    for (const x of [HX[2] + hw + gapS / 2, HX[3] - gapS / 2]) { g.fillStyle = dim('#55606e', br); g.fillRect(x - 2, gy - 70, 4, 70); g.fillStyle = night ? '#ffe27a' : dim('#dde', br); g.beginPath(); g.arc(x, gy - 74, 6, 0, 7); g.fill(); if (night) { const rg = g.createRadialGradient(x, gy - 74, 4, x, gy - 74, 60); rg.addColorStop(0, 'rgba(255,226,122,.45)'); rg.addColorStop(1, 'rgba(255,226,122,0)'); g.fillStyle = rg; g.beginPath(); g.arc(x, gy - 74, 60, 0, 7); g.fill(); } }
+    deco(gy, hw, br, 'front');   // 房子前面的（花、長椅、鞦韆、噴水池）與天上的（熱氣球）
+    // 動物：依作息站在自己家門口（小熊住第 2 間、小兔第 5 間、松鼠第 6 間），晚上貓頭鷹在鐘樓上
+    const sc = scene(t), sz = hw * 1.3, door = i => HX[i] + hw / 2;
+    const AT = { wake: ['bear', door(1), ''], breakfast: ['bear', door(1), '🥣'], school: ['bunny', door(4) + hw * 0.7, '🎒'], lunch: ['squirrel', door(5), '🍙'], class: ['bunny', door(4), '📖'], park: ['bear', W * 0.36, '⚽'], dinner: ['squirrel', door(5), '🍲'], bath: ['bunny', door(4), '🛁'], story: ['bear', door(1), '📚'] }[sc];
+    const walking = walks.map(w => w.who);
+    if (AT && !walking.includes(AT[0])) critter(AT[0], AT[1], gy + hw * 0.45, sz, br, AT[2]);
+    if (sc === 'sleep' || sc === 'owl') critter('owl', W / 2, gy - tw * 2.05, hw * 0.9, 1, '');
+    if (sc === 'sleep' || sc === 'owl') { g.font = `${Math.min(22, W * 0.05)}px system-ui,sans-serif`; g.textAlign = 'center'; g.fillText('💤', door(1), gy - hw * 1.1); g.fillText('💤', door(4), gy - hw * 1.05); }
+    // 走出門的動物（撥對時）：從家門口跳著走出去
+    for (const w of walks) { const k = clamp((now() - w.t0) / 1600, 0, 1), x0 = door(w.home), dir = w.home < 3 ? 1 : -1, down = Math.min(1, k / 0.3); critter(w.who, x0 + dir * Math.max(0, k - 0.3) / 0.7 * hw * 2.6, gy + hw * (0.1 + 0.9 * down) - Math.abs(Math.sin(k * Math.PI * 6)) * sz * 0.14, sz, br, '', dir); }   // 先從門口走下來，再往草地中間跳著走
+  }
+  // 撥對時動物走出門：home 是哪一間（小熊 1、小兔 4、松鼠 5；貓頭鷹從鐘樓飛，當作 4）
+  let walks = [], raf = 0;
+  const HOME = { bear: 1, bunny: 4, rabbit: 4, squirrel: 5, owl: 4 };
+  function walk(who) {
+    if (RM) return; const k = who === 'rabbit' ? 'bunny' : who; walks = walks.filter(w => w.who !== k); walks.push({ who: k, home: HOME[who] || 1, t0: now() });
+    if (!raf) { const loop = () => { walks = walks.filter(w => now() - w.t0 < 1700); draw(); raf = walks.length ? requestAnimationFrame(loop) : 0; }; raf = requestAnimationFrame(loop); }
   }
   // 小鎮的作息（自由玩用）
   let litN = 0, litT = 0;
   function scene(min) { const h = min / 60; return h < 6 ? 'sleep' : h < 7 ? 'wake' : h < 8 ? 'breakfast' : h < 12 ? 'school' : h < 13 ? 'lunch' : h < 15.5 ? 'class' : h < 17.5 ? 'park' : h < 19 ? 'dinner' : h < 20 ? 'bath' : h < 21 ? 'story' : 'owl'; }
   addEventListener('resize', resize);
-  return { set(min) { t = min; draw(); }, resize, scene, lit(n, tot) { litN = n; litT = tot; draw(); } };
+  return { set(min) { t = min; draw(); }, resize, scene, lit(n, tot) { litN = n; litT = tot; draw(); }, walk, walking: () => walks.map(w => w.who), img: () => Object.keys(IMG) };
 })();
+
+// ---------- 小鎮會長大：玩完幾次就多一樣東西
+const DECOR = [{ id: 'flowers', at: 1 }, { id: 'tree', at: 2 }, { id: 'bench', at: 4 }, { id: 'swing', at: 6 }, { id: 'fountain', at: 9 }, { id: 'bakery', at: 13 }, { id: 'windmill', at: 18 }, { id: 'balloon', at: 24 }];
+const townPts = () => num(DB.best.days) * 2 + num(DB.best.reads) + num(DB.best.matches) + num(DB.best.vs);
+// 回到主選單時看看小鎮有沒有長大：有就說一聲、在那個東西上放煙火
+function townGrow() {
+  const n = DECOR.filter(d => townPts() >= d.at).length, seen = num(DB.town.seen);
+  if (n <= seen) { if (n < seen) { DB.town.seen = n; save(); } return; }
+  const d = DECOR[n - 1]; DB.town.seen = n; save(); Town.set(clock.get().tot);
+  setTimeout(() => { toast(tx('town.new', { x: tx('deco.' + d.id) })); SFX.ding(); FX.confetti(30); }, 350);
+}
 
 // ---------- 時刻的說法
 function timeWords(tot) {
@@ -1230,7 +1308,7 @@ $('#modes').addEventListener('click', e => { const b = e.target.closest('.mode')
 // ---------- 畫面切換
 function show(name) { $$('.screen').forEach(sc => sc.hidden = sc.id !== 's-' + name); mode = name; $('#toast').hidden = true; if (name !== 'menu') SFX.chimeStop(); Music.track(name === 'menu' ? Music.forTime(clock.get().tot) : name === 'tut' || name === 'map' || name === 'pet' ? 'town' : 'play'); }
 $$('[data-home]').forEach(b => b.addEventListener('click', goHome));
-function goHome() { Day.stop(); Read.stop(); Match.stop(); Versus.stop(); show('menu'); refreshMenu(); showTime(clock.get().tot); fitTitle(); }
+function goHome() { Day.stop(); Read.stop(); Match.stop(); Versus.stop(); show('menu'); refreshMenu(); showTime(clock.get().tot); fitTitle(); townGrow(); }
 
 // ---------- 粒子（慶祝用）
 const FX = (() => {
@@ -1354,7 +1432,7 @@ const Day = (() => {
   function good() {
     const k = S.tasks[S.i]; clearTimeout(judgeT); clock2.ghost(null); clock2.countStop();
     if (S.tries === 0) record(k.from !== undefined ? `e:${k.from}:${k.d}` : `s:${Math.floor(k.t / 60)}:${k.t % 60}`, true, 0, null, inducible(Math.floor(k.t / 60), k.t % 60));   // 錯過的已經在 judge() 記過了
-    S.lit++; lights(); SFX.bell(); if (S.tries === 0) { Quest.add('set'); Pet.earn(1); } Quest.add('star');
+    S.lit++; lights(); SFX.bell(); Town.walk(k.who); if (S.tries === 0) { Quest.add('set'); Pet.earn(1); } Quest.add('star');
     const emo = $('#day-emo'); emo.classList.remove('jump'); void emo.offsetWidth; emo.classList.add('jump');
     const r = $('#clock2').getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 36);
     const el = $('#day-hint'); el.className = 'bubble good'; el.textContent = tx(S.i === S.tasks.length - 1 ? 'day.okLast' : 'day.ok', { who: tx('who.' + k.who) }); el.hidden = false;
@@ -1913,7 +1991,7 @@ if (DB.hinted) $('#hintline').hidden = true; refreshMenu(); whoChip();
 if (!DB.tut) Tut.start(false);
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock6, Tut, Music, SFX, WHO: () => WHO, keyFor, bkParse, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet, timeline };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock6, Tut, Music, SFX, WHO: () => WHO, keyFor, bkParse, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet, timeline, townPts, townGrow, DECOR };   // 給測試用
 })();
 </script>
 </body>

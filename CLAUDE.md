@@ -41,7 +41,7 @@
    - **誰在玩**（照九九）：`WHO = { cur, list:[{id, name}] }` 存在 `tick-town-who`，最多 4 人；每個人一把存檔 `keyFor(id)`（第一個人 id 是空字串＝舊的 `tick-town-v1`，舊存檔自動變成第一個人；之後的人 `tick-town-v1:p…`）。語言、難度、外圈、聲音、紀錄、星圖、寵物、每日任務都跟著人。主選單的名字鈕 `#go-who` 只在有名字或兩個人以上才出現（一個孩子的家庭不多一顆鈕）；設定頁最上面「誰在玩」一定有。沒名字時先取名才能新增；新增的人先存一份 `tut:false`（沿用語言和聲音），`switchWho` 後跑教學選等級。上排放不下時 `fitTitle()` 先縮、再兩行、再把標題藏起來（`visibility:hidden`），名字鈕在 375px 以下只剩圖示。
    - **家長區**：備份紀錄（`#o-bk`，匯出不用關卡；匯入取代所有人，要難的家長關卡）、清除紀錄（只清目前這個人，名字留著）、刪除玩家（名字和存檔一起刪，`switchWho(next, true)` 不要先存回去；只有一個沒名字的人時不顯示）。備份格式照九九：`{ app:'tick-town', v:1, at, who, saves:{ key: 存檔 } }`，檔案 `tick-town-backup-日期.json` 或備份碼 `TTWN1:` + base64；`bkParse()` 檢查 app、id 格式、最多 4 人，前後多貼了字也讀得懂；`bkApply()` 寫完 `location.reload()`，期間 `bkFrozen` 擋住 `save()`。關於頁最後有獻詞 `about.ded`。
    - **三年級（等級 3）**：讀鐘每題先 `kind()` 抽種類：一般讀鐘、`h24`（鐘上 15:20，打 24 小時制，鍵 `a:H:m`；下午沒加 12／早上多加 12 → `ampm`，提示 `hint.ampm`／`hint.ampmAm`）、`dur`（旁邊寫出發時刻、鐘上是到的時刻，打分鐘數，鍵 `g:出發:分鐘`；跨整點時「只算分鐘相減／只算到整點／只算整點後」→ `carry`，差 1～4 → `minOne`）。權重 h24 = 1 + 3×`errs.ampm`、dur = 1 + 3×`errs.carry`，上一題同種 ×0.5；`Read.only(k)` 測試用。小鎮的一天等級 3 下午以後的事有 40～80% 寫成 24 小時制（`task.h24`，目標寫 15:20＋「24 小時制」），分鐘對、小時錯 → `ampm`、提示 `hint.ampmSet`。`classifySet` 差 1～4 分 → `minOne`，提示 `clock.countOne(m)` 從 5 的倍數開始小格一格一格亮（`.tk-lit`）。**時間線** `timeline(t1, t2)`：SVG，跨整點分兩段（橘：到整點、紅：剩下的），每段上面寫 +幾分，一段一段畫（`RM` 就直接出現）；用在讀鐘 dur 的提示與答對、小鎮的一天「走了幾分鐘」撥錯。打數字時的提示 `.bubble.over` 蓋在鍵盤上（不擠掉鐘），按「知道了」收起來；`fitRead()` 題目長時把鐘縮小到鍵盤放得下（最小 110px）。
-   - **小鎮** `Town`：canvas 畫天空、太陽／月亮、遠山、房子、路燈、動物；`Town.set(minutesOfDay)`。
+   - **小鎮** `Town`：canvas 畫天空、太陽／月亮、遠山、房子（左右各 3 間，有煙囪、門）、中間的**鐘樓**（鐘面跟著 `t` 走）、路燈、動物；`Town.set(minutesOfDay)`。動物依作息站在自己家門口（`scene()`：小熊住第 2 間、小兔第 5 間、松鼠第 6 間，晚上貓頭鷹站在鐘樓上），圖借用寵物成體圖 `assets/pets/{bear,squirrel,owl}-3.png`，小兔與裝飾在 `assets/town/*.png`（`tools/cut-town.py <原圖> <名字,…>` 切），沒有圖就畫 emoji。`Town.walk(who)`：小鎮的一天撥對時那隻動物從門口走下來、往草地中間跳著走 1.6 秒（rAF，`RM` 不跑）。**小鎮會長大**：`townPts()` = 小鎮的一天 ×2 + 讀鐘、配對、雙人各一輪 ×1；`DECOR` 八樣（花 1、大樹 2、長椅 4、鞦韆 6、噴水池 9、麵包店 13、風車 18、熱氣球 24）；`goHome()` 時 `townGrow()` 比 `DB.town.seen`，多了就 toast「小鎮多了…」。每個人的小鎮各自長。
    - `SFX`：Web Audio 合成（tick、bell、ding、hm）；`DB.set.sound` 關掉就不出聲。**報時** `SFX.chime(n)`：鐘樓敲 n 下（0.62 秒一下），走自己的 `chimeBus` 才能 `chimeStop()` 中途停；只看 `DB.set.chime`（跟音效分開）。主選單放手停在整點才報時（拖的途中經過整點只 `bell()` 一聲；又開始拖、離開主選單、切到背景都停）；教學第 2 步烏龜到 3 敲 3 下；遊戲裡不報時（不打斷題目）。敲鐘時音樂 `duck`。
    - **音樂** `Music`（照九九，Web Audio 即時合成、沒有音檔）：`TRACKS` 三首，`town`（白天音樂盒 C–Am–F–G）、`night`（搖籃曲 F–Dm–B♭–C）、`play`（遊戲中 G–Em–C–D，輕拍子、每兩輪一次主旋律，不加速）。`show(name)` 換畫面時換歌：主選單看鐘上的時刻（`forTime`：6～19 點白天）、教學／星圖／寵物 `town`、其他遊戲 `play`；主選單拖鐘時 `showTime` 也跟著換。瀏覽器要先碰一下才能出聲：`pointerdown`／`keydown`（capture）時 `Music.start()`；`visibilitychange` 切背景停、回來再開。`DB.set.music` 預設開。
    - 存檔 `DB = { facts, errs, best, set:{ lang, music, sound, chime, level, timer, ring }, daily, pet, retest, town }`，`save()`；載入用 `Object.assign(fresh(), …)` 補欄位並消毒。
@@ -76,6 +76,7 @@
 - [x] 教學（`Tut`：第一次打開動手撥三下、選要練什麼；設定可再看）
 - [x] 鐘面外圈（`setRing`：00～55、兔子指到的亮、提示一格一格亮；設定可關）
 - [x] 韓文、西班牙文（`STR.ko`／`STR.es`，`timePhrase`）
+- [x] 小鎮像小鎮（鐘樓、動物站在家門口、撥對時走出門、玩越多小鎮越大；`tests/town.js`）— 小兔與裝飾的插畫等本機 session 用 ChatGPT 生（`art/town-raw/`），還沒到之前用 emoji
 - [x] 三年級內容（24 小時制、走了幾分鐘、時間線提示、1 分的小格；`tests/grade3.js`）
 - [x] 誰在玩（最多 4 人）、備份紀錄、家長區（備份／清除／刪除玩家）、獻詞（`tests/who.js`）
 - [x] 音樂、報時（`Music` 三首、`SFX.chime`；設定頁音樂／音效／報時三個開關；`tests/sound.js`）
