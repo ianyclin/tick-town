@@ -23,7 +23,7 @@
   --ink:#3b2f2f;--muted:#7a6a5a;--paper:#fff8ea;--panel:rgba(255,255,255,.82);--line:rgba(90,60,30,.18);
   --sun:#ffb340;--hour:#3a7bd5;--minute:#e8514f;--mint:#5fcf9a;--coral:#ff7a6b;
   --face:#fffaf0;--face-rim:#e8c98f;
-  padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);   /* 瀏海、動態島、底部橫條：body 是 fixed，padding 要加在每個畫面上（寫在 :root 沒有用） */
 }
 :lang(ko){--f-zh:'Chiron',"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif}   /* Chiron GoRound TC 有韓文字（切子集時一起切進來）；後面是缺字時的備用 */
 :lang(ja){--f-zh:'ZenMaru',"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif;--f-num:'Lilita','ZenMaru',system-ui,sans-serif}
@@ -33,7 +33,7 @@ body{font-family:var(--f-zh);color:var(--ink);background:#8fd0ff;overflow:hidden
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
 [hidden]{display:none!important}
 #town{position:fixed;inset:0;width:100%;height:100%;z-index:0}
-.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:10px 16px;z-index:1;gap:8px}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:calc(10px + var(--sat)) 16px calc(10px + var(--sab));z-index:1;gap:8px}
 .top{width:100%;max-width:520px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .top>div{flex:none}
 h1{margin:0;font-size:clamp(15px,5vw,26px);font-weight:900;letter-spacing:1px;color:#fff;white-space:nowrap;flex:1;min-width:0;overflow:hidden;text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 8px rgba(0,0,0,.45)}
@@ -59,7 +59,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 .mode .emo{font-size:30px;line-height:1}
 .mode:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.08)}
 .mode.soon{opacity:.55}
-.overlay{position:fixed;inset:0;background:rgba(40,30,20,.45);display:grid;place-items:center;z-index:6;padding:16px}
+.overlay{position:fixed;inset:0;background:rgba(40,30,20,.45);display:grid;place-items:center;z-index:6;padding:calc(16px + var(--sat)) 16px calc(16px + var(--sab))}
 .card{background:var(--paper);border-radius:24px;padding:18px;width:100%;max-width:420px;max-height:calc(100% - 20px);overflow-y:auto;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
 .card>*{flex-shrink:0}
 .hhead{display:flex;align-items:center;justify-content:space-between;position:sticky;top:-18px;background:var(--paper);padding-top:2px;margin-top:-2px;z-index:1}
@@ -119,7 +119,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 .mcard.done .fr{background:#dff7ea;border-color:var(--mint)}
 .mcard.no .inner{animation:tilt .5s ease}
 @media (prefers-reduced-motion:reduce){.mcard .inner{transition:none}}
-#s-versus{padding:0;touch-action:none;gap:0}
+#s-versus{padding:var(--sat) 0 var(--sab);touch-action:none;gap:0}
 .half{flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 12px;min-height:0;position:relative}
 .half.flip{transform:rotate(180deg);background:rgba(255,255,255,.12)}
 .half .clock-wrap{width:min(62vw,32vh,280px);margin:0}
