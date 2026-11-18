@@ -34,7 +34,7 @@ const solve = async p => { const q = await p.textContent('#gate-q'); const ans =
     const after = await db(); ok(Object.keys(after.facts).length === 0 && after.set.lang === lang && after.daily.badges === 0, `${lang} 清掉了（語言留著）`);
     // 連錯 3 次 → 30 秒
     await p.click('#set-reset'); await p.waitForTimeout(100);
-    for (let k = 0; k < 3; k++) { const m = (await p.$$('#gate-a i')).length; for (let i = 0; i < m; i++) await p.click('#gate-keys .key[data-k="9"]'); await p.waitForTimeout(120); }
+    for (let k = 0; k < 3; k++) { const m = (await p.$$('#gate-a i')).length; for (let i = 0; i < m; i++) await p.click(`#gate-keys .key[data-k="${i ? 9 : 0}"]`); await p.waitForTimeout(120); }   // 第一個數字打 0：答案至少兩位數，不可能剛好打對（全打 9 遇到答案 99 會真的打開）
     ok(await p.isHidden('#o-gate'), `${lang} 連錯 3 次關掉`); await p.click('#set-reset'); await p.waitForTimeout(100); ok(await p.isHidden('#o-gate') && await p.isVisible('#toast'), `${lang} 30 秒內打不開：${await p.textContent('#toast')}`);
     ok(errs.length === 0, `${lang} 無錯誤 ${errs.join('|')}`); await p.context().close();
   }

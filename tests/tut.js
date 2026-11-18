@@ -60,7 +60,7 @@ const URL = 'http://localhost:8124/index.html';
     await p.reload(); await p.waitForTimeout(400);
     ok(await p.isVisible('#s-menu') && await p.isHidden('#s-tut'), `${tag} 再打開不會再跳教學`);
     // 設定 → 再看一次
-    await p.click('#go-set'); await p.waitForTimeout(150); ok(await inView(p, '#go-tut'), `${tag} 設定裡有「${await p.textContent('#go-tut')}」`);
+    await p.click('#go-set'); await p.waitForTimeout(150); await p.locator('#go-tut').scrollIntoViewIfNeeded(); ok(await inView(p, '#go-tut'), `${tag} 設定裡有「${await p.textContent('#go-tut')}」`);
     await p.click('#go-tut'); await p.waitForTimeout(300);
     ok(await p.isVisible('#s-tut') && await p.isHidden('#o-set') && await tot(p) === 420, `${tag} 再看一次：從第 1 步開始`);
     await p.click('#tut-skip'); await p.waitForTimeout(200);
