@@ -1,0 +1,3 @@
+/* 桌面上的 app 名稱，跟著系統語言 */
+"CFBundleDisplayName" = "째깍 마을";
+"CFBundleName" = "째깍 마을";
