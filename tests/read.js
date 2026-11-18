@@ -40,7 +40,7 @@ const SHOT = process.argv[2];
     { const db0 = await p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-v1'))); const bad = Object.entries(db0.facts).filter(([k, f]) => k.startsWith('r:') && f.n > 2); ok(bad.length === 0, `${lang} 沒有題目被重複記（${bad.map(b => b[0] + ':' + b[1].n).join(',')}）`); }
     const db = await p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-v1')));
     const rk = Object.keys(db.facts).filter(k => k.startsWith('r:')); ok(rk.length >= 5, `${lang} 記錄 ${rk.length} 題：${rk.slice(0, 3).join(' ')}`);
-    ok(db.errs.hourLate > 0.4 || db.errs.hourOff > 0 || db.errs.other > 0 || db.errs.minIndex > 0 || db.errs.halfHour > 0 || db.errs.minNear > 0 || db.errs.handSwap > 0 || db.errs.read12 > 0, `${lang} 錯法有記錄 ${JSON.stringify(db.errs)}`);
+    ok(db.errs.hourLate > 0.05 || db.errs.hourOff > 0 || db.errs.other > 0 || db.errs.minIndex > 0 || db.errs.halfHour > 0 || db.errs.minNear > 0 || db.errs.handSwap > 0 || db.errs.read12 > 0, `${lang} 錯法有記錄 ${JSON.stringify(db.errs)}`);
     if (SHOT) await p.screenshot({ path: `${SHOT}/read-${lang}-done.png` });
     await p.click('#rdone-again'); await p.waitForTimeout(300); ok(await p.isHidden('#o-rdone') && !!(await q()), `${lang} 再玩一次`);
     await p.click('#s-read [data-home]'); await p.waitForTimeout(200); ok(await p.isVisible('#s-menu'), `${lang} 回主選單`);

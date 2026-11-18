@@ -33,6 +33,8 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 .top{width:100%;max-width:520px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .top>div{flex:none}
 h1{margin:0;font-size:clamp(15px,5vw,26px);font-weight:900;letter-spacing:1px;color:#fff;white-space:nowrap;flex:1;min-width:0;overflow:hidden;text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 8px rgba(0,0,0,.45)}
+h1.two{white-space:normal;line-height:1.05;font-size:12px}
+@media (max-width:400px){.top{gap:4px}.top>div{gap:4px!important}.top .chip{padding:0 8px;gap:4px}}
 .icon-btn{min-width:44px;min-height:44px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:22px;display:grid;place-items:center;box-shadow:0 2px 0 rgba(0,0,0,.08)}
 .clock-wrap{width:min(78vw,44vh,360px);aspect-ratio:1;position:relative;margin-top:4px}
 .clock-wrap svg{width:100%;height:100%;overflow:visible;display:block;touch-action:none}
@@ -412,7 +414,7 @@ const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // ---------- 介面文字（三語；ja 區塊的 '\n  ja: {' 到 '\n  },' 給切字腳本找）
 const STR = {
   'zh-Hant': {
-    title: '滴答小鎮', 'menu.set': '設定', close: '關閉', on: '開', off: '關',
+    title: '滴答小鎮', title2: '滴答|小鎮', 'menu.set': '設定', close: '關閉', on: '開', off: '關',
     'menu.hint': '用手拖兔子（長針）或烏龜（短針），小鎮會跟著變！',
     'mode.day': '小鎮的一天', 'mode.read': '幾點了？', 'mode.match': '配對', 'mode.versus': '兩個人一起',
     soon: '這裡還在蓋，先玩上面的鐘吧！',
@@ -450,7 +452,7 @@ const STR = {
     'set.help': '遊戲說明', 'set.about': '關於',
     'help.title': '遊戲說明',
     'help.clockT': '鐘', 'help.clock': '<li>短的是<b>烏龜</b>，走得慢，管「幾點」。</li><li>長的是<b>兔子</b>，跑得快，管「幾分」。</li><li>用手拖兔子，它跑一格就是 5 分；烏龜會慢慢跟著走。</li><li>主選單的鐘可以隨便撥，小鎮會跟著變：太陽、燈、動物都不一樣。</li>',
-    'help.dayT': '小鎮的一天', 'help.day': '<li>動物們一天有 7 件事。看牠要幾點做，把鐘撥好。</li><li>撥對了，牠就出門，牠家的燈會亮。</li><li>撥錯沒關係，等一下會有虛線告訴你正確的位置，再撥一次就好。</li><li>7 盞燈全亮，小鎮會放煙火！</li>',
+    'help.dayT': '小鎮的一天', 'help.day': '<li>動物們一天有 7 件事。看牠要幾點做，把鐘撥好。</li><li>撥對了，牠就出門，牠家的燈會亮。</li><li>撥錯沒關係，等一下會有虛線告訴你正確的位置，再撥一次就好。</li><li>你容易搞混的時刻，動物們會多約幾次，可以多練幾次。</li><li>7 盞燈全亮，小鎮會放煙火！</li>',
     'help.readT': '幾點了？', 'help.read': '<li>看鐘，從三張卡片裡選出正確的時刻。</li><li>選錯沒關係，可以再選。</li><li>讀得很熟的時刻，會改成按數字打出來：先打幾點，再打幾分，按「好了」。</li>',
     'help.matchT': '配對', 'help.match': '<li>翻兩張牌，找出一樣的時刻。</li><li>指針鐘、數字鐘、文字，三種樣子都可能出現。</li>',
     'help.vsT': '兩個人一起', 'help.vs': '<li>上下各一座鐘，各撥各的，先撥對的拿一分，5 分就贏。</li><li>可以跟機器人比，也可以跟另一個人比（上面那座是倒過來的）。</li>',
@@ -474,7 +476,7 @@ const STR = {
     'scene.class': '下午的課', 'scene.park': '去公園玩', 'scene.dinner': '吃晚餐', 'scene.bath': '洗澡澡', 'scene.story': '聽故事', 'scene.owl': '貓頭鷹醒著，小熊睡了',
   },
   en: {
-    title: 'Tick-Tock Town', 'menu.set': 'Settings', close: 'Close', on: 'On', off: 'Off',
+    title: 'Tick-Tock Town', title2: 'Tick-Tock|Town', 'menu.set': 'Settings', close: 'Close', on: 'On', off: 'Off',
     'menu.hint': 'Drag the rabbit (long hand) or the tortoise (short hand). Watch the town change!',
     'mode.day': 'Town Day', 'mode.read': 'What time?', 'mode.match': 'Match', 'mode.versus': 'Two players',
     soon: 'Still being built. Play with the clock for now!',
@@ -510,7 +512,7 @@ const STR = {
     'set.help': 'How to play', 'set.about': 'About',
     'help.title': 'How to play',
     'help.clockT': 'The clock', 'help.clock': '<li>The short hand is <b>Tortoise</b>. It moves slowly and tells the hour.</li><li>The long hand is <b>Rabbit</b>. It moves fast and tells the minutes.</li><li>Drag Rabbit. Each number is 5 minutes. Tortoise follows slowly.</li><li>On the menu you can spin the clock any way you like. Watch the sun, the lights and the animals change!</li>',
-    'help.dayT': "Town's Day", 'help.day': '<li>The animals have 7 things to do each day. Set the clock to the right time.</li><li>Set it right and the animal goes out. Its house lights up.</li><li>Got it wrong? No worries. Dotted hands will show the right spot. Try again!</li><li>Light all 7 and the town sets off fireworks!</li>',
+    'help.dayT': "Town's Day", 'help.day': '<li>The animals have 7 things to do each day. Set the clock to the right time.</li><li>Set it right and the animal goes out. Its house lights up.</li><li>Got it wrong? No worries. Dotted hands will show the right spot. Try again!</li><li>Times that trick you come up more often, so you get more practice.</li><li>Light all 7 and the town sets off fireworks!</li>',
     'help.readT': 'What time?', 'help.read': '<li>Look at the clock and pick the right time from three cards.</li><li>Picked wrong? Just pick again.</li><li>Times you know well switch to typing: type the hour, then the minutes, then tap "Done".</li>',
     'help.matchT': 'Match', 'help.match': '<li>Flip two cards and find the same time.</li><li>Clocks, digital times and words can all show up.</li>',
     'help.vsT': 'Two players', 'help.vs': '<li>Two clocks, one on each side. Set yours right first to get a point. 5 points wins.</li><li>Play against the robot, or a friend (the top clock is upside down for them).</li>',
@@ -534,7 +536,7 @@ const STR = {
     'scene.class': 'Afternoon class', 'scene.park': 'Playing at the park', 'scene.dinner': 'Dinner time', 'scene.bath': 'Bath time', 'scene.story': 'Story time', 'scene.owl': 'Owl is up, Bear is asleep',
   },
   ja: {
-    title: 'チクタクタウン', 'menu.set': 'せってい', close: 'とじる', on: 'オン', off: 'オフ',
+    title: 'チクタクタウン', title2: 'チクタク|タウン', 'menu.set': 'せってい', close: 'とじる', on: 'オン', off: 'オフ',
     'menu.hint': 'うさぎ（長いはり）か かめ（みじかいはり）を ゆびで うごかしてみよう！',
     'mode.day': 'まちの一日', 'mode.read': 'いま何時？', 'mode.match': 'ペアさがし', 'mode.versus': 'ふたりで',
     soon: 'ここは まだ じゅんび中。まずは とけいで あそんでね！',
@@ -570,7 +572,7 @@ const STR = {
     'set.help': 'あそびかた', 'set.about': 'このアプリ',
     'help.title': 'あそびかた',
     'help.clockT': 'とけい', 'help.clock': '<li>みじかい はりは <b>かめ</b>。ゆっくり うごいて「何時」を おしえるよ。</li><li>長い はりは <b>うさぎ</b>。はやく うごいて「何分」を おしえるよ。</li><li>うさぎを ゆびで うごかそう。1つ すすむと 5分。かめも ゆっくり ついてくるよ。</li><li>メニューの とけいは じゆうに まわせるよ。太ようや あかりや どうぶつが かわるよ！</li>',
-    'help.dayT': 'まちの一日', 'help.day': '<li>どうぶつたちは 一日に 7つ やることが あるよ。何時に するか 見て、とけいを あわせよう。</li><li>あわせられたら、どうぶつは 出かけて、おうちの あかりが つくよ。</li><li>まちがえても だいじょうぶ。てんせんが ただしい ばしょを おしえてくれるよ。</li><li>7つ ぜんぶ ついたら、はなびが あがるよ！</li>',
+    'help.dayT': 'まちの一日', 'help.day': '<li>どうぶつたちは 一日に 7つ やることが あるよ。何時に するか 見て、とけいを あわせよう。</li><li>あわせられたら、どうぶつは 出かけて、おうちの あかりが つくよ。</li><li>まちがえても だいじょうぶ。てんせんが ただしい ばしょを おしえてくれるよ。</li><li>まちがえやすい 時こくは、なんども 出てくるよ。たくさん れんしゅう できるね。</li><li>7つ ぜんぶ ついたら、はなびが あがるよ！</li>',
     'help.readT': 'いま何時？', 'help.read': '<li>とけいを 見て、3まいの カードから ただしい 時こくを えらぼう。</li><li>まちがえても、もういちど えらべるよ。</li><li>よく よめる 時こくは、すうじで うつように なるよ：何時、何分の じゅんに うって「できた」。</li>',
     'help.matchT': 'ペアさがし', 'help.match': '<li>2まい めくって、おなじ 時こくを さがそう。</li><li>はりの とけい、すうじの とけい、ことば、3つの かたちが 出るよ。</li>',
     'help.vsT': 'ふたりで', 'help.vs': '<li>上と下に とけいが 1つずつ。早く あわせた人が 1点。5点で かち。</li><li>ロボットとも、ともだちとも あそべるよ（上の とけいは さかさまだよ）。</li>',
@@ -606,7 +608,15 @@ function applyStr() {
   $$('[data-t]').forEach(el => el.textContent = tx(el.dataset.t));
   $$('[data-th]').forEach(el => el.innerHTML = tx(el.dataset.th));
   $$('[data-ta]').forEach(el => el.setAttribute('aria-label', tx(el.dataset.ta)));
+  fitTitle();
 }
+// 標題一行放不下就縮字（英文 "Tick-Tock Town" 在窄手機上會被右邊的鈕切掉）；縮到 11px 還放不下（320px 寬的英、日文）才折成兩行
+function fitTitle() {
+  const h = $('h1'); if (!h) return; h.classList.remove('two'); h.style.fontSize = ''; h.textContent = tx('title'); if (!h.clientWidth) return;
+  let px = parseFloat(getComputedStyle(h).fontSize); while (h.scrollWidth > h.clientWidth && px > 11) { px = Math.max(11, px - 1); h.style.fontSize = px + 'px'; }
+  if (h.scrollWidth > h.clientWidth) { h.style.fontSize = ''; h.classList.add('two'); h.innerHTML = tx('title2').split('|').join('<br>'); }
+}
+addEventListener('resize', fitTitle); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitle);
 function setLang() { LANG = STR[DB.set.lang] ? DB.set.lang : langAuto(); applyStr(); }
 
 // ---------- 存檔
@@ -829,7 +839,7 @@ $('#modes').addEventListener('click', e => { const b = e.target.closest('.mode')
 // ---------- 畫面切換
 function show(name) { $$('.screen').forEach(sc => sc.hidden = sc.id !== 's-' + name); mode = name; $('#toast').hidden = true; }
 $$('[data-home]').forEach(b => b.addEventListener('click', goHome));
-function goHome() { Day.stop(); Read.stop(); Match.stop(); Versus.stop(); show('menu'); refreshMenu(); showTime(clock.get().tot); }
+function goHome() { Day.stop(); Read.stop(); Match.stop(); Versus.stop(); show('menu'); refreshMenu(); showTime(clock.get().tot); fitTitle(); }
 
 // ---------- 粒子（慶祝用）
 const FX = (() => {
@@ -874,14 +884,33 @@ const clock2 = Clock($('#clock2'), { snap: 5 });
 const Day = (() => {
   const WHO = { wake: 'bear', breakfast: 'squirrel', school: 'rabbit', lunch: 'bear', park: 'squirrel', dinner: 'rabbit', bath: 'rabbit', story: 'bear', sleep: 'bear' };
   const EMO = { bear: '🐻', rabbit: '🐰', squirrel: '🐿️', owl: '🦉' };
-  const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
   let S = null, judgeT = 0, hintN = 0;
   // 一天 7 件事，時刻依等級：1 整點半點、2 五分、3 一分（其中兩件用「走了幾分鐘」問）
+  // 每件事在自己的時段裡挑時刻：錯過的時刻、會誘發孩子最常犯的錯的時刻比較常出（同讀鐘的 pick()）；上一輪出過的少出
+  let lastDay = [];
+  const wpick = c => { let r = Math.random() * c.reduce((a, x) => a + x[1], 0); for (const x of c) { r -= x[1]; if (r <= 0) return x[0]; } return c[c.length - 1][0]; };
+  function weight(t) {
+    const E = DB.errs, h = Math.floor(t / 60), m = t % 60, f = DB.facts[`s:${h}:${m}`]; let w = 1;
+    if (f) w += f.err * 6 + (f.w ? 1 : 0); else w += 0.5;
+    if (num(E.hourLate) > 0.1 && m >= 35) w += 3 * E.hourLate; if (num(E.minIndex) > 0.1 && m % 30 !== 0) w += 3 * E.minIndex; if (num(E.halfHour) > 0.1 && m === 30) w += 3 * E.halfHour; if (num(E.read12) > 0.1 && h % 12 === 0) w += 3 * E.read12;
+    if (lastDay.includes(t)) w *= 0.3;
+    return w;
+  }
   function makeDay() {
-    const L = DB.set.level, step = L === 1 ? 30 : L === 3 ? 1 : 5;
+    const L = DB.set.level, step = L === 1 ? 30 : L === 3 ? 1 : 5, E = DB.errs;
     const base = [['wake', 6, 7.5], ['breakfast', 7, 8.5], ['school', 7.5, 9], ['lunch', 11.5, 13], ['park', 15, 17.5], ['dinner', 17.5, 19.5], ['sleep', 20, 21.5]];
     let prev = -1;
-    return base.map(([sc, a, b]) => { let t; do { t = clamp(Math.round(rnd(a * 60, b * 60) / step) * step, 0, 1439); } while (t <= prev); prev = t; const task = { sc, t, who: WHO[sc] }; if (L === 3 && (sc === 'park' || sc === 'dinner')) { const d = [25, 35, 40, 45, 50][rnd(0, 4)]; task.from = t - d; task.d = d; } return task; });
+    const day = base.map(([sc, a, b]) => {
+      const el = L === 3 && (sc === 'park' || sc === 'dinner'), c = [];
+      for (let t = Math.ceil(a * 60 / step) * step; t <= b * 60; t += step) if (t > prev) {
+        if (!el) { c.push([[t], weight(t)]); continue; }
+        for (const d of [25, 35, 40, 45, 50]) { const from = t - d, f = DB.facts[`e:${from}:${d}`]; c.push([[t, d], (1 + (f ? f.err * 6 : 0) + (num(E.carry) > 0.1 && from % 60 + d > 60 ? 3 * E.carry : 0)) * (lastDay.includes(t) ? 0.3 : 1)]); }   // 走了幾分鐘：常忘了跨過整點（carry）的孩子，多出會跨整點的
+      }
+      const [t, d] = wpick(c); prev = t; const task = { sc, t, who: WHO[sc] };
+      if (el) { task.from = t - d; task.d = d; }
+      return task;
+    });
+    lastDay = day.map(k => k.t); return day;
   }
   function start() { S = { tasks: makeDay(), i: 0, lit: 0, tries: 0 }; hintN = 0; show('day'); $('#o-done').hidden = true; next(); }
   function stop() { clearTimeout(judgeT); clock2.ghost(null); clock2.countStop(); S = null; }
@@ -923,7 +952,7 @@ const Day = (() => {
   clock2.onChange = (tot, dragging) => { if (!S || S.ok) return; words(tot); clearTimeout(judgeT); $('#day-hint').hidden = true; clock2.countStop(); if (dragging) return; if (tot % 720 === S.tasks[S.i].t % 720) { S.ok = true; good(); } else judgeT = setTimeout(judge, 2000); };   // 撥對後再碰指針不再算一次   // 鐘面是 12 小時的，上下午不管
   clock2.onSnap = (tot, bell) => { SFX.tick(); };
   $('#done-again').addEventListener('click', start); $('#done-home').addEventListener('click', () => { $('#o-done').hidden = true; goHome(); });
-  return { start, stop, target: () => S && S.tasks[S.i].t };
+  return { start, stop, target: () => S && S.tasks[S.i].t, makeDay };
 })();
 
 // ---------- 幾點了？（讀鐘）：先選三張卡，熟了才打數字

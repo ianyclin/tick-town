@@ -16,6 +16,18 @@ const SHOT = process.argv[2];
     ok(await cs(7 * 60 + 20, 9 * 60 + 20) === 'hourOff', '7:20 撥成 9:20 → hourOff');
     ok(await cs(7 * 60 + 20, 2 * 60 + 5) === 'other', '亂撥 → other');
     await p.close(); }
+  // 出題偏向弱點：某種錯法的權重高，會誘發那種錯的時刻要明顯變多
+  { const rate = async (level, errs, facts, f) => { const p = await b.newPage(); await p.addInitScript(`localStorage.setItem('tick-town-v1', ${JSON.stringify(JSON.stringify({ set: { lang: 'zh-Hant', sound: false, level }, errs, facts, hinted: true }))});`); await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(200);
+      const r = await p.evaluate(f => { const fn = new Function('k', 'return ' + f); let hit = 0, n = 0, bad = 0; for (let i = 0; i < 300; i++) { const d = window.__tt.Day.makeDay(); if (d.length !== 7 || d.some((k, j) => j && k.t <= d[j - 1].t)) bad++; for (const k of d) { n++; if (fn(k)) hit++; } } return [hit / n, bad]; }, f); await p.close(); return r; };
+    const late = 'k.t % 60 >= 35', half = 'k.t % 60 === 30', idx = 'k.t % 30 !== 0', cross = 'k.from !== undefined && k.from % 60 + k.d > 60', el = 'k.from !== undefined';
+    const [l0, bad0] = await rate(2, {}, {}, late), [l1, bad1] = await rate(2, { hourLate: 0.8 }, {}, late);
+    ok(bad0 === 0 && bad1 === 0, '每天 7 件事、時刻一件比一件晚');
+    ok(l1 > l0 + 0.12, `hourLate 弱 → 35 分以後的時刻變多（${l0.toFixed(2)} → ${l1.toFixed(2)}）`);
+    const [h0] = await rate(2, {}, {}, half), [h1] = await rate(2, { halfHour: 0.8 }, {}, half); ok(h1 > h0 * 1.8, `halfHour 弱 → 半點變多（${h0.toFixed(2)} → ${h1.toFixed(2)}）`);
+    const [i0] = await rate(1, {}, {}, idx), [i1] = await rate(1, { minIndex: 0.9, hourLate: 0.9 }, {}, idx); ok(i0 === 0 && i1 === 0, '等級 1 不管弱點是什麼都只出整點、半點');
+    const [f0] = await rate(2, {}, {}, 'k.t === 430'), [f1] = await rate(2, {}, { 's:7:10': { n: 3, w: 2, err: 0.6, t: 0 } }, 'k.t === 430'); ok(f1 > f0 * 2, `錯過的 7:10 比較常出（${f0.toFixed(3)} → ${f1.toFixed(3)}）`);
+    const [c0] = await rate(3, {}, {}, cross), [c1] = await rate(3, { carry: 0.8 }, {}, cross), [e3] = await rate(3, {}, {}, el); ok(c1 > c0 + 0.03 && Math.abs(e3 - 2 / 7) < 0.001, `carry 弱 → 跨整點的「走了幾分鐘」變多（${c0.toFixed(2)} → ${c1.toFixed(2)}），等級 3 每天兩題`);
+  }
   for (const [lang, level, w, h] of [['zh-Hant', 2, 390, 844], ['en', 1, 320, 568], ['ja', 3, 390, 844]]) {
     const p = await (await b.newContext({ viewport: { width: w, height: h }, hasTouch: true })).newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.addInitScript(`localStorage.setItem('tick-town-v1', JSON.stringify({ set: { lang: '${lang}', sound: false, level: ${level} }, free: 420, hinted: true }));`);
