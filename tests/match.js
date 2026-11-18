@@ -1,4 +1,4 @@
-// 配對：8 張牌 4 對、翻錯翻回去、配錯記讀錯、全配完結算
+// 配對：12 張牌 6 對（3×4）、翻錯翻回去、配錯記讀錯、全配完結算
 const { chromium } = require('playwright');
 let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
 const SHOT = process.argv[2];
@@ -9,9 +9,9 @@ const SHOT = process.argv[2];
     await p.addInitScript(`localStorage.setItem('tick-town-v1', JSON.stringify({ set: { lang: '${lang}', sound: false, level: ${level} }, hinted: true }));`);
     await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(300);
     await p.click('[data-mode=match]'); await p.waitForTimeout(300);
-    ok(await p.isVisible('#s-match') && (await p.$$('#mgrid .mcard')).length === 8, `${lang} 8 張牌`);
+    ok(await p.isVisible('#s-match') && (await p.$$('#mgrid .mcard')).length === 12 && await p.evaluate(() => { const g = document.querySelector('#mgrid').getBoundingClientRect(); return g.bottom <= innerHeight && g.right <= innerWidth; }), `${lang} 12 張牌，4 排都在畫面內`);
     const S = () => p.evaluate(() => { const s = window.__tt.Match.s(); return { cards: s.cards.map(c => ({ t: c.t, r: c.r, i: c.i, done: !!c.done })), done: s.done, flips: s.flips }; });
-    let st = await S(); const ids = new Set(st.cards.map(c => c.i)); ok(ids.size === 4 && st.cards.every(c => st.cards.filter(x => x.i === c.i).length === 2), `${lang} 4 對，每對 2 張`);
+    let st = await S(); const ids = new Set(st.cards.map(c => c.i)); ok(ids.size === 6 && st.cards.every(c => st.cards.filter(x => x.i === c.i).length === 2), `${lang} 6 對，每對 2 張`);
     ok(st.cards.every(c => { const o = st.cards.find(x => x.i === c.i && x !== c); return o.r !== c.r; }), `${lang} 每對兩張是不同樣子：${st.cards.map(c => c.r).join('')}`);
     if (lang === 'en') ok(st.cards.every(c => c.r !== 'w' || c.t[1] % 30 === 0), `${lang} 英文的文字牌只在整點半點`);
     const sizes = await p.$$eval('#mgrid .mcard', es => es.map(e => e.getBoundingClientRect().width)); ok(Math.min(...sizes) >= 44, `${lang} 牌寬 ${Math.round(Math.min(...sizes))}`);
@@ -24,8 +24,8 @@ const SHOT = process.argv[2];
     ok((await p.$$('#mgrid .mcard.open:not(.done)')).length === 2, `${lang} 翻開兩張`); await p.waitForTimeout(1000);
     ok((await p.$$('#mgrid .mcard.open:not(.done)')).length === 0, `${lang} 配錯翻回去`);
     // 全部配對：照 i 配
-    for (let k = 0; k < 4; k++) { st = await S(); if (st.cards.every(c => c.done)) break; const a = st.cards.findIndex(c => !c.done); const bb = st.cards.findIndex((c, i) => i !== a && !c.done && c.i === st.cards[a].i); await p.click(`#mgrid .mcard[data-i="${a}"]`); await p.click(`#mgrid .mcard[data-i="${bb}"]`); await p.waitForTimeout(250); }
-    st = await S(); ok(st.done === 4 && (await p.$$('#mgrid .mcard.done')).length === 8, `${lang} 4 對全配完`);
+    for (let k = 0; k < 6; k++) { st = await S(); if (st.cards.every(c => c.done)) break; const a = st.cards.findIndex(c => !c.done); const bb = st.cards.findIndex((c, i) => i !== a && !c.done && c.i === st.cards[a].i); await p.click(`#mgrid .mcard[data-i="${a}"]`); await p.click(`#mgrid .mcard[data-i="${bb}"]`); await p.waitForTimeout(250); }
+    st = await S(); ok(st.done === 6 && (await p.$$('#mgrid .mcard.done')).length === 12, `${lang} 6 對全配完`);
     await p.waitForTimeout(900); ok(await p.isVisible('#o-mdone'), `${lang} 結算：${await p.textContent('#mdone-p')}`);
     const db = await p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-v1'))); ok(Object.keys(db.facts).some(k => k.startsWith('r:')) && db.best.matches === 1, `${lang} 配對記進讀鐘紀錄、matches=${db.best.matches}`);
     await p.click('#mdone-again'); await p.waitForTimeout(300); ok((await p.$$('#mgrid .mcard.done')).length === 0, `${lang} 再玩一次重新發牌`);
