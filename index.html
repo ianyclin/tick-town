@@ -7,7 +7,7 @@
 <title>滴答小鎮</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-<meta name="theme-color" content="#8fd0ff">
+<meta name="theme-color" content="#bfe6ff">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23fffaf0' stroke='%23e8c98f' stroke-width='4'/%3E%3Cpath d='M32 32V14' stroke='%23e8514f' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M32 32l12 7' stroke='%233a7bd5' stroke-width='7' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='32' r='3' fill='%235b4a3a'/%3E%3C/svg%3E">
 <style>
 @font-face{font-family:'Lilita';src:url(assets/fonts/lilita.woff2) format('woff2');font-display:swap}
@@ -29,7 +29,7 @@
 :lang(ja){--f-zh:'ZenMaru',"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif;--f-num:'Lilita','ZenMaru',system-ui,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overscroll-behavior:none}
-body{font-family:var(--f-zh);color:var(--ink);background:#8fd0ff;overflow:hidden;position:fixed;inset:0;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+body{font-family:var(--f-zh);color:var(--ink);background:#bfe6ff;overflow:hidden;position:fixed;inset:0;touch-action:manipulation;user-select:none;-webkit-user-select:none}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
 [hidden]{display:none!important}
 #town{position:fixed;inset:0;width:100%;height:100%;z-index:0}
@@ -367,6 +367,21 @@ h1{color:#fff;text-shadow:0 2px 0 #e58aa2,0 4px 0 rgba(150,70,95,.35),0 6px 10px
 #splash{background:linear-gradient(#bfe6ff,#ffeef2 70%,#fff3df)}
 #splash .sp-title{text-shadow:0 3px 0 #e58aa2,0 6px 0 rgba(150,70,95,.3),0 8px 16px rgba(120,60,80,.35)}
 #splash img{box-shadow:0 14px 30px rgba(110,70,60,.3)}
+/* 家長報告、介紹另一個遊戲的卡 */
+.rep-sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.rep-sum div{background:#fff6e9;box-shadow:var(--clay-in);border-radius:16px;padding:8px 4px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.rep-sum b{font-family:var(--f-num);font-size:26px;color:var(--hour);font-weight:400;line-height:1.1}.rep-sum span{font-size:12px;font-weight:700;color:var(--muted);line-height:1.2}
+.card.report p{text-align:left;font-size:15px;line-height:1.55}
+.card.report h4{margin:6px 0 0;font-size:17px;color:var(--hour)}
+.card.report .lab{font-size:13px}
+.rep-err{background:var(--pan);box-shadow:var(--clay-s);border-radius:18px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.rep-head{display:flex;align-items:center;gap:10px}.rep-head .pc{width:66px;aspect-ratio:1;flex:none;pointer-events:none}.rep-head .pc svg{width:100%;height:100%;display:block;overflow:visible}
+.rep-head b{font-size:16px;line-height:1.3;display:block}.rep-head b::first-letter{text-transform:uppercase}.rep-head small{font-size:12px;color:#c0392b;font-weight:700}
+.rep-err p i{font-style:normal;font-weight:900;color:#245f9e;margin-right:6px;font-size:12px;background:#dcecff;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.rep-bar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:#f3e3d2;box-shadow:var(--clay-in)}.rep-bar i{display:block}.rep-bar .s{background:#ffd84a}.rep-bar .l{background:#ffc070}.rep-bar .w{background:#ff9d8f}
+.promo{display:flex;align-items:center;gap:10px;background:var(--pan);box-shadow:var(--clay-s);border-radius:18px;padding:10px 12px;text-align:left}
+.promo img{width:56px;height:56px;border-radius:13px;flex:none;box-shadow:0 3px 6px rgba(110,70,60,.25)}
+.promo div{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}.promo small{font-size:12px;color:var(--muted);font-weight:700}.promo b{font-size:17px}.promo span{font-size:13px;color:var(--muted)}
 /* 圖示與插畫 */
 .ic{width:1.15em;height:1.15em;display:inline-block;vertical-align:-0.2em;flex:none;object-fit:contain}
 img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px 2px rgba(90,50,40,.25))}
@@ -557,6 +572,7 @@ img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px
     <div class="row"><span class="lab"><span data-t="set.chime"></span><small class="sub" data-t="set.chimeD"></small></span><button class="sw" type="button" data-set="chime" aria-pressed="true" data-t="on"></button></div>
     <div class="linkrow"><button class="link-btn" type="button" id="go-tut" data-t="set.tut" style="grid-column:1/-1"></button><button class="link-btn" type="button" id="go-help" data-t="set.help"></button><button class="link-btn" type="button" id="go-about" data-t="set.about"></button></div>
     <div class="lab parent" data-t="set.parent"></div>
+    <div class="row"><span class="lab"><span data-t="set.report"></span><small class="sub" data-t="set.reportD"></small></span><button class="setbtn" type="button" id="go-report" data-t="set.reportGo"></button></div>
     <div class="row app-only" hidden><span class="lab"><span data-t="set.unlock"></span><small class="sub" id="set-unlockD"></small></span><button class="setbtn" type="button" id="set-unlock" data-t="set.unlockGo"></button></div>
     <div class="row"><span class="lab"><span data-t="set.backup"></span><small class="sub" data-t="set.backupD"></small></span><button class="setbtn" type="button" id="go-backup" data-t="set.backupGo"></button></div>
     <div class="row"><span class="lab" id="set-resetP"></span><button class="danger" type="button" id="set-reset" data-t="set.reset"></button></div>
@@ -618,6 +634,14 @@ img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px
   </div>
 </div>
 
+<div class="overlay" id="o-report" hidden>
+  <div class="card report">
+    <div class="hhead"><h3 id="rep-title"></h3><button class="xbtn" type="button" id="rep-close" data-ta="close" data-ic="close"></button></div>
+    <div id="rep-body" class="btn-col"></div>
+    <div class="promo"><img src="assets/promo/jiujiu.webp" alt=""><div><small data-t="promo.t"></small><b data-t="promo.name"></b><span data-t="promo.d"></span></div><button class="setbtn" type="button" data-promo="jiujiu" data-t="promo.go"></button></div>
+    <p class="legal" data-t="rep.note"></p>
+  </div>
+</div>
 <div class="overlay" id="o-help" hidden>
   <div class="card help">
     <div class="hhead"><h3 data-t="help.title"></h3><button class="xbtn" type="button" id="help-close" data-ta="close" data-ic="close"></button></div>
@@ -632,6 +656,7 @@ img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px
     <h4 data-t="help.petT"></h4><ul data-th="help.pet"></ul>
     <h4 data-t="help.townT"></h4><ul data-th="help.town"></ul>
     <h4 data-t="help.whoT"></h4><ul data-th="help.who"></ul>
+    <h4 data-t="help.repT"></h4><ul data-th="help.rep"></ul>
   </div>
 </div>
 
@@ -644,6 +669,7 @@ img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px
     <h4 data-t="about.madeT"></h4><p data-t="about.made"></p>
     <div class="legal" data-t="about.fonts"></div>
     <button class="link-btn" type="button" id="about-privacy" data-t="about.privLink" style="align-self:center"></button>
+    <div class="promo"><img src="assets/promo/jiujiu.webp" alt=""><div><small data-t="promo.t"></small><b data-t="promo.name"></b><span data-t="promo.d"></span></div><button class="setbtn" type="button" data-promo="jiujiu" data-t="promo.go"></button></div>
     <p class="about-ded" data-th="about.ded"></p>
   </div>
 </div>
@@ -744,6 +770,8 @@ const STR = {
     'bk.importT': '匯入', 'bk.importP': '匯入會取代這台裝置上所有人的紀錄。', 'bk.pick': '選擇備份檔', 'bk.pastePh': '或把備份碼貼在這裡', 'bk.pasteGo': '用備份碼匯入', 'bk.bad': '看不懂這個備份。請確認是滴答小鎮的備份檔或備份碼，而且有完整複製。', 'bk.found': '備份裡有 {n} 個人：{names}（{date} 備份）。匯入後，這台裝置原本的紀錄會被取代。', 'bk.yes': '確定匯入', 'bk.done': '匯入完成！', 'bk.fail': '匯入失敗，這台裝置的空間可能不夠。', 'about.ded': '獻給一直支持我的老婆和三個寶貝',
     'help.whoT': '誰在玩', 'help.who': '<li>家裡最多 4 個人可以一起玩，每個人有自己的紀錄、星圖、寵物和難度。</li><li>在「設定 → 誰在玩」取名字、新增一個人。有名字以後，主選單左上角會出現名字，點它就能換人。</li><li>新加的人會先玩一次教學，再選要練什麼。</li>',
     'set.resetP0': '清掉這台裝置上的所有紀錄', 'set.parent': '家長區', 'reset.done': '紀錄清掉了',
+    'set.report': "學習報告", 'set.reportD': "最常搞混的地方、建議怎麼練", 'set.reportGo': "看看", 'rep.title': "{name}的學習報告", 'rep.title0': "學習報告", 'rep.week': "這 7 天", 'rep.days': "練了幾天", 'rep.n': "答了幾題", 'rep.acc': "答對", 'rep.up': "比前一週進步了（前一週答對 {p}%）。", 'rep.same': "跟前一週差不多（前一週答對 {p}%）。", 'rep.down': "這週錯得比前一週多一點（前一週答對 {p}%）。常常是題目變難了，不用擔心。", 'rep.none': "這 7 天還沒有紀錄。讓孩子玩幾輪「小鎮的一天」或「幾點了？」，這裡就會出現他最常搞混的地方。", 'rep.errT': "最常搞混的地方", 'rep.errNone': "目前沒有特別常犯的錯。繼續玩就好，遊戲會自己挑還不熟的時刻來出題。", 'rep.cnt': "這兩週 {n} 次", 'rep.ex': "例如", 'rep.game': "遊戲裡", 'rep.home': "在家可以", 'rep.hourLate.x': "鐘上是 7:50，孩子說成 8:50。短針快走到 8，看起來像 8 點。", 'rep.hourLate.g': "多玩「幾點了？」。遊戲發現這個錯，會多出 40 分到 55 分的時刻，答錯時會提醒「烏龜還沒走到 8」。", 'rep.hourLate.h': "看家裡的鐘，在快要整點的時候問：「短針過了 8 沒有？」還沒過，就還是 7 點多。", 'rep.minIndex.x': "鐘上是 7:20，孩子說成 7:04。長針指著 4，就說 4 分。", 'rep.minIndex.g': "到設定把「外圈的分鐘數字」打開，再玩「小鎮的一天」。撥錯時鐘會從 12 開始 5、10、15 一格一格數給他看。", 'rep.minIndex.h': "指著鐘面的數字一起 5 個 5 個數：1 是 5 分、2 是 10 分、3 是 15 分。", 'rep.handSwap.x': "鐘上是 3:40，孩子說成 8:15。把長針當成幾點、短針當成幾分。", 'rep.handSwap.g': "到設定按「再看一次怎麼玩」：烏龜是短針（幾點），兔子是長針（幾分）。再玩「小鎮的一天」。", 'rep.handSwap.h': "每次都用同一個順序：先找短針說「幾點」，再找長針說「幾分」。", 'rep.halfHour.x': "鐘上是 6:30，孩子說成 7:30，或把短針撥在正 6 的位置。半點時短針其實在 6 和 7 中間。", 'rep.halfHour.g': "到設定把「要練什麼」調成「整點、半點」練幾天，再調回來。", 'rep.halfHour.h': "半點的時候一起看短針：「它走到 6 和 7 的中間，還沒到 7，所以是 6 點半。」", 'rep.minOne.x': "鐘上是 4:23，孩子說成 4:25 或 4:20。小格沒有數清楚。", 'rep.minOne.g': "「要練什麼」選「過了多久」時才會出 1 分的小格。撥錯時鐘會從最近的 5 的倍數開始，一小格一小格亮給他看。", 'rep.minOne.h': "先說最近的「5 的倍數」（20 分），再一小格一小格往上加：21、22、23。", 'rep.carry.x': "2:50 出發、走了 25 分鐘，孩子算成 2:75，或只算到 3:00 就停了。", 'rep.carry.g': "玩「幾點了？」裡「走了幾分鐘」的題目。答錯時會畫一條時間線：先走到整點，再走剩下的。", 'rep.carry.h': "用兩步算：「2:50 再 10 分鐘到 3:00，還剩 15 分鐘，所以是 3:15。」出門、等公車時都可以問。", 'rep.ampm.x': "下午 3:20 用 24 小時制要寫 15:20，孩子寫成 3:20；或早上 9 點寫成 21:00。", 'rep.ampm.g': "玩「幾點了？」的 24 小時制題目。遊戲發現這個錯，會多出下午的時刻。", 'rep.ampm.h': "下午的時刻加 12：下午 3 點是 15 點。看火車時刻表、電影場次時一起讀。", 'rep.read12.x': "鐘上是 12:30，孩子說成 1:30 或 0:30。", 'rep.read12.g': "在主畫面的大鐘，把烏龜從 11 慢慢拖過 12 再到 1，看下面的字怎麼變。", 'rep.read12.h': "中午吃飯前後看鐘：12 點之後是 1 點。短針在 12 和 1 中間時，還是 12 點多。", 'rep.starT': "已經會的時刻", 'rep.star': "{s} 個已點亮、{l} 個熟悉中、{w} 個容易錯（一共 144 個，每 5 分一個）。在主畫面按星星的圖示可以看星圖。", 'rep.note': "報告只看這台裝置上的紀錄，不會上傳到任何地方。", 'promo.t': "同一位作者的另一個遊戲", 'promo.name': "九九流星隊", 'promo.d': "打下流星，練熟九九乘法。", 'promo.go': "去看看",
+    'help.repT': "給大人：學習報告", 'help.rep': "<li>設定最下面的家長區有<b>學習報告</b>：這 7 天練了多少、最常搞混的是哪一種、在家可以怎麼練。</li><li>報告只看這台裝置上的紀錄。</li>",
     'gate.title': '請大人來', 'gate.p': '請大人算這一題，才能繼續。', 'gate.cancel': '取消', 'gate.wait': '錯太多次了，等 30 秒再試',
     'menu.map': '星圖', 'map.count': '{n}/{t}', 'map.aria': '亮了 {n} 顆星，一共 {t} 顆', 'map.legend': '裡面那圈是 1 點，外面是 12 點；一片是 5 分',
     'map.info': '每個時刻一顆星，讀對、撥對幾次就會亮。<b>裡面那圈是 1 點，最外面是 12 點</b>，一片是 5 分。點一片看看。', 'map.weak': '最常搞混的是：<b>{e}</b>。多玩幾次就會了！', 'map.sector': '<b>{m} 分</b>的題（1 點到 12 點）：',
@@ -819,6 +847,8 @@ const STR = {
     'bk.pick': 'Choose backup file', 'bk.pastePh': 'Or paste a backup code here', 'bk.pasteGo': 'Import from code', 'bk.bad': 'This doesn\'t look like a Tick-Tock Town backup. Check that it\'s the right file or that the whole code was copied.', 'bk.found': 'This backup has {n} player(s): {names} (saved {date}). Importing replaces the records on this device.',
     'bk.yes': 'Import', 'bk.done': 'Import complete!', 'bk.fail': 'Import failed. This device may be out of storage.', 'about.ded': 'For my wife and our three kids, who always cheer me on.', 'help.whoT': 'Who\'s playing', 'help.who': '<li>Up to 4 people can play on one device. Everyone gets their own records, star map, pet and level.</li><li>Add names and players in Settings → Who\'s playing. Once someone has a name, it shows at the top left of the menu. Tap it to switch.</li><li>A new player starts with the short tutorial, then picks what to practice.</li>',
     'set.resetP0': 'Erase all progress on this device', 'set.parent': 'For grown-ups', 'reset.done': 'Progress erased',
+    'set.report': "Progress report", 'set.reportD': "Most common mix-ups and how to practice", 'set.reportGo': "Open", 'rep.title': "{name}'s progress report", 'rep.title0': "Progress report", 'rep.week': "Last 7 days", 'rep.days': "days played", 'rep.n': "answers", 'rep.acc': "correct", 'rep.up': "Better than the week before ({p}% correct then).", 'rep.same': "About the same as the week before ({p}% correct then).", 'rep.down': "A few more misses than the week before ({p}% correct then). Often that just means the questions got harder.", 'rep.none': "Nothing recorded in the last 7 days. After a few rounds of Town Day or What time?, the most common mix-ups will show up here.", 'rep.errT': "Most common mix-ups", 'rep.errNone': "No mix-up stands out right now. Just keep playing. The game picks the times that still need work.", 'rep.ex': "Example", 'rep.game': "In the game", 'rep.home': "At home", 'rep.hourLate.x': "The clock shows 7:50 and your child says 8:50. The short hand is almost at 8, so it looks like 8 o'clock.", 'rep.hourLate.g': "Play What time? more. When the game sees this mix-up it gives more times from :40 to :55, and reminds your child that Turtle has not reached the 8 yet.", 'rep.hourLate.h': "Look at a real clock shortly before the hour and ask, \"Has the short hand passed the 8 yet?\" If not, it is still 7-something.", 'rep.minIndex.x': "The clock shows 7:20 and your child says 7:04. The long hand points at the 4, so they say 4 minutes.", 'rep.minIndex.g': "Turn on Minute ring in Settings, then play Town Day. After a miss, the clock counts 5, 10, 15 from the 12, one number at a time.", 'rep.minIndex.h': "Point at the numbers and count by fives together: 1 is 5 minutes, 2 is 10, 3 is 15.", 'rep.handSwap.x': "The clock shows 3:40 and your child says 8:15. They read the long hand as the hour and the short hand as the minutes.", 'rep.handSwap.g': "Tap How to play (again) in Settings: Turtle is the short hand (hours), Rabbit is the long hand (minutes). Then play Town Day.", 'rep.handSwap.h': "Always use the same order: find the short hand and say the hour, then find the long hand and say the minutes.", 'rep.halfHour.x': "The clock shows 6:30 and your child says 7:30, or puts the short hand right on the 6. At half past, the short hand is halfway between 6 and 7.", 'rep.halfHour.g': "In Settings, set Practice to O'clock, half for a few days, then switch back.", 'rep.halfHour.h': "At half past, look at the short hand together: \"It is halfway between 6 and 7. It has not reached 7, so it is half past 6.\"", 'rep.minOne.x': "The clock shows 4:23 and your child says 4:25 or 4:20. The little ticks were not counted.", 'rep.minOne.g': "The 1-minute ticks only appear when Practice is set to How long?. After a miss, the clock lights the little ticks one by one from the nearest five.", 'rep.minOne.h': "Say the nearest five first (20 minutes), then count on one tick at a time: 21, 22, 23.", 'rep.carry.x': "Leaving at 2:50 and walking 25 minutes, your child says 2:75, or stops at 3:00.", 'rep.carry.g': "Play the \"how many minutes\" questions in What time?. After a miss, the game draws a timeline: first up to the hour, then the rest.", 'rep.carry.h': "Do it in two steps: \"From 2:50, 10 minutes gets us to 3:00. 15 minutes are left, so it is 3:15.\" Try it while waiting for the bus.", 'rep.ampm.x': "3:20 in the afternoon is 15:20 on a 24-hour clock, but your child writes 3:20. Or 9 in the morning becomes 21:00.", 'rep.ampm.g': "Play the 24-hour questions in What time?. When the game sees this mix-up it gives more afternoon times.", 'rep.ampm.h': "Add 12 to afternoon hours: 3 p.m. is 15:00. Read train timetables or movie times together.", 'rep.read12.x': "The clock shows 12:30 and your child says 1:30 or 0:30.", 'rep.read12.g': "On the big clock on the main screen, drag Turtle slowly from 11 past 12 to 1 and watch the words below change.", 'rep.read12.h': "Look at the clock around lunchtime: after 12 comes 1. While the short hand is between 12 and 1, it is still 12-something.", 'rep.starT': "Times your child knows", 'rep.star': "{s} lit up, {l} getting there, {w} tricky (144 in all, one for every 5 minutes). Tap the star icon on the main screen to see the star map.", 'rep.note': "This report only uses the records on this device. Nothing is uploaded anywhere.", 'promo.t': "Another game by the same author", 'promo.name': "9×9 Meteor Squad", 'promo.d': "Shoot down meteors. Master your times tables.", 'promo.go': "Take a look", 'rep.cnt': "{n} times in 2 weeks",
+    'help.repT': "For grown-ups: progress report", 'help.rep': "<li>Under For grown-ups in Settings there is a <b>Progress report</b>: how much practice in the last 7 days, the most common mix-ups, and what to try at home.</li><li>The report only uses the records on this device.</li>",
     'gate.title': 'Ask a grown-up', 'gate.p': 'A grown-up needs to solve this to continue.', 'gate.cancel': 'Cancel', 'gate.wait': 'Too many misses. Try again in 30 seconds',
     'menu.map': 'Star map', 'map.count': '{n}/{t}', 'map.aria': '{n} of {t} stars lit', 'map.legend': 'Inner ring is 1 o\'clock, outer is 12; each slice is 5 minutes',
     'map.info': 'Every time has a star. Read it or set it right a few times and it lights up. <b>The inner ring is 1 o\'clock, the outer ring is 12.</b> Each slice is 5 minutes. Tap a slice!', 'map.weak': 'Mixed up most often: <b>{e}</b>. A few more tries and you\'ll get it!', 'map.sector': '<b>{m} minutes</b> (1 to 12 o\'clock):',
@@ -892,6 +922,8 @@ const STR = {
     'bk.pasteGo': 'コードから読み込む', 'bk.bad': 'チクタクタウンのバックアップとして読み取れませんでした。正しいファイルか、コードを最後までコピーしたか確認してください。', 'bk.found': 'バックアップには {n} 人分の記録があります：{names}（{date} に保存）。読み込むと、この端末の記録は置き換わります。', 'bk.yes': '読み込む', 'bk.done': '読み込みが完了しました！', 'bk.fail': '読み込みに失敗しました。端末の空き容量が足りない可能性があります。', 'about.ded': 'いつも応援してくれる妻と、<br>3人の子どもたちへ',
     'help.whoT': 'だれが あそぶ', 'help.who': '<li>1つの タブレットで 4人まで あそべるよ。ひとりひとりに きろく・星マップ・ペット・むずかしさが あるよ。</li><li>「せってい → だれが あそぶ」で 名前を つけたり、人を ふやしたり できるよ。名前を つけると、メニューの 左上に 名前が でるよ。おすと 人を かえられるよ。</li><li>あたらしい 人は さいしょに あそびかたを やってから、なにを れんしゅうするか えらぶよ。</li>',
     'set.resetP0': 'この たんまつの きろくを ぜんぶ けす', 'set.parent': 'おうちの人へ', 'reset.done': 'きろくを けしました',
+    'set.report': "学習レポート", 'set.reportD': "よく まちがえる ところと 練習の しかた", 'set.reportGo': "見る", 'rep.title': "{name}の 学習レポート", 'rep.title0': "学習レポート", 'rep.week': "この7日間", 'rep.days': "練習した日数", 'rep.n': "答えた数", 'rep.acc': "正解", 'rep.up': "前の週より よくなりました（前の週の正解は {p}%）。", 'rep.same': "前の週と 同じくらいです（前の週の正解は {p}%）。", 'rep.down': "前の週より 少し まちがいが 多めです（前の週の正解は {p}%）。問題が むずかしくなっただけの ことが 多いので、心配いりません。", 'rep.none': "この7日間の 記録は まだ ありません。「まちの一日」や「いま何時？」を 何回か あそぶと、よく まちがえる ところが ここに 出ます。", 'rep.errT': "よく まちがえる ところ", 'rep.errNone': "今は 目立つ まちがいは ありません。このまま あそべば、ゲームが まだ なれていない 時こくを えらんで 出します。", 'rep.cnt': "この2週間で {n}回", 'rep.ex': "例", 'rep.game': "ゲームで", 'rep.home': "おうちで", 'rep.hourLate.x': "時計は 7:50 なのに「8:50」と 言います。短い針が 8に 近いので、8時に 見えます。", 'rep.hourLate.g': "「いま何時？」を 多めに あそびましょう。この まちがいが あると、40分〜55分の 時こくが 多く 出て、「カメは まだ 8に ついていないよ」と 教えます。", 'rep.hourLate.h': "おうちの 時計で、ちょうどの 時間の 少し前に「短い針は 8を すぎた？」と 聞きます。まだなら 7時何分です。", 'rep.minIndex.x': "時計は 7:20 なのに「7:04」と 言います。長い針が 4を さしているので、4分と 言います。", 'rep.minIndex.g': "せっていで「そとの 分の 数字」を オンにして「まちの一日」を あそびます。まちがえると、12から 5、10、15と 一つずつ 数えて 見せます。", 'rep.minIndex.h': "時計の 数字を 指さして、いっしょに 5ずつ 数えます。1は 5分、2は 10分、3は 15分。", 'rep.handSwap.x': "時計は 3:40 なのに「8:15」と 言います。長い針を「何時」、短い針を「何分」と 読んでいます。", 'rep.handSwap.g': "せっていで「あそびかたを もういちど 見る」を おします。カメが 短い針（何時）、ウサギが 長い針（何分）です。そのあと「まちの一日」を あそびます。", 'rep.handSwap.h': "いつも 同じ じゅんばんで 読みます。まず 短い針で「何時」、つぎに 長い針で「何分」。", 'rep.halfHour.x': "時計は 6:30 なのに「7:30」と 言ったり、短い針を 6の 真上に おいたり します。何時半の とき、短い針は 6と 7の 間です。", 'rep.halfHour.g': "せっていの「なにを れんしゅうする？」を 何日か「何時・何時半」に して、あとで もどします。", 'rep.halfHour.h': "何時半の ときに いっしょに 短い針を 見ます。「6と 7の 間で、まだ 7に ついていないから 6時半。」", 'rep.minOne.x': "時計は 4:23 なのに「4:25」や「4:20」と 言います。小さい 目もりを 数えていません。", 'rep.minOne.g': "1分の 目もりは「なにを れんしゅうする？」が「たった時間」の ときだけ 出ます。まちがえると、近い 5の ばいすうから 目もりが 一つずつ 光ります。", 'rep.minOne.h': "まず 近い「5の ばいすう」（20分）を 言って、そこから 一つずつ たします。21、22、23。", 'rep.carry.x': "2:50に 出て 25分 歩くと、「2:75」と 言ったり、3:00で 止まったり します。", 'rep.carry.g': "「いま何時？」の「何分 たった？」の 問題を あそびます。まちがえると 時間の 線が 出ます。まず ちょうどの 時間まで、つぎに のこり。", 'rep.carry.h': "2回に 分けて 考えます。「2:50から 10分で 3:00。のこり 15分だから 3:15。」バスを 待つ ときなどに 聞いてみましょう。", 'rep.ampm.x': "午後 3:20 は 24時間せいで 15:20 ですが、3:20と 書きます。または 朝の 9時を 21:00と 書きます。", 'rep.ampm.g': "「いま何時？」の 24時間せいの 問題を あそびます。この まちがいが あると、午後の 時こくが 多く 出ます。", 'rep.ampm.h': "午後の 時こくには 12を たします。午後 3時は 15時。電車の 時こく表や えいがの 時間を いっしょに 読みましょう。", 'rep.read12.x': "時計は 12:30 なのに「1:30」や「0:30」と 言います。", 'rep.read12.g': "さいしょの 画面の 大きい 時計で、カメを 11から 12を こえて 1まで ゆっくり 動かして、下の 文字が どう かわるか 見ます。", 'rep.read12.h': "お昼ごろに 時計を 見ます。12時の つぎは 1時。短い針が 12と 1の 間なら、まだ 12時何分です。", 'rep.starT': "もう わかる 時こく", 'rep.star': "光っている {s}こ、なれてきた {l}こ、まちがえやすい {w}こ（ぜんぶで 144こ、5分ごと）。さいしょの 画面の 星の ボタンで 星マップが 見られます。", 'rep.note': "この レポートは この たんまつの 記録だけを 使います。どこにも 送りません。", 'promo.t': "同じ 作者の もう一つの ゲーム", 'promo.name': "九九流星隊", 'promo.d': "流星を うって、九九を マスター。", 'promo.go': "見てみる",
+    'help.repT': "おうちの人へ：学習レポート", 'help.rep': "<li>せっていの「おうちの人へ」に <b>学習レポート</b>が あります。この7日間の 練習、よく まちがえる ところ、おうちでの 練習の しかたが 見られます。</li><li>この たんまつの 記録だけを 使います。</li>",
     'gate.title': 'おうちの人を よんでね', 'gate.p': 'つづけるには、おうちの人が この もんだいを といてください。', 'gate.cancel': 'やめる', 'gate.wait': 'まちがいが おおいので、30びょう まってね',
     'menu.map': '星マップ', 'map.count': '{n}/{t}', 'map.aria': '星が {t}こ中 {n}こ ついた', 'map.legend': '内がわが 1時、外がわが 12時。1まいが 5分',
     'map.info': 'どの時こくにも 星が 1つ。何回か 正かいすると 光るよ。<b>内がわの わが 1時、いちばん外が 12時</b>。1まいが 5分だよ。タップしてみてね。', 'map.weak': 'いちばん まちがえやすいのは：<b>{e}</b>。もう少し あそべば できるよ！', 'map.sector': '<b>{m}分</b>の もんだい（1時から 12時）：',
@@ -964,6 +996,8 @@ const STR = {
     'bk.file': '백업 파일 저장', 'bk.copy': '백업 코드 복사', 'bk.saved': '백업 파일을 만들었습니다.', 'bk.copied': '백업 코드를 복사했습니다. 메모에 붙여 넣거나 자신에게 보내 보관하세요.', 'bk.copyManual': '아래 코드를 길게 눌러 전체 선택한 뒤 복사하세요.', 'bk.importT': '가져오기', 'bk.importP': '가져오면 이 기기의 모든 플레이어 기록이 바뀝니다.', 'bk.pick': '백업 파일 선택', 'bk.pastePh': '또는 여기에 백업 코드 붙여 넣기', 'bk.pasteGo': '코드로 가져오기',
     'bk.bad': '째깍 마을 백업이 아닌 것 같습니다. 올바른 파일인지, 코드를 전부 복사했는지 확인해 주세요.', 'bk.found': '플레이어 {n}명: {names} ({date} 백업). 가져오면 이 기기의 기록이 바뀝니다.', 'bk.yes': '가져오기', 'bk.done': '가져오기 완료!', 'bk.fail': '가져오기에 실패했습니다. 기기 저장 공간이 부족할 수 있습니다.', 'about.ded': '언제나 응원해 주는 아내와 세 아이에게.', 'help.whoT': '누가 할까', 'help.who': '<li>한 기기에서 4명까지 할 수 있어. 사람마다 기록, 별 지도, 펫, 단계가 따로 있어.</li><li>"설정 → 누가 할까"에서 이름을 넣거나 사람을 추가해. 이름이 있으면 메뉴 왼쪽 위에 이름이 나와. 누르면 사람을 바꿀 수 있어.</li><li>새로 온 사람은 먼저 노는 방법을 해 보고, 무엇을 연습할지 골라.</li>',
     'set.resetP0': '이 기기의 기록을 모두 지우기', 'set.parent': '어른용', 'reset.done': '기록을 지웠습니다',
+    'set.report': "학습 보고서", 'set.reportD': "자주 헷갈리는 부분과 연습 방법", 'set.reportGo': "보기", 'rep.title': "{name}의 학습 보고서", 'rep.title0': "학습 보고서", 'rep.week': "최근 7일", 'rep.days': "연습한 날", 'rep.n': "푼 문제", 'rep.acc': "정답", 'rep.up': "지난주보다 좋아졌습니다(지난주 정답 {p}%).", 'rep.same': "지난주와 비슷합니다(지난주 정답 {p}%).", 'rep.down': "지난주보다 조금 더 틀렸습니다(지난주 정답 {p}%). 문제가 어려워져서 그런 경우가 많으니 걱정하지 않으셔도 됩니다.", 'rep.none': "최근 7일 동안의 기록이 아직 없습니다. 「마을의 하루」나 「몇 시야?」를 몇 번 하면 자주 헷갈리는 부분이 여기에 나옵니다.", 'rep.errT': "자주 헷갈리는 부분", 'rep.errNone': "지금은 특별히 자주 틀리는 부분이 없습니다. 계속 놀기만 하면 게임이 아직 익숙하지 않은 시각을 골라서 냅니다.", 'rep.cnt': "최근 2주 동안 {n}번", 'rep.ex': "예", 'rep.game': "게임에서", 'rep.home': "집에서", 'rep.hourLate.x': "시계는 7:50인데 8:50이라고 합니다. 짧은바늘이 8에 거의 가 있어서 8시처럼 보입니다.", 'rep.hourLate.g': "「몇 시야?」를 더 많이 해 보세요. 이 실수가 보이면 40분~55분 시각이 더 많이 나오고, \"거북이가 아직 8에 안 왔어\"라고 알려 줍니다.", 'rep.hourLate.h': "집에 있는 시계로 정각이 되기 조금 전에 \"짧은바늘이 8을 지났어?\" 하고 물어보세요. 아직 안 지났으면 7시 몇 분입니다.", 'rep.minIndex.x': "시계는 7:20인데 7:04라고 합니다. 긴바늘이 4를 가리키니까 4분이라고 합니다.", 'rep.minIndex.g': "설정에서 「바깥쪽 분 숫자」를 켜고 「마을의 하루」를 해 보세요. 틀리면 시계가 12부터 5, 10, 15 하고 하나씩 세어 보여 줍니다.", 'rep.minIndex.h': "시계의 숫자를 짚으면서 함께 5씩 세어 보세요. 1은 5분, 2는 10분, 3은 15분.", 'rep.handSwap.x': "시계는 3:40인데 8:15라고 합니다. 긴바늘을 \"몇 시\", 짧은바늘을 \"몇 분\"으로 읽습니다.", 'rep.handSwap.g': "설정에서 「노는 방법 다시 보기」를 눌러 보세요. 거북이가 짧은바늘(몇 시), 토끼가 긴바늘(몇 분)입니다. 그다음 「마을의 하루」를 해 보세요.", 'rep.handSwap.h': "항상 같은 순서로 읽습니다. 먼저 짧은바늘을 찾아 \"몇 시\", 그다음 긴바늘을 찾아 \"몇 분\".", 'rep.halfHour.x': "시계는 6:30인데 7:30이라고 하거나, 짧은바늘을 6에 딱 맞춰 놓습니다. 반일 때 짧은바늘은 6과 7 사이에 있습니다.", 'rep.halfHour.g': "설정의 「무엇을 연습할까?」를 며칠 동안 「정각・반」으로 바꿨다가 다시 돌려놓으세요.", 'rep.halfHour.h': "반일 때 짧은바늘을 함께 보세요. \"6과 7 사이에 있고 아직 7에 안 왔으니까 6시 반이야.\"", 'rep.minOne.x': "시계는 4:23인데 4:25나 4:20이라고 합니다. 작은 눈금을 세지 않았습니다.", 'rep.minOne.g': "1분짜리 눈금은 「무엇을 연습할까?」가 「얼마나 지났지?」일 때만 나옵니다. 틀리면 가까운 5의 배수부터 작은 눈금이 하나씩 켜집니다.", 'rep.minOne.h': "먼저 가까운 \"5의 배수\"(20분)를 말하고, 거기서 한 칸씩 더합니다. 21, 22, 23.", 'rep.carry.x': "2:50에 출발해서 25분 걸으면 2:75라고 하거나 3:00에서 멈춥니다.", 'rep.carry.g': "「몇 시야?」의 \"몇 분 지났지?\" 문제를 해 보세요. 틀리면 시간 선이 그려집니다. 먼저 정각까지, 그다음 나머지.", 'rep.carry.h': "두 번에 나눠 계산합니다. \"2:50에서 10분이면 3:00. 15분 남았으니까 3:15.\" 버스를 기다릴 때 물어보세요.", 'rep.ampm.x': "오후 3:20은 24시간제로 15:20인데 3:20이라고 씁니다. 또는 오전 9시를 21:00이라고 씁니다.", 'rep.ampm.g': "「몇 시야?」의 24시간제 문제를 해 보세요. 이 실수가 보이면 오후 시각이 더 많이 나옵니다.", 'rep.ampm.h': "오후 시각에는 12를 더합니다. 오후 3시는 15시. 기차 시간표나 영화 시간을 함께 읽어 보세요.", 'rep.read12.x': "시계는 12:30인데 1:30이나 0:30이라고 합니다.", 'rep.read12.g': "첫 화면의 큰 시계에서 거북이를 11에서 12를 지나 1까지 천천히 끌면서 아래 글자가 어떻게 바뀌는지 보세요.", 'rep.read12.h': "점심때쯤 시계를 보세요. 12시 다음은 1시입니다. 짧은바늘이 12와 1 사이에 있으면 아직 12시 몇 분입니다.", 'rep.starT': "이미 아는 시각", 'rep.star': "불이 켜진 것 {s}개, 익숙해지는 중 {l}개, 헷갈리는 것 {w}개(모두 144개, 5분마다 하나). 첫 화면의 별 버튼을 누르면 별 지도를 볼 수 있습니다.", 'rep.note': "이 보고서는 이 기기에 있는 기록만 사용합니다. 어디에도 보내지 않습니다.", 'promo.t': "같은 제작자의 다른 게임", 'promo.name': "구구 유성대", 'promo.d': "유성을 쏘아 떨어뜨리고 구구단을 완벽하게!", 'promo.go': "보러 가기",
+    'help.repT': "어른용: 학습 보고서", 'help.rep': "<li>설정의 어른용에 <b>학습 보고서</b>가 있습니다. 최근 7일 동안의 연습, 자주 헷갈리는 부분, 집에서 연습하는 방법을 볼 수 있습니다.</li><li>이 기기에 있는 기록만 사용합니다.</li>",
     'gate.title': '어른 확인', 'gate.p': '계속하려면 어른이 이 문제를 풀어 주세요.', 'gate.cancel': '취소', 'gate.wait': '너무 많이 틀렸습니다. 30초 후에 다시 해 주세요',
     'menu.map': '별 지도', 'map.count': '{n}/{t}', 'map.aria': '별 {t}개 중 {n}개 켜짐', 'map.legend': '안쪽 고리가 1시, 바깥쪽이 12시. 한 조각이 5분',
     'map.info': '시각마다 별이 하나씩 있어. 몇 번 맞게 읽거나 맞추면 별이 켜져. <b>안쪽 고리가 1시, 바깥쪽 고리가 12시.</b> 한 조각이 5분이야. 조각을 눌러 봐!', 'map.weak': '가장 많이 헷갈린 것: <b>{e}</b>. 몇 번만 더 하면 알게 될 거야!', 'map.sector': '<b>{m}분</b> (1시부터 12시까지):',
@@ -1040,6 +1074,8 @@ const STR = {
     'bk.found': 'Este respaldo tiene {n} jugador(es): {names} (guardado el {date}). Importar reemplaza el progreso de este dispositivo.', 'bk.yes': 'Importar', 'bk.done': '¡Importación completa!', 'bk.fail': 'No se pudo importar. Puede que este dispositivo no tenga espacio.', 'about.ded': 'Para mi esposa y nuestros tres hijos, que siempre me apoyan.',
     'help.whoT': 'Quién juega', 'help.who': '<li>Hasta 4 personas pueden jugar en un dispositivo. Cada quien tiene su propio progreso, mapa de estrellas, mascota y nivel.</li><li>En Ajustes → Quién juega puedes poner nombres y agregar jugadores. Cuando alguien tiene nombre, aparece arriba a la izquierda del menú. Tócalo para cambiar.</li><li>Un jugador nuevo empieza con el tutorial y luego elige qué practicar.</li>',
     'set.resetP0': 'Borrar todo el progreso de este dispositivo', 'set.parent': 'Para adultos', 'reset.done': 'Progreso borrado',
+    'set.report': "Informe de avance", 'set.reportD': "En qué se confunde más y cómo practicar", 'set.reportGo': "Ver", 'rep.title': "Informe de avance de {name}", 'rep.title0': "Informe de avance", 'rep.week': "Últimos 7 días", 'rep.days': "días de práctica", 'rep.n': "respuestas", 'rep.acc': "correctas", 'rep.up': "Mejor que la semana anterior ({p}% correctas entonces).", 'rep.same': "Más o menos igual que la semana anterior ({p}% correctas entonces).", 'rep.down': "Algunos errores más que la semana anterior ({p}% correctas entonces). Muchas veces solo significa que las preguntas se volvieron más difíciles.", 'rep.none': "No hay registros de los últimos 7 días. Después de unas rondas de Día del pueblo o ¿Qué hora es?, aquí aparecerá en qué se confunde más.", 'rep.errT': "En qué se confunde más", 'rep.errNone': "Por ahora no destaca ningún error. Basta con seguir jugando: el juego elige las horas que todavía cuestan.", 'rep.cnt': "{n} veces en 2 semanas", 'rep.ex': "Ejemplo", 'rep.game': "En el juego", 'rep.home': "En casa", 'rep.hourLate.x': "El reloj marca las 7:50 y dice 8:50. La aguja corta casi llega al 8 y parece que son las 8.", 'rep.hourLate.g': "Jueguen más a ¿Qué hora es?. Cuando el juego ve este error, pone más horas entre :40 y :55 y recuerda que Tortuga todavía no llega al 8.", 'rep.hourLate.h': "Miren un reloj de verdad poco antes de la hora en punto y pregunte: \"¿La aguja corta ya pasó el 8?\". Si no, todavía son las 7 y algo.", 'rep.minIndex.x': "El reloj marca las 7:20 y dice 7:04. La aguja larga apunta al 4 y dice 4 minutos.", 'rep.minIndex.g': "Active Aro de minutos en Ajustes y jueguen a Día del pueblo. Después de un error, el reloj cuenta 5, 10, 15 desde el 12, número por número.", 'rep.minIndex.h': "Señalen los números y cuenten juntos de cinco en cinco: el 1 son 5 minutos, el 2 son 10, el 3 son 15.", 'rep.handSwap.x': "El reloj marca las 3:40 y dice 8:15. Lee la aguja larga como la hora y la corta como los minutos.", 'rep.handSwap.g': "Toque Cómo se juega (otra vez) en Ajustes: Tortuga es la aguja corta (horas) y Conejo es la aguja larga (minutos). Luego jueguen a Día del pueblo.", 'rep.handSwap.h': "Usen siempre el mismo orden: primero la aguja corta para decir la hora, después la aguja larga para decir los minutos.", 'rep.halfHour.x': "El reloj marca las 6:30 y dice 7:30, o pone la aguja corta justo en el 6. A la media, la aguja corta está entre el 6 y el 7.", 'rep.halfHour.g': "En Ajustes, ponga ¿Qué quieres practicar? en En punto y media durante unos días y luego vuelva a cambiarlo.", 'rep.halfHour.h': "A la media, miren juntos la aguja corta: \"Está entre el 6 y el 7. Todavía no llega al 7, así que son las 6 y media\".", 'rep.minOne.x': "El reloj marca las 4:23 y dice 4:25 o 4:20. No contó las rayitas.", 'rep.minOne.g': "Las rayitas de 1 minuto solo aparecen cuando ¿Qué quieres practicar? está en ¿Cuánto tiempo?. Después de un error, las rayitas se encienden una por una desde el múltiplo de cinco más cercano.", 'rep.minOne.h': "Primero digan el múltiplo de cinco más cercano (20 minutos) y luego sumen de rayita en rayita: 21, 22, 23.", 'rep.carry.x': "Sale a las 2:50 y camina 25 minutos: dice 2:75, o se detiene en las 3:00.", 'rep.carry.g': "Jueguen las preguntas de \"cuántos minutos\" en ¿Qué hora es?. Después de un error, el juego dibuja una línea del tiempo: primero hasta la hora en punto y luego lo que falta.", 'rep.carry.h': "Háganlo en dos pasos: \"De las 2:50, con 10 minutos llegamos a las 3:00. Faltan 15, así que son las 3:15\". Pruébenlo mientras esperan el autobús.", 'rep.ampm.x': "Las 3:20 de la tarde son las 15:20 en el reloj de 24 horas, pero escribe 3:20. O las 9 de la mañana se vuelven las 21:00.", 'rep.ampm.g': "Jueguen las preguntas de 24 horas en ¿Qué hora es?. Cuando el juego ve este error, pone más horas de la tarde.", 'rep.ampm.h': "A las horas de la tarde se les suma 12: las 3 de la tarde son las 15:00. Lean juntos horarios de autobús o de cine.", 'rep.read12.x': "El reloj marca las 12:30 y dice 1:30 o 0:30.", 'rep.read12.g': "En el reloj grande de la pantalla principal, arrastre a Tortuga despacio del 11 al 1 pasando por el 12 y miren cómo cambian las palabras de abajo.", 'rep.read12.h': "Miren el reloj a la hora del almuerzo: después de las 12 viene la 1. Mientras la aguja corta esté entre el 12 y el 1, todavía son las 12 y algo.", 'rep.starT': "Horas que ya sabe", 'rep.star': "{s} encendidas, {l} en camino, {w} difíciles (144 en total, una cada 5 minutos). Toque la estrella en la pantalla principal para ver el mapa de estrellas.", 'rep.note': "Este informe solo usa los registros de este dispositivo. No se envía nada a ningún lado.", 'promo.t': "Otro juego del mismo autor", 'promo.name': "Escuadrón Meteoro 9×9", 'promo.d': "Derriba meteoros. Domina las tablas.", 'promo.go': "Ver",
+    'help.repT': "Para adultos: informe de avance", 'help.rep': "<li>En Para adultos, dentro de Ajustes, hay un <b>Informe de avance</b>: cuánto practicó en los últimos 7 días, en qué se confunde más y qué probar en casa.</li><li>El informe solo usa los registros de este dispositivo.</li>",
     'gate.title': 'Para un adulto', 'gate.p': 'Un adulto debe resolver esto para continuar.', 'gate.cancel': 'Cancelar', 'gate.wait': 'Demasiados intentos. Espere 30 segundos',
     'menu.map': 'Mapa de estrellas', 'map.count': '{n}/{t}', 'map.aria': '{n} de {t} estrellas encendidas', 'map.legend': 'El aro de adentro es la 1, el de afuera son las 12; cada porción son 5 minutos',
     'map.info': 'Cada hora tiene una estrella. Léela o ponla bien varias veces y se enciende. <b>El aro de adentro es la 1, el de afuera son las 12.</b> Cada porción son 5 minutos. ¡Toca una porción!', 'map.weak': 'Lo que más confundes: <b>{e}</b>. ¡Unas veces más y te saldrá!', 'map.sector': '<b>{m} minutos</b> (de la 1 a las 12):',
@@ -1297,7 +1333,7 @@ const petStage = fed => PET_STAGES.reduce((st, at, i) => fed >= at ? i : st, 0);
 // 配件：徽章門檻、戴在哪裡（圖在 ART 的 G，位置在 FIT）
 const GEAR = [{ id: 'bow', at: 1, slot: 'head' }, { id: 'scarf', at: 2, slot: 'neck' }, { id: 'glasses', at: 4, slot: 'face' }, { id: 'hat', at: 6, slot: 'head' }, { id: 'star', at: 8, slot: 'head' }, { id: 'crown', at: 12, slot: 'head' }];
 const GEAR_BY = Object.create(null); GEAR.forEach(g => { GEAR_BY[g.id] = g; });
-const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, music: true, chime: true, level: 2, ring: true }, daily: {}, pet: { kind: '', fed: 0, acorn: 0, wear: { head: '', face: '', neck: '' } }, retest: [], town: { lit: [] }, free: 7 * 60, hinted: false, tut: false });
+const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, music: true, chime: true, level: 2, ring: true }, daily: {}, pet: { kind: '', fed: 0, acorn: 0, wear: { head: '', face: '', neck: '' } }, retest: [], town: { lit: [] }, log: {}, free: 7 * 60, hinted: false, tut: false });
 let DB = fresh();
 const num = (v, d = 0) => (typeof v === 'number' && Number.isFinite(v)) ? v : d;
 function loadDB() {
@@ -1310,6 +1346,10 @@ function loadDB() {
   if (!f.facts || typeof f.facts !== 'object') f.facts = {};
   for (const [k, v] of Object.entries(f.facts)) { if (!v || typeof v !== 'object' || !/^[rseag]:\d+:\d+$/.test(k)) delete f.facts[k]; else f.facts[k] = { n: clamp(num(v.n), 0, 1e6), w: clamp(num(v.w), 0, 1e6), err: clamp(num(v.err), 0, 1), t: clamp(num(v.t), 0, 6e5) }; }
   if (!f.errs || typeof f.errs !== 'object') f.errs = {}; for (const k of Object.keys(f.errs)) { if (!ERRS.includes(k)) delete f.errs[k]; else f.errs[k] = clamp(num(f.errs[k]), 0, 1); }
+  // 每天的答題紀錄（家長報告用）：log['2026-11-18'] = { n 答了幾題, ok 答對幾題, e: { 錯法: 幾次 } }，只留最近 28 天
+  if (!f.log || typeof f.log !== 'object' || Array.isArray(f.log)) f.log = {};
+  for (const k of Object.keys(f.log)) { const v = f.log[k]; if (!/^\d{4}-\d\d-\d\d$/.test(k) || !v || typeof v !== 'object') { delete f.log[k]; continue; } const e = {}; if (v.e && typeof v.e === 'object') for (const t of ERRS) if (num(v.e[t]) > 0) e[t] = clamp(Math.round(num(v.e[t])), 0, 1e5); const n = clamp(Math.round(num(v.n)), 0, 1e5); f.log[k] = { n, ok: clamp(Math.round(num(v.ok)), 0, n), e }; }
+  { const ks = Object.keys(f.log).sort(); while (ks.length > 28) delete f.log[ks.shift()]; }
   if (!f.best || typeof f.best !== 'object') f.best = {}; for (const k of Object.keys(f.best)) f.best[k] = clamp(num(f.best[k]), 0, 1e6);
   if (!f.daily || typeof f.daily !== 'object') f.daily = {}; const D = f.daily;
   if (!Array.isArray(D.tasks) || D.tasks.length !== 3 || !D.tasks.every(q => q && typeof q === 'object' && QIDS.includes(q.id) && num(q.n) > 0)) D.date = ''; else D.tasks = D.tasks.map(q => ({ id: q.id, n: num(q.n), p: clamp(num(q.p), 0, num(q.n)), done: !!q.done }));
@@ -1425,11 +1465,11 @@ function Clock(el, opts = {}) {
   }
   gh.appendChild(tort);
   gh.appendChild(mk('circle', { class: 'knob', cx: C, cy: C - 52, r: KR }));
-  // 分針：兔子（耳朵朝外）。有軟陶插畫（assets/clay/rabbithead.webp）就用插畫
+  // 分針：兔子（耳朵朝外）。有軟陶插畫（assets/clay/rabbithead.webp）就用插畫；插畫的兔子往外放（下巴在半徑 75），不蓋住鐘面的數字（數字在半徑 58～74）
   const gm = mk('g', { class: 'hand minute' });
-  gm.appendChild(mk('rect', { x: C - 4, y: C - 72, width: 8, height: 80, rx: 4, fill: 'url(#ckM)', stroke: '#c23a3b', 'stroke-width': 0.7 }));
+  gm.appendChild(mk('rect', { x: C - 4, y: C - 78, width: 8, height: 86, rx: 4, fill: 'url(#ckM)', stroke: '#c23a3b', 'stroke-width': 0.7 }));
   const rab = mk('g', { transform: `translate(${C} ${C - 78})` });
-  if (CLAY.has('rabbithead')) rab.appendChild(mk('image', { href: 'assets/clay/rabbithead.webp', x: -12.5, y: -22, width: 25, height: 33 }));
+  if (CLAY.has('rabbithead')) rab.appendChild(mk('image', { href: 'assets/clay/rabbithead.webp', x: -11, y: -26, width: 22, height: 29 }));
   else {
     for (const sx of [-1, 1]) { rab.appendChild(mk('ellipse', { cx: 4.2 * sx, cy: -13, rx: 3.4, ry: 8.5, fill: 'url(#ckFur)', stroke: '#dcbcb0', 'stroke-width': 0.7, transform: `rotate(${6 * sx} ${4.2 * sx} -6)` })); rab.appendChild(mk('ellipse', { cx: 4.2 * sx, cy: -12.5, rx: 1.5, ry: 5.6, fill: '#ffbccb', transform: `rotate(${6 * sx} ${4.2 * sx} -6)` })); }
     rab.appendChild(mk('ellipse', { cx: 0, cy: 0.5, rx: 10.5, ry: 9.5, fill: 'url(#ckFur)', stroke: '#dcbcb0', 'stroke-width': 0.8 }));
@@ -1705,7 +1745,7 @@ $('.sw[data-set=sound]').addEventListener('click', () => { DB.set.sound = !DB.se
 $('.sw[data-set=music]').addEventListener('click', () => { DB.set.music = !DB.set.music; save(); DB.set.music ? Music.start() : Music.stop(); renderSet(); SFX.ding(); });
 $('.sw[data-set=chime]').addEventListener('click', () => { DB.set.chime = !DB.set.chime; save(); renderSet(); if (DB.set.chime) SFX.chime(1); else SFX.chimeStop(); });   // 打開時敲一下讓大人聽聽看
 $('.sw[data-set=ring]').addEventListener('click', () => { DB.set.ring = !DB.set.ring; save(); setRingAll(DB.set.ring); renderSet(); SFX.ding(); });
-document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for (const id of ['#o-gate', '#o-buy', '#o-lock', '#o-who', '#o-bk', '#o-help', '#o-about', '#o-quest', '#o-set']) if (!$(id).hidden) { $(id).hidden = true; if (id === '#o-gate') { $('#gate-cancel').click(); return; } if (id === '#o-help' || id === '#o-about' || id === '#o-bk') $('#o-set').hidden = false; return; } });
+document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for (const id of ['#o-gate', '#o-buy', '#o-lock', '#o-who', '#o-bk', '#o-report', '#o-help', '#o-about', '#o-quest', '#o-set']) if (!$(id).hidden) { $(id).hidden = true; if (id === '#o-gate') { $('#gate-cancel').click(); return; } if (id === '#o-help' || id === '#o-about' || id === '#o-bk' || id === '#o-report') $('#o-set').hidden = false; return; } });
 
 // ---------- 模式（還在蓋）
 let toastT = 0;
@@ -1736,11 +1776,13 @@ const FX = (() => {
 // ---------- 紀錄：題目（s:時:分）與錯誤類型
 // 這個時刻「可能誘發」哪些錯法：答對只能證明這幾種沒犯，其他類型的權重不動
 function inducible(h, m) { const t = ['handSwap', 'minNear', 'hourOff', 'other']; if (m >= 35) t.push('hourLate'); if (m === 30) t.push('halfHour'); if (m >= 5 && m % 5 === 0 && m % 30 !== 0) t.push('minIndex'); if (h % 12 === 0 || h % 12 === 1) t.push('read12'); if (m % 5 !== 0) t.push('minOne'); return t; }
+const dayKey = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 function record(k, ok, ms, errType, induce) {
   const f = DB.facts[k] || (DB.facts[k] = { n: 0, w: 0, err: 0, t: 0 });
   f.n++; f.err = f.err * 0.7 + (ok ? 0 : 0.3); if (!ok) f.w++; else if (ms > 0) f.t = f.t ? f.t * 0.6 + ms * 0.4 : ms;
   if (ok) { for (const e of induce || []) DB.errs[e] = num(DB.errs[e]) * 0.85; }   // 答對：這題可能誘發的錯法權重衰減
   else if (errType) DB.errs[errType] = num(DB.errs[errType]) * 0.85 + 0.15;        // 答錯：犯的那一種加權
+  { const d = dayKey(new Date()), L = DB.log || (DB.log = {}), e = L[d] || (L[d] = { n: 0, ok: 0, e: {} }); e.n++; if (ok) e.ok++; else if (errType && ERRS.includes(errType)) e.e[errType] = num(e.e[errType]) + 1; const ks = Object.keys(L).sort(); while (ks.length > 28) delete L[ks.shift()]; }   // 每天的紀錄（家長報告用），只留 28 天
   save();
 }
 // 撥鐘答錯是哪一種錯（target T、answer A，都是一天裡的分鐘）
@@ -2274,6 +2316,44 @@ const Versus = (() => {
   return { open, start, stop, s: () => S, setOpp: o => { opp = o; } };
 })();
 
+// ---------- 家長報告（設定的家長區）：這 7 天練了多少、最常搞混的是哪幾種錯（每一種附例子、遊戲裡怎麼練、在家怎麼練）、星圖點亮多少。只看這台裝置的紀錄
+const REP_ERRS = ['hourLate', 'minIndex', 'handSwap', 'halfHour', 'minOne', 'carry', 'ampm', 'read12'];   // 報告會講的錯法（差一格、小時看錯、判不出來的不講，沒有具體的建議）
+const REP_EX = { hourLate: [7, 50], minIndex: [7, 20], handSwap: [3, 40], halfHour: [6, 30], minOne: [4, 23], carry: [2, 50], ampm: [15, 20], read12: [12, 30] };   // 每種錯法旁邊那座小鐘的時刻
+const JIUJIU_URL = 'https://ianyclin.github.io/jiujiu-game/';   // 九九流星隊（同一位作者）；打開前要過家長關卡
+const Report = (() => {
+  function data(now = new Date()) {
+    const key = i => { const d = new Date(now); d.setDate(d.getDate() - i); return dayKey(d); };
+    const win = (a, b) => { const o = { n: 0, ok: 0, days: 0, e: {} }; for (let i = a; i < b; i++) { const x = (DB.log || {})[key(i)]; if (!x || !x.n) continue; o.n += x.n; o.ok += x.ok; o.days++; for (const t in x.e) o.e[t] = num(o.e[t]) + x.e[t]; } return o; };
+    const w1 = win(0, 7), w0 = win(7, 14), w2 = win(0, 14);
+    // 排名：這兩週犯了幾次，加上長期的權重（舊存檔沒有每天的紀錄，就只看權重）；至少 2 次或權重夠高才列出來，最多 3 種
+    const errs = REP_ERRS.map(t => ({ t, c: num(w2.e[t]), s: num(w2.e[t]) + num(DB.errs[t]) * 4 })).filter(x => x.c >= 2 || num(DB.errs[x.t]) >= 0.15).sort((a, b) => b.s - a.s).slice(0, 3);
+    let st = 0, l = 0, w = 0; for (let h = 1; h <= 12; h++) for (let mm = 0; mm < 60; mm += 5) { const x = StarMap.stateOf(h, mm); if (x === 'star') st++; else if (x === 'weak') w++; else if (x === 'learn') l++; }
+    return { w1, w0, errs, s: st, l, w };
+  }
+  function render() {
+    const D = data(), me = whoCur().name; $('#rep-title').textContent = me ? tx('rep.title', { name: me }) : tx('rep.title0');
+    const pct = o => Math.round(o.ok / o.n * 100); let h = `<div class="lab">${esc(tx('rep.week'))}</div>`;
+    if (!D.w1.n) h += `<p>${esc(tx('rep.none'))}</p>`;
+    else {
+      h += `<div class="rep-sum"><div><b>${D.w1.days}</b><span>${esc(tx('rep.days'))}</span></div><div><b>${D.w1.n}</b><span>${esc(tx('rep.n'))}</span></div><div><b>${pct(D.w1)}%</b><span>${esc(tx('rep.acc'))}</span></div></div>`;
+      if (D.w0.n >= 8 && D.w1.n >= 8) { const d = pct(D.w1) - pct(D.w0); h += `<p>${esc(tx(d >= 5 ? 'rep.up' : d <= -5 ? 'rep.down' : 'rep.same', { p: pct(D.w0) }))}</p>`; }
+    }
+    h += `<h4>${esc(tx('rep.errT'))}</h4>`;
+    if (!D.errs.length) h += `<p>${esc(tx('rep.errNone'))}</p>`;
+    for (const x of D.errs) h += `<div class="rep-err" data-err="${x.t}"><div class="rep-head"><span class="pc" data-c="${REP_EX[x.t].join(',')}"></span><div><b>${esc(tx('err.' + x.t))}</b>${x.c ? `<small>${esc(tx('rep.cnt', { n: x.c }))}</small>` : ''}</div></div>`
+      + `<p><i>${esc(tx('rep.ex'))}</i>${esc(tx(`rep.${x.t}.x`))}</p><p><i>${esc(tx('rep.game'))}</i>${esc(tx(`rep.${x.t}.g`))}</p><p><i>${esc(tx('rep.home'))}</i>${esc(tx(`rep.${x.t}.h`))}</p></div>`;
+    h += `<h4>${esc(tx('rep.starT'))}</h4><div class="rep-bar"><i class="s" style="flex:${D.s}"></i><i class="l" style="flex:${D.l}"></i><i class="w" style="flex:${D.w}"></i><i style="flex:${144 - D.s - D.l - D.w}"></i></div><p>${esc(tx('rep.star', { s: D.s, l: D.l, w: D.w }))}</p>`;
+    $('#rep-body').innerHTML = h;
+    $$('#rep-body .pc').forEach(el => { const [hh, mm] = el.dataset.c.split(',').map(Number); Clock(el, { drag: false, ring: false, snap: 1 }).set(hh, mm); });
+  }
+  function open() { render(); $('#o-set').hidden = true; $('#o-report').hidden = false; $('#o-report .card').scrollTop = 0; }
+  $('#go-report').addEventListener('click', open);
+  $('#rep-close').addEventListener('click', () => { $('#o-report').hidden = true; $('#o-set').hidden = false; });   // 從設定打開的，關掉回到設定
+  return { open, data, render };
+})();
+// 介紹同一位作者的另一個遊戲（家長報告、關於頁）：按了先過家長關卡才打開
+document.addEventListener('click', e => { const b = e.target.closest('[data-promo]'); if (!b) return; Gate.open(() => { window.open(JIUJIU_URL, '_blank', 'noopener'); }, false); });
+
 // ---------- 寵物：答對掉橡果，餵了會長大；徽章解鎖配件。沒有飢餓、沒有倒扣
 // 寵物的圖：自己畫的（ART.pet：蛋 → 坐在蛋殼裡 → 越長越大），配件直接畫在同一張圖裡、跟著縮放
 // 插畫版：CLAY_PET[種類][階段] = [兩眼中間 x, 眼睛 y, 兩眼距離, 頭頂 y, 寬高比]（x、兩眼距離是圖寬的比例，y 是圖高的比例；tools/cut-clay.py 切完後用眼睛的兩顆黑點量的）
@@ -2527,7 +2607,7 @@ setTimeout(() => { const sp = $('#splash'); if (sp) sp.remove(); }, 1900);
 if (!DB.tut) Tut.start(false);
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock5, clock6, Shop, Tut, Music, SFX, WHO: () => WHO, keyFor, bkParse, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet, timeline, townPts, townGrow, DECOR, UL: () => UL, APP };   // 給測試用
+window.__tt = { Report, clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock5, clock6, Shop, Tut, Music, SFX, WHO: () => WHO, keyFor, bkParse, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet, timeline, townPts, townGrow, DECOR, UL: () => UL, APP };   // 給測試用
 })();
 </script>
 </body>
