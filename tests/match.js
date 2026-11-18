@@ -17,12 +17,14 @@ const SHOT = process.argv[2];
     const sizes = await p.$$eval('#mgrid .mcard', es => es.map(e => e.getBoundingClientRect().width)); ok(Math.min(...sizes) >= 44, `${lang} 牌寬 ${Math.round(Math.min(...sizes))}`);
     if (SHOT) { await p.click('#mgrid .mcard[data-i="0"]'); await p.waitForTimeout(400); await p.screenshot({ path: `${SHOT}/match-${lang}.png` }); await p.click('#mgrid .mcard[data-i="1"]'); await p.waitForTimeout(1200); }
     // 翻錯：找兩張不同對的
-    st = await S(); const i0 = st.cards.findIndex(c => !c.done), i1 = st.cards.findIndex((c, i) => i !== i0 && !c.done && c.i !== st.cards[i0].i);
+    await p.waitForFunction(() => window.__tt.Match.s().open.length === 0, null, { timeout: 5000 });   // 截圖時翻的兩張如果不同對，要等它們翻回去，不然接下來的點擊會被擋掉
+    st = await S(); const i0 = st.cards.findIndex(c => !c.done), i1 = st.cards.findIndex((c, i) => i !== i0 && !c.done && c.i !== st.cards[i0].i && (c.t[0] !== st.cards[i0].t[0] || c.t[1] !== st.cards[i0].t[1]));   // 同一個時刻也算配對，要挑時刻不一樣的
     await p.click(`#mgrid .mcard[data-i="${i0}"]`); await p.click(`#mgrid .mcard[data-i="${i1}"]`); await p.waitForTimeout(200);
-    ok((await p.$$('#mgrid .mcard.open')).length === 2, `${lang} 翻開兩張`); await p.waitForTimeout(1000);
-    ok((await p.$$('#mgrid .mcard.open')).length === 0, `${lang} 配錯翻回去`);
+    // 只數還沒配好的牌（截圖時翻的兩張如果剛好是一對，會一直開著）
+    ok((await p.$$('#mgrid .mcard.open:not(.done)')).length === 2, `${lang} 翻開兩張`); await p.waitForTimeout(1000);
+    ok((await p.$$('#mgrid .mcard.open:not(.done)')).length === 0, `${lang} 配錯翻回去`);
     // 全部配對：照 i 配
-    for (let k = 0; k < 4; k++) { st = await S(); const a = st.cards.findIndex(c => !c.done); const bb = st.cards.findIndex((c, i) => i !== a && !c.done && c.i === st.cards[a].i); await p.click(`#mgrid .mcard[data-i="${a}"]`); await p.click(`#mgrid .mcard[data-i="${bb}"]`); await p.waitForTimeout(250); }
+    for (let k = 0; k < 4; k++) { st = await S(); if (st.cards.every(c => c.done)) break; const a = st.cards.findIndex(c => !c.done); const bb = st.cards.findIndex((c, i) => i !== a && !c.done && c.i === st.cards[a].i); await p.click(`#mgrid .mcard[data-i="${a}"]`); await p.click(`#mgrid .mcard[data-i="${bb}"]`); await p.waitForTimeout(250); }
     st = await S(); ok(st.done === 4 && (await p.$$('#mgrid .mcard.done')).length === 8, `${lang} 4 對全配完`);
     await p.waitForTimeout(900); ok(await p.isVisible('#o-mdone'), `${lang} 結算：${await p.textContent('#mdone-p')}`);
     const db = await p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-v1'))); ok(Object.keys(db.facts).some(k => k.startsWith('r:')) && db.best.matches === 1, `${lang} 配對記進讀鐘紀錄、matches=${db.best.matches}`);
