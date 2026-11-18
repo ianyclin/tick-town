@@ -36,9 +36,9 @@ const SHOT = process.argv[2];
     await p.waitForTimeout(100); const saved = await p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-v1')).free); ok(saved === 195, `${lang} 存檔 free=${saved}`);
     // 晚上：拖到 21:00 看天空變暗、場景換
     await p.evaluate(() => { window.__tt.clock.set(21, 0); window.__tt.clock.onChange(21 * 60, false); });
-    const px = await p.evaluate(() => { const c = document.querySelector('#town'); const d = c.getContext('2d').getImageData(10, 10, 1, 1).data; return d[0] + d[1] + d[2]; }); ok(px < 300, `${lang} 21:00 天空暗 (${px})；場景「${await p.textContent('#scene')}」`);
+    const px = await p.evaluate(() => { const c = document.querySelector('#town'); const d = c.getContext('2d').getImageData(0, 0, 40, 40).data; let t = 0; for (let i = 0; i < d.length; i += 4) t += d[i] + d[i + 1] + d[i + 2]; return Math.round(t / (d.length / 4)); }); ok(px < 300, `${lang} 21:00 天空暗 (${px})；場景「${await p.textContent('#scene')}」`);   // 取左上角一塊的平均（星星是隨機撒的，落在一個點上會量錯）
     await p.evaluate(() => { window.__tt.clock.set(12, 0); window.__tt.clock.onChange(12 * 60, false); });
-    const px2 = await p.evaluate(() => { const c = document.querySelector('#town'); const d = c.getContext('2d').getImageData(10, 10, 1, 1).data; return d[0] + d[1] + d[2]; }); ok(px2 > 450, `${lang} 12:00 天空亮 (${px2})；「${await p.textContent('#words')}」`);
+    const px2 = await p.evaluate(() => { const c = document.querySelector('#town'); const d = c.getContext('2d').getImageData(0, 0, 40, 40).data; let t = 0; for (let i = 0; i < d.length; i += 4) t += d[i] + d[i + 1] + d[i + 2]; return Math.round(t / (d.length / 4)); }); ok(px2 > 450, `${lang} 12:00 天空亮 (${px2})；「${await p.textContent('#words')}」`);   // 取左上角一塊的平均（星星是隨機撒的，落在一個點上會量錯）
     // 版面
     const sw = await p.evaluate(() => document.documentElement.scrollWidth); ok(sw <= w, `${lang} 不橫捲`);
     const small = await p.evaluate(() => [...document.querySelectorAll('button')].filter(b => b.offsetParent && b.getBoundingClientRect().height < 44).map(b => b.textContent.trim())); ok(small.length === 0, `${lang} 按鈕都 ≥ 44：${small.join(',')}`);
