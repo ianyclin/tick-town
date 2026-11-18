@@ -5,7 +5,7 @@
 ## 已經好了的（不用做）
 
 - 遊戲本體、五種語言、隱私權政策與支援頁（`privacy/`、`support/`，網址 `https://ianyclin.github.io/tick-town/privacy/`、`…/support/`）。
-- App 圖示（`assets/icons/`，`tools/make-icon.py` 程式畫的，可以商用）、加入主畫面用的 `manifest.json`。
+- App 圖示（`assets/icons/`，`tools/make-icon.cjs` 直接拍遊戲裡的鐘，可以商用）、加入主畫面用的 `manifest.json`。
 - 開場動畫、App 版解鎖（配對、修鐘店、兩個人一起各試玩 3 次，之後一次購買 `unlock_all`；網頁版永遠全部免費）。
 - Capacitor 外殼設定（`capacitor.config.json`、`package.json`），App ID `io.github.ianyclin.ticktown`。
 - GitHub Actions 每次 main 更新都自動建 Android 測試 APK：`https://github.com/ianyclin/tick-town/releases/download/android-latest/tick-town.apk`。

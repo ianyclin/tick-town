@@ -297,7 +297,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
   --pan:linear-gradient(180deg,#fffdf9,#fff2e2);
 }
 body{background:#bfe6ff}
-h1{color:#fff;letter-spacing:2px;text-shadow:0 2px 0 #e58aa2,0 4px 0 rgba(150,70,95,.35),0 6px 10px rgba(120,60,80,.35);padding:2px 0 8px 2px}
+h1{color:#fff;text-shadow:0 2px 0 #e58aa2,0 4px 0 rgba(150,70,95,.35),0 6px 10px rgba(120,60,80,.35);padding:2px 0 8px 2px}
 .hintline,.pet-name{color:#fff;text-shadow:0 1.5px 0 #c9788f,0 3px 6px rgba(120,60,80,.45)}
 .legend{color:var(--ink);text-shadow:none}.legend span{background:var(--pan);box-shadow:var(--clay-s);padding:5px 11px}.legend i{border:0;box-shadow:inset 0 -2px 2px rgba(0,0,0,.12),inset 0 1px 1px rgba(255,255,255,.7)}
 /* 奶油色軟陶塊 */
@@ -370,7 +370,7 @@ h1{color:#fff;letter-spacing:2px;text-shadow:0 2px 0 #e58aa2,0 4px 0 rgba(150,70
 /* 圖示與插畫 */
 .ic{width:1.15em;height:1.15em;display:inline-block;vertical-align:-0.2em;flex:none;object-fit:contain}
 img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px 2px rgba(90,50,40,.25))}
-.emo .ic,.big .ic{display:block}.big .ic{width:1.3em;height:1.3em;margin:0 auto}
+.emo .ic,.big .ic{display:block}.scene .emo .ic{display:inline-block}.big .ic{width:1.3em;height:1.3em;margin:0 auto}
 .big img.av{height:1.5em;margin:0 auto}
 .task .emo{font-size:52px}
 @media (max-height:640px){.task .emo{font-size:40px}.mode .emo{font-size:28px}}
@@ -1076,7 +1076,6 @@ function fitTitle() {
 addEventListener('resize', fitTitle); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitle);
 function setLang() { LANG = STR[DB.set.lang] ? DB.set.lang : langAuto(); applyStr(); if (typeof renderLocks === 'function' && $('#go-match')) try { renderLocks(); } catch (e) {} }
 
-// ---------- 圖示：全部自己畫的 SVG（48×48、深棕色粗外框的貼紙風），不用現成的 emoji。ic(name) 回一段可以放進 innerHTML 的 <svg>；畫布上用 icImg(name)
 // ---------- 美術：全部自己畫（SVG），「軟陶玩具」的樣子——每一塊都有立體的光影和細顆粒
 // ART.doc(name, opt) 回一整個 <svg>；ART.url(name, opt) 回 data URL（給 <img>、canvas 用）
 const ART = (() => {
@@ -1216,14 +1215,55 @@ const ART = (() => {
   for (const k of ['bowl', 'backpack', 'riceball', 'book', 'ball', 'pot', 'bath', 'books']) art['p-' + k] = art['i-' + k];
   art.zzz = art['i-zzz'];
 
+  // ---------- 配件（以原點為中心畫，寬約 40；戴在頭上時由 pet() 擺位置）
+  const G = {
+    bow: () => P(pa('M0 0C-8 -12 -22 -12 -22 0C-22 12 -8 12 0 0Z', '#ff6f7d') + pa('M0 0C8 -12 22 -12 22 0C22 12 8 12 0 0Z', '#ff6f7d'), 'cs') + P(ci(0, 0, 5.5, '#ff94a0'), 'cs'),
+    scarf: () => P(rc(-22, -6, 44, 12, 6, '#ff8a5c') + pa('M8 2h11v20a3 3 0 0 1-3 3h-5a3 3 0 0 1-3-3Z', '#ff8a5c'), 'cs') + [-13, -3, 7].map(x => rc(x, -6, 5, 12, 0, '#ffe08a', 'opacity=".9"')).join('') + rc(8, 16, 11, 4, 0, '#ffe08a', 'opacity=".9"'),
+    glasses: () => `<path d="M-4 -1q4 -3 8 0" fill="none" stroke="#3b3550" stroke-width="2.6" stroke-linecap="round"/>` + P(rc(-22, -8, 18, 15, 7, '#3b3550') + rc(4, -8, 18, 15, 7, '#3b3550'), 'cs') + pa('M-19 -4q4 -3 8 -1', 'none', 'stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"') + pa('M7 -4q4 -3 8 -1', 'none', 'stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"'),
+    hat: () => P(el(0, 8, 23, 6, '#4f8fe0') + rc(-13, -16, 26, 25, 6, '#5b9bea'), 'cs') + rc(-13, 0, 26, 5.5, 0, '#ffd36b'),
+    star: () => P(`<polygon points="0,-13 3.8,-4.6 13,-3.6 6.2,2.6 8,11.6 0,7 -8,11.6 -6.2,2.6 -13,-3.6 -3.8,-4.6" fill="#ffd84a" stroke="#ffd84a" stroke-width="3" stroke-linejoin="round"/>`, 'cs'),
+    crown: () => P(pa('M-17 10L-20 -8L-9 0L0 -13L9 0L20 -8L17 10Z', '#ffd24a', 'stroke="#ffd24a" stroke-width="3" stroke-linejoin="round"'), 'cs') + ci(0, 3, 3, '#ff7a8a') + ci(-10, 5, 2.2, '#7fc8f0') + ci(10, 5, 2.2, '#7fc8f0'),
+  };
+  for (const k in G) art['g-' + k] = { w: 56, h: 56, s: () => `<g transform="translate(28 ${k === 'scarf' ? 22 : 29}) scale(1.08)">${G[k]()}</g>` };
+  // 頭、眼睛、脖子在哪裡（120 單位）：配件用
+  const FIT = { bear: { top: [60, 21], eye: [60, 51, 17], neck: [60, 80, 1.05], side: 24 }, squirrel: { top: [56, 28], eye: [56, 52, 15], neck: [56, 80, 0.95], side: 21 }, owl: { top: [60, 17], eye: [60, 50, 14], neck: [60, 76, 1.5], side: 22 }, bunny: { top: [60, 32], eye: [60, 58, 16], neck: [60, 84, 0.95], side: 20 } };
+  function gearOn(kind, id) {
+    const f = FIT[kind], at = (x, y, sc, rot = 0) => `<g data-g="${id}" transform="translate(${x} ${y}) rotate(${rot}) scale(${sc})">${G[id]()}</g>`;
+    return id === 'bow' ? at(f.top[0] - f.side, f.top[1] + 9, 0.62, -18) : id === 'star' ? at(f.top[0] + f.side, f.top[1] + 9, 0.72, 14) : id === 'hat' ? at(f.top[0], f.top[1] - 4, 0.95) : id === 'crown' ? at(f.top[0], f.top[1] - 2, 0.85)
+      : id === 'glasses' ? at(f.eye[0], f.eye[1] + 1, f.eye[2] / 14.5) : id === 'scarf' ? at(f.neck[0], f.neck[1], f.neck[2]) : '';
+  }
+  // ---------- 寵物（120×120）：0 是蛋；1～4 同一隻越長越大，1 還坐在蛋殼裡，4 身邊有小星星
+  const PETC = { owl: '#b9a2e6', squirrel: '#f2a057', bear: '#e6a868' }, PSC = [0, 0.5, 0.66, 0.83, 1];
+  function pet(kind, st, wear) {
+    const col = PETC[kind]; if (!col) return '';
+    if (st === 0) return shadow(60, 112, 26, 4.5) + P(pa('M60 30C82 30 94 62 94 80a34 31 0 0 1-68 0C26 62 38 30 60 30Z', '#fff6e2'), 'cb') + ci(48, 62, 5.5, col, 'opacity=".75"') + ci(72, 80, 7, col, 'opacity=".75"') + ci(50, 92, 4, col, 'opacity=".75"') + ci(70, 52, 3.4, col, 'opacity=".75"');
+    const k = PSC[st], w = wear || {}, gear = ['neck', 'head', 'face'].map(sl => w[sl] && G[w[sl]] ? gearOn(kind, w[sl]) : '').join('');
+    return shadow(60, 114, 12 + 20 * k, 4.5) + `<g transform="translate(60 114) scale(${k}) translate(-60 -114)">${C[kind]({})}${gear}</g>`
+      + (st === 1 ? P(pa('M34 96l7 6l7 -7l6 7l6 -7l6 7l7 -7l7 6l1 0a26 20 0 0 1-53 0Z', '#fff6e2')) + ci(50, 108, 2.6, col, 'opacity=".7"') + ci(70, 106, 3.2, col, 'opacity=".7"') : '')
+      + (st === 4 ? [[14, 30, 1], [106, 42, 0.8], [100, 12, 0.6]].map(([x, y, sc]) => `<g transform="translate(${x} ${y}) scale(${sc * 0.6})">${G.star()}</g>`).join('') : '');
+  }
+  for (const kd in PETC) for (let st = 0; st < 5; st++) art[`pet-${kd}-${st}`] = { w: 120, h: 120, s: () => pet(kd, st) };
+  // ---------- 小鎮的裝飾（玩越多長越多）
+  const flower = (x, y, c, sc = 1) => `<g transform="translate(${x} ${y}) scale(${sc})">` + pa('M0 0V24', 'none', 'stroke="#5fb56a" stroke-width="3.4" stroke-linecap="round"') + P([0, 72, 144, 216, 288].map(a => ci(0, -7, 5.4, c, `transform="rotate(${a})"`)).join(''), 'cs') + ci(0, 0, 3.6, '#ffd24a') + '</g>';
+  art.flowers = { w: 120, h: 70, s: () => shadow(60, 66, 44, 4) + P(ci(26, 54, 15, '#7fcf7a') + ci(60, 48, 19, '#8ad884') + ci(94, 54, 15, '#7fcf7a') + rc(12, 50, 96, 16, 8, '#7fcf7a')) + flower(26, 28, '#ff9aae') + flower(60, 18, '#fff3f0', 1.15) + flower(93, 30, '#ffc24a') + flower(43, 40, '#b79be8', 0.8) + flower(77, 40, '#ff8a7a', 0.8) };
+  art.tree = { w: 120, h: 140, s: () => shadow(60, 136, 30, 4.5) + P(pa('M52 136V92h16v44Z', '#b9825a')) + P(ci(36, 70, 26, '#74c96f') + ci(84, 70, 26, '#74c96f') + ci(60, 46, 34, '#84d67c') + ci(60, 80, 28, '#7fd078'), 'cb') + P([[40, 62], [78, 76], [62, 38], [86, 54], [50, 86]].map(([x, y]) => ci(x, y, 5.6, '#ff6f6f')).join(''), 'cs') };
+  art.bench = { w: 120, h: 62, s: () => shadow(60, 58, 50, 4) + P(rc(18, 34, 8, 24, 3, '#a8744f') + rc(94, 34, 8, 24, 3, '#a8744f')) + P(rc(8, 6, 104, 13, 6.5, '#ffb35c') + rc(8, 22, 104, 13, 6.5, '#ffc778')) + P(rc(4, 36, 112, 12, 6, '#ffb35c')) };
+  art.swing = { w: 120, h: 112, s: () => shadow(60, 108, 52, 4) + P(pa('M14 108L26 12h8L22 108ZM106 108L94 12h-8L98 108Z', '#7fc8f0')) + P(rc(14, 6, 92, 11, 5.5, '#ff8fb0')) + pa('M46 17V78M74 17V78', 'none', 'stroke="#c9a27a" stroke-width="2.6"') + P(rc(38, 76, 44, 9, 4.5, '#ffd24a'), 'cs') };
+  art.fountain = { w: 120, h: 104, s: () => shadow(60, 100, 52, 4.5) + P(pa('M40 26Q46 4 60 4Q74 4 80 26Q70 16 60 16Q50 16 40 26Z', '#a8dcff'), 'cs') + P(rc(54, 26, 12, 50, 6, '#e8e2f2')) + P(el(60, 40, 30, 9, '#e8e2f2')) + el(60, 37, 24, 5, '#9bd5ff') + P(pa('M6 72h108v10a18 18 0 0 1-18 18H24A18 18 0 0 1 6 82Z', '#e8e2f2')) + el(60, 73, 50, 9, '#9bd5ff') + el(44, 71, 10, 2.6, '#fff', 'opacity=".6"') };
+  art.bakery = { w: 140, h: 124, s: () => shadow(70, 120, 60, 5) + P(rc(14, 42, 112, 78, 12, '#ffe7c2')) + P(pa('M6 30Q8 16 22 16H118Q132 16 134 30V44a10.7 9 0 0 1-21.3 0a10.7 9 0 0 1-21.3 0a10.7 9 0 0 1-21.3 0a10.7 9 0 0 1-21.3 0a10.7 9 0 0 1-21.3 0a10.7 9 0 0 1-21.3 0Z', '#ff8fa3'))
+    + [27.3, 70, 112.7].map(x => `<path d="M${x - 10.7} 17h21.4V44a10.7 9 0 0 1-21.4 0Z" fill="#fff" opacity=".85"/>`).join('') + P(pa('M84 120V88a13 13 0 0 1 26 0V120Z', '#c98a5e'), 'cs') + ci(104, 104, 2.4, '#ffd36b') + P(rc(24, 68, 48, 34, 8, '#fffaf2'), 'cs') + rc(28, 72, 40, 26, 5, '#bfe6ff') + P(el(41, 90, 8, 5.5, '#e2a15c') + el(56, 89, 9, 6.5, '#d9914a'), 'cs') };
+  art.windmill = { w: 120, h: 190, s: () => shadow(60, 186, 34, 5) + P(pa('M40 186L48 70h24l8 116Z', '#ffe7c2')) + P(pa('M44 76Q60 52 76 76Z', '#ff8a7a')) + P(pa('M52 186V164a8 8 0 0 1 16 0V186Z', '#c98a5e'), 'cs') + P(ci(60, 124, 7, '#bfe6ff'), 'cs')
+    + P([20, 110, 200, 290].map(a => `<g transform="rotate(${a} 60 70)">${rc(55, 8, 22, 54, 6, '#fffaf2')}${rc(57.5, 6, 5, 60, 2.5, '#c9a27a')}</g>`).join('')) + P(ci(60, 70, 7, '#ffd24a'), 'cs') };
+  art.balloon = { w: 100, h: 140, s: () => pa('M34 88L42 112M66 88L58 112', 'none', 'stroke="#c9a27a" stroke-width="2"') + P(pa('M50 4C78 4 92 26 92 46C92 68 72 82 64 92H36C28 82 8 68 8 46C8 26 22 4 50 4Z', '#ff8fa3'), 'cb') + pa('M50 4C40 22 38 62 44 92H56C62 62 60 22 50 4Z', '#fff3c4') + pa('M50 4C30 12 18 40 30 84L36 92H44C38 62 40 22 50 4Z', '#7fc8f0', 'opacity=".9"') + pa('M50 4C70 12 82 40 70 84L64 92H56C62 62 60 22 50 4Z', '#b79be8', 'opacity=".9"') + P(rc(38, 110, 24, 20, 6, '#d9a066'), 'cs') };
+
   function doc(name, opt = {}) { const a = art[name]; if (!a) return ''; const px = opt.px || a.w * 2; return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${a.w} ${a.h}" width="${px}" height="${Math.round(px * a.h / a.w)}">${DEFS}${a.s(opt)}</svg>`; }
   const cache = {};
   const url = (name, opt) => { const k = name + JSON.stringify(opt || ''); return cache[k] || (cache[k] = 'data:image/svg+xml;utf8,' + encodeURIComponent(doc(name, opt))); };
-  return { doc, url, art, HEAD, TOWER, WIN, DEFS, P, el, ci, pa, rc, eye, blush, shadow, mouth, sleepEye, INK };
+  return { doc, url, art, HEAD, TOWER, WIN, pet, DEFS, P, el, ci, pa, rc, eye, blush, shadow, mouth, sleepEye, INK };
 })();
 // 圖從哪裡來：assets/clay/ 裡有的（CLAY 列出的，ChatGPT 生成的軟陶插畫）用檔案，沒有的用上面自己畫的
 const CLAY = new Set([]);
-const artSrc = name => CLAY.has(name) ? `assets/clay/${name}.png` : ART.url(name);
+const artSrc = name => CLAY.has(name) ? `assets/clay/${name}.webp` : ART.url(name);
 const ic = name => `<img class="ic" src="${artSrc('i-' + name)}" alt="" aria-hidden="true" draggable="false">`;
 const av = who => `<img class="av" src="${artSrc(who === 'rabbit' ? 'bunny' : who === 'robot' ? 'i-robot' : who)}" alt="" draggable="false">`;
 function fillIcons(root) { (root || document).querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = ic(e.dataset.ic); }); (root || document).querySelectorAll('[data-av]').forEach(e => { e.innerHTML = av(e.dataset.av); }); }
@@ -1246,21 +1286,13 @@ const whoCur = () => WHO.list.find(x => x.id === WHO.cur) || WHO.list[0];
 KEY = keyFor(WHO.cur);
 const ERRS = ['hourLate', 'minIndex', 'handSwap', 'halfHour', 'minNear', 'hourOff', 'minOne', 'carry', 'ampm', 'read12', 'other'];   // 撥鐘／讀鐘的錯法（minNear 差一格、hourOff 小時差很多、carry 跨整點、other 判不出來）
 const QIDS = ['day', 'read', 'set', 'star', 'match', 'vs', 'shop'];
-// ---------- 寵物資料：住在鐘樓的動物。圖檔 assets/pets/{kind}-{stage}.png（還沒有圖時用 emoji 代替）
+// ---------- 寵物資料：住在鐘樓的動物（圖在 ART.pet）
 const PET_KINDS = Object.create(null); Object.assign(PET_KINDS, { owl: { c: '#8a6fd1' }, squirrel: { c: '#e38b4f' }, bear: { c: '#8c5a3c' } });
 const PET_STAGES = [0, 30, 100, 250, 500];   // fed 到幾顆升到幼體、少年、成體、究極
 const FEED = 10;
 const petStage = fed => PET_STAGES.reduce((st, at, i) => fed >= at ? i : st, 0);
-// 配件：徽章門檻；圖檔 assets/gear/{id}.png（沒有圖時用 emoji）；place 回 [中心 x, 中心 y, 寬]（120 單位）
-// place(hx, hy, hr, top, ny, f) 回 [中心 x, 中心 y, 寬, 旋轉]；f 是臉：ex 臉中心 x、ey 眼睛高度、ew 兩眼外緣距離、hb 帽沿高度、hw 帽寬
-const GEAR = [
-  { id: 'bow', at: 1, slot: 'head', ar: 1.196, place: (hx, hy, hr, top, ny, f) => [f.ex - f.hw * 0.38, f.hb + hr * 0.05, f.hw * 0.5, -15] },
-  { id: 'scarf', at: 2, slot: 'neck', ar: 0.949, place: (hx, hy, hr, top, ny, f) => { const w = f.hw * 0.62; return [f.ex, ny + w / 0.949 * 0.4, w, 0]; } },
-  { id: 'glasses', at: 4, slot: 'face', ar: 2.695, place: (hx, hy, hr, top, ny, f) => [f.ex, f.ey, f.ew * 1.3, 0] },
-  { id: 'hat', at: 6, slot: 'head', ar: 1.225, place: (hx, hy, hr, top, ny, f) => { const w = f.hw * 0.95; return [f.ex, f.hb - w / 1.225 * 0.38, w, 0]; } },
-  { id: 'star', at: 8, slot: 'head', ar: 1.455, place: (hx, hy, hr, top, ny, f) => [f.ex + f.hw * 0.38, f.hb + hr * 0.05, f.hw * 0.45, 15] },
-  { id: 'crown', at: 12, slot: 'head', ar: 1.231, place: (hx, hy, hr, top, ny, f) => { const w = f.hw * 0.65; return [f.ex, f.hb - w / 1.231 * 0.38, w, 0]; } },
-];
+// 配件：徽章門檻、戴在哪裡（圖在 ART 的 G，位置在 FIT）
+const GEAR = [{ id: 'bow', at: 1, slot: 'head' }, { id: 'scarf', at: 2, slot: 'neck' }, { id: 'glasses', at: 4, slot: 'face' }, { id: 'hat', at: 6, slot: 'head' }, { id: 'star', at: 8, slot: 'head' }, { id: 'crown', at: 12, slot: 'head' }];
 const GEAR_BY = Object.create(null); GEAR.forEach(g => { GEAR_BY[g.id] = g; });
 const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, music: true, chime: true, level: 2, ring: true }, daily: {}, pet: { kind: '', fed: 0, acorn: 0, wear: { head: '', face: '', neck: '' } }, retest: [], town: { lit: [] }, free: 7 * 60, hinted: false, tut: false });
 let DB = fresh();
@@ -1374,11 +1406,11 @@ function Clock(el, opts = {}) {
   const tks = [];
   for (let i = 0; i < 60; i++) { const big = i % 5 === 0, a = i * 6 * Math.PI / 180, r1 = big ? 77 : 81.5, r2 = 85; svg.appendChild(tks[i] = mk('line', { x1: C + r1 * Math.sin(a), y1: C - r1 * Math.cos(a), x2: C + r2 * Math.sin(a), y2: C - r2 * Math.cos(a), stroke: big ? '#7a5544' : '#d6bda0', 'stroke-width': big ? 3.2 : 1.6, 'stroke-linecap': 'round' })); }
   for (let n = 1; n <= 12; n++) { const a = n * 30 * Math.PI / 180, t = mk('text', { x: C + 66 * Math.sin(a), y: C - 66 * Math.cos(a) + 7, 'text-anchor': 'middle', 'font-size': 19, 'font-weight': 900, fill: '#5b4034', 'font-family': 'var(--f-num)' }); t.textContent = n; svg.appendChild(t); }
-  // 時針：烏龜（從上面看，頭朝外）。有軟陶插畫（assets/clay/turtle.png）就用插畫
+  // 時針：烏龜（從上面看，頭朝外）。有軟陶插畫（assets/clay/turtle.webp）就用插畫
   const gh = mk('g', { class: 'hand hour' });
   gh.appendChild(mk('rect', { x: C - 5.5, y: C - 46, width: 11, height: 54, rx: 5.5, fill: 'url(#ckH)', stroke: '#2a5ea8', 'stroke-width': 0.7 }));
   const tort = mk('g', { transform: `translate(${C} ${C - 50})` });
-  if (CLAY.has('turtle')) tort.appendChild(mk('image', { href: 'assets/clay/turtle.png', x: -15, y: -16, width: 30, height: 30 }));
+  if (CLAY.has('turtle')) tort.appendChild(mk('image', { href: 'assets/clay/turtle.webp', x: -15, y: -16, width: 30, height: 30 }));
   else {
     for (const [x, y] of [[-9.5, -5], [9.5, -5], [-9.5, 7], [9.5, 7]]) tort.appendChild(mk('circle', { cx: x, cy: y, r: 3.6, fill: 'url(#ckSkin)', stroke: '#6fae52', 'stroke-width': 0.6 }));
     tort.appendChild(mk('circle', { cx: 0, cy: -8.6, r: 5, fill: 'url(#ckSkin)', stroke: '#6fae52', 'stroke-width': 0.6 }));
@@ -1390,11 +1422,11 @@ function Clock(el, opts = {}) {
   }
   gh.appendChild(tort);
   gh.appendChild(mk('circle', { class: 'knob', cx: C, cy: C - 52, r: KR }));
-  // 分針：兔子（耳朵朝外）。有軟陶插畫（assets/clay/rabbithead.png）就用插畫
+  // 分針：兔子（耳朵朝外）。有軟陶插畫（assets/clay/rabbithead.webp）就用插畫
   const gm = mk('g', { class: 'hand minute' });
   gm.appendChild(mk('rect', { x: C - 4, y: C - 72, width: 8, height: 80, rx: 4, fill: 'url(#ckM)', stroke: '#c23a3b', 'stroke-width': 0.7 }));
   const rab = mk('g', { transform: `translate(${C} ${C - 78})` });
-  if (CLAY.has('rabbithead')) rab.appendChild(mk('image', { href: 'assets/clay/rabbithead.png', x: -12, y: -23, width: 24, height: 34 }));
+  if (CLAY.has('rabbithead')) rab.appendChild(mk('image', { href: 'assets/clay/rabbithead.webp', x: -12, y: -23, width: 24, height: 34 }));
   else {
     for (const sx of [-1, 1]) { rab.appendChild(mk('ellipse', { cx: 4.2 * sx, cy: -13, rx: 3.4, ry: 8.5, fill: 'url(#ckFur)', stroke: '#dcbcb0', 'stroke-width': 0.7, transform: `rotate(${6 * sx} ${4.2 * sx} -6)` })); rab.appendChild(mk('ellipse', { cx: 4.2 * sx, cy: -12.5, rx: 1.5, ry: 5.6, fill: '#ffbccb', transform: `rotate(${6 * sx} ${4.2 * sx} -6)` })); }
     rab.appendChild(mk('ellipse', { cx: 0, cy: 0.5, rx: 10.5, ry: 9.5, fill: 'url(#ckFur)', stroke: '#dcbcb0', 'stroke-width': 0.8 }));
@@ -1487,12 +1519,12 @@ const Town = (() => {
   }
   const rr = (x, y, w, hh, r) => { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + hh, r); g.arcTo(x + w, y + hh, x, y + hh, r); g.arcTo(x, y + hh, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); };
   const rnd01 = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };   // 固定的亂數（每次畫都一樣，小花才不會跳來跳去）
-  // ---------- 圖：有檔案（CLAY 列出的）用 assets/clay/名字.png，沒有就用自己畫的（ART）。載入後先縮成要用的大小存起來（bmp），之後每次只是貼上去
+  // ---------- 圖：有檔案（CLAY 列出的）用 assets/clay/名字.webp，沒有就用自己畫的（ART）。載入後先縮成要用的大小存起來（bmp），之後每次只是貼上去
   const SPR = {}; let bmpC = {};
   function spr(name) {
     let s = SPR[name]; if (s) return s.ok ? s.im : null;
     s = SPR[name] = { im: new Image(), ok: false }; s.im.onload = () => { s.ok = true; backKey = ''; draw(); };
-    const src = CLAY.has(name) ? `assets/clay/${name}.png` : ART.art[name.split(':')[0]] ? ART.url(name.split(':')[0], name.includes(':lit') ? { lit: 1 } : name.includes(':sleep') ? { sleep: 1 } : undefined) : '';
+    const src = CLAY.has(name) ? `assets/clay/${name}.webp` : ART.art[name.split(':')[0]] ? ART.url(name.split(':')[0], name.includes(':lit') ? { lit: 1 } : name.includes(':sleep') ? { sleep: 1 } : undefined) : '';
     if (src) s.im.src = src; return null;
   }
   function bmp(name, hpx) {
@@ -2170,7 +2202,7 @@ const Match = (() => {
     $('#match-hint').hidden = true; $('#o-mdone').hidden = true; prog(); show('match'); Town.set(clock.get().tot);
   }
   function stop() { S = null; }
-  function prog() { $('#match-prog').innerHTML = `<span aria-hidden="true">🃏</span>${tx('match.prog', { n: S.done, t: PAIRS })}`; }
+  function prog() { $('#match-prog').innerHTML = `${ic('cards')}${tx('match.prog', { n: S.done, t: PAIRS })}`; }
   function flip(i) {
     if (!S || lock) return; const c = S.cards[i], el = $(`#mgrid .mcard[data-i="${i}"]`); if (c.done || S.open.includes(i)) return;
     el.classList.add('open'); S.open.push(i); S.flips++; SFX.tick(); $('#match-hint').hidden = true;
@@ -2240,46 +2272,21 @@ const Versus = (() => {
 })();
 
 // ---------- 寵物：答對掉橡果，餵了會長大；徽章解鎖配件。沒有飢餓、沒有倒扣
-let PET_IMG = false; { const im = new Image(); im.onload = () => { PET_IMG = true; if (mode === 'pet') Pet.render(); }; im.src = 'assets/pets/owl-0.png'; }   // 有圖檔就用圖，沒有就用 emoji
-// 每隻每階段的頭：[hx, hy, hr, top, ny]（120 單位：頭中心、頭半徑、圖最高點、下巴高度），由 tools/pet-sheet.cjs 的格線圖目測
-// 臉 PET_FACE：{ ex 臉中心 x, ey 眼睛高度, ew 兩眼外緣距離, hb 帽沿高度, hw 帽寬 }；null 用 faceOf() 從頭圓推算
-const PET_HEAD = {
-  owl: [[60, 94, 17, 72, 108], [61, 93, 22, 72, 100], [60, 67, 20, 47, 87], [60, 47, 20, 27, 67], [60, 33, 21, 3, 55]],
-  squirrel: [[60, 94, 17, 70, 108], [48, 86, 15, 66, 100], [47, 66, 19, 40, 85], [43, 42, 18, 20, 60], [42, 36, 19, 3, 55]],
-  bear: [[60, 94, 17, 69, 108], [60, 88, 14, 71, 102], [61, 63, 17, 46, 80], [60, 28, 18, 10, 47], [60, 27, 18, 3, 45]],
-};
-const faceOf = (hx, hy, hr) => ({ ex: hx, ey: hy - hr * 0.2, ew: hr * 1.3, hb: hy - hr * 0.55, hw: hr * 1.7 });
-const PET_FACE = {
-  owl: [null, { ex: 61, ey: 92, ew: 26, hb: 73, hw: 44 }, { ex: 60, ey: 69, ew: 35, hb: 54, hw: 48 }, { ex: 60, ey: 50, ew: 35, hb: 35, hw: 46 }, { ex: 60, ey: 35, ew: 40, hb: 20, hw: 50 }],
-  squirrel: [null, { ex: 48, ey: 87, ew: 23, hb: 75, hw: 32 }, { ex: 47, ey: 70, ew: 32, hb: 52, hw: 40 }, { ex: 43, ey: 45, ew: 30, hb: 30, hw: 40 }, { ex: 42, ey: 40, ew: 30, hb: 23, hw: 40 }],
-  bear: [null, { ex: 60, ey: 87, ew: 25, hb: 76, hw: 34 }, { ex: 61, ey: 65, ew: 30, hb: 51, hw: 40 }, { ex: 60, ey: 30, ew: 30, hb: 15, hw: 42 }, { ex: 60, ey: 28, ew: 30, hb: 13, hw: 44 }],
-};
-function gearSVG(id, hx, hy, hr, top, ny, f) {
-  const g = GEAR_BY[id]; if (!g) return '';
-  const [cx, cy, w, rot] = g.place(hx, hy, hr, top, ny, f), h = w / g.ar;
-  if (!PET_IMG) return '';
-  return `<image href="assets/gear/${id}.png" x="${(cx - w / 2).toFixed(1)}" y="${(cy - h / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}"${rot ? ` transform="rotate(${rot} ${cx.toFixed(1)} ${cy.toFixed(1)})"` : ''}/>`;
-}
-function petSVG(kind, st, wear) {
-  const K = PET_KINDS[kind]; if (!K) return '';
-  const [hx, hy, hr, top, ny] = PET_HEAD[kind][st], f = PET_FACE[kind][st] || faceOf(hx, hy, hr), size = 50 + st * 14;
-  const body = PET_IMG ? `<image href="assets/pets/${kind}-${st}.png" x="0" y="0" width="120" height="120"/>` : (st === 0 ? `<ellipse cx="60" cy="72" rx="26" ry="34" fill="${K.c}" opacity=".85"/><ellipse cx="52" cy="60" rx="7" ry="10" fill="#fff" opacity=".5"/>` : `<text x="60" y="${hy + hr * 1.4}" text-anchor="middle" font-size="${size}">${K.e}</text>`);
-  const gear = sl => { const id = wear && wear[sl]; return id && GEAR_BY[id] && st > 0 ? gearSVG(id, hx, hy, hr, top, ny, f) : ''; };
-  return `<svg viewBox="0 0 120 120"><ellipse cx="60" cy="116" rx="34" ry="5" fill="rgba(0,0,0,.15)"/>${body}${gear('neck')}${gear('head')}${gear('face')}</svg>`;
-}
+// 寵物的圖：自己畫的（ART.pet：蛋 → 坐在蛋殼裡 → 越長越大），配件直接畫在同一張圖裡、跟著縮放
+function petSVG(kind, st, wear) { if (!PET_KINDS[kind]) return ''; return `<svg viewBox="0 0 120 120">${ART.DEFS}${ART.pet(kind, st, st > 0 ? wear : null)}</svg>`; }
 const Pet = (() => {
   const P = () => DB.pet, name = () => tx('kname.' + P().kind);
   function earn(n) { P().acorn += n; save(); if (mode === 'menu') $('#b-acorn').textContent = P().acorn; }
   function open() { show('pet'); Town.set(clock.get().tot); render(); }
   function render() {
     const p = P(), has = !!PET_KINDS[p.kind]; $('#pet-acorn').textContent = p.acorn; $('#pet-pick').hidden = has; $('#pet-show').hidden = !has;
-    if (!has) { $('#pet-cards').innerHTML = Object.keys(PET_KINDS).map(k => `<button type="button" class="pet-card" data-kind="${k}"><span class="emo"><img class="av" src="assets/pets/${k}-0.png" alt=""></span>${tx('kind.' + k)}<small>${tx('kname.' + k)}</small></button>`).join(''); return; }
+    if (!has) { $('#pet-cards').innerHTML = Object.keys(PET_KINDS).map(k => `<button type="button" class="pet-card" data-kind="${k}"><span class="emo"><img class="av" src="${artSrc('pet-' + k + '-0')}" alt=""></span>${tx('kind.' + k)}<small>${tx('kname.' + k)}</small></button>`).join(''); return; }
     const st = petStage(p.fed), next = PET_STAGES[st + 1], prev = PET_STAGES[st];
     $('#pet-stage').innerHTML = petSVG(p.kind, st, p.wear); $('#pet-name').innerHTML = `${name()}<small>${tx('stage.' + st)}</small>`;
     $('#pet-barwrap').hidden = !next; $('#pet-bar').style.width = next ? Math.round((p.fed - prev) / (next - prev) * 100) + '%' : '100%';
     $('#pet-feed').hidden = !next; $('#pet-feed').disabled = p.acorn < FEED; $('#pet-feed').textContent = p.acorn < FEED ? tx('pet.feedLack', { d: FEED - p.acorn }) : tx('pet.feed', { n: FEED });
     const badges = num(DB.daily.badges);
-    $('#pet-gear').innerHTML = `<div class="gear-t">${tx('gear.title')}</div>` + GEAR.map(g => { const ok = badges >= g.at, on = p.wear[g.slot] === g.id; return `<button type="button" data-gear="${g.id}" aria-pressed="${on}"${ok ? '' : ' aria-disabled="true"'}><span class="emo"><img class="av" src="assets/gear/${g.id}.png" alt=""></span>${tx('gear.' + g.id)}<small>${ok ? '' : tx('gear.badges', { n: g.at })}</small></button>`; }).join('');
+    $('#pet-gear').innerHTML = `<div class="gear-t">${tx('gear.title')}</div>` + GEAR.map(g => { const ok = badges >= g.at, on = p.wear[g.slot] === g.id; return `<button type="button" data-gear="${g.id}" aria-pressed="${on}"${ok ? '' : ' aria-disabled="true"'}><span class="emo"><img class="av" src="${artSrc('g-' + g.id)}" alt=""></span>${tx('gear.' + g.id)}<small>${ok ? '' : tx('gear.badges', { n: g.at })}</small></button>`; }).join('');
   }
   function feed() {
     const p = P(); if (p.acorn < FEED || !PET_KINDS[p.kind]) return; const before = petStage(p.fed); p.acorn -= FEED; p.fed += FEED; save(); render();

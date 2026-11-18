@@ -31,11 +31,12 @@
 
 ## 架構（index.html）
 
-1. `<style>`：`:root` tokens（白天小鎮：天空淡藍到米白、暖色屋頂、鐘面米白、時針藍、分針紅、強調橘黃）。
+1. `<style>`：`:root` tokens，檔尾一大段「軟陶玩具風」是整套介面的皮（奶油色軟陶塊 `--pan`＋`--clay` 陰影、糖果按鈕 `.btn`、主選單五顆各一個顏色 `.mode[data-mode]`）。時針藍、分針紅不變。
 2. HTML：`.screen` 用 `hidden` 切換：`#s-menu`（自由玩的鐘＋小鎮＋模式鈕）、之後 `#s-day`（小鎮的一天）、`#s-read`、`#s-match`、`#s-versus`、`#s-map`；overlay 卡片照九九的關閉規則（看資料的卡右上 ✕；要做決定的卡底部按鈕）。
 3. JS（IIFE）：
    - `STR`／`tx`／`applyStr`／`setLang`。
-   - **鐘面元件** `Clock(el, opts)`：SVG 200×200 viewBox；`set(h, m)`、`get()`、`onChange`、`snap`（5 或 1 分）、`drag`（可不可以拖）。拖分針：用連續角度累計（跨 12 會進位小時），時針同步；拖烏龜：**分針不動**，只換小時（吸附到「整點 + 原本的分鐘」，`hourSnap()`）。一次只認一根手指（`drag.id`，第二指不理，兩指同時按會把角度差算亂）；`lostpointercapture` 也當放手。`snapTick` 每吸附一格 `SFX.tick()`，整點 `SFX.bell()`。
+   - **美術（全部自己的圖，不用現成的 emoji）**：風格是「軟陶玩具」——圓滾滾、粉嫩色、每一塊有立體光影和細顆粒。`ART`（IIFE）是自己畫的 SVG 圖庫：濾鏡 `c`／`cs`／`cb`（邊緣一圈暗一圈亮＋顆粒，`P(內容, 濾鏡)` 包一塊）、動物 `C`（小熊、小兔、松鼠、貓頭鷹）、房子 `house-0`～`5`（`:lit` 亮燈）、`tower`、太陽月亮雲、裝飾、寵物 `pet-種類-階段`、配件 `g-*`、圖示 `i-*`（`IC`）、小東西 `p-*`。`ART.url(name, opt)` 回 data URL。`ic(name)` 回 `<img class="ic">`（HTML 用 `data-ic`、動物頭像 `data-av`，`fillIcons()` 填）。之後有 ChatGPT 生成的軟陶插畫：`python3 tools/cut-clay.py <原圖> <名字,…>` 切到 `assets/clay/`，把名字加進 `CLAY`，同名的圖就自動換成插畫（鐘樓要填 `CLAY_TOWER`、房子的窗戶 `CLAY_WIN`）。看圖庫：`node tools/art-lab.cjs <輸出.png> [名字,…]`。`tests/art.js` 檢查原始檔和每個畫面都沒有 emoji、圖都載得出來。
+   - **鐘面元件** `Clock(el, opts)`：SVG 200×200 viewBox；`set(h, m)`、`get()`、`onChange`、`snap`（5 或 1 分）、`drag`（可不可以拖）。拖分針：用連續角度累計（跨 12 會進位小時），時針同步；拖烏龜：**分針不動**，只換小時（吸附到「整點 + 原本的分鐘」，`hourSnap()`）。一次只認一根手指（`drag.id`，第二指不理，兩指同時按會把角度差算亂）；`lostpointercapture` 也當放手。`snapTick` 每吸附一格 `SFX.tick()`，整點 `SFX.bell()`。鐘的立體感全部用漸層（放在頁面最前面的 `#ck-defs`；放在藏起來的畫面裡會失效），不用濾鏡（拖指針時每一格都重畫，濾鏡在手機上會卡）；烏龜是從上面看、頭朝外，兔子耳朵朝外。
    - **外圈** `setRing(on)`：鐘外面一圈 00～55（`.ring`，紅色小字），兔子指到（差 1.5 分以內）的數字亮 `.on`；開的時候 viewBox 從 `0 0 200 200` 放大到 `-19 -19 238 238`（鐘本身稍微變小），把手半徑 ×`RS` 放大回原本的像素。`countTo(m)` 開外圈時改成外圈數字一格一格亮 `.lit`（不另外疊字）。設定 `DB.set.ring`（預設 true，舊存檔沒有這欄當 true），`setRingAll()` 改全部的鐘；`Clock(el, { ring: false })` 的迷你鐘（配對、選等級卡）不在 `CLOCKS` 裡、不畫外圈。量把手大小要在兔子朝上時量（斜的時候外框會比較大）。
    - **教學** `Tut`（`#s-tut`、`clock6`）：全新的第一次打開（沒有存檔）先動手撥三下：兔子跑一圈（7:00 起，離開 50 分以上才算）→ 烏龜拖到 3 → 兔子拖到 6（半），最後三張大卡選「要練什麼」＝ `set.level`（全遊戲唯一決定難度的地方，設定頁同一個）。選了才存 `DB.tut = true`；沒選就關掉下次還是教學。有教學以前的舊存檔（`loadDB()` 的 `had`）當作看過；清除紀錄後也不再跳。「我會了」直接到選等級；設定頁「再看一次怎麼玩」`Tut.start(true)`（現在的等級先亮著）。鐘面為教學加了 `clock.only = 'm'／'h'`（只准拖一根，碰另一根呼叫 `onWrong` → 提醒「那是烏龜喔」並讓對的那根閃 `nudge()`）、`mark(n)` 圈出數字；手指 👆 用 CSS 變數 `--a0`／`--a1`／`--r` 沿著把手的路徑示範，孩子一拖就消失、放手沒做到 1.8 秒後再示範並出虛線（不說錯）。
    - **誰在玩**（照九九）：`WHO = { cur, list:[{id, name}] }` 存在 `tick-town-who`，最多 4 人；每個人一把存檔 `keyFor(id)`（第一個人 id 是空字串＝舊的 `tick-town-v1`，舊存檔自動變成第一個人；之後的人 `tick-town-v1:p…`）。語言、難度、外圈、聲音、紀錄、星圖、寵物、每日任務都跟著人。主選單的名字鈕 `#go-who` 只在有名字或兩個人以上才出現（一個孩子的家庭不多一顆鈕）；設定頁最上面「誰在玩」一定有。沒名字時先取名才能新增；新增的人先存一份 `tut:false`（沿用語言和聲音），`switchWho` 後跑教學選等級。上排放不下時 `fitTitle()` 先縮、再兩行、再把標題藏起來（`visibility:hidden`），名字鈕在 375px 以下只剩圖示。
@@ -43,11 +44,11 @@
    - **App 版**（`APP` = Capacitor 原生殼才是 true；網頁版永遠全部免費）：`PAID = ['match','shop','versus']`，各試玩 `TRIALS = 3` 次（`paidGate(m)`，主選單鈕上 `.m-lock` 標籤「試玩 n 次」／🔒），用完出鎖卡 `#o-lock`（孩子看的不提價錢），「給大人看」→ 家長關卡（簡單的）→ 購買卡 `#o-buy`（價錢從商店讀）。購買照九九用 Capgo native-purchases（`IAP_ID = 'unlock_all'`，Android 要 acknowledge），每次開啟、回前景都問商店，`UL` 存在 `tick-town-unlock`（整台裝置共用）。每日任務 `famOK()` 只出玩得到的遊戲。測試用假的 `window.Capacitor`（`tests/app.js`）。
    - **開場動畫** `#splash`：圖示跳出來＋標題，1.3 秒淡出，`pointer-events:none` 不擋點擊，1.9 秒後拿掉；`RM` 只淡出。
    - **隱私權政策**：關於頁的鈕 → 家長關卡（簡單的）→ `window.open(PRIVACY_URL[LANG])`。頁面在 `privacy/`、`support/`，`tools/make-privacy.py` 產生（改政策改那個檔）。
-   - **打包**：`npm run www`（`tools/make-www.mjs` 複製 index.html、manifest、assets 到 `www/`）；`android/`、`ios/` 不進版控，GitHub Actions `android-apk.yml` 每次 `npx cap add android` 再建 debug APK，檢查權限只准 BILLING／網路，放到 Release `android-latest`。圖示 `tools/make-icon.py`；商店圖 `tools/store-art.cjs`；上架步驟 `docs/launch.md`。
+   - **打包**：`npm run www`（`tools/make-www.mjs` 複製 index.html、manifest、assets 到 `www/`）；`android/`、`ios/` 不進版控，GitHub Actions `android-apk.yml` 每次 `npx cap add android` 再建 debug APK，檢查權限只准 BILLING／網路，放到 Release `android-latest`。圖示 `tools/make-icon.cjs`（直接拍遊戲裡的鐘）；商店圖 `tools/store-art.cjs`；上架步驟 `docs/launch.md`。
    - **修鐘店** `Shop`（`#s-shop`、`clock5`）：一輪 10 個鐘，每個掛一張標籤（等級 1 有一半寫成文字），孩子按「對」或「要修」。出題照讀鐘的權重；標籤 55% 是錯的，錯法用 `Read.options()`（跟讀鐘干擾卡同一套，照孩子的弱點挑）。看對：記 `r:h:m` 對（錯的標籤看出來＝那一種錯法衰減）、標籤修好變綠；錯的標籤按「對」：記那一種錯、虛線畫出標籤寫的時間＋該錯法的提示（`.bubble.over`、按「知道了」下一題）；對的標籤按「要修」：記 other。`DB.best.shops`、每日任務 `shop`（看 6 個）、小鎮長大也算。主選單 5 個鈕（≤ 420px 字縮小、西班牙文「A dos」）。
    - **「現在」鈕** `#go-now`（主選單鐘的右下角）：跳到裝置現在的時刻（照吸附的格子），整點也會報時。
    - **三年級（等級 3）**：讀鐘每題先 `kind()` 抽種類：一般讀鐘、`h24`（鐘上 15:20，打 24 小時制，鍵 `a:H:m`；下午沒加 12／早上多加 12 → `ampm`，提示 `hint.ampm`／`hint.ampmAm`）、`dur`（旁邊寫出發時刻、鐘上是到的時刻，打分鐘數，鍵 `g:出發:分鐘`；跨整點時「只算分鐘相減／只算到整點／只算整點後」→ `carry`，差 1～4 → `minOne`）。權重 h24 = 1 + 3×`errs.ampm`、dur = 1 + 3×`errs.carry`，上一題同種 ×0.5；`Read.only(k)` 測試用。小鎮的一天等級 3 下午以後的事有 40～80% 寫成 24 小時制（`task.h24`，目標寫 15:20＋「24 小時制」），分鐘對、小時錯 → `ampm`、提示 `hint.ampmSet`。`classifySet` 差 1～4 分 → `minOne`，提示 `clock.countOne(m)` 從 5 的倍數開始小格一格一格亮（`.tk-lit`）。**時間線** `timeline(t1, t2)`：SVG，跨整點分兩段（橘：到整點、紅：剩下的），每段上面寫 +幾分，一段一段畫（`RM` 就直接出現）；用在讀鐘 dur 的提示與答對、小鎮的一天「走了幾分鐘」撥錯。打數字時的提示 `.bubble.over` 蓋在鍵盤上（不擠掉鐘），按「知道了」收起來；`fitRead()` 題目長時把鐘縮小到鍵盤放得下（最小 110px）。
-   - **小鎮** `Town`：canvas 畫天空、太陽／月亮、遠山、房子（左右各 3 間，有煙囪、門）、中間的**鐘樓**（鐘面跟著 `t` 走）、路燈、動物；`Town.set(minutesOfDay)`。動物依作息站在自己家門口（`scene()`：小熊住第 2 間、小兔第 5 間、松鼠第 6 間，晚上貓頭鷹站在鐘樓上），圖借用寵物成體圖 `assets/pets/{bear,squirrel,owl}-3.png`，小兔與裝飾在 `assets/town/*.png`（`tools/cut-town.py <原圖> <名字,…>` 切），沒有圖就畫 emoji。`Town.walk(who)`：小鎮的一天撥對時那隻動物從門口走下來、往草地中間跳著走 1.6 秒（rAF，`RM` 不跑）。**小鎮會長大**：`townPts()` = 小鎮的一天 ×2 + 讀鐘、配對、雙人各一輪 ×1；`DECOR` 八樣（花 1、大樹 2、長椅 4、鞦韆 6、噴水池 9、麵包店 13、風車 18、熱氣球 24）；`goHome()` 時 `townGrow()` 比 `DB.town.seen`，多了就 toast「小鎮多了…」。每個人的小鎮各自長。
+   - **小鎮** `Town`：canvas。天空是漸層（`KF` 關鍵影格）；山、草地、小路、小花畫一次存在 `back`（視窗大小變了才重畫，最後蓋一層細顆粒）；房子（左右各 3 間）、中間的**鐘樓**、裝飾、動物、太陽月亮雲都是一張張的圖：`spr(name)` 載入、`bmp(name, 高)` 先縮成要用的大小存起來、`thing()` 貼上去（腳下有影子）。圖的來源 `artSrc(name)`：`CLAY` 列出的用 `assets/clay/名字.webp`（ChatGPT 生成的軟陶插畫，`tools/cut-clay.py` 切），沒有的用自己畫的 `ART`。**晚上**：地上的東西先畫在另一層 `land`，整層用 `source-atop` 蓋一層顏色（傍晚偏暖、晚上深藍），疊回天空後才畫會發光的（窗戶 `HOUSE_WIN`、路燈、鐘面）和鐘樓的指針（`TOWER_AT()` 給鐘面在圖上的位置）。`Town.set(minutesOfDay)`。動物依作息站在自己家門口（`scene()`：小熊住第 2 間、小兔第 5 間、松鼠第 6 間，晚上貓頭鷹站在鐘樓上）。`Town.walk(who)`：小鎮的一天撥對時那隻動物從門口走下來、往草地中間跳著走 1.6 秒（rAF，`RM` 不跑）。**小鎮會長大**：`townPts()` = 小鎮的一天 ×2 + 讀鐘、配對、雙人各一輪 ×1；`DECOR` 八樣（花 1、大樹 2、長椅 4、鞦韆 6、噴水池 9、麵包店 13、風車 18、熱氣球 24）；`goHome()` 時 `townGrow()` 比 `DB.town.seen`，多了就 toast「小鎮多了…」。每個人的小鎮各自長。
    - `SFX`：Web Audio 合成（tick、bell、ding、hm）；`DB.set.sound` 關掉就不出聲。**報時** `SFX.chime(n)`：鐘樓敲 n 下（0.62 秒一下），走自己的 `chimeBus` 才能 `chimeStop()` 中途停；只看 `DB.set.chime`（跟音效分開）。主選單放手停在整點才報時（拖的途中經過整點只 `bell()` 一聲；又開始拖、離開主選單、切到背景都停）；教學第 2 步烏龜到 3 敲 3 下；遊戲裡不報時（不打斷題目）。敲鐘時音樂 `duck`。
    - **音樂** `Music`（照九九，Web Audio 即時合成、沒有音檔）：`TRACKS` 三首，`town`（白天音樂盒 C–Am–F–G）、`night`（搖籃曲 F–Dm–B♭–C）、`play`（遊戲中 G–Em–C–D，輕拍子、每兩輪一次主旋律，不加速）。`show(name)` 換畫面時換歌：主選單看鐘上的時刻（`forTime`：6～19 點白天）、教學／星圖／寵物 `town`、其他遊戲 `play`；主選單拖鐘時 `showTime` 也跟著換。瀏覽器要先碰一下才能出聲：`pointerdown`／`keydown`（capture）時 `Music.start()`；`visibilitychange` 切背景停、回來再開。`DB.set.music` 預設開。
    - 存檔 `DB = { facts, errs, best, set:{ lang, music, sound, chime, level, timer, ring }, daily, pet, retest, town }`，`save()`；載入用 `Object.assign(fresh(), …)` 補欄位並消毒。
@@ -61,7 +62,7 @@
 - 存檔向下相容。
 - commit 訊息用繁體中文，一句話說清楚改了什麼。
 - 五種語言版面要一樣（320×568 到 1920×1080；`tests/layout.js` 量 9 種尺寸 × 五語；`tests/lang.js` 查字串表齊全、時刻說法、裝置語言；教學另外在 `tests/tut.js` 量 6 種）：標題 `h1` 一行、放不下就縮（`flex:1;min-width:0`，右邊的 chip 與圖示鈕 `flex:none`，不然會被推出畫面；`fitTitle()` 一次縮 1px 到 11px，還放不下（320px 寬的英、日文）才用 `title2` 折成兩行；≤ 400px 寬上排的間距縮小）；矮螢幕（≤ 620px）主選單那行提示藏起來；讀鐘打數字時鐘縮小（`.clock-wrap.small`，≤ 640px 高再縮到 22vh）、鍵盤不透明；雙人把手 `knob: 28`（鐘比較小）、中線的返回鈕 44px 不折行、toast 放中線上面（`.toast.mid`）；日文 `word-break:keep-all`（在空格處斷行，不在詞中間）；虛線指針是珊瑚色加白底線（細灰線孩子看不到）。
-- 測試用 Playwright（chromium 在 `/opt/pw-browsers/chromium`，`NODE_PATH=/opt/node-tools/node_modules:$(npm root -g)`），本機 `python3 -m http.server 8124`。
+- 測試用 Playwright（chromium 在 `/opt/pw-browsers/chromium`，`NODE_PATH=/opt/node-tools/node_modules:$(npm root -g)`），本機 `python3 -m http.server 8124`。改完畫面要自己截圖看過（不能只看測試有沒有過）。
 - 派 agent：試玩、截圖、量版面用 sonnet；批次跑腳本用 haiku；程式碼審查、破壞性測試用 opus。
 
 ## 進度
@@ -78,14 +79,15 @@
 - [x] 兩個人一起（`Versus`：上下分割各撥各的鐘，先撥對拿一分、5 分贏；機器人想的時間跟著孩子最近 4 次撥對的時間 ×1.1、夾 3～12 秒、落後 ×1.3／領先 ×0.8，鐘面會慢慢轉到答案；另一個人時上半旋轉 180°、可選大人加難（1 分）；只記小隊長那邊）
 - [x] 遊戲說明（`#o-help`，從設定開、✕ 回設定）、關於頁（`#o-about`：練什麼、三個等級、隱私、製作、字型授權；版本號寫在 `about.made`）
 - [x] 字型切子集（`assets/fonts/`，約 600 KB）
-- [x] 寵物（`Pet`：住在鐘樓的貓頭鷹／松鼠／小熊，橡果 `pet.acorn` 答對 +1、任務單項 +10、全完成 +30，餵 10 顆、`PET_STAGES` 30／100／250／500；配件 `GEAR` 依徽章門檻、`wear.{head,face,neck}`；圖在 `assets/pets/{kind}-{st}.png`（ChatGPT 生成、`tools/cut-pets.py` 切）與 `assets/gear/{id}.png`（`tools/cut-gear.py`，一列六樣）；`PET_HEAD[kind][st] = [hx, hy, hr, top, ny]`、`PET_FACE[kind][st] = {ex, ey, ew, hb, hw}` 用 `tools/pet-sheet.cjs <png> [glasses,hat,scarf]` 的格線圖目測；`PET_IMG` 偵測不到圖時退回 emoji）
+- [x] 寵物（`Pet`：住在鐘樓的貓頭鷹／松鼠／小熊，橡果 `pet.acorn` 答對 +1、任務單項 +10、全完成 +30，餵 10 顆、`PET_STAGES` 30／100／250／500；配件 `GEAR` 依徽章門檻、`wear.{head,face,neck}`；圖是 `ART.pet(kind, st, wear)`：0 是蛋、1 坐在蛋殼裡、2～4 同一隻越長越大，配件 `G` 直接畫在同一張圖裡，位置在 `FIT`）
 - [x] 教學（`Tut`：第一次打開動手撥三下、選要練什麼；設定可再看）
 - [x] 鐘面外圈（`setRing`：00～55、兔子指到的亮、提示一格一格亮；設定可關）
 - [x] 韓文、西班牙文（`STR.ko`／`STR.es`，`timePhrase`）
 - [x] App 版準備（開場動畫、圖示與 manifest、隱私權與支援頁、解鎖與購買、Capacitor 設定、自動建 APK、商店文案與圖；`tests/app.js`）— 剩下要 Ian 操作的在 `docs/launch.md`
 - [x] 修鐘店（`Shop`：標籤對不對，錯的標籤照弱點挑；`tests/shop.js`）、「現在」鈕
-- [x] 小鎮像小鎮（鐘樓、動物站在家門口、撥對時走出門、玩越多小鎮越大；`tests/town.js`）；小兔與裝飾插畫（ChatGPT 生，原圖 `art/town-raw/`，`tools/cut-town.py` 切）
+- [x] 小鎮像小鎮（鐘樓、動物站在家門口、撥對時走出門、玩越多小鎮越大；`tests/town.js`）
 - [x] 三年級內容（24 小時制、走了幾分鐘、時間線提示、1 分的小格；`tests/grade3.js`）
 - [x] 誰在玩（最多 4 人）、備份紀錄、家長區（備份／清除／刪除玩家）、獻詞（`tests/who.js`）
 - [x] 音樂、報時（`Music` 三首、`SFX.chime`；設定頁音樂／音效／報時三個開關；`tests/sound.js`）
+- [x] 美術整個重做（軟陶玩具風：介面、鐘面、小鎮、動物、寵物、圖示、App 圖示；不用 emoji；`tests/art.js`）— ChatGPT 的軟陶插畫到了再用 `CLAY` 換上去
 - [ ] 其餘待辦與順序見 `ROADMAP.md`（上架操作，見 `docs/launch.md`）

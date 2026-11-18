@@ -10,7 +10,7 @@ const SHOT = process.argv[2];
     await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(250);
     const inView = sel => p.evaluate(sel => { const r = document.querySelector(sel).getBoundingClientRect(); return r.bottom <= innerHeight + 1 && r.top >= -1; }, sel);
     ok(await inView('#modes'), `${w}x${h} ${lang} 首次開啟模式鈕在畫面內`);
-    const h1lines = await p.evaluate(() => { const e = document.querySelector('h1'); return e.getBoundingClientRect().height / parseFloat(getComputedStyle(e).fontSize); }); ok(h1lines <= (w <= 340 ? 2.2 : 1.7), `${w}x${h} ${lang} 標題一行（320 寬放不下才兩行）`);
+    const h1lines = await p.evaluate(() => { const e = document.querySelector('h1'), cs = getComputedStyle(e); return (e.getBoundingClientRect().height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)) / parseFloat(cs.fontSize); }); ok(h1lines <= (w <= 340 ? 2.2 : 1.7), `${w}x${h} ${lang} 標題一行（320 寬放不下才兩行）`);
     const h1cut = await p.evaluate(() => { const e = document.querySelector('h1'); return e.scrollWidth - e.clientWidth; }); ok(h1cut <= 0, `${w}x${h} ${lang} 標題沒被切掉（多出 ${h1cut}px）`);
     await p.click('[data-mode=read]'); await p.waitForTimeout(250);
     ok(await inView('#read-keys'), `${w}x${h} ${lang} 讀鐘鍵盤整個在畫面內`);
