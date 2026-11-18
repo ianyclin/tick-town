@@ -28,7 +28,7 @@ const SHOT = process.argv[2];
     const [f0] = await rate(2, {}, {}, 'k.t === 430'), [f1] = await rate(2, {}, { 's:7:10': { n: 3, w: 2, err: 0.6, t: 0 } }, 'k.t === 430'); ok(f1 > f0 * 2, `錯過的 7:10 比較常出（${f0.toFixed(3)} → ${f1.toFixed(3)}）`);
     const [c0] = await rate(3, {}, {}, cross), [c1] = await rate(3, { carry: 0.8 }, {}, cross), [e3] = await rate(3, {}, {}, el); ok(c1 > c0 + 0.03 && Math.abs(e3 - 2 / 7) < 0.001, `carry 弱 → 跨整點的「走了幾分鐘」變多（${c0.toFixed(2)} → ${c1.toFixed(2)}），等級 3 每天兩題`);
   }
-  for (const [lang, level, w, h] of [['zh-Hant', 2, 390, 844], ['en', 1, 320, 568], ['ja', 3, 390, 844]]) {
+  for (const [lang, level, w, h] of [['zh-Hant', 2, 390, 844], ['en', 1, 320, 568], ['ja', 3, 390, 844], ['ko', 2, 360, 640], ['es', 3, 390, 844]]) {
     const p = await (await b.newContext({ viewport: { width: w, height: h }, hasTouch: true })).newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.addInitScript(`localStorage.setItem('tick-town-v1', JSON.stringify({ set: { lang: '${lang}', sound: false, level: ${level} }, free: 420, hinted: true }));`);
     await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(300);
@@ -37,7 +37,7 @@ const SHOT = process.argv[2];
     const say = await p.textContent('#day-say'), target = await p.textContent('#day-target'); ok(say.length > 5 && /\d/.test(target), `${lang} 題目「${say}」目標 ${target}`);
     if (SHOT) await p.screenshot({ path: `${SHOT}/day-${lang}.png` });
     // 用內部狀態取得目標：從 Town 的時間（Town.set(k.t)）讀不到，改從存檔／DOM 推：target 文字 h:mm + ampm → 直接撥 clock2 並觸發 onChange
-    const parse = await p.evaluate(() => { const t = document.querySelector('#day-target').textContent; const m = t.match(/(\d+):(\d+)/); return m ? [+m[1], +m[2], /下午|PM|ごご/.test(t) ? 'pm' : 'am', t] : null; });
+    const parse = await p.evaluate(() => { const t = document.querySelector('#day-target').textContent; const m = t.match(/(\d+):(\d+)/); return m ? [+m[1], +m[2], /下午|PM|ごご|오후|p\. m\./.test(t) ? 'pm' : 'am', t] : null; });
     ok(parse, `${lang} 目標可解析 ${JSON.stringify(parse)}`);
     const setAns = async (hh, mm) => { await p.evaluate(([hh, mm]) => { const c = window.__tt.clock2; c.set(hh, mm); c.onChange(c.get().tot, true); c.onChange(c.get().tot, false); }, [hh, mm]); };
     const toTot = ([hh, mm, ap]) => ((ap === 'pm' && hh !== 12 ? hh + 12 : (ap === 'am' && hh === 12 ? 0 : hh)) * 60 + mm);

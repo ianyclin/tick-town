@@ -5,7 +5,7 @@ const SHOT = process.argv[2];
 const solve = async p => { const q = await p.textContent('#gate-q'); const ans = String(Function('return ' + q.replace(/=/g, '').replace(/×/g, '*').replace(/−/g, '-'))()); for (const d of ans) await p.click(`#gate-keys .key[data-k="${d}"]`); await p.waitForTimeout(150); return ans; };
 (async () => {
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox'] });
-  for (const [lang, w, h] of [['zh-Hant', 390, 844], ['en', 320, 568], ['ja', 390, 844]]) {
+  for (const [lang, w, h] of [['zh-Hant', 390, 844], ['en', 320, 568], ['ja', 390, 844], ['ko', 390, 844], ['es', 320, 568]]) {
     const p = await (await b.newContext({ viewport: { width: w, height: h } })).newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.addInitScript(`localStorage.setItem('tick-town-v1', JSON.stringify({ set: { lang: '${lang}', sound: false, level: 2 }, hinted: true, facts: { 'r:7:20': { n: 4, err: 0.05, w: 0, t: 2000 } } }));`);
     await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(300);

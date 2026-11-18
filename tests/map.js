@@ -3,7 +3,7 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
 const SHOT = process.argv[2];
 (async () => {
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox'] });
-  for (const [lang, level, w, h] of [['zh-Hant', 2, 390, 844], ['en', 1, 320, 568], ['ja', 2, 820, 1180]]) {
+  for (const [lang, level, w, h] of [['zh-Hant', 2, 390, 844], ['en', 1, 320, 568], ['ja', 2, 820, 1180], ['ko', 2, 320, 568], ['es', 1, 390, 844]]) {
     const p = await (await b.newContext({ viewport: { width: w, height: h } })).newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     const facts = {}; facts['r:7:20'] = { n: 4, err: 0.05, w: 0, t: 2000 }; facts['s:19:20'] = { n: 1, err: 0, w: 0, t: 0 }; facts['r:2:50'] = { n: 3, err: 0.6, w: 2, t: 0 }; facts['s:3:30'] = { n: 1, err: 0.3, w: 1, t: 0 }; facts['r:12:0'] = { n: 3, err: 0.1, w: 0, t: 1500 };
     await p.addInitScript(`localStorage.setItem('tick-town-v1', JSON.stringify({ set: { lang: '${lang}', sound: false, level: ${level} }, hinted: true, facts: ${JSON.stringify(facts)}, errs: { hourLate: 0.5 } }));`);
@@ -14,7 +14,7 @@ const SHOT = process.argv[2];
     const st = await p.evaluate(() => [window.__tt.Map.stateOf(7, 20), window.__tt.Map.stateOf(2, 50), window.__tt.Map.stateOf(3, 30), window.__tt.Map.stateOf(12, 0), window.__tt.Map.stateOf(5, 5)]);
     ok(st.join() === 'star,weak,learn,star,new', `${lang} 狀態 ${st.join()}`);
     const cnt = await p.textContent('#map-count'); ok(level === 1 ? /1\/24/.test(cnt) : /2\/144/.test(cnt), `${lang} 計數 ${cnt}`);
-    ok(/hourLate|時針快到|almost at the next|つぎの数字/.test(await p.innerHTML('#map-info')), `${lang} 最常搞混：${(await p.textContent('#map-info')).slice(-40)}`);
+    ok(/hourLate|時針快到|almost at the next|つぎの数字|다음 숫자|número siguiente/.test(await p.innerHTML('#map-info')), `${lang} 最常搞混：${(await p.textContent('#map-info')).slice(-40)}`);
     if (SHOT) await p.screenshot({ path: `${SHOT}/map-${lang}.png` });
     await p.click('#map .cell[data-k="10"]'); await p.waitForTimeout(150);
     ok((await p.$$eval('#map-info .hrow span', es => es.map(e => e.className))).join().includes('weak'), `${lang} 點 50 分那片：${await p.textContent('#map-info')}`);

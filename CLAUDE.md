@@ -4,10 +4,10 @@
 
 ## 現況
 
-- 單檔 `index.html`（HTML + CSS + JS），無建置步驟，開檔即玩。**不連任何外部網域**。字型自行託管在 `assets/fonts/`（Lilita One 數字、Chiron GoRound TC 中英、Zen Maru Gothic 日文，OFL；`tools/make-fonts.py` 從 Google Fonts 的 GitHub 倉庫切子集，**改了介面文字要重跑**）。已切過一次；改字串後重跑 `python3 tools/make-fonts.py <來源目錄>`（來源 ttf 從 Google Fonts 的 GitHub 倉庫下載）。
+- 單檔 `index.html`（HTML + CSS + JS），無建置步驟，開檔即玩。**不連任何外部網域**。字型自行託管在 `assets/fonts/`（Lilita One 數字、Chiron GoRound TC 中英韓西（它有韓文字，切子集時一起切進來）、Zen Maru Gothic 日文，OFL；`tools/make-fonts.py` 從 Google Fonts 的 GitHub 倉庫切子集，**改了介面文字要重跑**）。已切過一次；改字串後重跑 `python3 tools/make-fonts.py <來源目錄>`（來源 ttf 從 Google Fonts 的 GitHub 倉庫下載）。
 - 網頁版**全部免費**（已定案）。App 版（之後用 Capacitor 包）才有解鎖，規則照九九流星隊：免費的部分永遠夠玩，付費只解鎖額外玩法，購買在家長關卡後面，孩子看得到的文字不提價錢、不叫孩子去找大人買。
 - 存檔 `localStorage` key `tick-town-v1`（多人時 `tick-town-v1:<id>`，`tick-town-who`）。
-- 三語：繁體中文（預設、台灣用語、不得出現簡體字）、英文（美國小一到小三）、日文（小一到小三，漢字以三年級前學過的為主，其他用假名）。文字全部在 `STR[語言][key]`，`tx(key, 參數)` 取；HTML 用 `data-t`／`data-th`／`data-ta` 標 key，`applyStr()` 填。`STR` 的 `ja` 區塊必須是 `\n  ja: {` 開頭、`\n  },` 結尾（切字腳本靠這個找）。
+- 五種語言：繁體中文（預設、台灣用語、不得出現簡體字）、英文（美國小一到小三）、日文（小一到小三，漢字以三年級前學過的為主，其他用假名）、韓文（孩子看的用親切的반말「시계를 맞춰 줘!」，給大人看的用존댓말；動物和寵物的名字都**以母音結尾**（곰돌이、토순이、다람쥐、부엉이、부리、다래、곰이），後面的「가／와」才不會錯，`tests/lang.js` 會檢查）、西班牙文（拉丁美洲通用、對孩子用 tú、對大人用 usted；時刻「la 1／las 3」靠 `timeWords` 給的 `{art}`，15 分「y cuarto」只有 `es` 有 `t.quarter`，時段放在後面「las 7 y 20 de la mañana」，自己一行時第一個字大寫）。時段和時刻怎麼排在 `timePhrase(w, menu)`。裝置語言照九九 `langAuto()` 依 `navigator.languages` 找第一個認得的，都不認得用英文。翻譯是 Claude 寫的，上架前請母語者看過。文字全部在 `STR[語言][key]`，`tx(key, 參數)` 取；HTML 用 `data-t`／`data-th`／`data-ta` 標 key，`applyStr()` 填。`STR` 的 `ja` 區塊必須是 `\n  ja: {` 開頭、`\n  },` 結尾（切字腳本靠這個找）。
 
 ## 兒童 app 硬限制（從第一天就遵守）
 
@@ -50,7 +50,7 @@
 - 改規則同一次 commit 更新遊戲說明（`help.*`）。說明要 ELI5。
 - 存檔向下相容。
 - commit 訊息用繁體中文，一句話說清楚改了什麼。
-- 三種語言版面要一樣（320×568 到 1920×1080；`tests/layout.js` 量 9 種尺寸 × 三語；教學另外在 `tests/tut.js` 量 6 種）：標題 `h1` 一行、放不下就縮（`flex:1;min-width:0`，右邊的 chip 與圖示鈕 `flex:none`，不然會被推出畫面；`fitTitle()` 一次縮 1px 到 11px，還放不下（320px 寬的英、日文）才用 `title2` 折成兩行；≤ 400px 寬上排的間距縮小）；矮螢幕（≤ 620px）主選單那行提示藏起來；讀鐘打數字時鐘縮小（`.clock-wrap.small`，≤ 640px 高再縮到 22vh）、鍵盤不透明；雙人把手 `knob: 28`（鐘比較小）、中線的返回鈕 44px 不折行、toast 放中線上面（`.toast.mid`）；日文 `word-break:keep-all`（在空格處斷行，不在詞中間）；虛線指針是珊瑚色加白底線（細灰線孩子看不到）。
+- 五種語言版面要一樣（320×568 到 1920×1080；`tests/layout.js` 量 9 種尺寸 × 五語；`tests/lang.js` 查字串表齊全、時刻說法、裝置語言；教學另外在 `tests/tut.js` 量 6 種）：標題 `h1` 一行、放不下就縮（`flex:1;min-width:0`，右邊的 chip 與圖示鈕 `flex:none`，不然會被推出畫面；`fitTitle()` 一次縮 1px 到 11px，還放不下（320px 寬的英、日文）才用 `title2` 折成兩行；≤ 400px 寬上排的間距縮小）；矮螢幕（≤ 620px）主選單那行提示藏起來；讀鐘打數字時鐘縮小（`.clock-wrap.small`，≤ 640px 高再縮到 22vh）、鍵盤不透明；雙人把手 `knob: 28`（鐘比較小）、中線的返回鈕 44px 不折行、toast 放中線上面（`.toast.mid`）；日文 `word-break:keep-all`（在空格處斷行，不在詞中間）；虛線指針是珊瑚色加白底線（細灰線孩子看不到）。
 - 測試用 Playwright（chromium 在 `/opt/pw-browsers/chromium`，`NODE_PATH=/opt/node-tools/node_modules:$(npm root -g)`），本機 `python3 -m http.server 8124`。
 - 派 agent：試玩、截圖、量版面用 sonnet；批次跑腳本用 haiku；程式碼審查、破壞性測試用 opus。
 
@@ -71,4 +71,5 @@
 - [x] 寵物（`Pet`：住在鐘樓的貓頭鷹／松鼠／小熊，橡果 `pet.acorn` 答對 +1、任務單項 +10、全完成 +30，餵 10 顆、`PET_STAGES` 30／100／250／500；配件 `GEAR` 依徽章門檻、`wear.{head,face,neck}`；圖在 `assets/pets/{kind}-{st}.png`（ChatGPT 生成、`tools/cut-pets.py` 切）與 `assets/gear/{id}.png`（`tools/cut-gear.py`，一列六樣）；`PET_HEAD[kind][st] = [hx, hy, hr, top, ny]`、`PET_FACE[kind][st] = {ex, ey, ew, hb, hw}` 用 `tools/pet-sheet.cjs <png> [glasses,hat,scarf]` 的格線圖目測；`PET_IMG` 偵測不到圖時退回 emoji）
 - [x] 教學（`Tut`：第一次打開動手撥三下、選要練什麼；設定可再看）
 - [x] 鐘面外圈（`setRing`：00～55、兔子指到的亮、提示一格一格亮；設定可關）
-- [ ] 其餘待辦與順序見 `ROADMAP.md`（韓文西文、音樂報時、多人與備份、三年級內容、插畫、App 版）
+- [x] 韓文、西班牙文（`STR.ko`／`STR.es`，`timePhrase`）
+- [ ] 其餘待辦與順序見 `ROADMAP.md`（音樂報時、多人與備份、三年級內容、插畫、App 版）

@@ -3,7 +3,7 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
 const SHOT = process.argv[2];
 (async () => {
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox'] });
-  for (const [lang, w, h] of [['zh-Hant', 390, 844], ['en', 320, 568], ['ja', 390, 844]]) {
+  for (const [lang, w, h] of [['zh-Hant', 390, 844], ['en', 320, 568], ['ja', 390, 844], ['ko', 320, 568], ['es', 320, 568]]) {
     const p = await (await b.newContext({ viewport: { width: w, height: h } })).newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.addInitScript(`localStorage.setItem('tick-town-v1', JSON.stringify({ set: { lang: '${lang}', sound: false, level: 2 }, hinted: true }));`);
     await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(300);

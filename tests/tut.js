@@ -16,7 +16,7 @@ const URL = 'http://localhost:8124/index.html';
   const inView = (p, sel) => p.evaluate(sel => { const r = document.querySelector(sel).getBoundingClientRect(); return r.width > 0 && r.top >= -1 && r.left >= -1 && r.bottom <= innerHeight + 1 && r.right <= innerWidth + 1; }, sel);
   const noScroll = p => p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1);
 
-  for (const [lang, loc, w, h] of [['zh-Hant', 'zh-TW', 390, 844], ['en', 'en-US', 320, 568], ['ja', 'ja-JP', 360, 640], ['zh-Hant', 'zh-TW', 1024, 768], ['en', 'en-US', 1920, 1080], ['ja', 'ja-JP', 768, 1024]]) {
+  for (const [lang, loc, w, h] of [['zh-Hant', 'zh-TW', 390, 844], ['en', 'en-US', 320, 568], ['ja', 'ja-JP', 360, 640], ['ko', 'ko-KR', 320, 568], ['es', 'es-MX', 375, 667], ['zh-Hant', 'zh-TW', 1024, 768], ['en', 'en-US', 1920, 1080], ['ja', 'ja-JP', 768, 1024]]) {
     const tag = `${w}x${h} ${lang}`;
     const p = await (await b.newContext({ viewport: { width: w, height: h }, hasTouch: true, locale: loc })).newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto(URL); await p.waitForTimeout(500);

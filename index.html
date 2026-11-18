@@ -22,6 +22,7 @@
   --face:#fffaf0;--face-rim:#e8c98f;
   padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);
 }
+:lang(ko){--f-zh:'Chiron',"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif}   /* Chiron GoRound TC 有韓文字（切子集時一起切進來）；後面是缺字時的備用 */
 :lang(ja){--f-zh:'ZenMaru',"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif;--f-num:'Lilita','ZenMaru',system-ui,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overscroll-behavior:none}
@@ -121,7 +122,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 .about h4{margin:8px 0 2px;font-size:16px}
 .linkrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .linkrow .link-btn{text-align:center}
-:lang(ja) .toast,:lang(ja) .mode,:lang(ja) .bubble,:lang(ja) .say,:lang(ja) .btn,:lang(ja) .langs button,:lang(ja) .link-btn,:lang(ja) .danger{word-break:keep-all;overflow-wrap:anywhere}   /* 日文在空格處斷行，不在詞中間 */
+:lang(ja) .toast,:lang(ja) .mode,:lang(ja) .bubble,:lang(ja) .say,:lang(ja) .btn,:lang(ja) .langs button,:lang(ja) .link-btn,:lang(ja) .danger,:lang(ko) body{word-break:keep-all;overflow-wrap:anywhere}   /* 日文在空格處斷行，不在詞中間 */
 #s-read .clock-wrap.small{width:min(58vw,30vh,300px)}
 @media (max-height:640px){#s-read .clock-wrap.small{width:min(50vw,22vh,220px)}.pad .keys{gap:6px}.pad .key{min-height:44px;font-size:22px}.padin{font-size:28px;padding:6px 18px}}
 .pad .key,.pad .padin{background:var(--paper)}
@@ -633,9 +634,133 @@ const STR = {
     'scene.sleep': 'みんな ねているよ', 'scene.wake': 'くまくんが おきたよ', 'scene.breakfast': 'あさごはん', 'scene.school': '学校へ いくよ', 'scene.lunch': 'おひるごはん',
     'scene.class': 'ごごの じゅぎょう', 'scene.park': 'こうえんで あそぶよ', 'scene.dinner': 'ばんごはん', 'scene.bath': 'おふろ', 'scene.story': 'えほんの 時間', 'scene.owl': 'ふくろうは おきてる、くまくんは ねたよ',
   },
+  ko: {
+    title: '째깍 마을', title2: '째깍|마을', 'menu.set': '설정', close: '닫기', on: '켜짐', off: '꺼짐',
+    'menu.hint': '토끼(긴바늘)나 거북이(짧은바늘)를 끌어 봐. 마을이 바뀌어!',
+    'mode.day': '마을의 하루', 'mode.read': '몇 시야?', 'mode.match': '짝 맞추기', 'mode.versus': '둘이서',
+    soon: '아직 만드는 중이야. 지금은 시계를 돌려 봐!',
+    'set.title': '설정', 'set.lang': '언어・Language', 'set.level': '무엇을 연습할까?', 'set.sound': '효과음', 'set.ring': '바깥쪽 분 숫자', 'set.ringD': '시계 바깥에 05, 10, 15…가 있어. 토끼가 가리키는 곳이 몇 분인지 알려 줘.',
+    'tut.s1': '이건 토끼야. 긴바늘이지. 한 바퀴 빙 돌려 봐!', 'tut.ok1': '토끼가 한 바퀴 돌면, 거북이는 한 칸만 가!', 'tut.s2': '이건 거북이야. 짧은바늘이지. 3까지 끌어 봐.', 'tut.ok2': '거북이는 3, 토끼는 12. 3시야!', 'tut.s3': '토끼를 6까지 끌어 봐. 그게 "반"이야.', 'tut.ok3': '{h}시 반! 거북이가 {h}하고 {h2} 사이 한가운데에 있어.',
+    'tut.wrongM': '그건 토끼야! 거북이는 짧은 바늘이야.', 'tut.wrongH': '그건 거북이야! 토끼는 긴 바늘이야.', 'tut.pick': '무엇을 연습할까?', 'tut.pickP': '나중에 설정에서 바꿀 수 있어.', 'tut.skip': '건너뛰기', 'set.tut': '노는 방법 다시 보기',
+    'level.1': '정각・반', 'level.2': '몇 시 몇 분', 'level.3': '얼마나 지났지?',
+    legal: '© ianyclin · 광고 없음 · 인터넷 필요 없음',
+    't.oclock': '{h}시', 't.half': '{h}시 반', 't.hm': '{h}시 {m}분',
+    'p.night': '밤', 'p.morning': '아침', 'p.noon': '낮', 'p.afternoon': '오후', 'p.evening': '저녁',
+    'ampm.am': '오전', 'ampm.pm': '오후',
+    back: '‹ 메뉴', home: '메뉴로',
+    'who.bear': '곰돌이', 'who.rabbit': '토순이', 'who.squirrel': '다람쥐', 'who.owl': '부엉이',
+    'day.lights': '{n}/{t}', 'day.aria': '불 {t}개 중 {n}개 켜짐',
+    'say.wake': '{t}에 {who}가 일어나. 시계를 맞춰 줘!', 'say.breakfast': '{t}에 {who}가 아침밥을 먹어. 시계를 맞춰 줘!', 'say.school': '{t}에 {who}가 학교에 가. 시계를 맞춰 줘!',
+    'say.lunch': '{t}에 {who}가 점심을 먹어. 시계를 맞춰 줘!', 'say.park': '{t}에 {who}가 공원에 가. 시계를 맞춰 줘!', 'say.dinner': '{t}에 {who}가 저녁밥을 먹어. 시계를 맞춰 줘!',
+    'say.bath': '{t}에 {who}가 목욕을 해. 시계를 맞춰 줘!', 'say.story': '{t}에 {who}가 동화책을 읽어. 시계를 맞춰 줘!', 'say.sleep': '{t}에 {who}가 잠자리에 들어. 시계를 맞춰 줘!',
+    'say.elapsed': '{who}가 {t1}에 출발해서 {d}분 동안 걸었어. 도착했을 때 몇 시였을까? 시계를 맞춰 봐!',
+    'day.ok': '{who}가 출발했어!', 'day.okLast': '잘 자, {who}!', 'day.done': '마을에 불이 다 켜졌어!', 'day.doneP': '오늘 {who}와 친구들이 모든 일을 제시간에 했어.', 'day.again': '하루 더 하기',
+    'hint.hourLate': '거북이는 아직 {h2}에 안 갔어! 아직 {h1}하고 {h2} 사이에 있어.', 'hint.halfHour': '{h1}시 반에는 거북이가 {h1}하고 {h2} 한가운데에 있어.',
+    'hint.minIndex': '토끼는 숫자 한 칸에 5분씩 뛰어: 5, 10, 15… 같이 세어 보자!', 'hint.handSwap': '짧은 바늘은 거북이(시), 긴 바늘은 토끼(분)야.',
+    'hint.carry': '먼저 다음 정각까지 가 보자: {t1}부터 {h3}시까지 {a}분. 그다음 {b}분 더.', 'hint.minNear': '거의 다 왔어! 한 칸만 더.', 'hint.hourOff': '점선 거북이가 어디 있는지 봐.', 'hint.other': '점선이 맞는 자리를 알려 줘. 해 봐!',
+    'vs.title': '둘이서', 'vs.who': '누구랑 할까?', 'vs.opp.cpu': '로봇', 'vs.opp.human': '친구', 'vs.hard': '위쪽 어른은 더 어렵게', 'vs.rule': '각자 자기 시계를 맞춰. 먼저 맞춘 사람이 1점. 5점이면 이겨!', 'vs.start': '시작',
+    'vs.task': '맞춰 봐', 'vs.win': '{who} 승리!', 'vs.cpuWin': '이번엔 로봇이 조금 더 빨랐어. 한 번 더?', 'vs.again': '한 번 더', 'vs.p1': '대장', 'vs.p2': '도전자', 'vs.cpu': '로봇', 'q.vs': '로봇이나 친구랑 둘이서 한 판 하기',
+    'menu.pet': '펫', 'pet.pick': '알을 하나 골라 봐. 시계탑에서 같이 살 거야. 맞히면 도토리가 나와서 먹일 수 있어.', 'pet.feed': '도토리 ×{n} 먹이기', 'pet.feedLack': '도토리 {d}개 더', 'pet.grow': '{name}가 자랐어! 지금: {stage}', 'pet.hello': '{name}가 왔어! 문제를 맞혀서 먹이를 주자',
+    'kind.owl': '부엉이', 'kind.squirrel': '다람쥐', 'kind.bear': '곰', 'kname.owl': '부리', 'kname.squirrel': '다래', 'kname.bear': '곰이',
+    'stage.0': '알', 'stage.1': '아기', 'stage.2': '어린이', 'stage.3': '어른', 'stage.4': '최강',
+    'gear.title': '꾸미기 (배지로 열기)', 'gear.need': '오늘의 미션을 끝내고 배지를 모아 봐! ({n}개 더)', 'gear.badges': '배지 ×{n}',
+    'gear.bow': '리본', 'gear.scarf': '목도리', 'gear.glasses': '선글라스', 'gear.hat': '모자', 'gear.star': '별 핀', 'gear.crown': '왕관',
+    'q.acorn': '도토리 +{n}',
+    'help.petT': '펫', 'help.pet': '<li>맞히면 <b>도토리</b>가 나와. 펫 화면에서 먹이면 자라: 알 → 아기 → 어린이 → 어른 → 최강.</li><li>오늘의 미션으로 배지를 모으면 꾸미기가 열려.</li><li>먹이를 안 줘도 괜찮아. 기다려 줄 거야.</li>',
+    'match.say': '두 장을 뒤집어서 같은 시각을 찾아!', 'match.prog': '{n}/{t}', 'match.done': '다 찾았어!', 'match.p': '{n}번 뒤집었어.', 'q.match': '짝 맞추기 한 판 하기',
+    'quest.title': '오늘의 미션', 'quest.badges': '배지 ×{n}', 'quest.streak': '{n}일 연속', 'quest.doneOne': '미션 완료!', 'quest.doneAll': '오늘 미션을 다 했어! 배지 +1',
+    'q.day': '마을의 하루 끝내기', 'q.read': '{n}번 맞게 읽기', 'q.set': '시계를 {n}번 맞게 맞추기', 'q.star': '새 별 {n}개 켜기',
+    'set.help': '노는 방법', 'set.about': '정보',
+    'help.title': '노는 방법',
+    'help.clockT': '시계', 'help.clock': '<li>짧은 바늘은 <b>거북이</b>. 천천히 움직이고 "몇 시"를 알려 줘.</li><li>긴 바늘은 <b>토끼</b>. 빨리 움직이고 "몇 분"을 알려 줘.</li><li>토끼를 끌어 봐. 숫자 한 칸이 5분이야. 거북이는 천천히 따라와.</li><li>바깥쪽 작은 숫자(05, 10, 15…)가 "몇 분"이야. 토끼가 4를 가리키면 바깥은 20, 그러니까 20분이야. 설정에서 끌 수 있어.</li><li>메뉴의 시계는 마음대로 돌려 봐. 해, 불빛, 동물들이 바뀌어!</li>',
+    'help.dayT': '마을의 하루', 'help.day': '<li>동물들은 하루에 할 일이 7개 있어. 몇 시에 하는지 보고 시계를 맞춰.</li><li>맞추면 동물이 나가고, 그 집에 불이 켜져.</li><li>틀려도 괜찮아. 점선이 맞는 자리를 알려 주니까 다시 해 봐!</li><li>자주 헷갈리는 시각은 더 자주 나와. 그만큼 더 연습할 수 있어.</li><li>7개가 다 켜지면 마을에서 불꽃놀이를 해!</li>',
+    'help.readT': '몇 시야?', 'help.read': '<li>시계를 보고 카드 세 장 중에서 맞는 시각을 골라.</li><li>틀려도 다시 고르면 돼.</li><li>잘 아는 시각은 숫자로 쳐서 대답해: 시, 분 순서로 치고 "다 했어"를 눌러.</li>',
+    'help.matchT': '짝 맞추기', 'help.match': '<li>두 장을 뒤집어서 같은 시각을 찾아.</li><li>시계, 숫자, 글자가 섞여 나와.</li>',
+    'help.vsT': '둘이서', 'help.vs': '<li>양쪽에 시계가 하나씩 있어. 먼저 맞추면 1점, 5점이면 이겨.</li><li>로봇이나 친구랑 할 수 있어 (친구는 위쪽 시계가 거꾸로야).</li>',
+    'help.mapT': '별 지도', 'help.map': '<li>시각마다 별이 하나씩 있어. 몇 번 맞게 읽거나 맞추면 별이 켜져.</li><li>안쪽 고리가 1시, 바깥쪽 고리가 12시. 한 조각이 5분이야.</li><li>조각을 누르면 어떤 시각이 켜졌는지 보여.</li>',
+    'help.questT': '미션', 'help.quest': '<li>하루에 미션 3개. 다 하면 배지를 받아.</li><li>다 못 해도 괜찮아.</li>',
+    'about.title': '정보',
+    'about.whyT': '이 게임에서 연습하는 것', 'about.why': '시계 읽기, 시계 맞추기, 시간이 얼마나 지났는지 계산하기. 아이들은 흔히 몇 가지 정해진 실수를 합니다(시침이 다음 숫자에 가까우면 다음 시로 읽기, 분침이 가리키는 숫자를 그대로 분으로 읽기, 두 바늘을 바꿔 읽기, 반일 때 시침의 위치). 이 게임은 어떤 문제를 틀렸는지가 아니라 어떤 종류의 실수인지를 기록하고, 그 실수가 나오기 쉬운 시각을 더 자주 내며, 그 실수에 맞춘 힌트를 줍니다. 아이가 무엇을 가장 많이 헷갈리는지는 별 지도에서 볼 수 있습니다.',
+    'about.levelT': '세 단계', 'about.level': '설정의 "무엇을 연습할까?"에서 고릅니다: 정각과 반(1학년 정도), 몇 시 몇 분(2학년 정도, 5분 단위), 얼마나 지났지(3학년 정도, 1분 단위, "…에 출발해서 …분 걸었으면 몇 시에 도착?" 포함). 기본은 2단계입니다.',
+    'about.privT': '개인정보', 'about.priv': '광고, 추적, 개인정보 수집이 없습니다. 기록은 이 기기에만 저장되고 어디에도 올라가지 않습니다. 인터넷 없이 놀 수 있습니다. 어른이 설정에서 모든 기록을 지울 수 있습니다.',
+    'about.madeT': '만든 사람', 'about.made': 'ianyclin. 버전 0.1. 의견: gigigagagogogege@gmail.com.',
+    'about.fonts': '글꼴: Lilita One, Chiron GoRound TC, Zen Maru Gothic (SIL Open Font License).',
+    'set.parent': '어른용', 'set.resetP': '이 기기의 기록을 모두 지우기', 'set.reset': '모두 지우기', 'reset.done': '기록을 지웠습니다',
+    'gate.title': '어른 확인', 'gate.p': '계속하려면 어른이 이 문제를 풀어 주세요.', 'gate.cancel': '취소', 'gate.wait': '너무 많이 틀렸습니다. 30초 후에 다시 해 주세요',
+    'menu.map': '별 지도', 'map.count': '{n}/{t}', 'map.aria': '별 {t}개 중 {n}개 켜짐', 'map.legend': '안쪽 고리가 1시, 바깥쪽이 12시. 한 조각이 5분',
+    'map.info': '시각마다 별이 하나씩 있어. 몇 번 맞게 읽거나 맞추면 별이 켜져. <b>안쪽 고리가 1시, 바깥쪽 고리가 12시.</b> 한 조각이 5분이야. 조각을 눌러 봐!', 'map.weak': '가장 많이 헷갈린 것: <b>{e}</b>. 몇 번만 더 하면 알게 될 거야!', 'map.sector': '<b>{m}분</b> (1시부터 12시까지):',
+    'err.hourLate': '시침이 다음 숫자에 거의 왔을 때', 'err.minIndex': '분침이 가리키는 숫자를 그대로 분으로 읽기', 'err.handSwap': '두 바늘을 바꿔 읽기', 'err.halfHour': '반일 때 시침의 위치', 'err.minNear': '한 칸 차이', 'err.hourOff': '몇 시인지', 'err.read12': '12시 근처', 'err.minOne': '1분짜리 작은 눈금', 'err.carry': '정각을 넘어가는 시간', 'err.ampm': '오전과 오후', 'err.other': '그 밖의 것',
+    'st.new': '처음', 'st.learn': '익히는 중', 'st.weak': '헷갈림', 'st.star': '켜짐',
+    'read.say': '{who}가 물어봐: 지금 몇 시야?', 'read.sayKeys': '{who}가 물어봐: 지금 몇 시야? 숫자로 쳐 봐.', 'read.prog': '{n}/{t}', 'read.done': '{n}번 맞게 읽었어!', 'read.doneAll': '다 맞혔어! 대단해!', 'read.again': '한 번 더', 'key.ok': '다 했어', 'key.del': '지우기',
+    'hint.read12': '거북이가 12를 가리키니까 12시야.', 'hint.tryAgain': '다른 것을 골라 봐!', 'hint.tryKeys': '다시 쳐 봐!',
+    'scene.sleep': '모두 자고 있어', 'scene.wake': '곰돌이가 일어나', 'scene.breakfast': '아침 먹을 시간', 'scene.school': '학교 가는 길', 'scene.lunch': '점심시간',
+    'scene.class': '오후 수업', 'scene.park': '공원에서 놀기', 'scene.dinner': '저녁 먹을 시간', 'scene.bath': '목욕 시간', 'scene.story': '동화 시간', 'scene.owl': '부엉이는 깨어 있고, 곰돌이는 자고 있어',
+  },
+  es: {
+    title: 'Pueblo Tictac', title2: 'Pueblo|Tictac', 'menu.set': 'Ajustes', close: 'Cerrar', on: 'Sí', off: 'No',
+    'menu.hint': 'Arrastra el conejo (aguja larga) o la tortuga (aguja corta). ¡Mira cómo cambia el pueblo!',
+    'mode.day': 'Día del pueblo', 'mode.read': '¿Qué hora es?', 'mode.match': 'Parejas', 'mode.versus': 'Dos jugadores',
+    soon: 'Todavía lo estamos haciendo. ¡Por ahora juega con el reloj!',
+    'set.title': 'Ajustes', 'set.lang': 'Idioma・Language', 'set.level': '¿Qué quieres practicar?', 'set.sound': 'Sonido', 'set.ring': 'Aro de minutos', 'set.ringD': 'Un aro con 05, 10, 15… alrededor del reloj. Donde apunta el conejo, esos son los minutos.',
+    'tut.s1': 'Este es el conejo, la aguja larga. ¡Dale una vuelta entera!', 'tut.ok1': '¡El conejo dio una vuelta y la tortuga solo avanzó un paso!', 'tut.s2': 'Esta es la tortuga, la aguja corta. Llévala al 3.', 'tut.ok2': '¡Tortuga en el 3, conejo en el 12: son las 3 en punto!', 'tut.s3': 'Lleva el conejo al 6. Eso es "y media".', 'tut.ok3': '¡Las {h} y media! La tortuga está justo entre el {h} y el {h2}.',
+    'tut.wrongM': '¡Ese es el conejo! La tortuga es la corta.', 'tut.wrongH': '¡Esa es la tortuga! El conejo es el largo.', 'tut.pick': '¿Qué quieres practicar?', 'tut.pickP': 'Puedes cambiarlo después en Ajustes.', 'tut.skip': 'Saltar', 'set.tut': 'Cómo se juega (otra vez)',
+    'level.1': 'En punto y media', 'level.2': 'Horas y minutos', 'level.3': '¿Cuánto tiempo?',
+    legal: '© ianyclin · Sin anuncios · No necesita internet',
+    't.oclock': '{art} {h} en punto', 't.half': '{art} {h} y media', 't.quarter': '{art} {h} y cuarto', 't.hm': '{art} {h} y {m}',
+    'p.night': 'de la noche', 'p.morning': 'de la mañana', 'p.noon': 'del mediodía', 'p.afternoon': 'de la tarde', 'p.evening': 'de la noche',
+    'ampm.am': 'a. m.', 'ampm.pm': 'p. m.',
+    back: '‹ Menú', home: 'Volver al menú',
+    'who.bear': 'Osito', 'who.rabbit': 'Conejita', 'who.squirrel': 'Ardilla', 'who.owl': 'Búho',
+    'day.lights': '{n}/{t}', 'day.aria': '{n} de {t} luces encendidas',
+    'say.wake': '{who} se despierta a {t}. ¡Pon el reloj!', 'say.breakfast': '{who} desayuna a {t}. ¡Pon el reloj!', 'say.school': '{who} va a la escuela a {t}. ¡Pon el reloj!',
+    'say.lunch': '{who} almuerza a {t}. ¡Pon el reloj!', 'say.park': '{who} va al parque a {t}. ¡Pon el reloj!', 'say.dinner': '{who} cena a {t}. ¡Pon el reloj!',
+    'say.bath': '{who} se baña a {t}. ¡Pon el reloj!', 'say.story': '{who} lee un cuento a {t}. ¡Pon el reloj!', 'say.sleep': '{who} se va a dormir a {t}. ¡Pon el reloj!',
+    'say.elapsed': '{who} salió a las {t1} y caminó {d} minutos. ¿A qué hora llegó? ¡Pon el reloj!',
+    'day.ok': '¡{who} ya va en camino!', 'day.okLast': '¡Buenas noches, {who}!', 'day.done': '¡Todo el pueblo está encendido!', 'day.doneP': 'Hoy {who} y sus amigos hicieron todo a tiempo.', 'day.again': 'Jugar otro día',
+    'hint.hourLate': '¡La tortuga todavía no llegó al {h2}! Sigue entre el {h1} y el {h2}.', 'hint.halfHour': 'A la media, la tortuga está justo entre el {h1} y el {h2}.',
+    'hint.minIndex': 'El conejo salta 5 minutos por número: 5, 10, 15… ¡Cuenta conmigo!', 'hint.handSwap': 'La aguja corta es la tortuga (horas). La larga es el conejo (minutos).',
+    'hint.carry': 'Primero llega a la hora en punto: de {t1} a las {h3} son {a} minutos. Luego {b} más.', 'hint.minNear': '¡Casi! Una rayita más.', 'hint.hourOff': 'Mira dónde está la tortuga punteada.', 'hint.other': 'Las agujas punteadas muestran el lugar correcto. ¡Inténtalo!',
+    'vs.title': 'Dos jugadores', 'vs.who': 'Jugar contra…', 'vs.opp.cpu': 'el robot', 'vs.opp.human': 'un amigo', 'vs.hard': 'Más difícil para el adulto de arriba', 'vs.rule': 'Cada uno pone su reloj. El primero que lo pone bien gana un punto. ¡Con 5 puntos ganas!', 'vs.start': 'Empezar',
+    'vs.task': 'Pon', 'vs.win': '¡Gana {who}!', 'vs.cpuWin': 'Esta vez el robot fue un poco más rápido. ¿Otra vez?', 'vs.again': 'Jugar otra vez', 'vs.p1': 'Capitán', 'vs.p2': 'Retador', 'vs.cpu': 'Robot', 'q.vs': 'Juega una partida contra el robot o un amigo',
+    'menu.pet': 'Mascota', 'pet.pick': 'Elige un huevo. Vivirá en la torre del reloj. Las respuestas correctas dan bellotas para alimentarla.', 'pet.feed': 'Dar ×{n} bellotas', 'pet.feedLack': 'Faltan {d} bellotas', 'pet.grow': '¡{name} creció! Ahora: {stage}', 'pet.hello': '¡Llegó {name}! Responde preguntas para alimentarla',
+    'kind.owl': 'Búho', 'kind.squirrel': 'Ardilla', 'kind.bear': 'Oso', 'kname.owl': 'Hu', 'kname.squirrel': 'Nuez', 'kname.bear': 'Bruno',
+    'stage.0': 'Huevo', 'stage.1': 'Bebé', 'stage.2': 'Pequeño', 'stage.3': 'Grande', 'stage.4': 'Súper',
+    'gear.title': 'Accesorios (se abren con medallas)', 'gear.need': '¡Termina las misiones del día para ganar medallas! (faltan {n})', 'gear.badges': 'Medallas ×{n}',
+    'gear.bow': 'Moño', 'gear.scarf': 'Bufanda', 'gear.glasses': 'Gafas de sol', 'gear.hat': 'Sombrero', 'gear.star': 'Broche de estrella', 'gear.crown': 'Corona',
+    'q.acorn': 'Bellotas +{n}',
+    'help.petT': 'Mascota', 'help.pet': '<li>Las respuestas correctas dan <b>bellotas</b>. Dale de comer a tu mascota en su página y crecerá: Huevo → Bebé → Pequeño → Grande → Súper.</li><li>Gana medallas con las misiones del día para abrir accesorios.</li><li>Si no le das de comer, no pasa nada. Te va a esperar.</li>',
+    'match.say': '¡Voltea dos cartas y busca la misma hora!', 'match.prog': '{n}/{t}', 'match.done': '¡Todas las parejas!', 'match.p': 'Volteaste {n} veces.', 'q.match': 'Termina una partida de Parejas',
+    'quest.title': 'Misiones de hoy', 'quest.badges': 'Medallas ×{n}', 'quest.streak': '{n} días seguidos', 'quest.doneOne': '¡Misión cumplida!', 'quest.doneAll': '¡Todas las misiones de hoy! Medalla +1',
+    'q.day': 'Termina un Día del pueblo', 'q.read': 'Lee bien la hora {n} veces', 'q.set': 'Pon bien el reloj {n} veces', 'q.star': 'Enciende {n} estrellas nuevas',
+    'set.help': 'Cómo se juega', 'set.about': 'Acerca de',
+    'help.title': 'Cómo se juega',
+    'help.clockT': 'El reloj', 'help.clock': '<li>La aguja corta es la <b>tortuga</b>. Se mueve despacio y marca la hora.</li><li>La aguja larga es el <b>conejo</b>. Se mueve rápido y marca los minutos.</li><li>Arrastra el conejo. Cada número son 5 minutos. La tortuga lo sigue despacio.</li><li>Los numeritos de afuera (05, 10, 15…) son los minutos. ¿El conejo en el 4? Afuera dice 20: son 20 minutos. Puedes quitar el aro en Ajustes.</li><li>En el menú puedes girar el reloj como quieras. ¡Mira cómo cambian el sol, las luces y los animales!</li>',
+    'help.dayT': 'Día del pueblo', 'help.day': '<li>Los animales tienen 7 cosas que hacer cada día. Pon el reloj a la hora correcta.</li><li>Si aciertas, el animal sale y se enciende la luz de su casa.</li><li>¿Te equivocaste? No pasa nada. Las agujas punteadas te muestran el lugar. ¡Prueba otra vez!</li><li>Las horas que te confunden salen más seguido, así practicas más.</li><li>¡Con las 7 luces encendidas, el pueblo lanza fuegos artificiales!</li>',
+    'help.readT': '¿Qué hora es?', 'help.read': '<li>Mira el reloj y elige la hora correcta entre tres cartas.</li><li>¿Elegiste mal? Elige otra vez.</li><li>Las horas que ya sabes bien se escriben con números: primero la hora, luego los minutos, y toca "Listo".</li>',
+    'help.matchT': 'Parejas', 'help.match': '<li>Voltea dos cartas y busca la misma hora.</li><li>Pueden salir relojes, horas en números y palabras.</li>',
+    'help.vsT': 'Dos jugadores', 'help.vs': '<li>Dos relojes, uno para cada uno. El primero que pone bien el suyo gana un punto. Con 5 puntos ganas.</li><li>Juega contra el robot o un amigo (para tu amigo, el reloj de arriba está al revés).</li>',
+    'help.mapT': 'Mapa de estrellas', 'help.map': '<li>Cada hora tiene una estrella. Léela o ponla bien varias veces y se enciende.</li><li>El aro de adentro es la 1, el de afuera son las 12. Cada porción son 5 minutos.</li><li>Toca una porción para ver qué horas están encendidas.</li>',
+    'help.questT': 'Misiones', 'help.quest': '<li>3 misiones al día. Termínalas todas y ganas una medalla.</li><li>¿No las terminaste? También está bien.</li>',
+    'about.title': 'Acerca de',
+    'about.whyT': 'Qué practica este juego', 'about.why': 'Leer el reloj, ponerlo en hora y calcular cuánto tiempo pasó. Los niños cometen algunos errores típicos (leer la hora siguiente cuando la aguja corta ya casi llega, tomar el número al que apunta la aguja larga como los minutos, confundir las agujas, dónde está la aguja corta a la media). El juego registra qué tipo de error, no solo qué pregunta; muestra más seguido las horas que lo provocan y da pistas pensadas para ese error. El mapa de estrellas le muestra cuál confunde más su hijo o hija.',
+    'about.levelT': 'Tres niveles', 'about.level': 'En Ajustes, "¿Qué quieres practicar?": en punto y media (aprox. 1.º de primaria); horas y minutos (aprox. 2.º, de 5 en 5 minutos); cuánto tiempo (aprox. 3.º, de minuto en minuto, más "salió a las …, caminó … minutos, ¿a qué hora llegó?"). El nivel predeterminado es el 2.',
+    'about.privT': 'Privacidad', 'about.priv': 'Sin anuncios, sin seguimiento y sin recopilar datos personales. El progreso se guarda solo en este dispositivo y nunca se sube a internet. No se necesita internet para jugar. Un adulto puede borrarlo todo desde Ajustes.',
+    'about.madeT': 'Hecho por', 'about.made': 'ianyclin. Versión 0.1. Comentarios: gigigagagogogege@gmail.com.',
+    'about.fonts': 'Fuentes: Lilita One, Chiron GoRound TC, Zen Maru Gothic (SIL Open Font License).',
+    'set.parent': 'Para adultos', 'set.resetP': 'Borrar todo el progreso de este dispositivo', 'set.reset': 'Borrar todo', 'reset.done': 'Progreso borrado',
+    'gate.title': 'Para un adulto', 'gate.p': 'Un adulto debe resolver esto para continuar.', 'gate.cancel': 'Cancelar', 'gate.wait': 'Demasiados intentos. Espere 30 segundos',
+    'menu.map': 'Mapa de estrellas', 'map.count': '{n}/{t}', 'map.aria': '{n} de {t} estrellas encendidas', 'map.legend': 'El aro de adentro es la 1, el de afuera son las 12; cada porción son 5 minutos',
+    'map.info': 'Cada hora tiene una estrella. Léela o ponla bien varias veces y se enciende. <b>El aro de adentro es la 1, el de afuera son las 12.</b> Cada porción son 5 minutos. ¡Toca una porción!', 'map.weak': 'Lo que más confundes: <b>{e}</b>. ¡Unas veces más y te saldrá!', 'map.sector': '<b>{m} minutos</b> (de la 1 a las 12):',
+    'err.hourLate': 'cuando la aguja corta casi llega al número siguiente', 'err.minIndex': 'tomar el número al que apunta la aguja larga como los minutos', 'err.handSwap': 'confundir las dos agujas', 'err.halfHour': 'dónde está la aguja corta a la media', 'err.minNear': 'una rayita de diferencia', 'err.hourOff': 'la hora', 'err.read12': 'cerca de las 12', 'err.minOne': 'las rayitas de 1 minuto', 'err.carry': 'el tiempo que pasa de una hora a otra', 'err.ampm': 'a. m. y p. m.', 'err.other': 'otras cosas',
+    'st.new': 'Nueva', 'st.learn': 'Aprendiendo', 'st.weak': 'Difícil', 'st.star': 'Encendida',
+    'read.say': '{who} pregunta: ¿Qué hora es?', 'read.sayKeys': '{who} pregunta: ¿Qué hora es? Escríbela.', 'read.prog': '{n}/{t}', 'read.done': '¡Leíste bien {n} veces!', 'read.doneAll': '¡Todas! ¡Increíble!', 'read.again': 'Jugar otra vez', 'key.ok': 'Listo', 'key.del': 'Borrar',
+    'hint.read12': 'La tortuga apunta al 12: son las 12.', 'hint.tryAgain': '¡Prueba otra!', 'hint.tryKeys': '¡Escríbela otra vez!',
+    'scene.sleep': 'Todos duermen', 'scene.wake': 'Osito se despierta', 'scene.breakfast': 'Hora del desayuno', 'scene.school': 'Camino a la escuela', 'scene.lunch': 'Hora del almuerzo',
+    'scene.class': 'Clase de la tarde', 'scene.park': 'Jugando en el parque', 'scene.dinner': 'Hora de la cena', 'scene.bath': 'Hora del baño', 'scene.story': 'Hora del cuento', 'scene.owl': 'El búho está despierto, Osito duerme',
+  },
 };
 let LANG = 'zh-Hant', mode = 'menu';
-const langAuto = () => { const l = (navigator.language || '').toLowerCase(); return l.startsWith('zh') ? 'zh-Hant' : l.startsWith('ja') ? 'ja' : 'en'; };
+const langAuto = () => { for (const l of (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''])) { const x = String(l).toLowerCase(); if (x.startsWith('zh')) return 'zh-Hant'; if (x.startsWith('ja')) return 'ja'; if (x.startsWith('ko')) return 'ko'; if (x.startsWith('es')) return 'es'; if (x.startsWith('en')) return 'en'; } return 'en'; };
 function tx(key, p) {
   let s = STR[LANG][key]; if (s === undefined) s = STR['zh-Hant'][key]; if (s === undefined) return key;
   if (typeof s === 'function') s = s(p || {});
@@ -859,9 +984,17 @@ const Town = (() => {
 // ---------- 時刻的說法
 function timeWords(tot) {
   const H = Math.floor(tot / 60), m = tot % 60, h12 = H % 12 === 0 ? 12 : H % 12;
-  const main = m === 0 ? tx('t.oclock', { h: h12 }) : m === 30 ? tx('t.half', { h: h12 }) : tx('t.hm', { h: h12, m, mm: String(m).padStart(2, '0') });
+  const art = h12 === 1 ? 'la' : 'las', q = STR[LANG] && STR[LANG]['t.quarter'];   // art：西班牙文的冠詞（la 1／las 3）；t.quarter：西班牙文 15 分說 y cuarto
+  const main = m === 0 ? tx('t.oclock', { h: h12, art }) : m === 30 ? tx('t.half', { h: h12, art }) : m === 15 && q ? tx('t.quarter', { h: h12, art }) : tx('t.hm', { h: h12, m, mm: String(m).padStart(2, '0'), art });
   const period = H < 5 ? 'p.night' : H < 11 ? 'p.morning' : H < 13 ? 'p.noon' : H < 18 ? 'p.afternoon' : H < 23 ? 'p.evening' : 'p.night';
   return { main, period: tx(period), digital: `${h12}:${String(m).padStart(2, '0')}`, ampm: tx(H < 12 ? 'ampm.am' : 'ampm.pm') };
+}
+// 時段和時刻怎麼排：中文、韓文「早上 7 點」、日文「あさ7時」、西班牙文「las 7 de la mañana」、英文只說時刻（menu 時括號補時段）
+function timePhrase(w, menu) {
+  if (LANG === 'en') return menu ? `${w.main} (${w.period})` : w.main;
+  if (LANG === 'ja') return w.period + w.main;
+  if (LANG === 'es') { const t = `${w.main} ${w.period}`; return menu ? t[0].toUpperCase() + t.slice(1) : t; }
+  return `${w.period} ${w.main}`;
 }
 
 // ---------- 主選單：自由玩的鐘
@@ -869,7 +1002,7 @@ const clock = Clock($('#clock'), { snap: 5 });
 function showTime(tot) {
   const w = timeWords(tot);
   $('#digital').innerHTML = `${w.digital}<small>${w.ampm}</small>`;
-  $('#words').textContent = LANG === 'en' ? `${w.main} (${w.period})` : LANG === 'ja' ? `${w.period}${w.main}` : `${w.period} ${w.main}`;
+  $('#words').textContent = timePhrase(w, true);
   const sc = Town.scene(tot); $('#scene').innerHTML = `<span class="emo">${{ sleep: '💤', owl: '🦉', wake: '🐻', breakfast: '🥣', school: '🎒', lunch: '🍙', class: '📖', park: '⚽', dinner: '🍲', bath: '🛁', story: '📚' }[sc]}</span>${tx('scene.' + sc)}`;
   Town.set(tot);
 }
@@ -877,7 +1010,7 @@ clock.onChange = (tot, dragging) => { showTime(tot); if (!dragging) { DB.free = 
 clock.onSnap = (tot, bell) => { if (bell) SFX.bell(); else SFX.tick(); };
 
 // ---------- 設定
-const LANGS = { 'zh-Hant': '繁體中文', en: 'English', ja: '日本語' };
+const LANGS = { 'zh-Hant': '繁體中文', en: 'English', ja: '日本語', ko: '한국어', es: 'Español' };
 function renderSet() {
   $('#set-lang').innerHTML = Object.keys(LANGS).map(k => `<button type="button" data-lang="${k}" aria-pressed="${LANG === k}">${LANGS[k]}</button>`).join('');
   $('#set-level').innerHTML = [1, 2, 3].map(l => `<button type="button" data-level="${l}" aria-pressed="${DB.set.level === l}">${tx('level.' + l)}</button>`).join('');
@@ -979,14 +1112,14 @@ const Day = (() => {
     const k = S.tasks[S.i]; S.tries = 0; clearTimeout(judgeT); clock2.ghost(null); clock2.countStop(); $('#day-hint').hidden = true;
     const w = timeWords(k.t), who = tx('who.' + k.who);
     $('#day-emo').textContent = EMO[k.who]; $('#day-emo').className = 'emo';
-    const tw = LANG === 'en' ? w.main : LANG === 'ja' ? w.period + w.main : w.period + ' ' + w.main;
+    const tw = timePhrase(w, false);
     if (k.from !== undefined) { const w1 = timeWords(k.from); $('#day-say').textContent = tx('say.elapsed', { who, t1: w1.digital, d: k.d }); $('#day-target').innerHTML = `${w1.digital}<small>+${k.d}</small>`; }
     else { $('#day-say').textContent = tx('say.' + k.sc, { who, t: tw }); $('#day-target').innerHTML = `${w.digital}<small>${w.ampm}</small>`; }
     const startAt = k.from !== undefined ? k.from : S.i ? S.tasks[S.i - 1].t : (k.t === 360 ? 5 * 60 : 6 * 60);   // 鐘從上一件事的時刻開始（「走了幾分鐘」的題從出發時刻開始；第一題剛好 6:00 就從 5:00）
     S.ok = false; S.lastA = -1;
     clock2.setSnap(DB.set.level === 3 ? 1 : 5); clock2.set(Math.floor(startAt / 60), startAt % 60); words(startAt); Town.set(k.t); lights();
   }
-  function words(tot) { const w = timeWords(tot); $('#day-words').textContent = LANG === 'en' ? w.digital : w.main; }
+  function words(tot) { const w = timeWords(tot); $('#day-words').textContent = LANG === 'en' ? w.digital : LANG === 'es' ? w.main[0].toUpperCase() + w.main.slice(1) : w.main; }   // 西班牙文自己一行，第一個字大寫（Las 6 en punto）
   function judge() {
     const k = S.tasks[S.i], A = clock2.get().tot; if (A % 720 === k.t % 720 || A === S.lastA) return; S.lastA = A;   // 同一個錯的答案只記一次
     S.tries++; const type = k.from !== undefined && (A % 720 === (k.t - 60) % 720 || A % 720 === (k.from - (k.from % 60) + (k.from % 60 + k.d) % 60) % 720) ? 'carry' : classifySet(k.t, A);   // 走了幾分鐘：忘了跨過整點
@@ -1159,7 +1292,7 @@ const Match = (() => {
     while (out.length < PAIRS) { const h = rnd(1, 12), m = Math.floor(Math.random() * (60 / step)) * step; if (!has(h, m)) out.push([h, m]); }
     return out;
   }
-  const reps = (h, m) => { const r = ['a', 'd']; if (LANG !== 'en' || m % 30 === 0) r.push('w'); return shuffle(r).slice(0, 2); };   // 英文的文字跟數字鐘一樣（7:20），只有整點半點才用
+  const reps = (h, m) => { const r = ['a', 'd']; if (LANG === 'en' ? m % 30 === 0 : LANG === 'es' ? m % 15 === 0 : true) r.push('w'); return shuffle(r).slice(0, 2); };   // 英文、西班牙文的文字跟數字鐘差不多（7:20、las 7 y 20），只有整點半點（西班牙文加 15 分）才用
   function face(t, rep) {
     const [h, m] = t;
     if (rep === 'd') return `<span class="dg">${h}:${String(m).padStart(2, '0')}</span>`;

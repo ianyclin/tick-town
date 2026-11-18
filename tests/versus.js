@@ -4,7 +4,7 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
 const SHOT = process.argv[2];
 (async () => {
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox'] });
-  for (const [lang, w, h] of [['zh-Hant', 390, 844], ['en', 320, 568], ['ja', 820, 1180]]) {
+  for (const [lang, w, h] of [['zh-Hant', 390, 844], ['en', 320, 568], ['ja', 820, 1180], ['ko', 320, 568], ['es', 360, 640]]) {
     const p = await (await b.newContext({ viewport: { width: w, height: h }, hasTouch: true })).newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.addInitScript(`localStorage.setItem('tick-town-v1', JSON.stringify({ set: { lang: '${lang}', sound: false, level: 2 }, hinted: true }));`);
     await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(300);
@@ -22,7 +22,7 @@ const SHOT = process.argv[2];
     await p.waitForTimeout(13500); st = await S(); ok(st.score.B >= 1, `${lang} 機器人得分 ${st.score.B}`);
     // 連拿到 5 分 → 結束
     for (let i = 0; i < 5; i++) { st = await S(); if (!st) break; await setA(st.t.A); await p.waitForTimeout(150); }
-    ok(await p.isVisible('#o-vdone') && /贏|wins|かち/.test(await p.textContent('#vdone-h')), `${lang} 5 分結束：${await p.textContent('#vdone-h')}`);
+    ok(await p.isVisible('#o-vdone') && /贏|wins|かち|승리|Gana/.test(await p.textContent('#vdone-h')), `${lang} 5 分結束：${await p.textContent('#vdone-h')}`);
     const db = await p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-v1'))); ok(Object.keys(db.facts).filter(k => k.startsWith('s:')).length >= 3 && db.best.vs === 1, `${lang} 記錄撥鐘 ${Object.keys(db.facts).length} 題`);
     await p.click('#vdone-home'); await p.waitForTimeout(200);
     // 雙人：上半旋轉、兩邊都能撥、大人加難
