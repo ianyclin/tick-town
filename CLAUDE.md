@@ -36,6 +36,7 @@
 3. JS（IIFE）：
    - `STR`／`tx`／`applyStr`／`setLang`。
    - **鐘面元件** `Clock(el, opts)`：SVG 200×200 viewBox；`set(h, m)`、`get()`、`onChange`、`snap`（5 或 1 分）、`drag`（可不可以拖）。拖分針：用連續角度累計（跨 12 會進位小時），時針同步；拖烏龜：**分針不動**，只換小時（吸附到「整點 + 原本的分鐘」，`hourSnap()`）。一次只認一根手指（`drag.id`，第二指不理，兩指同時按會把角度差算亂）；`lostpointercapture` 也當放手。`snapTick` 每吸附一格 `SFX.tick()`，整點 `SFX.bell()`。
+   - **教學** `Tut`（`#s-tut`、`clock6`）：全新的第一次打開（沒有存檔）先動手撥三下：兔子跑一圈（7:00 起，離開 50 分以上才算）→ 烏龜拖到 3 → 兔子拖到 6（半），最後三張大卡選「要練什麼」＝ `set.level`（全遊戲唯一決定難度的地方，設定頁同一個）。選了才存 `DB.tut = true`；沒選就關掉下次還是教學。有教學以前的舊存檔（`loadDB()` 的 `had`）當作看過；清除紀錄後也不再跳。「我會了」直接到選等級；設定頁「再看一次怎麼玩」`Tut.start(true)`（現在的等級先亮著）。鐘面為教學加了 `clock.only = 'm'／'h'`（只准拖一根，碰另一根呼叫 `onWrong` → 提醒「那是烏龜喔」並讓對的那根閃 `nudge()`）、`mark(n)` 圈出數字；手指 👆 用 CSS 變數 `--a0`／`--a1`／`--r` 沿著把手的路徑示範，孩子一拖就消失、放手沒做到 1.8 秒後再示範並出虛線（不說錯）。
    - **小鎮** `Town`：canvas 畫天空、太陽／月亮、遠山、房子、路燈、動物；`Town.set(minutesOfDay)`。
    - `SFX`：Web Audio 合成（tick、bell、ding、wrong、fan）。
    - 存檔 `DB = { facts, errs, best, set:{ lang, music, sound, level, timer }, daily, pet, retest, town }`，`save()`；載入用 `Object.assign(fresh(), …)` 補欄位並消毒。
@@ -48,7 +49,7 @@
 - 改規則同一次 commit 更新遊戲說明（`help.*`）。說明要 ELI5。
 - 存檔向下相容。
 - commit 訊息用繁體中文，一句話說清楚改了什麼。
-- 三種語言版面要一樣（320×568 到 1920×1080；`tests/layout.js` 量 9 種尺寸 × 三語）：標題 `h1` 一行、放不下就縮（`flex:1;min-width:0`，右邊的 chip 與圖示鈕 `flex:none`，不然會被推出畫面；`fitTitle()` 一次縮 1px 到 11px，還放不下（320px 寬的英、日文）才用 `title2` 折成兩行；≤ 400px 寬上排的間距縮小）；矮螢幕（≤ 620px）主選單那行提示藏起來；讀鐘打數字時鐘縮小（`.clock-wrap.small`，≤ 640px 高再縮到 22vh）、鍵盤不透明；雙人把手 `knob: 28`（鐘比較小）、中線的返回鈕 44px 不折行、toast 放中線上面（`.toast.mid`）；日文 `word-break:keep-all`（在空格處斷行，不在詞中間）；虛線指針是珊瑚色加白底線（細灰線孩子看不到）。
+- 三種語言版面要一樣（320×568 到 1920×1080；`tests/layout.js` 量 9 種尺寸 × 三語；教學另外在 `tests/tut.js` 量 6 種）：標題 `h1` 一行、放不下就縮（`flex:1;min-width:0`，右邊的 chip 與圖示鈕 `flex:none`，不然會被推出畫面；`fitTitle()` 一次縮 1px 到 11px，還放不下（320px 寬的英、日文）才用 `title2` 折成兩行；≤ 400px 寬上排的間距縮小）；矮螢幕（≤ 620px）主選單那行提示藏起來；讀鐘打數字時鐘縮小（`.clock-wrap.small`，≤ 640px 高再縮到 22vh）、鍵盤不透明；雙人把手 `knob: 28`（鐘比較小）、中線的返回鈕 44px 不折行、toast 放中線上面（`.toast.mid`）；日文 `word-break:keep-all`（在空格處斷行，不在詞中間）；虛線指針是珊瑚色加白底線（細灰線孩子看不到）。
 - 測試用 Playwright（chromium 在 `/opt/pw-browsers/chromium`，`NODE_PATH=/opt/node-tools/node_modules:$(npm root -g)`），本機 `python3 -m http.server 8124`。
 - 派 agent：試玩、截圖、量版面用 sonnet；批次跑腳本用 haiku；程式碼審查、破壞性測試用 opus。
 
@@ -67,4 +68,5 @@
 - [x] 遊戲說明（`#o-help`，從設定開、✕ 回設定）、關於頁（`#o-about`：練什麼、三個等級、隱私、製作、字型授權；版本號寫在 `about.made`）
 - [x] 字型切子集（`assets/fonts/`，約 600 KB）
 - [x] 寵物（`Pet`：住在鐘樓的貓頭鷹／松鼠／小熊，橡果 `pet.acorn` 答對 +1、任務單項 +10、全完成 +30，餵 10 顆、`PET_STAGES` 30／100／250／500；配件 `GEAR` 依徽章門檻、`wear.{head,face,neck}`；圖在 `assets/pets/{kind}-{st}.png`（ChatGPT 生成、`tools/cut-pets.py` 切）與 `assets/gear/{id}.png`（`tools/cut-gear.py`，一列六樣）；`PET_HEAD[kind][st] = [hx, hy, hr, top, ny]`、`PET_FACE[kind][st] = {ex, ey, ew, hb, hw}` 用 `tools/pet-sheet.cjs <png> [glasses,hat,scarf]` 的格線圖目測；`PET_IMG` 偵測不到圖時退回 emoji）
-- [ ] 三語校對、App 版、商店文案、GitHub Actions 建 APK
+- [x] 教學（`Tut`：第一次打開動手撥三下、選要練什麼；設定可再看）
+- [ ] 其餘待辦與順序見 `ROADMAP.md`（鐘面外圈、韓文西文、音樂報時、多人與備份、三年級內容、插畫、App 版）

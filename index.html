@@ -168,6 +168,23 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 .bubble{background:#fff;border:2px solid var(--sun);border-radius:18px;padding:10px 14px;font-weight:900;font-size:16px;max-width:520px;width:100%;text-align:center;text-wrap:pretty;line-height:1.4;box-shadow:0 4px 0 rgba(0,0,0,.08);animation:toastIn .25s ease}
 .bubble.good{border-color:var(--mint)}
 .cnt{font-family:var(--f-num);font-size:11px;fill:#c0392b;font-weight:700;text-anchor:middle}
+.mark{fill:none;stroke:var(--sun);stroke-width:4;animation:markPulse 1.1s ease-in-out infinite}
+@keyframes markPulse{50%{stroke-width:7;opacity:.55}}
+.hand.nudge{animation:nudge .55s ease-in-out 3}
+@keyframes nudge{50%{filter:drop-shadow(0 0 5px #ffb300) drop-shadow(0 0 2px #ffb300)}}
+.tut-finger{position:absolute;inset:0;pointer-events:none;z-index:2;transform:rotate(var(--a0));animation:tutSweep 2.8s ease-in-out infinite}
+.tut-finger span{position:absolute;left:50%;top:calc(50% - var(--r));font-size:clamp(34px,11vw,52px);line-height:1;transform:translate(-50%,-8%) rotate(calc(-1*var(--a0)));animation:tutSweepR 2.8s ease-in-out infinite;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
+@keyframes tutSweep{0%{transform:rotate(var(--a0));opacity:0}10%,18%{transform:rotate(var(--a0));opacity:1}80%,90%{transform:rotate(var(--a1));opacity:1}100%{transform:rotate(var(--a1));opacity:0}}
+@keyframes tutSweepR{0%,18%{transform:translate(-50%,-8%) rotate(calc(-1*var(--a0)))}80%,100%{transform:translate(-50%,-8%) rotate(calc(-1*var(--a1)))}}
+.tut-dots{gap:8px}.tut-dots i{width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.18);display:block}.tut-dots i.on{background:var(--sun)}
+.tut-pick{display:flex;flex-direction:column;gap:10px;width:100%;max-width:520px}
+.pick{display:flex;align-items:center;gap:8px;min-height:84px;padding:8px 12px;border-radius:22px;background:var(--paper);border:3px solid var(--line);box-shadow:0 4px 0 rgba(0,0,0,.08);text-align:left;width:100%}
+.pick[aria-pressed=true]{border-color:var(--hour);background:#e4efff}
+.pick .pc{width:clamp(58px,19vw,88px);aspect-ratio:1;flex:none;pointer-events:none}.pick .pc svg{width:100%;height:100%;display:block;overflow:visible}
+.pick .arrow{flex:none;font-size:18px;font-weight:900;color:var(--muted);text-align:center}.pick .pt{margin-left:4px}
+.pick .pt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.pick .pt b{font-size:19px;font-weight:900;line-height:1.2}.pick .pt i{font-style:normal;font-family:var(--f-num);font-size:17px;color:var(--hour)}
+.tut-note{font-size:14px;font-weight:700;text-align:center;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+@media (prefers-reduced-motion:reduce){.tut-finger,.tut-finger span,.mark,.hand.nudge{animation:none}}
 .btn{min-height:52px;padding:0 24px;border-radius:999px;background:var(--sun);color:#3b2f2f;font-weight:900;font-size:19px;box-shadow:0 5px 0 #d4922a}
 .btn.alt{background:#fff;box-shadow:0 5px 0 rgba(0,0,0,.12)}
 .btn:active{transform:translateY(3px);box-shadow:0 2px 0 #d4922a}
@@ -226,6 +243,15 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
     <button class="mode" type="button" data-mode="match"><span class="emo">🃏</span><span data-t="mode.match"></span></button>
     <button class="mode" type="button" data-mode="versus"><span class="emo">🤝</span><span data-t="mode.versus"></span></button>
   </div>
+</section>
+
+<section class="screen" id="s-tut" hidden>
+  <div class="top"><div class="lights tut-dots" id="tut-dots" aria-hidden="true"></div><button class="link-btn" type="button" id="tut-skip" data-t="tut.skip"></button></div>
+  <div class="task"><span class="emo" id="tut-emo">🦉</span><div class="say" id="tut-say" aria-live="polite"></div></div>
+  <div class="clock-wrap" id="clock6"><div class="tut-finger" id="tut-finger" aria-hidden="true" hidden><span>👆</span></div></div>
+  <div class="bubble" id="tut-hint" aria-live="polite" hidden></div>
+  <div class="tut-pick" id="tut-pick" hidden></div>
+  <div class="tut-note" id="tut-note" data-t="tut.pickP" hidden></div>
 </section>
 
 <section class="screen" id="s-day" hidden>
@@ -349,7 +375,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
     <div class="lab" data-t="set.level"></div>
     <div class="langs" id="set-level"></div>
     <div class="row"><span class="lab" data-t="set.sound"></span><button class="sw" type="button" data-set="sound" aria-pressed="true" data-t="on"></button></div>
-    <div class="linkrow"><button class="link-btn" type="button" id="go-help" data-t="set.help"></button><button class="link-btn" type="button" id="go-about" data-t="set.about"></button></div>
+    <div class="linkrow"><button class="link-btn" type="button" id="go-tut" data-t="set.tut" style="grid-column:1/-1"></button><button class="link-btn" type="button" id="go-help" data-t="set.help"></button><button class="link-btn" type="button" id="go-about" data-t="set.about"></button></div>
     <div class="lab parent" data-t="set.parent"></div>
     <div class="row"><span class="lab" data-t="set.resetP"></span><button class="danger" type="button" id="set-reset" data-t="set.reset"></button></div>
     <div class="legal" data-t="legal"></div>
@@ -419,6 +445,8 @@ const STR = {
     'mode.day': '小鎮的一天', 'mode.read': '幾點了？', 'mode.match': '配對', 'mode.versus': '兩個人一起',
     soon: '這裡還在蓋，先玩上面的鐘吧！',
     'set.title': '設定', 'set.lang': '語言 Language', 'set.level': '要練什麼', 'set.sound': '音效',
+    'tut.s1': '這是兔子，長長的那一根。拖著牠跑一圈！', 'tut.ok1': '兔子跑一圈，烏龜才走一格！', 'tut.s2': '這是烏龜，短短的那一根。把牠拖到 3。', 'tut.ok2': '烏龜指 3，兔子在 12，就是 3 點！', 'tut.s3': '把兔子拖到 6，就是「半」。', 'tut.ok3': '{h} 點半！烏龜走到 {h} 和 {h2} 的中間了。',
+    'tut.wrongM': '那是兔子喔！烏龜是短短的那一根。', 'tut.wrongH': '那是烏龜喔！兔子是長長的那一根。', 'tut.pick': '你想練什麼？', 'tut.pickP': '以後可以在設定裡換。', 'tut.skip': '我會了', 'set.tut': '再看一次怎麼玩',
     'level.1': '整點、半點', 'level.2': '幾點幾分', 'level.3': '過了多久',
     legal: '© 指數三寶飯（ianyclin）・沒有廣告・不用網路',
     // 時刻的說法
@@ -481,6 +509,8 @@ const STR = {
     'mode.day': 'Town Day', 'mode.read': 'What time?', 'mode.match': 'Match', 'mode.versus': 'Two players',
     soon: 'Still being built. Play with the clock for now!',
     'set.title': 'Settings', 'set.lang': 'Language', 'set.level': 'Practice', 'set.sound': 'Sound',
+    'tut.s1': 'This is Rabbit, the long hand. Drag Rabbit all the way around!', 'tut.ok1': 'Rabbit ran a whole lap. Tortoise moved just one step!', 'tut.s2': 'This is Tortoise, the short hand. Drag Tortoise to 3.', 'tut.ok2': "Tortoise on 3, Rabbit on 12. That's 3 o'clock!", 'tut.s3': 'Drag Rabbit to 6. That means "half past".', 'tut.ok3': 'Half past {h}! Tortoise is halfway between {h} and {h2}.',
+    'tut.wrongM': "That's Rabbit! Tortoise is the short one.", 'tut.wrongH': "That's Tortoise! Rabbit is the long one.", 'tut.pick': 'What do you want to practice?', 'tut.pickP': 'You can change this later in Settings.', 'tut.skip': 'Skip', 'set.tut': 'How to play (again)',
     'level.1': "O'clock, half", 'level.2': 'Minutes', 'level.3': 'How long?',
     legal: '© ianyclin · No ads · No internet needed',
     't.oclock': "{h} o'clock", 't.half': 'half past {h}', 't.hm': '{h}:{mm}',
@@ -541,6 +571,8 @@ const STR = {
     'mode.day': 'まちの一日', 'mode.read': 'いま何時？', 'mode.match': 'ペアさがし', 'mode.versus': 'ふたりで',
     soon: 'ここは まだ じゅんび中。まずは とけいで あそんでね！',
     'set.title': 'せってい', 'set.lang': 'ことば Language', 'set.level': 'なにを れんしゅうする？', 'set.sound': 'おと',
+    'tut.s1': 'これは うさぎ。長い はりだよ。ぐるっと 1しゅう まわしてみよう！', 'tut.ok1': 'うさぎが 1しゅう すると、かめは 1つだけ すすむよ！', 'tut.s2': 'これは かめ。みじかい はりだよ。3まで うごかそう。', 'tut.ok2': 'かめが 3、うさぎが 12。3時だね！', 'tut.s3': 'うさぎを 6まで うごかそう。「半」だよ。', 'tut.ok3': '{h}時半！かめは {h}と {h2}の まん中に いるよ。',
+    'tut.wrongM': 'それは うさぎだよ！かめは みじかい ほう。', 'tut.wrongH': 'それは かめだよ！うさぎは 長い ほう。', 'tut.pick': 'なにを れんしゅうする？', 'tut.pickP': 'あとで せっていで かえられるよ。', 'tut.skip': 'スキップ', 'set.tut': 'あそびかたを もういちど 見る',
     'level.1': '何時・何時半', 'level.2': '何時何分', 'level.3': 'たった時間',
     legal: '© ianyclin・広告なし・ネットふよう',
     't.oclock': '{h}時', 't.half': '{h}時半', 't.hm': '{h}時{m}分',
@@ -639,14 +671,15 @@ const GEAR = [
   { id: 'crown', at: 12, slot: 'head', e: '👑', ar: 1.231, place: (hx, hy, hr, top, ny, f) => { const w = f.hw * 0.65; return [f.ex, f.hb - w / 1.231 * 0.38, w, 0]; } },
 ];
 const GEAR_BY = Object.create(null); GEAR.forEach(g => { GEAR_BY[g.id] = g; });
-const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, level: 2 }, daily: {}, pet: { kind: '', fed: 0, acorn: 0, wear: { head: '', face: '', neck: '' } }, retest: [], town: { lit: [] }, free: 7 * 60, hinted: false });
+const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, level: 2 }, daily: {}, pet: { kind: '', fed: 0, acorn: 0, wear: { head: '', face: '', neck: '' } }, retest: [], town: { lit: [] }, free: 7 * 60, hinted: false, tut: false });
 let DB = fresh();
 const num = (v, d = 0) => (typeof v === 'number' && Number.isFinite(v)) ? v : d;
 function loadDB() {
-  let d = {}; try { d = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { d = {}; }
+  let d = {}, had = false; try { const raw = localStorage.getItem(KEY); had = raw !== null; d = JSON.parse(raw || '{}') || {}; } catch (e) { d = {}; }
   const f = fresh(); if (d && typeof d === 'object') { for (const k of Object.keys(f)) if (k in d) f[k] = (f[k] && typeof f[k] === 'object' && !Array.isArray(f[k])) ? Object.assign(f[k], (d[k] && typeof d[k] === 'object') ? d[k] : {}) : d[k]; }
   f.set.level = [1, 2, 3].includes(f.set.level) ? f.set.level : 2; f.set.sound = f.set.sound !== false; if (typeof f.set.lang !== 'string') f.set.lang = '';
   f.free = clamp(Math.round(num(f.free, 7 * 60)), 0, 1439);
+  f.tut = had ? !(d && d.tut === false) : false;   // 教學看過了沒：有教學以前的舊存檔當作看過，全新的才從教學開始
   if (!f.facts || typeof f.facts !== 'object') f.facts = {};
   for (const [k, v] of Object.entries(f.facts)) { if (!v || typeof v !== 'object' || !/^[rse]:\d+:\d+$/.test(k)) delete f.facts[k]; else f.facts[k] = { n: clamp(num(v.n), 0, 1e6), w: clamp(num(v.w), 0, 1e6), err: clamp(num(v.err), 0, 1), t: clamp(num(v.t), 0, 6e5) }; }
   if (!f.errs || typeof f.errs !== 'object') f.errs = {}; for (const k of Object.keys(f.errs)) { if (!ERRS.includes(k)) delete f.errs[k]; else f.errs[k] = clamp(num(f.errs[k]), 0, 1); }
@@ -717,7 +750,7 @@ function Clock(el, opts = {}) {
   let drag = null;
   const ang = e => { const r = svg.getBoundingClientRect(), x = e.clientX - r.left - r.width / 2, y = e.clientY - r.top - r.height / 2; return Math.atan2(x, -y) * 180 / Math.PI; };
   const down = which => e => {
-    if (!api.drag || drag) return; e.preventDefault(); ac();   // 第二根手指不理（兩指同時按會把角度算亂）
+    if (!api.drag || drag) return; if (api.only && api.only !== which) { e.preventDefault(); if (api.onWrong) api.onWrong(which); return; } e.preventDefault(); ac();   // 第二根手指不理（兩指同時按會把角度算亂）
     drag = { id: e.pointerId, which, prev: ang(e), last: snapped(tot), m0: snapped(tot) % 60 }; svg.setPointerCapture(e.pointerId); (which === 'm' ? gm : gh).classList.add('on');
   };
   const hourSnap = () => (((Math.round((tot - drag.m0) / 60) * 60 + drag.m0) % 1440) + 1440) % 1440;   // 拖烏龜：分針不動，只換小時
@@ -737,6 +770,10 @@ function Clock(el, opts = {}) {
   const gc = mk('g'); svg.appendChild(gc); let cntT = [];
   api.countTo = (m, step = 320) => { api.countStop(); const n = Math.round(m / 5); for (let i = 1; i <= n; i++) cntT.push(setTimeout(() => { const a = i * 30 * Math.PI / 180, t = mk('text', { class: 'cnt', x: C + 88 * Math.sin(a), y: C - 88 * Math.cos(a) + 4 }); t.textContent = i * 5; gc.appendChild(t); SFX.tick(); }, i * step)); cntT.push(setTimeout(() => { gc.innerHTML = ''; }, n * step + 2600)); };
   api.countStop = () => { cntT.forEach(clearTimeout); cntT = []; gc.innerHTML = ''; };
+  // 教學用：圈出鐘面上的數字、讓某一根指針閃一下、只准拖某一根（api.only = 'm'／'h'，碰另一根呼叫 onWrong）
+  const gk = mk('g'); svg.insertBefore(gk, gg);
+  api.mark = n => { gk.innerHTML = ''; if (!n) return; const a = n * 30 * Math.PI / 180; gk.appendChild(mk('circle', { class: 'mark', cx: C + 66 * Math.sin(a), cy: C - 66 * Math.cos(a), r: 13 })); };
+  api.nudge = which => { const g = which === 'm' ? gm : gh; g.classList.remove('nudge'); void g.getBoundingClientRect(); g.classList.add('nudge'); };
   gm.addEventListener('pointerdown', down('m')); gh.addEventListener('pointerdown', down('h'));
   svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up); svg.addEventListener('lostpointercapture', up);
   render();
@@ -1052,7 +1089,7 @@ const Gate = (() => {
   $('#gate-cancel').addEventListener('click', () => { $('#o-gate').hidden = true; fn = null; });
   return { open };
 })();
-$('#set-reset').addEventListener('click', () => Gate.open(() => { const lang = DB.set.lang; DB = fresh(); DB.set.lang = lang; save(); setLang(); renderSet(); clock.setSnap(5); clock.set(7, 0); showTime(clock.get().tot); Quest.ensure(); refreshMenu(); toast(tx('reset.done')); }, true));
+$('#set-reset').addEventListener('click', () => Gate.open(() => { const lang = DB.set.lang; DB = fresh(); DB.set.lang = lang; DB.tut = true; save(); setLang(); renderSet(); clock.setSnap(5); clock.set(7, 0); showTime(clock.get().tot); Quest.ensure(); refreshMenu(); toast(tx('reset.done')); }, true));
 
 // ---------- 每日任務：每天 3 個，做完徽章 +1、連續天數；沒有懲罰、沒有過期提醒
 const Quest = (() => {
@@ -1282,12 +1319,65 @@ const StarMap = (() => {
 })();
 $('#go-map').addEventListener('click', () => { ac(); StarMap.open(); });
 
+// ---------- 教學：第一次打開先動手撥三下（兔子跑一圈、烏龜到 3、兔子到 6），最後選「要練什麼」
+const clock6 = Clock($('#clock6'), { snap: 5 });
+const Tut = (() => {
+  // to：手指示範要順時針拖到幾度（null = 跑一整圈）；r：把手離中心多遠（鐘寬的 %）；ok(t)：放手時的時刻算不算做到
+  const STEPS = [
+    { only: 'm', to: null, r: 39, ok: t => Math.abs(t - 420) >= 50 },
+    { only: 'h', mark: 3, to: 90, r: 26, ok: t => t % 720 === 180, ghost: () => [3, 0] },
+    { only: 'm', mark: 6, to: 180, r: 39, ok: t => t % 60 === 30, ghost: t => [Math.floor(t / 60), 30] },
+  ];
+  let S = null, T = [], minis = false;
+  const later = (f, ms) => { const me = S; T.push(setTimeout(() => { if (S === me) f(); }, ms)); };
+  const clear = () => { T.forEach(clearTimeout); T = []; };
+  const dots = () => { $('#tut-dots').innerHTML = [0, 1, 2, 3].map(i => `<i class="${i <= S.i ? 'on' : ''}"></i>`).join(''); };
+  function finger(on) { const el = $('#tut-finger'), st = STEPS[S.i]; if (!on || !st) { el.hidden = true; return; } const a = clock6.get().tot, base = st.only === 'm' ? (a % 60) * 6 : ((a / 60) % 12) * 30, d = st.to === null ? 360 : (((st.to - base) % 360) + 360) % 360 || 360; el.style.setProperty('--a0', base + 'deg'); el.style.setProperty('--a1', (base + d) + 'deg'); el.style.setProperty('--r', st.r + '%'); el.hidden = true; void el.offsetWidth; el.hidden = false; }
+  function step(i) {
+    clear(); S.i = i; S.busy = false; const st = STEPS[i]; dots();
+    $('#tut-pick').hidden = true; $('#tut-note').hidden = true; $('#clock6').hidden = false; $('#tut-skip').hidden = false; $('#tut-hint').hidden = true;
+    $('#tut-say').textContent = tx('tut.s' + (i + 1));
+    if (i === 0) clock6.set(7, 0); else if (i === 1) { const t = Math.round(clock6.get().tot / 60) * 60; clock6.set(Math.floor(t / 60), 0); }   // 兔子沒有剛好停在 12 就幫牠站好，烏龜才會剛好指著數字
+    clock6.only = st.only; clock6.drag = true; clock6.mark(st.mark || null); clock6.ghost(null); clock6.nudge(st.only); Town.set(clock6.get().tot); finger(true);
+  }
+  function good() {
+    S.busy = true; clear(); clock6.drag = false; clock6.mark(null); clock6.ghost(null); finger(false);
+    const t = clock6.get().tot, h = Math.floor(t / 60) % 12 || 12, el = $('#tut-hint'); el.className = 'bubble good'; el.textContent = tx('tut.ok' + (S.i + 1), { h, h2: h % 12 + 1 }); el.hidden = false;
+    SFX.bell(); const r = $('#clock6').getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 30);
+    const emo = $('#tut-emo'); emo.classList.remove('jump'); void emo.offsetWidth; emo.classList.add('jump');
+    later(() => { if (S.i + 1 < STEPS.length) step(S.i + 1); else pick(); }, 2400);
+  }
+  function pick() {
+    clear(); S.i = 3; S.busy = true; dots(); finger(false); clock6.drag = false; clock6.mark(null); clock6.ghost(null); Town.set(10 * 60);   // 選等級時小鎮固定在白天（孩子可能把鐘撥到半夜）
+    $('#clock6').hidden = true; $('#tut-hint').hidden = true; $('#tut-skip').hidden = true; $('#tut-say').textContent = tx('tut.pick');
+    const EX = { 1: [[3, 0], [3, 30], ''], 2: [[7, 20], [9, 45], ''], 3: [[2, 40], [3, 15], '➜'] }, dg = ([h, m]) => `${h}:${String(m).padStart(2, '0')}`;
+    $('#tut-pick').innerHTML = [1, 2, 3].map(l => `<button class="pick" type="button" data-level="${l}" aria-pressed="${S.replay && DB.set.level === l}"><span class="pc" data-c="${EX[l][0]}"></span>${EX[l][2] ? `<span class="arrow" aria-hidden="true">${EX[l][2]}</span>` : ''}<span class="pc" data-c="${EX[l][1]}"></span><span class="pt"><b>${tx('level.' + l)}</b><i>${dg(EX[l][0])} ${EX[l][2] || '·'} ${dg(EX[l][1])}</i></span></button>`).join('');
+    $$('#tut-pick .pc').forEach(el => { const [h, m] = el.dataset.c.split(',').map(Number); Clock(el, { drag: false }).set(h, m); });
+    $('#tut-pick').hidden = false; $('#tut-note').hidden = false;
+  }
+  function start(replay) { Day.stop(); Read.stop(); Match.stop(); Versus.stop(); $('#o-set').hidden = true; S = { i: 0, replay: !!replay }; show('tut'); step(0); }
+  function stop() { clear(); S = null; clock6.only = null; }
+  clock6.onChange = (tot, dragging) => {
+    if (!S || S.busy) return; Town.set(tot); const st = STEPS[S.i]; clear();
+    if (dragging) { finger(false); $('#tut-hint').hidden = true; clock6.ghost(null); return; }
+    if (st.ok(tot)) { good(); return; }
+    later(() => { finger(true); if (st.ghost) { const [h, m] = st.ghost(clock6.get().tot); clock6.ghost(h, m); } }, 1800);   // 沒做到：不說錯，手指再示範一次，虛線指出要去的地方
+  };
+  clock6.onSnap = (tot, bell) => { if (bell) SFX.bell(); else SFX.tick(); };
+  clock6.onWrong = which => { if (!S || S.busy) return; const el = $('#tut-hint'); el.className = 'bubble'; el.textContent = tx(which === 'm' ? 'tut.wrongM' : 'tut.wrongH'); el.hidden = false; clock6.nudge(STEPS[S.i].only); SFX.hm(); };
+  $('#tut-skip').addEventListener('click', () => { if (S) pick(); });
+  $('#tut-pick').addEventListener('click', e => { const b = e.target.closest('[data-level]'); if (!b || !S) return; DB.set.level = +b.dataset.level; DB.tut = true; save(); clock.setSnap(DB.set.level === 3 ? 1 : 5); stop(); SFX.ding(); FX.confetti(40); goHome(); });
+  $('#go-tut').addEventListener('click', () => start(true));
+  return { start, stop, s: () => S };
+})();
+
 // ---------- 開始
 loadDB(); setLang(); Town.resize();
 if (DB.hinted) $('#hintline').hidden = true; refreshMenu();
+if (!DB.tut) Tut.start(false);
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock6, Tut, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet };   // 給測試用
 })();
 </script>
 </body>
