@@ -191,6 +191,20 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 .ring-n.on,.ring-n.lit{font-size:14px;fill:#fff}
 .ring-b{fill:transparent;transition:fill .15s}.ring-b.on,.ring-b.lit{fill:var(--minute)}
 @media (prefers-reduced-motion:reduce){.ring-n,.ring-b{transition:none}}
+.tk-lit{stroke:var(--minute);stroke-width:3.5}
+.bubble.over{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));width:calc(100% - 32px);max-width:520px;z-index:4;box-shadow:0 8px 30px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:8px;max-height:calc(100% - 140px);overflow-y:auto}
+.bubble.over .btn{align-self:center;min-width:140px}
+.bubble.good.over{bottom:auto;top:50%;transform:translate(-50%,-50%);width:auto;min-width:200px}
+.help ul.more{margin-top:-6px}
+.tl{display:block;width:100%;max-width:340px;margin:6px auto 0;overflow:visible}
+.tl .base{stroke:#e6dccb;stroke-width:6;stroke-linecap:round}
+.tl .seg{stroke-width:7;stroke-linecap:round;fill:none}.tl .seg.a{stroke:var(--sun)}.tl .seg.b{stroke:var(--minute)}
+.tl .dot{fill:#fff;stroke:#5b4a3a;stroke-width:2}
+.tl .t{font-family:var(--f-num);font-size:13px;fill:#3b2f2f;text-anchor:middle}
+.tl .d{font-family:var(--f-num);font-size:13px;text-anchor:middle;font-weight:700}.tl .d.a{fill:#c77a10}.tl .d.b{fill:#c0392b}
+.tl .anim{animation:tlDraw .7s ease forwards}.tl .fade{opacity:0;animation:tlFade .3s ease forwards}
+@keyframes tlDraw{to{stroke-dashoffset:0}}@keyframes tlFade{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.tl .anim,.tl .fade{animation:none;stroke-dashoffset:0!important;opacity:1}}
 .cnt{font-family:var(--f-num);font-size:11px;fill:#c0392b;font-weight:700;text-anchor:middle}
 .mark{fill:none;stroke:var(--sun);stroke-width:4;animation:markPulse 1.1s ease-in-out infinite}
 @keyframes markPulse{50%{stroke-width:7;opacity:.55}}
@@ -288,7 +302,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <section class="screen" id="s-read" hidden>
   <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights" id="read-prog" aria-live="polite"></div></div>
-  <div class="task"><span class="emo" id="read-emo">🦉</span><div class="say" id="read-say"></div></div>
+  <div class="task"><span class="emo" id="read-emo">🦉</span><div class="say" id="read-say"></div><div class="target" id="read-target" hidden></div></div>
   <div class="clock-wrap" id="clock3"></div>
   <div class="opts" id="read-opts"></div>
   <div class="pad" id="read-pad" hidden><div class="padin" id="read-in"></div><div class="keys" id="read-keys"></div></div>
@@ -449,8 +463,8 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
   <div class="card help">
     <div class="hhead"><h3 data-t="help.title"></h3><button class="xbtn" type="button" id="help-close" data-ta="close">✕</button></div>
     <h4 data-t="help.clockT"></h4><ul data-th="help.clock"></ul>
-    <h4 data-t="help.dayT"></h4><ul data-th="help.day"></ul>
-    <h4 data-t="help.readT"></h4><ul data-th="help.read"></ul>
+    <h4 data-t="help.dayT"></h4><ul data-th="help.day"></ul><ul data-th="help.day3" class="more"></ul>
+    <h4 data-t="help.readT"></h4><ul data-th="help.read"></ul><ul data-th="help.read3" class="more"></ul>
     <h4 data-t="help.matchT"></h4><ul data-th="help.match"></ul>
     <h4 data-t="help.vsT"></h4><ul data-th="help.vs"></ul>
     <h4 data-t="help.mapT"></h4><ul data-th="help.map"></ul>
@@ -464,7 +478,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
   <div class="card about">
     <div class="hhead"><h3 data-t="about.title"></h3><button class="xbtn" type="button" id="about-close" data-ta="close">✕</button></div>
     <h4 data-t="about.whyT"></h4><p data-t="about.why"></p>
-    <h4 data-t="about.levelT"></h4><p data-t="about.level"></p>
+    <h4 data-t="about.levelT"></h4><p data-t="about.level"></p><p data-t="about.level3"></p>
     <h4 data-t="about.privT"></h4><p data-t="about.priv"></p>
     <h4 data-t="about.madeT"></h4><p data-t="about.made"></p>
     <div class="legal" data-t="about.fonts"></div>
@@ -516,6 +530,8 @@ const STR = {
     legal: '© 指數三寶飯（ianyclin）・沒有廣告・不用網路',
     // 時刻的說法
     't.oclock': '{h} 點', 't.half': '{h} 點半', 't.hm': '{h} 點 {m} 分',
+    'read.say24': '{who}問：現在是{p}。用 24 小時制怎麼寫？', 'read.sayDur': '{who}{t1} 出門，鐘上是到的時間。走了幾分鐘？', 'hint.ok': '知道了', 'u.min': '{n} 分', 'u.h24': '24 小時制', 'hint.ampm': '{p}的時刻，24 小時制要加 12：{h} + 12 = {H}。', 'hint.ampmAm': '{p}的時刻，24 小時制不用加 12，就是 {h} 點。', 'hint.ampmSet': '{H} 點就是{p} {h} 點（{H} − 12 = {h}），烏龜要指著 {h}。', 'hint.minOne': '從 {m5} 分開始，一小格是 1 分鐘。數數看兔子又走了幾小格！',
+    'hint.dur1': '從 {t1} 到 {t2}，數數看兔子走了幾分鐘。', 'help.read3': '<li>選「過了多久」時，還會問 24 小時制（下午 3 點 = 15 點），和「幾點出門、幾點到，走了幾分鐘」。</li>', 'help.day3': '<li>選「過了多久」時，有些時刻會寫成 24 小時制：15:20 就是下午 3:20，烏龜指著 3。</li>', 'about.level3': '選「過了多久」時還會練：24 小時制（讀鐘時寫成 15:20，撥鐘時看到 15:20 要撥到 3:20）、從幾點到幾點過了幾分鐘（跨過整點時，提示會畫一條時間線：先走到整點，再走剩下的）、1 分鐘的小格。',
     'p.night': '半夜', 'p.morning': '早上', 'p.noon': '中午', 'p.afternoon': '下午', 'p.evening': '晚上',
     'ampm.am': '上午', 'ampm.pm': '下午',
     // 小鎮的作息
@@ -584,6 +600,9 @@ const STR = {
     'level.1': "O'clock, half", 'level.2': 'Minutes', 'level.3': 'How long?',
     legal: '© ianyclin · No ads · No internet needed',
     't.oclock': "{h} o'clock", 't.half': 'half past {h}', 't.hm': '{h}:{mm}',
+    'read.say24': '{who} asks: It\'s {p}. What is it in 24-hour time?', 'read.sayDur': '{who} left at {t1} and got there at the clock time. How many minutes?', 'hint.ok': 'Got it', 'u.min': '{n} min', 'u.h24': '24-hour time', 'hint.ampm': 'In the {p}, 24-hour time adds 12: {h} + 12 = {H}.', 'hint.ampmAm': 'In the {p}, 24-hour time stays the same: {h}.',
+    'hint.ampmSet': '{H} is {h} in the {p} ({H} − 12 = {h}). Tortoise points at {h}.', 'hint.minOne': 'Start at {m5}. Each little tick is 1 minute. Count how many more ticks Rabbit went!', 'hint.dur1': 'From {t1} to {t2}: count how many minutes Rabbit went.', 'help.read3': '<li>With "How long?", you also get 24-hour time (3 PM = 15:00) and "left at…, got there at…, how many minutes?"</li>',
+    'help.day3': '<li>With "How long?", some times are in 24-hour time: 15:20 means 3:20 PM, so Tortoise points at 3.</li>', 'about.level3': 'Level 3 also practices 24-hour time (write 15:20 when reading; set 3:20 when you see 15:20), minutes from one time to another (when it passes the hour, the hint draws a timeline: first to the hour, then the rest), and the little 1-minute ticks.',
     'p.night': 'night', 'p.morning': 'morning', 'p.noon': 'noon', 'p.afternoon': 'afternoon', 'p.evening': 'evening',
     'ampm.am': 'AM', 'ampm.pm': 'PM',
     back: '‹ Menu', home: 'Back to menu',
@@ -653,6 +672,8 @@ const STR = {
     'level.1': '何時・何時半', 'level.2': '何時何分', 'level.3': 'たった時間',
     legal: '© ianyclin・広告なし・ネットふよう',
     't.oclock': '{h}時', 't.half': '{h}時半', 't.hm': '{h}時{m}分',
+    'read.say24': '{who}が きいてるよ：いまは {p}。24時間せいで かくと？', 'read.sayDur': '{who}は {t1}に 出て、とけいの 時こくに ついたよ。なん分？', 'hint.ok': 'わかった', 'u.min': '{n}分', 'u.h24': '24時間せい', 'hint.ampm': '{p}の 時こくは、24時間せいだと 12を たすよ：{h} + 12 = {H}。', 'hint.ampmAm': '{p}の 時こくは、24時間せいでも そのまま {h}だよ。', 'hint.ampmSet': '{H}時は {p}{h}時（{H} − 12 = {h}）。かめは {h}を さすよ。',
+    'hint.minOne': '{m5}分から、小さい めもり 1つが 1分。うさぎが あと いくつ すすんだか かぞえてね！', 'hint.dur1': '{t1}から {t2}まで、うさぎが なん分 すすんだか かぞえてね。', 'help.read3': '<li>「たった時間」では、24時間せい（ごご3時 = 15時）や「なん時に 出て、なん時に ついた？ なん分？」も 出るよ。</li>', 'help.day3': '<li>「たった時間」では、24時間せいで かいて ある 時こくも あるよ：15:20は ごご3:20。かめは 3を さすよ。</li>', 'about.level3': 'レベル3では、24時間制（読むときは 15:20 と書く、15:20 を見たら 3:20 に合わせる）、ある時刻から別の時刻まで何分か（ちょうどの時刻をまたぐときは、まずちょうどの時刻まで、次に残りという時間の線をヒントで描きます）、1分の小さい目もりも練習します。',
     'p.night': 'よなか', 'p.morning': 'あさ', 'p.noon': 'ひる', 'p.afternoon': 'ごご', 'p.evening': 'よる',
     'ampm.am': 'ごぜん', 'ampm.pm': 'ごご',
     back: '‹ メニュー', home: 'メニューへ',
@@ -721,6 +742,8 @@ const STR = {
     'level.1': '정각・반', 'level.2': '몇 시 몇 분', 'level.3': '얼마나 지났지?',
     legal: '© ianyclin · 광고 없음 · 인터넷 필요 없음',
     't.oclock': '{h}시', 't.half': '{h}시 반', 't.hm': '{h}시 {m}분',
+    'read.say24': '{who}가 물어봐: {p} 시각이야. 24시간제로 어떻게 쓸까?', 'read.sayDur': '{who}가 {t1}에 나가서 시계 시각에 도착했어. 몇 분?', 'hint.ok': '알겠어', 'u.min': '{n}분', 'u.h24': '24시간제', 'hint.ampm': '{p} 시각은 24시간제로 쓰면 12를 더해: {h} + 12 = {H}.', 'hint.ampmAm': '{p} 시각은 24시간제로 써도 그대로 {h}시.', 'hint.ampmSet': '{H}시 = {p} {h}시 ({H} − 12 = {h}). 거북이 자리: {h}.',
+    'hint.minOne': '{m5}분부터 작은 눈금 하나가 1분이야. 토끼가 몇 칸 더 갔는지 세어 봐!', 'hint.dur1': '{t1}부터 {t2}까지 토끼가 몇 분 갔는지 세어 봐.', 'help.read3': '<li>"얼마나 지났지?"를 고르면 24시간제(오후 3시 = 15시)와 "몇 시에 나가서 몇 시에 도착했어? 몇 분?"도 나와.</li>', 'help.day3': '<li>"얼마나 지났지?"에서는 24시간제로 쓴 시각도 있어: 15:20 = 오후 3:20. 거북이 자리는 3이야.</li>', 'about.level3': '3단계에서는 24시간제(읽을 때는 15:20으로 쓰기, 15:20을 보면 3:20으로 맞추기), 어떤 시각부터 다른 시각까지 몇 분인지(정각을 넘어갈 때는 힌트로 먼저 정각까지, 그다음 나머지를 시간 막대로 그려 줍니다), 1분짜리 작은 눈금도 연습합니다.',
     'p.night': '밤', 'p.morning': '아침', 'p.noon': '낮', 'p.afternoon': '오후', 'p.evening': '저녁',
     'ampm.am': '오전', 'ampm.pm': '오후',
     back: '‹ 메뉴', home: '메뉴로',
@@ -788,6 +811,9 @@ const STR = {
     'level.1': 'En punto y media', 'level.2': 'Horas y minutos', 'level.3': '¿Cuánto tiempo?',
     legal: '© ianyclin · Sin anuncios · No necesita internet',
     't.oclock': '{art} {h} en punto', 't.half': '{art} {h} y media', 't.quarter': '{art} {h} y cuarto', 't.hm': '{art} {h} y {m}',
+    'read.say24': '{who} pregunta: es {p}. ¿Cómo es en formato de 24 horas?', 'read.sayDur': '{who} salió a las {t1} y llegó a la hora del reloj. ¿Cuántos minutos?', 'hint.ok': 'Entendido', 'u.min': '{n} min', 'u.h24': 'formato 24 horas', 'hint.ampm': 'Si es {p}, en formato de 24 horas se suma 12: {h} + 12 = {H}.', 'hint.ampmAm': 'Si es {p}, en formato de 24 horas se queda igual: {h}.',
+    'hint.ampmSet': 'Las {H} son las {h} {p} ({H} − 12 = {h}). La tortuga apunta al {h}.', 'hint.minOne': 'Empieza en {m5}. Cada rayita es 1 minuto. ¡Cuenta cuántas rayitas más avanzó el conejo!', 'hint.dur1': 'De {t1} a {t2}: cuenta cuántos minutos avanzó el conejo.', 'help.read3': '<li>En "¿Cuánto tiempo?" también sale el formato de 24 horas (3 p. m. = 15:00) y "salió a las…, llegó a las…, ¿cuántos minutos?".</li>',
+    'help.day3': '<li>En "¿Cuánto tiempo?" algunas horas están en formato de 24 horas: 15:20 son las 3:20 p. m., así que la tortuga apunta al 3.</li>', 'about.level3': 'El nivel 3 también practica el formato de 24 horas (escribir 15:20 al leer; poner 3:20 al ver 15:20), los minutos entre dos horas (si pasa por la hora en punto, la pista dibuja una línea de tiempo: primero hasta la hora en punto y luego el resto) y las rayitas de 1 minuto.',
     'p.night': 'de la noche', 'p.morning': 'de la mañana', 'p.noon': 'del mediodía', 'p.afternoon': 'de la tarde', 'p.evening': 'de la noche',
     'ampm.am': 'a. m.', 'ampm.pm': 'p. m.',
     back: '‹ Menú', home: 'Volver al menú',
@@ -917,7 +943,7 @@ function loadDB() {
   f.free = clamp(Math.round(num(f.free, 7 * 60)), 0, 1439);
   f.tut = had ? !(d && d.tut === false) : false;   // 教學看過了沒：有教學以前的舊存檔當作看過，全新的才從教學開始
   if (!f.facts || typeof f.facts !== 'object') f.facts = {};
-  for (const [k, v] of Object.entries(f.facts)) { if (!v || typeof v !== 'object' || !/^[rse]:\d+:\d+$/.test(k)) delete f.facts[k]; else f.facts[k] = { n: clamp(num(v.n), 0, 1e6), w: clamp(num(v.w), 0, 1e6), err: clamp(num(v.err), 0, 1), t: clamp(num(v.t), 0, 6e5) }; }
+  for (const [k, v] of Object.entries(f.facts)) { if (!v || typeof v !== 'object' || !/^[rseag]:\d+:\d+$/.test(k)) delete f.facts[k]; else f.facts[k] = { n: clamp(num(v.n), 0, 1e6), w: clamp(num(v.w), 0, 1e6), err: clamp(num(v.err), 0, 1), t: clamp(num(v.t), 0, 6e5) }; }
   if (!f.errs || typeof f.errs !== 'object') f.errs = {}; for (const k of Object.keys(f.errs)) { if (!ERRS.includes(k)) delete f.errs[k]; else f.errs[k] = clamp(num(f.errs[k]), 0, 1); }
   if (!f.best || typeof f.best !== 'object') f.best = {}; for (const k of Object.keys(f.best)) f.best[k] = clamp(num(f.best[k]), 0, 1e6);
   if (!f.daily || typeof f.daily !== 'object') f.daily = {}; const D = f.daily;
@@ -1010,7 +1036,8 @@ function Clock(el, opts = {}) {
   // 鐘面
   svg.appendChild(mk('circle', { cx: C, cy: C, r: 96, fill: '#e8c98f' }));
   svg.appendChild(mk('circle', { cx: C, cy: C, r: 90, fill: 'var(--face)' }));
-  for (let i = 0; i < 60; i++) { const big = i % 5 === 0, a = i * 6 * Math.PI / 180, r1 = big ? 78 : 83, r2 = 87; svg.appendChild(mk('line', { x1: C + r1 * Math.sin(a), y1: C - r1 * Math.cos(a), x2: C + r2 * Math.sin(a), y2: C - r2 * Math.cos(a), stroke: big ? '#5b4a3a' : '#b9a58c', 'stroke-width': big ? 3 : 1.5, 'stroke-linecap': 'round' })); }
+  const tks = [];
+  for (let i = 0; i < 60; i++) { const big = i % 5 === 0, a = i * 6 * Math.PI / 180, r1 = big ? 78 : 83, r2 = 87; svg.appendChild(tks[i] = mk('line', { x1: C + r1 * Math.sin(a), y1: C - r1 * Math.cos(a), x2: C + r2 * Math.sin(a), y2: C - r2 * Math.cos(a), stroke: big ? '#5b4a3a' : '#b9a58c', 'stroke-width': big ? 3 : 1.5, 'stroke-linecap': 'round' })); }
   for (let n = 1; n <= 12; n++) { const a = n * 30 * Math.PI / 180, t = mk('text', { x: C + 66 * Math.sin(a), y: C - 66 * Math.cos(a) + 7, 'text-anchor': 'middle', 'font-size': 19, 'font-weight': 900, fill: '#3b2f2f', 'font-family': 'var(--f-num)' }); t.textContent = n; svg.appendChild(t); }
   // 時針：烏龜
   const gh = mk('g', { class: 'hand hour' });
@@ -1074,7 +1101,9 @@ function Clock(el, opts = {}) {
   api.countTo = (m, step = 320) => { api.countStop(); const n = Math.round(m / 5);
     if (ring) { for (let i = 1; i <= n; i++) cntT.push(setTimeout(() => { ringMark(i % 12, true, 'lit'); SFX.tick(); }, i * step)); cntT.push(setTimeout(() => { for (let i = 0; i < 12; i++) ringMark(i, false, 'lit'); }, n * step + 2600)); return; }   // 開外圈：外圈的數字一個一個亮
     for (let i = 1; i <= n; i++) cntT.push(setTimeout(() => { const a = i * 30 * Math.PI / 180, t = mk('text', { class: 'cnt', x: C + 88 * Math.sin(a), y: C - 88 * Math.cos(a) + 4 }); t.textContent = i * 5; gc.appendChild(t); SFX.tick(); }, i * step)); cntT.push(setTimeout(() => { gc.innerHTML = ''; }, n * step + 2600)); };
-  api.countStop = () => { cntT.forEach(clearTimeout); cntT = []; gc.innerHTML = ''; for (let i = 0; i < 12; i++) ringMark(i, false, 'lit'); };
+  // 1 分的提示：從 m5（5 的倍數）開始，小格一格一格亮到 m
+  api.countOne = (m, step = 380) => { api.countStop(); const m5 = Math.floor(m / 5) * 5; for (let i = 1; i <= m - m5; i++) cntT.push(setTimeout(() => { tks[(m5 + i) % 60].classList.add('tk-lit'); SFX.tick(); }, i * step)); cntT.push(setTimeout(() => tks.forEach(t => t.classList.remove('tk-lit')), (m - m5) * step + 2600)); };
+  api.countStop = () => { cntT.forEach(clearTimeout); cntT = []; gc.innerHTML = ''; tks.forEach(t => t.classList.remove('tk-lit')); for (let i = 0; i < 12; i++) ringMark(i, false, 'lit'); };
   // 教學用：圈出鐘面上的數字、讓某一根指針閃一下、只准拖某一根（api.only = 'm'／'h'，碰另一根呼叫 onWrong）
   const gk = mk('g'); svg.insertBefore(gk, gg);
   api.mark = n => { gk.innerHTML = ''; if (!n) return; const a = n * 30 * Math.PI / 180; gk.appendChild(mk('circle', { class: 'mark', cx: C + 66 * Math.sin(a), cy: C - 66 * Math.cos(a), r: 13 })); };
@@ -1236,9 +1265,24 @@ function classifySet(T, A) {
   if (am === tm && ah === nh(th)) return tm === 30 ? 'halfHour' : tm >= 35 ? 'hourLate' : 'hourOff';
   if (tm >= 10 && am === 5 * Math.floor(tm / 10) && ah === th) return 'minIndex';   // 7:20 把兔子放在 2
   if (am === (th === 0 ? 0 : th * 5) && ah % 12 === (tm / 5) % 12 && tm % 5 === 0) return 'handSwap';
+  if (ah === th && Math.abs(am - tm) >= 1 && Math.abs(am - tm) <= 4) return 'minOne';   // 差 1～4 分：小格數錯（只有等級 3 一分一格會出現）
   if (ah === th && Math.abs(am - tm) <= 5) return 'minNear';
   if (am === tm) return 'hourOff';
   return 'other';
+}
+
+// ---------- 時間線：從 t1 到 t2（一天裡的分鐘），跨過整點就分兩段，先畫到整點、再畫剩下的；每段上面寫幾分
+function timeline(t1, t2) {
+  const hr = (Math.floor(t1 / 60) + 1) * 60, cross = t1 % 60 !== 0 && hr < t2, pts = cross ? [t1, hr, t2] : [t1, t2];
+  const X = t => 24 + 252 * (t - t1) / Math.max(1, t2 - t1), dg = t => timeWords(((t % 1440) + 1440) % 1440).digital;
+  let g = `<line class="base" x1="24" y1="30" x2="276" y2="30"/>`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const x1 = X(pts[i]), x2 = X(pts[i + 1]), L = x2 - x1, cls = i === 0 && cross ? 'a' : 'b', delay = (RM ? 0 : i * 0.9).toFixed(1);
+    g += `<line class="seg ${cls} anim" x1="${x1}" y1="30" x2="${x2}" y2="30" stroke-dasharray="${L}" stroke-dashoffset="${L}" style="animation-delay:${delay}s"/>`;
+    g += `<text class="d ${cls} fade" x="${(x1 + x2) / 2}" y="18" style="animation-delay:${(+delay + 0.5).toFixed(1)}s">+${esc(tx('u.min', { n: pts[i + 1] - pts[i] }))}</text>`;
+  }
+  pts.forEach(t => { g += `<circle class="dot" cx="${X(t)}" cy="30" r="5"/><text class="t" x="${X(t)}" y="52">${dg(t)}</text>`; });
+  return `<svg class="tl" viewBox="0 0 300 60" role="img" aria-label="${esc(dg(t1) + ' → ' + dg(t2))}">${g}</svg>`;
 }
 
 // ---------- 小鎮的一天
@@ -1270,6 +1314,7 @@ const Day = (() => {
       }
       const [t, d] = wpick(c); prev = t; const task = { sc, t, who: WHO[sc] };
       if (el) { task.from = t - d; task.d = d; }
+      else if (L === 3 && t >= 13 * 60 && Math.random() < 0.4 + 0.4 * Math.min(1, num(E.ampm) * 2)) task.h24 = true;   // 常搞錯上下午的孩子多一點
       return task;
     });
     lastDay = day.map(k => k.t); return day;
@@ -1283,6 +1328,7 @@ const Day = (() => {
     $('#day-emo').textContent = EMO[k.who]; $('#day-emo').className = 'emo';
     const tw = timePhrase(w, false);
     if (k.from !== undefined) { const w1 = timeWords(k.from); $('#day-say').textContent = tx('say.elapsed', { who, t1: w1.digital, d: k.d }); $('#day-target').innerHTML = `${w1.digital}<small>+${k.d}</small>`; }
+    else if (k.h24) { const d24 = `${Math.floor(k.t / 60)}:${String(k.t % 60).padStart(2, '0')}`; $('#day-say').textContent = tx('say.' + k.sc, { who, t: d24 }); $('#day-target').innerHTML = `${d24}<small>${esc(tx('u.h24'))}</small>`; }
     else { $('#day-say').textContent = tx('say.' + k.sc, { who, t: tw }); $('#day-target').innerHTML = `${w.digital}<small>${w.ampm}</small>`; }
     const startAt = k.from !== undefined ? k.from : S.i ? S.tasks[S.i - 1].t : (k.t === 360 ? 5 * 60 : 6 * 60);   // 鐘從上一件事的時刻開始（「走了幾分鐘」的題從出發時刻開始；第一題剛好 6:00 就從 5:00）
     S.ok = false; S.lastA = -1;
@@ -1291,13 +1337,17 @@ const Day = (() => {
   function words(tot) { const w = timeWords(tot); $('#day-words').textContent = LANG === 'en' ? w.digital : LANG === 'es' ? w.main[0].toUpperCase() + w.main.slice(1) : w.main; }   // 西班牙文自己一行，第一個字大寫（Las 6 en punto）
   function judge() {
     const k = S.tasks[S.i], A = clock2.get().tot; if (A % 720 === k.t % 720 || A === S.lastA) return; S.lastA = A;   // 同一個錯的答案只記一次
-    S.tries++; const type = k.from !== undefined && (A % 720 === (k.t - 60) % 720 || A % 720 === (k.from - (k.from % 60) + (k.from % 60 + k.d) % 60) % 720) ? 'carry' : classifySet(k.t, A);   // 走了幾分鐘：忘了跨過整點
+    const sameMin = A % 60 === k.t % 60, wrongHour = Math.floor(A / 60) % 12 !== Math.floor(k.t / 60) % 12;
+    S.tries++; const type = k.from !== undefined && (A % 720 === (k.t - 60) % 720 || A % 720 === (k.from - (k.from % 60) + (k.from % 60 + k.d) % 60) % 720) ? 'carry' : k.h24 && sameMin && wrongHour ? 'ampm' : classifySet(k.t, A);   // 走了幾分鐘：忘了跨過整點；24 小時制：分鐘對、小時錯就是不會換算
     record(k.from !== undefined ? `e:${k.from}:${k.d}` : `s:${Math.floor(k.t / 60)}:${k.t % 60}`, false, 0, type, null);
     const th = Math.floor(k.t / 60) % 12 || 12, h2 = th % 12 + 1;
-    const key = ['hourLate', 'halfHour', 'minIndex', 'handSwap', 'minNear', 'hourOff', 'carry'].includes(type) ? 'hint.' + type : 'hint.other';
-    const w1 = k.from !== undefined ? timeWords(k.from) : null, toHour = k.from !== undefined ? 60 - k.from % 60 : 0;
-    const el = $('#day-hint'); el.className = 'bubble'; el.textContent = tx(key, { h1: th, h2, t1: w1 && w1.digital, a: toHour, b: k.d - toHour, h3: w1 && ((Math.floor(k.from / 60) + 1) % 12 || 12) }); el.hidden = false;
-    clock2.ghost(Math.floor(k.t / 60), k.t % 60); if (type === 'minIndex') clock2.countTo(k.t % 60);
+    const el1 = k.from !== undefined, cross = el1 && k.from % 60 + k.d > 60;
+    const key = type === 'ampm' ? 'hint.ampmSet' : el1 ? (cross ? 'hint.carry' : 'hint.dur1') : ['hourLate', 'halfHour', 'minIndex', 'handSwap', 'minNear', 'minOne', 'hourOff', 'carry'].includes(type) ? 'hint.' + type : 'hint.other';
+    const w1 = el1 ? timeWords(k.from) : null, toHour = el1 ? 60 - k.from % 60 : 0;
+    const el = $('#day-hint'); el.className = 'bubble'; el.textContent = tx(key, { h1: th, h2, t1: w1 && w1.digital, t2: timeWords(k.t).digital, a: toHour, b: k.d - toHour, h3: w1 && ((Math.floor(k.from / 60) + 1) % 12 || 12), H: Math.floor(k.t / 60), h: th, p: timeWords(k.t).period, m5: Math.floor(k.t % 60 / 5) * 5 });
+    if (el1) { el.insertAdjacentHTML('beforeend', timeline(k.from, k.t)); el.classList.add('over'); el.insertAdjacentHTML('beforeend', `<button type="button" class="btn" id="day-hint-ok">${esc(tx('hint.ok'))}</button>`); }   // 走了幾分鐘：畫時間線（先到整點、再走剩下的），蓋在下面
+    el.hidden = false;
+    clock2.ghost(Math.floor(k.t / 60), k.t % 60); if (type === 'minIndex') clock2.countTo(k.t % 60); if (type === 'minOne') clock2.countOne(k.t % 60);
     const emo = $('#day-emo'); emo.classList.remove('tilt'); void emo.offsetWidth; emo.classList.add('tilt');
     SFX.hm();
   }
@@ -1313,8 +1363,9 @@ const Day = (() => {
   function finish() { FX.fireworks(); FX.confetti(80); $('#done-p').textContent = tx('day.doneP', { who: tx('who.bear') }); $('#o-done').hidden = false; DB.best.days = num(DB.best.days) + 1; save(); Quest.add('day'); }
   clock2.onChange = (tot, dragging) => { if (!S || S.ok) return; words(tot); clearTimeout(judgeT); $('#day-hint').hidden = true; clock2.countStop(); if (dragging) return; if (tot % 720 === S.tasks[S.i].t % 720) { S.ok = true; good(); } else judgeT = setTimeout(judge, 2000); };   // 撥對後再碰指針不再算一次   // 鐘面是 12 小時的，上下午不管
   clock2.onSnap = (tot, bell) => { SFX.tick(); };
+  $('#day-hint').addEventListener('click', e => { if (e.target.closest('#day-hint-ok')) { $('#day-hint').hidden = true; SFX.tick(); } });
   $('#done-again').addEventListener('click', start); $('#done-home').addEventListener('click', () => { $('#o-done').hidden = true; goHome(); });
-  return { start, stop, target: () => S && S.tasks[S.i].t, makeDay };
+  return { start, stop, target: () => S && S.tasks[S.i].t, makeDay, force: t => { if (!S) return; S.tasks[S.i] = t; next(); } };   // force：測試用，換掉目前這一題
 })();
 
 // ---------- 幾點了？（讀鐘）：先選三張卡，熟了才打數字
@@ -1347,32 +1398,73 @@ const Read = (() => {
     const out = []; while (out.length < 2 && ds.length) { let tot = ds.reduce((a, d) => a + d[3], 0), r = Math.random() * tot, i = 0; for (; i < ds.length; i++) { r -= ds[i][3]; if (r <= 0) break; } out.push(ds.splice(Math.min(i, ds.length - 1), 1)[0]); }
     return shuffle([['ok', h, m], ...out]);
   }
-  function start() { S = { i: 0, right: 0, recent: [], q: null }; show('read'); $('#o-rdone').hidden = true; next(); }
+  // 等級 3：這一題考什麼。一般讀鐘、24 小時制、走了幾分鐘；常搞錯上下午／忘了跨整點的孩子，那一種比較常出
+  let forceKind = '';   // 測試用：只出某一種題
+  function kind() { if (forceKind) return forceKind; if (DB.set.level !== 3) return 'clock'; const E = DB.errs, w = [['clock', 1.2], ['h24', 1 + 3 * num(E.ampm)], ['dur', 1 + 3 * num(E.carry)]]; if (S.lastKind) w.forEach(x => { if (x[0] === S.lastKind) x[1] *= 0.5; }); let r = Math.random() * w.reduce((a, x) => a + x[1], 0); for (const x of w) { r -= x[1]; if (r <= 0) return x[0]; } return 'clock'; }
+  function pick24() {   // 早上 7 點到晚上 9 點，下午晚上多一點（要加 12 的才是重點）
+    const c = []; for (let H = 7; H <= 21; H++) for (let m = 0; m < 60; m += 1) { const f = DB.facts[`a:${H}:${m}`]; let w = (H >= 13 ? 3 : 1) * (m % 5 === 0 ? 1 : 0.4) + (f ? f.err * 6 : 0); if (S.recent.some(r => r[0] % 12 === H % 12 && r[1] === m)) w *= 0.05; c.push([H, m, w]); }
+    let r = Math.random() * c.reduce((a, x) => a + x[2], 0); for (const x of c) { r -= x[2]; if (r <= 0) { S.recent.push([x[0] % 12 || 12, x[1]]); if (S.recent.length > 4) S.recent.shift(); return x; } } return c[0];
+  }
+  function pickDur() {   // 出發時刻 5 分一格，走 10～55 分；跨過整點的比較常出（常忘了跨整點的更多）
+    const c = []; for (let t1 = 7 * 60; t1 <= 19 * 60; t1 += 5) for (let d = 10; d <= 55; d++) { const cross = t1 % 60 + d > 60, f = DB.facts[`g:${t1}:${d}`]; c.push([t1, d, (cross ? 1.5 + 3 * num(DB.errs.carry) : 0.6) * (d % 5 === 0 ? 0.6 : 1) + (f ? f.err * 6 : 0)]); }
+    let r = Math.random() * c.reduce((a, x) => a + x[2], 0); for (const x of c) { r -= x[2]; if (r <= 0) return x; } return c[0];
+  }
+  function start() { S = { i: 0, right: 0, recent: [], q: null, lastKind: '' }; show('read'); $('#o-rdone').hidden = true; next(); }
   function stop() { clock3.countStop(); clock3.ghost(null); S = null; }
   function prog() { $('#read-prog').innerHTML = `<span aria-hidden="true">⭐</span>${tx('read.prog', { n: S.right, t: N })}`; }
   function next() {
-    const [h, m] = pick(), who = WHOS[S.i % WHOS.length], keys = fluent(h, m) || DB.set.level === 3;
-    S.q = { h, m, who, keys, at: now(), fk: 0, wrong: false, typed: '' };
+    const kd = kind(); S.lastKind = kd; const who = WHOS[S.i % WHOS.length]; $('#read-target').hidden = true;
+    if (kd !== 'clock') return nextL3(kd, who);
+    const [h, m] = pick(), keys = fluent(h, m) || DB.set.level === 3;
+    S.q = { kind: 'clock', h, m, who, keys, at: now(), fk: 0, wrong: false, typed: '' };
     const H = h === 12 ? (Math.random() < 0.5 ? 0 : 12) : h < 6 ? h + 12 : Math.random() < 0.5 ? h : h + 12;   // 上下午隨便，小鎮的太陽只是氣氛
     clock3.set(H, m); Town.set(H * 60 + m); clock3.ghost(null); clock3.countStop();
     $('#read-emo').textContent = EMO[who]; $('#read-emo').className = 'emo'; $('#read-say').textContent = tx(keys ? 'read.sayKeys' : 'read.say', { who: tx('who.' + who) });
     $('#read-hint').hidden = true; prog();
     $('#read-opts').hidden = keys; $('#read-pad').hidden = !keys; $('#clock3').classList.toggle('small', keys);
-    if (keys) { renderPad(); } else $('#read-opts').innerHTML = options(h, m).map(o => `<button type="button" class="opt" data-t="${o[0]}" data-h="${o[1]}" data-m="${o[2]}">${o[1]}:${String(o[2]).padStart(2, '0')}</button>`).join('');
+    if (keys) { renderPad(); fitRead(); } else { $('#clock3').style.width = ''; }
+    if (keys) {} else $('#read-opts').innerHTML = options(h, m).map(o => `<button type="button" class="opt" data-t="${o[0]}" data-h="${o[1]}" data-m="${o[2]}">${o[1]}:${String(o[2]).padStart(2, '0')}</button>`).join('');
   }
+  // 等級 3 的兩種題：都用鍵盤；鐘上是那個時刻（24 小時制）或到的時刻（走了幾分鐘）
+  function nextL3(kd, who) {
+    let q; if (kd === 'h24') { const [H, m] = pick24(); q = { kind: 'h24', H, h: H % 12 || 12, m, T: H * 60 + m }; } else { const [t1, d] = pickDur(); const T = t1 + d; q = { kind: 'dur', t1, d, T, h: Math.floor(T / 60) % 12 || 12, m: T % 60 }; }
+    S.q = Object.assign(q, { who, keys: true, at: now(), fk: 0, wrong: false, typed: '' });
+    clock3.set(Math.floor(q.T / 60), q.T % 60); Town.set(q.T); clock3.ghost(null); clock3.countStop();
+    $('#read-emo').textContent = EMO[who]; $('#read-emo').className = 'emo';
+    const wT = timeWords(q.T);
+    if (kd === 'h24') $('#read-say').textContent = tx('read.say24', { who: tx('who.' + who), p: wT.period });
+    else { const w1 = timeWords(q.t1); $('#read-say').textContent = tx('read.sayDur', { who: tx('who.' + who), t1: w1.digital }); $('#read-target').innerHTML = `${w1.digital}<small>→ ?</small>`; $('#read-target').hidden = false; }
+    $('#read-hint').hidden = true; prog(); $('#read-opts').hidden = true; $('#read-pad').hidden = false; $('#clock3').classList.add('small'); renderPad(); fitRead();
+  }
+  const qKey = q => q.kind === 'h24' ? `a:${q.H}:${q.m}` : q.kind === 'dur' ? `g:${q.t1}:${q.d}` : key(q.h, q.m);
+  const qInduce = q => q.kind === 'h24' ? (q.H >= 13 ? ['ampm', 'other'] : ['other']) : q.kind === 'dur' ? (q.t1 % 60 + q.d > 60 ? ['carry', 'other'] : ['other']) : inducible(q.h, q.m);
+  // 打數字時：鍵盤要整個在畫面內。題目比較長（英文、西班牙文、走了幾分鐘）就把鐘縮小剛好那麼多（最小 110px）
+  function fitRead() {
+    const c = $('#clock3'); c.style.width = ''; if ($('#read-pad').hidden || $('#s-read').hidden) return;
+    const over = $('#read-pad').getBoundingClientRect().bottom - (innerHeight - 6); if (over <= 0) return;
+    c.style.width = Math.max(110, c.getBoundingClientRect().width - over) + 'px';
+  }
+  addEventListener('resize', () => { if (S) fitRead(); });
   function renderPad() { $('#read-in').textContent = fmt(S.q.typed); $('#read-in').className = 'padin'; if (!$('#read-keys').children.length) $('#read-keys').innerHTML = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'del', 0, 'ok'].map(k => `<button type="button" class="key${k === 'ok' ? ' ok' : ''}" data-k="${k}">${k === 'ok' ? tx('key.ok') : k === 'del' ? '⌫' : k}</button>`).join(''); $('#read-keys .ok').textContent = tx('key.ok'); }
-  const fmt = t => t.length <= 2 ? (t || '·') : t.slice(0, -2) + ':' + t.slice(-2);   // 720 → 7:20、1230 → 12:30
+  const fmt = t => S && S.q && S.q.kind === 'dur' ? (t ? tx('u.min', { n: t }) : '·') : t.length <= 2 ? (t || '·') : t.slice(0, -2) + ':' + t.slice(-2);   // 720 → 7:20、1230 → 12:30；走了幾分鐘：25 → 25 分
   function hint(type, h, m) {
-    const h1 = h, h2 = h % 12 + 1, kk = ['hourLate', 'halfHour', 'minIndex', 'handSwap', 'minNear', 'hourOff', 'read12'].includes(type) ? 'hint.' + type : S.q.keys ? 'hint.tryKeys' : 'hint.tryAgain';
-    const el = $('#read-hint'); el.className = 'bubble'; el.textContent = tx(kk, { h1, h2 }); el.hidden = false;
-    if (type === 'minIndex') clock3.countTo(m);
+    const q = S.q, h1 = h, h2 = h % 12 + 1, wT = timeWords(q.T !== undefined ? q.T : h * 60 + m);
+    let kk = ['hourLate', 'halfHour', 'minIndex', 'handSwap', 'minNear', 'minOne', 'hourOff', 'read12'].includes(type) ? 'hint.' + type : S.q.keys ? 'hint.tryKeys' : 'hint.tryAgain';
+    if (type === 'ampm') kk = q.H >= 13 ? 'hint.ampm' : 'hint.ampmAm';
+    const cross = q.kind === 'dur' && q.t1 % 60 + q.d > 60; if (q.kind === 'dur' && !['minIndex', 'minOne', 'hourLate'].includes(type)) kk = cross ? 'hint.carry' : 'hint.dur1';
+    const el = $('#read-hint'); el.className = 'bubble'; el.textContent = tx(kk, { h1, h2, h: q.h, H: q.H, p: wT.period, m5: Math.floor(m / 5) * 5, t1: q.t1 !== undefined ? timeWords(q.t1).digital : '', t2: wT.digital, a: q.t1 !== undefined ? 60 - q.t1 % 60 : 0, b: q.t1 !== undefined ? q.d - (60 - q.t1 % 60) : 0, h3: q.t1 !== undefined ? (Math.floor(q.t1 / 60) + 1) % 12 || 12 : 0 });
+    if (q.kind === 'dur') el.insertAdjacentHTML('beforeend', timeline(q.t1, q.T));   // 走了幾分鐘：時間線
+    if (q.keys) { el.classList.add('over'); el.insertAdjacentHTML('beforeend', `<button type="button" class="btn" id="read-hint-ok">${esc(tx('hint.ok'))}</button>`); }   // 打數字時：提示蓋在鍵盤上，按「知道了」再打
+    el.hidden = false;
+    if (type === 'minIndex') clock3.countTo(m); if (type === 'minOne') clock3.countOne(m);
     const emo = $('#read-emo'); emo.classList.remove('tilt'); void emo.offsetWidth; emo.classList.add('tilt'); SFX.hm();
   }
-  function wrong(type) { const q = S.q; if (!q.wrong) { q.wrong = true; record(key(q.h, q.m), false, 0, type, null); } hint(type, q.h, q.m); }
+  function wrong(type) { const q = S.q; if (!q.wrong) { q.wrong = true; record(qKey(q), false, 0, type, null); } hint(type, q.h, q.m); }
   function good(x, y) {
-    const q = S.q; if (q.done) return; q.done = true; clock3.countStop(); if (!q.wrong) { S.right++; record(key(q.h, q.m), true, Math.max(0, (q.fk || now()) - q.at), null, inducible(q.h, q.m)); }
+    const q = S.q; if (q.done) return; q.done = true; clock3.countStop(); if (!q.wrong) { S.right++; record(qKey(q), true, Math.max(0, (q.fk || now()) - q.at), null, qInduce(q)); }
     prog(); SFX.ding(); FX.burst(x, y, 24); if (!q.wrong) { Quest.add('read'); Pet.earn(1); } Quest.add('star'); const emo = $('#read-emo'); emo.classList.remove('jump'); void emo.offsetWidth; emo.classList.add('jump');
-    const el = $('#read-hint'); el.className = 'bubble good'; el.textContent = `${q.h}:${String(q.m).padStart(2, '0')}`; el.hidden = false;
+    const el = $('#read-hint'); el.className = 'bubble good'; el.textContent = q.kind === 'h24' ? `${q.H}:${String(q.m).padStart(2, '0')}` : q.kind === 'dur' ? `${timeWords(q.t1).digital} → ${timeWords(q.T).digital}：${tx('u.min', { n: q.d })}` : `${q.h}:${String(q.m).padStart(2, '0')}`;
+    if (q.kind === 'dur') el.insertAdjacentHTML('beforeend', timeline(q.t1, q.T)); if (q.keys) el.classList.add('over'); el.hidden = false;
     const me = S; setTimeout(() => { if (S !== me) return; if (++S.i < N) next(); else finish(); }, 900);
   }
   function finish() {
@@ -1384,19 +1476,32 @@ const Read = (() => {
     if (!S.q.fk) S.q.fk = now(); const r = b.getBoundingClientRect();
     if (b.dataset.t === 'ok') { b.classList.add('yes'); good(r.left + r.width / 2, r.top + r.height / 2); } else { b.classList.add('no'); wrong(b.dataset.t); }
   });
+  $('#read-hint').addEventListener('click', e => { if (e.target.closest('#read-hint-ok')) { $('#read-hint').hidden = true; SFX.tick(); } });
   $('#read-keys').addEventListener('click', e => {
     const b = e.target.closest('.key'); if (!b || !S || S.q.done) return; ac(); const q = S.q, k = b.dataset.k;
     if (k === 'del') q.typed = q.typed.slice(0, -1);
     else if (k === 'ok') {
+      if (q.kind === 'dur') {   // 走了幾分鐘：打分鐘數
+        if (!q.typed) return; const n = +q.typed;
+        if (n === q.d) { const r = $('#read-in').getBoundingClientRect(); good(r.left + r.width / 2, r.top + r.height / 2); return; }
+        const cross = q.t1 % 60 + q.d > 60, m1 = q.t1 % 60, m2 = q.T % 60;
+        const type = cross && [Math.abs(m2 - m1), 60 - m1, m2, q.d + 40, q.d - 40].includes(n) ? 'carry' : Math.abs(n - q.d) <= 4 ? 'minOne' : cross ? 'carry' : 'other';   // 跨整點常見：只算分鐘相減、只算到整點、只算整點後
+        wrong(type); q.typed = ''; $('#read-in').className = 'padin no'; setTimeout(() => { if (S && S.q === q) renderPad(); }, 500); return;
+      }
       if (q.typed.length < 3) return; const hh = +q.typed.slice(0, -2), mm = +q.typed.slice(-2);
+      if (q.kind === 'h24') {   // 24 小時制：打 15:20
+        if (hh === q.H && mm === q.m) { const r = $('#read-in').getBoundingClientRect(); good(r.left + r.width / 2, r.top + r.height / 2); return; }
+        const type = mm === q.m && ((q.H >= 13 && hh === q.H - 12) || (q.H < 12 && hh === q.H + 12)) ? 'ampm' : hh < 1 || hh > 23 || mm > 59 ? 'other' : classifySet((q.H % 12) * 60 + q.m, (hh % 12) * 60 + mm);   // 下午沒加 12、早上多加 12
+        wrong(type); q.typed = ''; $('#read-in').className = 'padin no'; setTimeout(() => { if (S && S.q === q) renderPad(); }, 500); return;
+      }
       if (hh === q.h && mm === q.m) { const r = $('#read-in').getBoundingClientRect(); good(r.left + r.width / 2, r.top + r.height / 2); return; }
       const type = hh < 1 || hh > 12 || mm > 59 ? 'other' : (q.m % 5 === 0 && q.m >= 5 && mm === q.m / 5 && hh === q.h) ? 'minIndex' : ((q.h === 12 && hh === 1) || (q.h === 1 && hh === 12)) && mm === q.m ? 'read12' : classifySet((q.h % 12) * 60 + q.m, (hh % 12) * 60 + mm);   // 讀鐘的錯法：7:20 打成 7:04 是把分針指的數字當分鐘
       wrong(type); q.typed = ''; $('#read-in').className = 'padin no'; setTimeout(() => { if (S && S.q === q) renderPad(); }, 500); return;
-    } else { if (q.typed.length >= 4) return; if (!q.fk) q.fk = now(); q.typed += k; SFX.tick(); }
+    } else { if (q.typed.length >= (q.kind === 'dur' ? 3 : 4)) return; if (!q.fk) q.fk = now(); q.typed += k; SFX.tick(); }
     $('#read-in').textContent = fmt(q.typed);
   });
   $('#rdone-again').addEventListener('click', start); $('#rdone-home').addEventListener('click', () => { $('#o-rdone').hidden = true; goHome(); });
-  return { start, stop, q: () => S && S.q };
+  return { start, stop, q: () => S && S.q, kind, only: k => { forceKind = k || ''; } };
 })();
 
 // ---------- 家長關卡：混合運算（先乘後加），答錯換題，連錯 3 次關掉 30 秒
@@ -1808,7 +1913,7 @@ if (DB.hinted) $('#hintline').hidden = true; refreshMenu(); whoChip();
 if (!DB.tut) Tut.start(false);
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock6, Tut, Music, SFX, WHO: () => WHO, keyFor, bkParse, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock6, Tut, Music, SFX, WHO: () => WHO, keyFor, bkParse, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet, timeline };   // 給測試用
 })();
 </script>
 </body>

@@ -8,6 +8,7 @@ const SHOT = process.argv[2];
     const p = await (await b.newContext({ viewport: { width: w, height: h }, hasTouch: true })).newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.addInitScript(`localStorage.setItem('tick-town-v1', JSON.stringify({ set: { lang: '${lang}', sound: false, level: ${level} }, free: 420, hinted: true, errs: { hourLate: 0.4 } }));`);
     await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(300);
+    await p.evaluate(() => window.__tt.Read.only('clock'));   // 這裡測一般讀鐘；等級 3 的 24 小時制、走了幾分鐘在 tests/grade3.js
     await p.click('[data-mode=read]'); await p.waitForTimeout(300);
     ok(await p.isVisible('#s-read'), `${lang} 進入幾點了`);
     const q = () => p.evaluate(() => window.__tt.Read.q());
