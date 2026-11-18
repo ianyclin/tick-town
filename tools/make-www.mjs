@@ -12,7 +12,7 @@ rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 for (const f of ['index.html', 'manifest.json']) cpSync(join(root, f), join(out, f));
 cpSync(join(root, 'assets'), join(out, 'assets'), { recursive: true, filter: src => !/icon-1024/.test(src) });
-for (const f of ['index.html', 'assets/fonts', 'assets/icons/icon-512.png']) {
+for (const f of ['index.html', 'assets/fonts', 'assets/clay', 'assets/icons/icon-512.png']) {
   if (!existsSync(join(out, f))) { console.error('缺少 ' + f); process.exit(1); }
 }
 console.log('www/ 完成');

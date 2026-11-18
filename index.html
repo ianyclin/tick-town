@@ -329,7 +329,7 @@ h1{color:#fff;text-shadow:0 2px 0 #e58aa2,0 4px 0 rgba(150,70,95,.35),0 6px 10px
 .mode[data-mode=match]{--m1:#fff3b0;--m2:#ffe07a;--m3:#e5b740}
 .mode[data-mode=shop]{--m1:#e6dcff;--m2:#cdbdf5;--m3:#a48fdc}
 .mode[data-mode=versus]{--m1:#d3f6de;--m2:#a8e8bf;--m3:#72c693}
-.mode .emo{font-size:36px}
+.mode .emo{font-size:34px;background:rgba(255,255,255,.6);border-radius:50%;padding:5px;box-shadow:inset 0 2px 3px rgba(120,80,60,.14),0 1px 0 rgba(255,255,255,.7)}
 .m-lock{background:linear-gradient(180deg,#8fe3b6,#66cf9c);color:#1f4a35;box-shadow:0 2px 0 #46a878,inset 0 1px 1px rgba(255,255,255,.7);top:-10px}
 .m-lock.locked{background:var(--pan);box-shadow:0 2px 0 #e3ccb4,inset 0 1px 1px #fff;padding:2px 5px}
 /* 可以選的東西：沒選是凹下去的淺色，選了是亮亮的藍色軟陶 */
@@ -373,14 +373,14 @@ img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px
 .emo .ic,.big .ic{display:block}.scene .emo .ic{display:inline-block}.big .ic{width:1.3em;height:1.3em;margin:0 auto}
 .big img.av{height:1.5em;margin:0 auto}
 .task .emo{font-size:52px}
-@media (max-height:640px){.task .emo{font-size:40px}.mode .emo{font-size:28px}}
-@media (max-width:420px){.mode{border-radius:20px}.mode .emo{font-size:30px!important}}
+@media (max-height:640px){.task .emo{font-size:40px}.mode .emo{font-size:26px;padding:3px}}
+@media (max-width:420px){.mode{border-radius:20px}.mode .emo{font-size:28px!important;padding:4px}}
 </style>
 </head>
 <body>
 <canvas id="town"></canvas>
 <svg id="ck-defs" width="0" height="0" style="position:absolute" aria-hidden="true"><defs><radialGradient id="ckRim" cx="32%" cy="24%" r="85%"><stop offset="0" stop-color="#ffefb0"/><stop offset=".55" stop-color="#ffcd62"/><stop offset="1" stop-color="#ee9f37"/></radialGradient><radialGradient id="ckFace"><stop offset="0" stop-color="#fffdf8"/><stop offset=".82" stop-color="#fff8ea"/><stop offset=".95" stop-color="#f6e3c6"/><stop offset="1" stop-color="#e3c69d"/></radialGradient><radialGradient id="ckRing"><stop offset="0" stop-color="#fff6e6"/><stop offset=".86" stop-color="#fff6e6"/><stop offset=".96" stop-color="#ffeccf"/><stop offset="1" stop-color="#f3d7ae"/></radialGradient><radialGradient id="ckSh"><stop offset=".8" stop-color="#5a3344" stop-opacity=".3"/><stop offset="1" stop-color="#5a3344" stop-opacity="0"/></radialGradient><linearGradient id="ckH"><stop offset="0" stop-color="#2f6cc0"/><stop offset=".4" stop-color="#6fb0f5"/><stop offset="1" stop-color="#2b63b3"/></linearGradient><linearGradient id="ckM"><stop offset="0" stop-color="#d64545"/><stop offset=".4" stop-color="#ff8a82"/><stop offset="1" stop-color="#cf3f40"/></linearGradient><radialGradient id="ckShell" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#b5ec8c"/><stop offset=".6" stop-color="#74c653"/><stop offset="1" stop-color="#4c9c3a"/></radialGradient><radialGradient id="ckSkin" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#d9f7b8"/><stop offset="1" stop-color="#9ad672"/></radialGradient><radialGradient id="ckFur" cx="38%" cy="28%" r="85%"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#fff3ec"/><stop offset="1" stop-color="#ecd3c8"/></radialGradient><radialGradient id="ckCap" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="#fff3b8"/><stop offset=".6" stop-color="#ffc64f"/><stop offset="1" stop-color="#e3922a"/></radialGradient><radialGradient id="ckBlush"><stop offset="0" stop-color="#ff8f9c" stop-opacity=".8"/><stop offset="1" stop-color="#ff8f9c" stop-opacity="0"/></radialGradient></defs></svg>
-<div id="splash" aria-hidden="true"><div class="sp-clock"><img src="assets/icons/icon-512.png" alt=""></div><b class="sp-title" data-t="title"></b></div>
+<div id="splash" aria-hidden="true"><div class="sp-clock"><img src="assets/icons/splash.webp" alt=""></div><b class="sp-title" data-t="title"></b></div>
 
 <section class="screen" id="s-menu">
   <div class="top">
@@ -1262,8 +1262,11 @@ const ART = (() => {
   return { doc, url, art, HEAD, TOWER, WIN, pet, DEFS, P, el, ci, pa, rc, eye, blush, shadow, mouth, sleepEye, INK };
 })();
 // 圖從哪裡來：assets/clay/ 裡有的（CLAY 列出的，ChatGPT 生成的軟陶插畫）用檔案，沒有的用上面自己畫的
-const CLAY = new Set([]);
-const artSrc = name => CLAY.has(name) ? `assets/clay/${name}.webp` : ART.url(name);
+const CLAY = new Set('bakery balloon bear bench bunny bush cloud1 cloud2 flowers fountain g-bow g-crown g-glasses g-hat g-scarf g-star house-0 house-1 house-2 house-3 house-4 house-5 i-acorn i-alarm i-bulb i-cards i-finger i-gear i-house i-lock i-map i-now i-party i-paw i-quest i-robot i-star i-starhappy i-trophy i-two i-wrench i-zzz moon owl p-backpack p-ball p-bath p-book p-books p-bowl p-pot p-riceball pet-bear-0 pet-bear-1 pet-bear-2 pet-bear-3 pet-bear-4 pet-owl-0 pet-owl-1 pet-owl-2 pet-owl-3 pet-owl-4 pet-squirrel-0 pet-squirrel-1 pet-squirrel-2 pet-squirrel-3 pet-squirrel-4 rabbithead squirrel sun swing title tower tree turtle windmill'.split(' '));
+// 同一張圖的別名（圖示借用小東西、烏龜、月亮、蛋的圖）
+const CLAY_AS = { 'i-bowl': 'p-bowl', 'i-backpack': 'p-backpack', 'i-riceball': 'p-riceball', 'i-book': 'p-book', 'i-ball': 'p-ball', 'i-pot': 'p-pot', 'i-bath': 'p-bath', 'i-books': 'p-books', 'i-turtle': 'turtle', 'i-moon': 'moon', 'i-egg': 'pet-owl-0', zzz: 'i-zzz', rabbit: 'bunny' };
+const clayName = name => { const n = CLAY_AS[name] || name; return CLAY.has(n) ? n : ''; };
+const artSrc = name => clayName(name) ? `assets/clay/${clayName(name)}.webp` : ART.url(name);
 const ic = name => `<img class="ic" src="${artSrc('i-' + name)}" alt="" aria-hidden="true" draggable="false">`;
 const av = who => `<img class="av" src="${artSrc(who === 'rabbit' ? 'bunny' : who === 'robot' ? 'i-robot' : who)}" alt="" draggable="false">`;
 function fillIcons(root) { (root || document).querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = ic(e.dataset.ic); }); (root || document).querySelectorAll('[data-av]').forEach(e => { e.innerHTML = av(e.dataset.av); }); }
@@ -1406,11 +1409,11 @@ function Clock(el, opts = {}) {
   const tks = [];
   for (let i = 0; i < 60; i++) { const big = i % 5 === 0, a = i * 6 * Math.PI / 180, r1 = big ? 77 : 81.5, r2 = 85; svg.appendChild(tks[i] = mk('line', { x1: C + r1 * Math.sin(a), y1: C - r1 * Math.cos(a), x2: C + r2 * Math.sin(a), y2: C - r2 * Math.cos(a), stroke: big ? '#7a5544' : '#d6bda0', 'stroke-width': big ? 3.2 : 1.6, 'stroke-linecap': 'round' })); }
   for (let n = 1; n <= 12; n++) { const a = n * 30 * Math.PI / 180, t = mk('text', { x: C + 66 * Math.sin(a), y: C - 66 * Math.cos(a) + 7, 'text-anchor': 'middle', 'font-size': 19, 'font-weight': 900, fill: '#5b4034', 'font-family': 'var(--f-num)' }); t.textContent = n; svg.appendChild(t); }
-  // 時針：烏龜（從上面看，頭朝外）。有軟陶插畫（assets/clay/turtle.webp）就用插畫
+  // 時針：烏龜（從上面看，頭朝外）。有軟陶插畫（assets/clay/turtle.webp）就用插畫；插畫的烏龜往裡面放（最外面到半徑 58），不蓋住牠指的數字
   const gh = mk('g', { class: 'hand hour' });
   gh.appendChild(mk('rect', { x: C - 5.5, y: C - 46, width: 11, height: 54, rx: 5.5, fill: 'url(#ckH)', stroke: '#2a5ea8', 'stroke-width': 0.7 }));
   const tort = mk('g', { transform: `translate(${C} ${C - 50})` });
-  if (CLAY.has('turtle')) tort.appendChild(mk('image', { href: 'assets/clay/turtle.webp', x: -15, y: -16, width: 30, height: 30 }));
+  if (CLAY.has('turtle')) tort.appendChild(mk('image', { href: 'assets/clay/turtle.webp', x: -16, y: -9, width: 32, height: 32 }));
   else {
     for (const [x, y] of [[-9.5, -5], [9.5, -5], [-9.5, 7], [9.5, 7]]) tort.appendChild(mk('circle', { cx: x, cy: y, r: 3.6, fill: 'url(#ckSkin)', stroke: '#6fae52', 'stroke-width': 0.6 }));
     tort.appendChild(mk('circle', { cx: 0, cy: -8.6, r: 5, fill: 'url(#ckSkin)', stroke: '#6fae52', 'stroke-width': 0.6 }));
@@ -1426,7 +1429,7 @@ function Clock(el, opts = {}) {
   const gm = mk('g', { class: 'hand minute' });
   gm.appendChild(mk('rect', { x: C - 4, y: C - 72, width: 8, height: 80, rx: 4, fill: 'url(#ckM)', stroke: '#c23a3b', 'stroke-width': 0.7 }));
   const rab = mk('g', { transform: `translate(${C} ${C - 78})` });
-  if (CLAY.has('rabbithead')) rab.appendChild(mk('image', { href: 'assets/clay/rabbithead.webp', x: -12, y: -23, width: 24, height: 34 }));
+  if (CLAY.has('rabbithead')) rab.appendChild(mk('image', { href: 'assets/clay/rabbithead.webp', x: -12.5, y: -22, width: 25, height: 33 }));
   else {
     for (const sx of [-1, 1]) { rab.appendChild(mk('ellipse', { cx: 4.2 * sx, cy: -13, rx: 3.4, ry: 8.5, fill: 'url(#ckFur)', stroke: '#dcbcb0', 'stroke-width': 0.7, transform: `rotate(${6 * sx} ${4.2 * sx} -6)` })); rab.appendChild(mk('ellipse', { cx: 4.2 * sx, cy: -12.5, rx: 1.5, ry: 5.6, fill: '#ffbccb', transform: `rotate(${6 * sx} ${4.2 * sx} -6)` })); }
     rab.appendChild(mk('ellipse', { cx: 0, cy: 0.5, rx: 10.5, ry: 9.5, fill: 'url(#ckFur)', stroke: '#dcbcb0', 'stroke-width': 0.8 }));
@@ -1497,9 +1500,9 @@ function setRingAll(on) { CLOCKS.forEach(c => c.setRing(on)); }
 
 // ---------- 小鎮（canvas 背景）：天空、太陽／月亮、山、房子、路燈、動物都跟著時刻變
 // 鐘樓的鐘面在圖的哪裡（ar 寬高比、cy 鐘面中心在圖高的幾分之幾、cr 鐘面半徑是圖寬的幾分之幾、perch／px 貓頭鷹站的地方）；房子的窗戶 [x, y, 半徑]（都是圖寬高的比例）
-const CLAY_TOWER = { ar: 0.5, cy: 0.4, cr: 0.25, perch: 0.25, px: 0.3 }, CLAY_WIN = [];
+const CLAY_TOWER = { ar: 0.406, cy: 0.417, cr: 0.335, perch: 0.335, px: 0.47 }, CLAY_WIN = [0, 1, 2, 3, 4, 5].map(() => [[0.245, 0.682, 0.07], [0.757, 0.682, 0.07]]);
 const TOWER_AT = () => CLAY.has('tower') ? CLAY_TOWER : Object.assign({ perch: 0.235, px: 0.3 }, ART.TOWER);
-const HOUSE_WIN = i => CLAY.has('house-' + i) ? (CLAY_WIN[i] || []) : ART.WIN.map(([x, y]) => [x / 120, y / 130, 7.5 / 120]);
+const HOUSE_WIN = i => CLAY.has('house-' + i) ? (CLAY_WIN[i] || []) : ART.WIN.map(([x, y]) => [x / 120, y / 130, 7.5 / 120, 1]);   // 第四個是 1：圓窗（自己畫的房子）；插畫的窗是圓角方形
 // ---------- 小鎮：軟陶玩具的小鎮。天空用漸層畫；山、草地、小路畫一次存起來；房子、鐘樓、動物是一張張的圖（SPR）
 // 晚上的做法：地上的東西先畫在另一層（land），整層蓋一層藍，再疊回天空上，最後才畫會發光的（窗戶、路燈、鐘面）
 const Town = (() => {
@@ -1524,7 +1527,7 @@ const Town = (() => {
   function spr(name) {
     let s = SPR[name]; if (s) return s.ok ? s.im : null;
     s = SPR[name] = { im: new Image(), ok: false }; s.im.onload = () => { s.ok = true; backKey = ''; draw(); };
-    const src = CLAY.has(name) ? `assets/clay/${name}.webp` : ART.art[name.split(':')[0]] ? ART.url(name.split(':')[0], name.includes(':lit') ? { lit: 1 } : name.includes(':sleep') ? { sleep: 1 } : undefined) : '';
+    const src = clayName(name) ? `assets/clay/${clayName(name)}.webp` : ART.art[name.split(':')[0]] ? ART.url(name.split(':')[0], name.includes(':lit') ? { lit: 1 } : name.includes(':sleep') ? { sleep: 1 } : undefined) : '';
     if (src) s.im.src = src; return null;
   }
   function bmp(name, hpx) {
@@ -1538,7 +1541,7 @@ const Town = (() => {
     g.save(); g.translate(x, y); if (dir < 0) g.scale(-1, 1); g.drawImage(b, -w / 2, -hh, w, hh); g.restore(); return w;
   }
   const prop = (name, x, y, sz) => thing('p-' + name, x, y, sz, 1, 0.5);
-  function critter(k, x, y, sz, pr, dir) { thing(k, x, y, sz, dir, 0.42); if (pr) prop(pr, x + sz * 0.5, y + 2, sz * 0.46); }
+  function critter(k, x, y, sz, pr, dir) { const w = thing(k, x, y, k === 'bunny' ? sz * 1.16 : sz, dir, 0.42); if (pr) prop(pr, x + (w || sz * 0.7) * 0.5 + sz * 0.2, y + 2, sz * 0.44); }   // 小兔有長耳朵，整張圖比較高
   const glow = (x, y, r, a, col = '255,228,130') => { const rg = g.createRadialGradient(x, y, 0, x, y, r); rg.addColorStop(0, `rgba(${col},${a})`); rg.addColorStop(1, `rgba(${col},0)`); g.fillStyle = rg; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); };
   // ---------- 山、草地、小路：畫一次存在 back（視窗大小變了才重畫）
   function hill(cx, top, rx, ry, c1, c2) {
@@ -1597,8 +1600,8 @@ const Town = (() => {
     g = lg; g.clearRect(0, 0, W, H); g.drawImage(back, 0, 0, W, H);
     deco(gy, hw, 'back');
     const T = TOWER_AT(), th = tw * 2.6, twW = th * T.ar, towerTop = gy + 4 - th, tcx = W / 2, tcy = towerTop + th * T.cy, tcr = twW * T.cr; thing('tower', tcx, gy + 4, th, 1, 0.42);
-    const onI = i => lit || (mode === 'day' && litT && i < Math.round(litN / litT * n)), hh = hw * 1.42, wins = [];   // 小鎮的一天：做完幾件事就亮幾間
-    for (let i = 0; i < n; i++) { const w = thing('house-' + i, HX[i] + hw / 2, gy + 4, hh, 1, 0.5); if (w && onI(i)) for (const [fx, fy, fr] of HOUSE_WIN(i)) wins.push([HX[i] + hw / 2 + (fx - 0.5) * w, gy + 4 - hh + fy * hh, fr * w]); }
+    const onI = i => lit || (mode === 'day' && litT && i < Math.round(litN / litT * n)), hh = hw * (CLAY.has('house-0') ? 1.24 : 1.42), wins = [];   // 小鎮的一天：做完幾件事就亮幾間
+    for (let i = 0; i < n; i++) { const w = thing('house-' + i, HX[i] + hw / 2, gy + 4, hh, 1, 0.5); if (w && onI(i)) for (const [fx, fy, fr, rd] of HOUSE_WIN(i)) wins.push([HX[i] + hw / 2 + (fx - 0.5) * w, gy + 4 - hh + fy * hh, fr * w, rd]); }
     const lamps = [HX[2] + hw + gapS / 2, HX[3] - gapS / 2];
     for (const x of lamps) { const pg = g.createLinearGradient(x - 3, 0, x + 3, 0); pg.addColorStop(0, '#c9d3e0'); pg.addColorStop(0.4, '#f4f7fb'); pg.addColorStop(1, '#9aa7b8'); g.strokeStyle = pg; g.lineWidth = 5; g.lineCap = 'round'; g.beginPath(); g.moveTo(x, gy + 2); g.lineTo(x, gy - hw); g.stroke();
       const lgd = g.createRadialGradient(x - 2, gy - hw - 7, 1, x, gy - hw - 4, 8); lgd.addColorStop(0, '#ffffff'); lgd.addColorStop(1, '#ffe9a8'); g.fillStyle = lgd; g.beginPath(); g.arc(x, gy - hw - 4, 7.5, 0, 7); g.fill(); }
@@ -1614,7 +1617,7 @@ const Town = (() => {
     g = g0; g.drawImage(land, 0, 0, W, H);
     deco(gy, hw, 'sky');
     // 會發光的：窗戶、路燈、鐘面；鐘樓的指針跟著現在的時刻走
-    for (const [x, y, r] of wins) { g.fillStyle = '#ffe680'; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.fillStyle = 'rgba(255,255,255,.55)'; g.beginPath(); g.arc(x - r * 0.25, y - r * 0.25, r * 0.4, 0, 7); g.fill(); if (br < 0.9) glow(x, y, r * 4, 0.5 * (1 - br) + 0.15); }
+    for (const [x, y, r, rd] of wins) { g.fillStyle = '#ffe680'; rr(x - r, y - r, r * 2, r * 2, rd ? r : r * 0.45); g.fill(); g.fillStyle = 'rgba(255,255,255,.5)'; g.beginPath(); g.arc(x - r * 0.3, y - r * 0.3, r * 0.35, 0, 7); g.fill(); if (br < 0.9) glow(x, y, r * 4, 0.5 * (1 - br) + 0.15); }
     if (night) for (const x of lamps) { g.fillStyle = '#fff3b0'; g.beginPath(); g.arc(x, gy - hw - 4, 7.5, 0, 7); g.fill(); glow(x, gy - hw - 4, 60, 0.55); }
     if (bmp('tower', th)) {
       if (night) glow(tcx, tcy, tcr * 2.8, 0.5); g.fillStyle = night ? '#fff6cf' : '#fffaf0'; g.beginPath(); g.arc(tcx, tcy, tcr, 0, 7); g.fill();
@@ -2273,7 +2276,21 @@ const Versus = (() => {
 
 // ---------- 寵物：答對掉橡果，餵了會長大；徽章解鎖配件。沒有飢餓、沒有倒扣
 // 寵物的圖：自己畫的（ART.pet：蛋 → 坐在蛋殼裡 → 越長越大），配件直接畫在同一張圖裡、跟著縮放
-function petSVG(kind, st, wear) { if (!PET_KINDS[kind]) return ''; return `<svg viewBox="0 0 120 120">${ART.DEFS}${ART.pet(kind, st, st > 0 ? wear : null)}</svg>`; }
+// 插畫版：CLAY_PET[種類][階段] = [兩眼中間 x, 眼睛 y, 兩眼距離, 頭頂 y, 寬高比]（x、兩眼距離是圖寬的比例，y 是圖高的比例；tools/cut-clay.py 切完後用眼睛的兩顆黑點量的）
+const CLAY_PET = { owl: [[0, 0, 0, 0, 0.85], [0.496, 0.309, 0.301, 0.003, 0.925], [0.5, 0.299, 0.332, 0, 0.83], [0.498, 0.305, 0.332, 0.003, 0.818], [0.503, 0.315, 0.346, 0, 0.812]],
+  squirrel: [[0, 0, 0, 0, 0.838], [0.501, 0.368, 0.327, 0.087, 0.868], [0.385, 0.365, 0.328, 0.095, 0.82], [0.363, 0.346, 0.312, 0.092, 0.83], [0.361, 0.353, 0.319, 0.098, 0.84]],
+  bear: [[0, 0, 0, 0, 0.795], [0.493, 0.357, 0.347, 0.098, 0.792], [0.494, 0.347, 0.402, 0.09, 0.652], [0.499, 0.34, 0.398, 0.08, 0.64], [0.499, 0.342, 0.408, 0.077, 0.637]] };
+const PET_H = [56, 62, 68, 80, 92];   // 每個階段畫多高（120 單位）
+// 配件：[寬是兩眼距離的幾倍, 寬高比, 放哪裡(ex, ey, u, top) => [中心 x, 中心 y], 旋轉]
+const GEAR_FIT = { bow: [1.15, 1.225, (ex, ey, u, top) => [ex - u * 0.95, top + u * 0.42], -18], star: [1.35, 1.753, (ex, ey, u, top) => [ex + u * 1.0, top + u * 0.5], 16], hat: [1.7, 1.243, (ex, ey, u, top) => [ex, top - u * 0.27], 0], crown: [1.55, 1.552, (ex, ey, u, top) => [ex, top - u * 0.22], 0],
+  glasses: [2.0, 2.349, (ex, ey) => [ex, ey], 0], scarf: [1.3, 0.883, (ex, ey, u) => [ex, ey + u * 1.28], 0] };
+function petSVG(kind, st, wear) {
+  if (!PET_KINDS[kind]) return '';
+  if (!CLAY.has(`pet-${kind}-${st}`)) return `<svg viewBox="0 0 120 120">${ART.DEFS}${ART.pet(kind, st, st > 0 ? wear : null)}</svg>`;
+  const d = CLAY_PET[kind][st], hh = PET_H[st], w = hh * d[4], x0 = 60 - w / 2, y0 = 115 - hh, ex = x0 + d[0] * w, ey = y0 + d[1] * hh, u = d[2] * w, top = y0 + d[3] * hh;
+  const gear = sl => { const id = st > 0 && wear && wear[sl], f = GEAR_FIT[id]; if (!f || !CLAY.has('g-' + id)) return ''; const gw = f[0] * u, gh = gw / f[1], [cx, cy] = f[2](ex, ey, u, top); return `<image data-g="${id}" href="assets/clay/g-${id}.webp" x="${(cx - gw / 2).toFixed(1)}" y="${(cy - gh / 2).toFixed(1)}" width="${gw.toFixed(1)}" height="${gh.toFixed(1)}"${f[3] ? ` transform="rotate(${f[3]} ${cx.toFixed(1)} ${cy.toFixed(1)})"` : ''}/>`; };
+  return `<svg viewBox="0 0 120 120"><ellipse cx="60" cy="114" rx="${(w * 0.42).toFixed(1)}" ry="4.5" fill="#3a2a55" opacity=".16"/><image href="assets/clay/pet-${kind}-${st}.webp" x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${w.toFixed(1)}" height="${hh}"/>${gear('neck')}${gear('head')}${gear('face')}</svg>`;
+}
 const Pet = (() => {
   const P = () => DB.pet, name = () => tx('kname.' + P().kind);
   function earn(n) { P().acorn += n; save(); if (mode === 'menu') $('#b-acorn').textContent = P().acorn; }

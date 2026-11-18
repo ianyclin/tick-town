@@ -23,11 +23,14 @@ const emoIn = t => [...t].filter(ch => EMO.test(ch) && !OKCH.test(ch));
     await check('主選單');
     // 鐘的漸層：鐘面中間偏右上的一點應該是奶油色（漸層失效會變透明，露出後面的天空或草地）
     const face = await p.evaluate(() => { const c = document.querySelector('#clock svg circle[fill="url(#ckFace)"]'); return c ? getComputedStyle(c).fill : ''; }); ok(/ckFace/.test(face) && await p.evaluate(() => !!document.querySelector('#ck-defs #ckFace')), `${lang} 鐘面的漸層在（${face.slice(0, 30)}）`);
+    // 軟陶插畫有用上：針尖的烏龜和兔子、主選單鈕的圖示、小鎮的圖都是 assets/clay/ 的檔案
+    ok(await p.evaluate(() => !!document.querySelector('#clock image[href*="clay/turtle"]') && !!document.querySelector('#clock image[href*="clay/rabbithead"]')), `${lang} 針尖是軟陶的烏龜和兔子`);
+    ok(await p.evaluate(() => [...document.querySelectorAll('#modes img.ic')].every(i => /assets\/clay\//.test(i.getAttribute('src')))), `${lang} 主選單鈕的圖示是軟陶插畫`);
     for (const m of ['day', 'read', 'match', 'shop']) { await p.click(`[data-mode=${m}]`); await p.waitForTimeout(350); await check(m); await p.click(`#s-${m} [data-home]`); await p.waitForTimeout(250); }
     await p.click('[data-mode=versus]'); await p.waitForTimeout(200); await check('雙人選單'); await p.click('#vs-start'); await p.waitForTimeout(300); await check('雙人'); await p.click('#s-versus [data-home]'); await p.waitForTimeout(250);
     await p.click('#go-map'); await p.waitForTimeout(250); await check('星圖'); await p.click('#s-map [data-home]');
     await p.click('#go-quest'); await p.waitForTimeout(200); await check('今日任務'); await p.click('#quest-close');
-    await p.click('#go-pet'); await p.waitForTimeout(400); await check('寵物'); await p.click('#s-pet [data-home]');
+    await p.click('#go-pet'); await p.waitForTimeout(400); await check('寵物'); ok(await p.evaluate(() => { const g = [...document.querySelectorAll('#pet-stage image')].map(i => i.getAttribute('href')); return g.some(h => /pet-owl-/.test(h)) && g.filter(h => /\/g-/.test(h)).length === 3; }), `${lang} 寵物是軟陶插畫、戴著三樣配件`); await p.click('#s-pet [data-home]');
     await p.click('#go-set'); await p.waitForTimeout(200); await check('設定'); await p.click('#go-help'); await p.waitForTimeout(200); await check('遊戲說明'); await p.click('#help-close'); await p.click('#go-about'); await p.waitForTimeout(200); await check('關於'); await p.click('#about-close'); await p.click('#go-tut'); await p.waitForTimeout(500); await check('教學');
     // 小鎮：要用的圖都載入了（太陽、房子、鐘樓、動物）
     const spr = await p.evaluate(() => window.__tt.Town.img()); ok(['tower', 'house-0', 'house-5', 'sun'].every(k => spr.includes(k)), `${lang} 小鎮的圖：${spr.length} 張（${spr.slice(0, 6).join('、')}…）`);
