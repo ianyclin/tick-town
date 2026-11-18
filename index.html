@@ -1547,7 +1547,7 @@ const HOUSE_WIN = i => CLAY.has('house-' + i) ? (CLAY_WIN[i] || []) : ART.WIN.ma
 // 晚上的做法：地上的東西先畫在另一層（land），整層蓋一層藍，再疊回天空上，最後才畫會發光的（窗戶、路燈、鐘面）
 const Town = (() => {
   const cv = $('#town'), g0 = cv.getContext('2d'); let g = g0, W = 0, H = 0, DPR = 1, t = 7 * 60, stars = [];
-  const land = document.createElement('canvas'), lg = land.getContext('2d'), back = document.createElement('canvas'), bg = back.getContext('2d'); let backKey = '';
+  const land = document.createElement('canvas'), lg = land.getContext('2d'), back = document.createElement('canvas'), bg = back.getContext('2d'), front = document.createElement('canvas'), fg = front.getContext('2d'); let backKey = '';   // front：房子前面的裝飾和動物（要畫在亮著的窗戶上面）
   const lerp = (a, b, k) => a + (b - a) * k;
   const hex = c => [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)];
   const mix = (a, b, k) => { const A = hex(a), B = hex(b); return `rgb(${Math.round(lerp(A[0], B[0], k))},${Math.round(lerp(A[1], B[1], k))},${Math.round(lerp(A[2], B[2], k))})`; };
@@ -1556,8 +1556,8 @@ const Town = (() => {
   const sky = h => { let i = 0; while (i < KF.length - 2 && KF[i + 1][0] <= h) i++; const a = KF[i], b = KF[i + 1], k = clamp((h - a[0]) / (b[0] - a[0]), 0, 1); return { top: mix(a[1], b[1], k), bot: mix(a[2], b[2], k), br: lerp(a[3], b[3], k) }; };
   function resize() {
     DPR = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight;
-    for (const c of [cv, land, back]) { c.width = W * DPR; c.height = H * DPR; } cv.style.width = W + 'px'; cv.style.height = H + 'px';
-    for (const c of [g0, lg, bg]) c.setTransform(DPR, 0, 0, DPR, 0, 0);
+    for (const c of [cv, land, back, front]) { c.width = W * DPR; c.height = H * DPR; } cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    for (const c of [g0, lg, bg, fg]) c.setTransform(DPR, 0, 0, DPR, 0, 0);
     stars = Array.from({ length: 60 }, () => [Math.random() * W, Math.random() * H * 0.55, Math.random() * 1.4 + 0.6]); bmpC = {}; backKey = ''; draw();
   }
   const rr = (x, y, w, hh, r) => { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + hh, r); g.arcTo(x + w, y + hh, x, y + hh, r); g.arcTo(x, y + hh, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); };
@@ -1645,16 +1645,9 @@ const Town = (() => {
     const lamps = [HX[2] + hw + gapS / 2, HX[3] - gapS / 2];
     for (const x of lamps) { const pg = g.createLinearGradient(x - 3, 0, x + 3, 0); pg.addColorStop(0, '#c9d3e0'); pg.addColorStop(0.4, '#f4f7fb'); pg.addColorStop(1, '#9aa7b8'); g.strokeStyle = pg; g.lineWidth = 5; g.lineCap = 'round'; g.beginPath(); g.moveTo(x, gy + 2); g.lineTo(x, gy - hw); g.stroke();
       const lgd = g.createRadialGradient(x - 2, gy - hw - 7, 1, x, gy - hw - 4, 8); lgd.addColorStop(0, '#ffffff'); lgd.addColorStop(1, '#ffe9a8'); g.fillStyle = lgd; g.beginPath(); g.arc(x, gy - hw - 4, 7.5, 0, 7); g.fill(); }
-    deco(gy, hw, 'front');
-    // 動物：依作息站在自己家門口（小熊住第 2 間、小兔第 5 間、松鼠第 6 間），晚上貓頭鷹在鐘樓上
-    const sc = scene(t), sz = hw * 1.25, door = i => HX[i] + hw / 2;
-    const AT = { wake: ['bear', door(1), ''], breakfast: ['bear', door(1), 'bowl'], school: ['bunny', door(4) + hw * 0.7, 'backpack'], lunch: ['squirrel', door(5), 'riceball'], class: ['bunny', door(4), 'book'], park: ['bear', W * 0.36, 'ball'], dinner: ['squirrel', door(5), 'pot'], bath: ['bunny', door(4), 'bath'], story: ['bear', door(1), 'books'] }[sc];
-    const walking = walks.map(w => w.who);
-    if (AT && !walking.includes(AT[0])) critter(AT[0], AT[1], gy + hw * 0.5, sz, AT[2]);
-    for (const w of walks) { const k = clamp((now() - w.t0) / 1600, 0, 1), x0 = door(w.home), dir = w.home < 3 ? 1 : -1, down = Math.min(1, k / 0.3); critter(w.who, x0 + dir * Math.max(0, k - 0.3) / 0.7 * hw * 2.6, gy + hw * (0.1 + 0.9 * down) - Math.abs(Math.sin(k * Math.PI * 6)) * sz * 0.14, sz, '', dir); }   // 先從門口走下來，再往草地中間跳著走
     // 天色：整層蓋一層顏色（傍晚偏暖、晚上深藍），只蓋在有畫東西的地方
-    const ta = clamp((0.97 - br) / 0.72, 0, 1) * 0.62; if (ta > 0.01) { g.save(); g.globalCompositeOperation = 'source-atop'; g.fillStyle = br > 0.55 ? `rgba(214,120,96,${ta * 0.8})` : mix('#7a5a96', '#1f2c6b', clamp((0.55 - br) / 0.2, 0, 1)).replace('rgb', 'rgba').replace(')', `,${ta})`); g.fillRect(0, 0, W, H); g.restore(); }
-    g = g0; g.drawImage(land, 0, 0, W, H);
+    const tintLayer = () => { const ta = clamp((0.97 - br) / 0.72, 0, 1) * 0.62; if (ta > 0.01) { g.save(); g.globalCompositeOperation = 'source-atop'; g.fillStyle = br > 0.55 ? `rgba(214,120,96,${ta * 0.8})` : mix('#7a5a96', '#1f2c6b', clamp((0.55 - br) / 0.2, 0, 1)).replace('rgb', 'rgba').replace(')', `,${ta})`); g.fillRect(0, 0, W, H); g.restore(); } };
+    tintLayer(); g = g0; g.drawImage(land, 0, 0, W, H);
     deco(gy, hw, 'sky');
     // 會發光的：窗戶、路燈、鐘面；鐘樓的指針跟著現在的時刻走
     for (const [x, y, r, rd] of wins) { g.fillStyle = '#ffe680'; rr(x - r, y - r, r * 2, r * 2, rd ? r : r * 0.45); g.fill(); g.fillStyle = 'rgba(255,255,255,.5)'; g.beginPath(); g.arc(x - r * 0.3, y - r * 0.3, r * 0.35, 0, 7); g.fill(); if (br < 0.9) glow(x, y, r * 4, 0.5 * (1 - br) + 0.15); }
@@ -1668,6 +1661,16 @@ const Town = (() => {
       g.strokeStyle = '#ee5a58'; g.lineWidth = Math.max(2, tcr * 0.14); g.beginPath(); g.moveTo(tcx, tcy); g.lineTo(tcx + Math.sin(mA) * tcr * 0.76, tcy - Math.cos(mA) * tcr * 0.76); g.stroke();
       g.fillStyle = '#ffc64f'; g.beginPath(); g.arc(tcx, tcy, Math.max(1.8, tcr * 0.12), 0, 7); g.fill();
     }
+    // 房子前面的裝飾和動物：畫在另一層、一樣蓋天色，再疊到發光的窗戶上面（不然窗戶的光會蓋住小熊的臉）
+    g = fg; g.clearRect(0, 0, W, H);
+    deco(gy, hw, 'front');
+    // 動物：依作息站在自己家門口（小熊住第 2 間、小兔第 5 間、松鼠第 6 間），晚上貓頭鷹在鐘樓上
+    const sc = scene(t), sz = hw * 1.25, door = i => HX[i] + hw / 2;
+    const AT = { wake: ['bear', door(1), ''], breakfast: ['bear', door(1), 'bowl'], school: ['bunny', door(4) + hw * 0.7, 'backpack'], lunch: ['squirrel', door(5), 'riceball'], class: ['bunny', door(4), 'book'], park: ['bear', W * 0.36, 'ball'], dinner: ['squirrel', door(5), 'pot'], bath: ['bunny', door(4), 'bath'], story: ['bear', door(1), 'books'] }[sc];
+    const walking = walks.map(w => w.who);
+    if (AT && !walking.includes(AT[0])) critter(AT[0], AT[1], gy + hw * 0.5, sz, AT[2]);
+    for (const w of walks) { const k = clamp((now() - w.t0) / 1600, 0, 1), x0 = door(w.home), dir = w.home < 3 ? 1 : -1, down = Math.min(1, k / 0.3); critter(w.who, x0 + dir * Math.max(0, k - 0.3) / 0.7 * hw * 2.6, gy + hw * (0.1 + 0.9 * down) - Math.abs(Math.sin(k * Math.PI * 6)) * sz * 0.14, sz, '', dir); }   // 先從門口走下來，再往草地中間跳著走
+    tintLayer(); g = g0; g.drawImage(front, 0, 0, W, H);
     if (sc === 'sleep' || sc === 'owl') { critter('owl', W / 2 + twW * T.px, towerTop + th * T.perch, hw * 0.95, ''); thing('zzz', door(1), gy - hw * 1.2, hw * 0.42); thing('zzz', door(4), gy - hw * 1.15, hw * 0.42); }
   }
   // 撥對時動物走出門：home 是哪一間（小熊 1、小兔 4、松鼠 5；貓頭鷹從鐘樓飛，當作 4）
