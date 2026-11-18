@@ -1575,13 +1575,15 @@ const Town = (() => {
     const c = document.createElement('canvas'); c.height = hh; c.width = Math.max(1, Math.round(hh * im.naturalWidth / im.naturalHeight)); const x = c.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(im, 0, 0, c.width, c.height); return bmpC[k] = c;
   }
   // 畫一樣東西：底部中間在 (x, y)，高 sz；dir = -1 左右翻；sh 腳下的影子
-  function thing(name, x, y, sz, dir = 1, sh = 0) {
+  const ph = () => RM ? 0 : now() / 1000;   // 小動畫的時間（秒）；減少動態效果時永遠是 0＝不動
+  function thing(name, x, y, sz, dir = 1, sh = 0, sy = 1) {   // sy：上下壓扁／拉長（腳底不動），動物呼吸用
     const b = bmp(name, sz); if (!b) return 0; const w = b.width / DPR, hh = b.height / DPR;
     if (sh) { const rg = g.createRadialGradient(x, y, 0, x, y, w * sh); rg.addColorStop(0, 'rgba(60,40,80,.28)'); rg.addColorStop(1, 'rgba(60,40,80,0)'); g.save(); g.translate(x, y); g.scale(1, 0.22); g.translate(-x, -y); g.fillStyle = rg; g.beginPath(); g.arc(x, y, w * sh, 0, 7); g.fill(); g.restore(); }
-    g.save(); g.translate(x, y); if (dir < 0) g.scale(-1, 1); g.drawImage(b, -w / 2, -hh, w, hh); g.restore(); return w;
+    g.save(); g.translate(x, y); g.scale(dir < 0 ? -1 / Math.sqrt(sy) : 1 / Math.sqrt(sy), sy); g.drawImage(b, -w / 2, -hh, w, hh); g.restore(); return w;
   }
   const prop = (name, x, y, sz) => thing('p-' + name, x, y, sz, 1, 0.5);
-  function critter(k, x, y, sz, pr, dir) { const w = thing(k, x, y, k === 'bunny' ? sz * 1.16 : sz, dir, 0.42); if (pr) prop(pr, x + (w || sz * 0.7) * 0.5 + sz * 0.2, y + 2, sz * 0.44); }   // 小兔有長耳朵，整張圖比較高
+  function critter(k, x, y, sz, pr, dir) { const w = thing(k, x, y, k === 'bunny' ? sz * 1.16 : sz, dir, 0.42, 1 + 0.022 * Math.sin(ph() * 2.4 + k.length));   // 輕輕呼吸：一點點變高變矮
+    if (pr) prop(pr, x + (w || sz * 0.7) * 0.5 + sz * 0.2, y + 2, sz * 0.44); }   // 小兔有長耳朵，整張圖比較高
   const glow = (x, y, r, a, col = '255,228,130') => { const rg = g.createRadialGradient(x, y, 0, x, y, r); rg.addColorStop(0, `rgba(${col},${a})`); rg.addColorStop(1, `rgba(${col},0)`); g.fillStyle = rg; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); };
   // ---------- 山、草地、小路：畫一次存在 back（視窗大小變了才重畫）
   function hill(cx, top, rx, ry, c1, c2) {
@@ -1613,7 +1615,7 @@ const Town = (() => {
   function deco(gy, hw, layer) {
     const k = DECOR.filter(d => townPts() >= d.at).map(d => d.id), has = id => k.includes(id);
     if (layer === 'back') { if (has('windmill')) thing('windmill', W - hw * 0.3, gy + 2, hw * 2.3, 1, 0.4); return; }
-    if (layer === 'sky') { if (has('balloon')) thing('balloon', W * 0.16, H * 0.3 + Math.sin(t / 37) * 8, hw * 1.15); return; }
+    if (layer === 'sky') { if (has('balloon')) thing('balloon', W * 0.16, H * 0.3 + Math.sin(t / 37) * 8 + Math.sin(ph() * 0.9) * 5, hw * 1.15); return; }
     if (has('flowers')) { thing('flowers', W * 0.07, gy + hw * 0.45, hw * 0.7, 1, 0.5); thing('flowers', W * 0.93, gy + hw * 0.45, hw * 0.7, -1, 0.5); }
     if (has('tree')) thing('tree', W * 0.1, gy + hw * 1.55, hw * 1.4, 1, 0.45);
     if (has('bakery')) thing('bakery', W * 0.28, gy + hw * 1.6, hw * 1.0, 1, 0.5);
@@ -1642,7 +1644,7 @@ const Town = (() => {
     const sp = at(6, 18.5); if (sp) { glow(sp[0], sp[1], R0 * 1.5, 0.45, '255,244,190'); thing('sun', sp[0], sp[1] + R0 / 2, R0); }
     const mp = at(18.5, 30) || (h < 6 ? at(-5.5, 6) : null); if (mp) { glow(mp[0], mp[1], R0 * 1.4, 0.3, '255,250,215'); thing('moon', mp[0], mp[1] + R0 * 0.4, R0 * 0.8); }
     // 雲（白天才有，跟著時間慢慢飄）
-    const ca = clamp((br - 0.4) / 0.35, 0, 1); if (ca > 0) { g.globalAlpha = ca; [['cloud1', 0.12, 0.15, 1.1, 0.5], ['cloud2', 0.55, 0.08, 0.8, 0.3], ['cloud1', 0.85, 0.24, 0.9, 0.4]].forEach(([nm, fx, fy, sc, v]) => { const span = W + 240; thing(nm, ((fx * span + t * v) % span) - 120, H * fy + 50, 52 * sc * Math.min(1.5, W / 420 + 0.3)); }); g.globalAlpha = 1; }
+    const ca = clamp((br - 0.4) / 0.35, 0, 1); if (ca > 0) { g.globalAlpha = ca; [['cloud1', 0.12, 0.15, 1.1, 0.5], ['cloud2', 0.55, 0.08, 0.8, 0.3], ['cloud1', 0.85, 0.24, 0.9, 0.4]].forEach(([nm, fx, fy, sc, v]) => { const span = W + 240; thing(nm, ((fx * span + t * v + ph() * v * 9) % span) - 120, H * fy + 50, 52 * sc * Math.min(1.5, W / 420 + 0.3)); }); g.globalAlpha = 1; }
     // 地上的一層：山、草地、小路（存好的）→ 風車、鐘樓、房子、路燈、裝飾、動物
     const key = W + 'x' + H + 'x' + DPR + 'x' + Math.round(gy); if (backKey !== key) { drawBack(gy, hw); backKey = key; }
     g = lg; g.clearRect(0, 0, W, H); g.drawImage(back, 0, 0, W, H);
@@ -1676,13 +1678,20 @@ const Town = (() => {
     const sc = scene(t), sz = hw * 1.25, door = i => HX[i] + hw / 2;
     const AT = { wake: ['bear', door(1), ''], breakfast: ['bear', door(1), 'bowl'], school: ['bunny', door(4) + hw * 0.7, 'backpack'], lunch: ['squirrel', door(5), 'riceball'], class: ['bunny', door(4), 'book'], park: ['bear', W * 0.36, 'ball'], dinner: ['squirrel', door(5), 'pot'], bath: ['bunny', door(4), 'bath'], story: ['bear', door(1), 'books'] }[sc];
     const walking = walks.map(w => w.who);
-    if (AT && !walking.includes(AT[0])) critter(AT[0], AT[1], gy + hw * 0.5, sz, AT[2]);
+    // 換了一段作息（例如撥到中午）：那隻動物從門口蹦蹦跳跳走到牠站的地方（0.8 秒）
+    const who = AT ? AT[0] + '@' + Math.round(AT[1]) : ''; if (who !== lastWho) { if (lastWho !== null && who && !RM) { enterT = now(); kick(); } lastWho = who; }
+    const ek = AT && !RM ? clamp((now() - enterT) / 800, 0, 1) : 1;
+    if (AT && !walking.includes(AT[0])) critter(AT[0], AT[1], gy + hw * (0.1 + 0.4 * ek) - Math.abs(Math.sin(ek * Math.PI * 3)) * sz * 0.12 * (ek < 1), sz * (0.82 + 0.18 * ek), ek < 1 ? '' : AT[2]);
     for (const w of walks) { const k = clamp((now() - w.t0) / 1600, 0, 1), x0 = door(w.home), dir = w.home < 3 ? 1 : -1, down = Math.min(1, k / 0.3); critter(w.who, x0 + dir * Math.max(0, k - 0.3) / 0.7 * hw * 2.6, gy + hw * (0.1 + 0.9 * down) - Math.abs(Math.sin(k * Math.PI * 6)) * sz * 0.14, sz, '', dir); }   // 先從門口走下來，再往草地中間跳著走
     tintLayer(); g = g0; g.drawImage(front, 0, 0, W, H);
     if (sc === 'sleep' || sc === 'owl') { critter('owl', W / 2 + twW * T.px, towerTop + th * T.perch, hw * 0.95, ''); thing('zzz', door(1), gy - hw * 1.2, hw * 0.42); thing('zzz', door(4), gy - hw * 1.15, hw * 0.42); }
   }
   // 撥對時動物走出門：home 是哪一間（小熊 1、小兔 4、松鼠 5；貓頭鷹從鐘樓飛，當作 4）
-  let walks = [], raf = 0;
+  let walks = [], raf = 0, lastWho = null, enterT = -1e9;
+  // 小動畫的迴圈：一秒大約 15 格就夠（呼吸、雲、熱氣球都很慢），省電；切到背景、減少動態效果時停
+  let idleT = 0, idleLast = 0;
+  function kick() { if (idleT || RM || document.hidden) return; const loop = ts => { idleT = 0; if (RM || document.hidden) return; const fast = now() - enterT < 900; if (fast || ts - idleLast > 62) { idleLast = ts; if (!raf) draw(); } idleT = requestAnimationFrame(loop); }; idleT = requestAnimationFrame(loop); }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
   const HOME = { bear: 1, bunny: 4, rabbit: 4, squirrel: 5, owl: 4 };
   function walk(who) {
     if (RM) return; const k = who === 'rabbit' ? 'bunny' : who; walks = walks.filter(w => w.who !== k); walks.push({ who: k, home: HOME[who] || 1, t0: now() });
@@ -1691,9 +1700,9 @@ const Town = (() => {
   // 小鎮的作息（自由玩用）
   let litN = 0, litT = 0;
   function scene(min) { const h = min / 60; return h < 6 ? 'sleep' : h < 7 ? 'wake' : h < 8 ? 'breakfast' : h < 12 ? 'school' : h < 13 ? 'lunch' : h < 15.5 ? 'class' : h < 17.5 ? 'park' : h < 19 ? 'dinner' : h < 20 ? 'bath' : h < 21 ? 'story' : 'owl'; }
-  addEventListener('resize', resize);
+  addEventListener('resize', resize); kick();
   let rq = 0; const later = () => { if (!rq) rq = requestAnimationFrame(() => { rq = 0; draw(); }); };   // 換畫面、換題目後版面變了：下一格再畫一次（地平線要跟著字框的位置）
-  return { set(min) { t = min; draw(); if (mode !== 'menu') later(); }, redraw: later, resize, scene, lit(n, tot) { litN = n; litT = tot; draw(); }, walk, walking: () => walks.map(w => w.who), img: () => Object.keys(SPR).filter(k => SPR[k].ok) };
+  return { set(min) { t = min; draw(); if (mode !== 'menu') later(); }, redraw: later, resize, scene, lit(n, tot) { litN = n; litT = tot; draw(); }, walk, walking: () => walks.map(w => w.who), anim: () => !!idleT, img: () => Object.keys(SPR).filter(k => SPR[k].ok) };
 })();
 
 // ---------- 小鎮會長大：玩完幾次就多一樣東西

@@ -30,7 +30,8 @@ const URL = 'http://localhost:8124/index.html';
   // 減少動態效果：不跑走路動畫
   { const p = await open({}, { reducedMotion: 'reduce' }); await p.click('[data-mode=day]'); await p.waitForTimeout(150);
     await p.evaluate(() => { const T = window.__tt.Day.target(), c = window.__tt.clock2; c.set(Math.floor(T / 60), T % 60); c.onChange(c.get().tot, false); }); await p.waitForTimeout(200);
-    ok((await p.evaluate(() => window.__tt.Town.walking())).length === 0, '減少動態效果：動物不走路'); await p.close(); }
+    ok((await p.evaluate(() => window.__tt.Town.walking())).length === 0, '減少動態效果：動物不走路'); ok(!(await p.evaluate(() => window.__tt.Town.anim())), '減少動態效果：小動畫（呼吸、雲）不跑'); await p.close(); }
+  { const p = await open({}); ok(await p.evaluate(() => window.__tt.Town.anim()), '平常：小動畫的迴圈在跑'); const a = await p.evaluate(() => document.querySelector('#town').toDataURL().length); await p.waitForTimeout(700); const b2 = await p.evaluate(() => document.querySelector('#town').toDataURL().length); ok(a !== b2, '過 0.7 秒畫面有在動（動物呼吸、雲在飄）'); ok(p.errs.length === 0, `無錯誤 ${p.errs.join(' | ')}`); await p.close(); }
   // 壞掉的存檔、每個人各自的小鎮
   { const p = await open({ town: 'abc', best: { days: 40 } });
     ok(await p.evaluate(() => { const t = window.__tt.DB().town; return t && typeof t === 'object' && t.seen >= 0; }), '壞掉的 town 欄位會修好');
