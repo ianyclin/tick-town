@@ -18,7 +18,7 @@ const SHOT = process.argv[2];
     await p.close(); }
   // 出題偏向弱點：某種錯法的權重高，會誘發那種錯的時刻要明顯變多
   { const rate = async (level, errs, facts, f) => { const p = await b.newPage(); await p.addInitScript(`localStorage.setItem('tick-town-v1', ${JSON.stringify(JSON.stringify({ set: { lang: 'zh-Hant', sound: false, level }, errs, facts, hinted: true }))});`); await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(200);
-      const r = await p.evaluate(f => { const fn = new Function('k', 'return ' + f); let hit = 0, n = 0, bad = 0; for (let i = 0; i < 300; i++) { const d = window.__tt.Day.makeDay(); if (d.length !== 7 || d.some((k, j) => j && k.t <= d[j - 1].t)) bad++; for (const k of d) { n++; if (fn(k)) hit++; } } return [hit / n, bad]; }, f); await p.close(); return r; };
+      const r = await p.evaluate(f => { const fn = new Function('k', 'return ' + f); let hit = 0, n = 0, bad = 0; for (let i = 0; i < 1200; i++) { const d = window.__tt.Day.makeDay(); if (d.length !== 7 || d.some((k, j) => j && k.t <= d[j - 1].t)) bad++; for (const k of d) { n++; if (fn(k)) hit++; } } return [hit / n, bad]; }, f); await p.close(); return r; };
     const late = 'k.t % 60 >= 35', half = 'k.t % 60 === 30', idx = 'k.t % 30 !== 0', cross = 'k.from !== undefined && k.from % 60 + k.d > 60', el = 'k.from !== undefined';
     const [l0, bad0] = await rate(2, {}, {}, late), [l1, bad1] = await rate(2, { hourLate: 0.8 }, {}, late);
     ok(bad0 === 0 && bad1 === 0, '每天 7 件事、時刻一件比一件晚');
