@@ -23,7 +23,7 @@
   --ink:#3b2f2f;--muted:#7a6a5a;--paper:#fff8ea;--panel:rgba(255,255,255,.82);--line:rgba(90,60,30,.18);
   --sun:#ffb340;--hour:#3a7bd5;--minute:#e8514f;--mint:#5fcf9a;--coral:#ff7a6b;
   --face:#fffaf0;--face-rim:#e8c98f;
-  padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);   /* 瀏海、動態島、底部橫條：body 是 fixed，padding 要加在每個畫面上（寫在 :root 沒有用） */
 }
 :lang(ko){--f-zh:'Chiron',"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif}   /* Chiron GoRound TC 有韓文字（切子集時一起切進來）；後面是缺字時的備用 */
 :lang(ja){--f-zh:'ZenMaru',"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif;--f-num:'Lilita','ZenMaru',system-ui,sans-serif}
@@ -33,7 +33,7 @@ body{font-family:var(--f-zh);color:var(--ink);background:#8fd0ff;overflow:hidden
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
 [hidden]{display:none!important}
 #town{position:fixed;inset:0;width:100%;height:100%;z-index:0}
-.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:10px 16px;z-index:1;gap:8px}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:calc(10px + var(--sat)) 16px calc(10px + var(--sab));z-index:1;gap:8px}
 .top{width:100%;max-width:520px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .top>div{flex:none}
 h1{margin:0;font-size:clamp(15px,5vw,26px);font-weight:900;letter-spacing:1px;color:#fff;white-space:nowrap;flex:1;min-width:0;overflow:hidden;text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 8px rgba(0,0,0,.45)}
@@ -41,7 +41,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 @media (max-width:400px){.top{gap:4px}.top>div{gap:4px!important}.top .chip{padding:0 8px;gap:4px}}
 .icon-btn{min-width:44px;min-height:44px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:22px;display:grid;place-items:center;box-shadow:0 2px 0 rgba(0,0,0,.08)}
 .clock-wrap{width:min(78vw,44vh,360px);aspect-ratio:1;position:relative;margin-top:4px}
-.clock-wrap svg{width:100%;height:100%;overflow:visible;display:block;touch-action:none}
+.clock-wrap>svg{width:100%;height:100%;overflow:visible;display:block;touch-action:none}
 .hand{cursor:grab}.hand.on{cursor:grabbing}
 .knob{fill:transparent;pointer-events:all}
 .timecard{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:8px 18px;text-align:center;min-width:200px;max-width:100%;box-shadow:0 4px 0 rgba(0,0,0,.06);backdrop-filter:blur(6px)}
@@ -59,7 +59,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 .mode .emo{font-size:30px;line-height:1}
 .mode:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.08)}
 .mode.soon{opacity:.55}
-.overlay{position:fixed;inset:0;background:rgba(40,30,20,.45);display:grid;place-items:center;z-index:6;padding:16px}
+.overlay{position:fixed;inset:0;background:rgba(40,30,20,.45);display:grid;place-items:center;z-index:6;padding:calc(16px + var(--sat)) 16px calc(16px + var(--sab))}
 .card{background:var(--paper);border-radius:24px;padding:18px;width:100%;max-width:420px;max-height:calc(100% - 20px);overflow-y:auto;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
 .card>*{flex-shrink:0}
 .hhead{display:flex;align-items:center;justify-content:space-between;position:sticky;top:-18px;background:var(--paper);padding-top:2px;margin-top:-2px;z-index:1}
@@ -119,7 +119,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 .mcard.done .fr{background:#dff7ea;border-color:var(--mint)}
 .mcard.no .inner{animation:tilt .5s ease}
 @media (prefers-reduced-motion:reduce){.mcard .inner{transition:none}}
-#s-versus{padding:0;touch-action:none;gap:0}
+#s-versus{padding:var(--sat) 0 var(--sab);touch-action:none;gap:0}
 .half{flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 12px;min-height:0;position:relative}
 .half.flip{transform:rotate(180deg);background:rgba(255,255,255,.12)}
 .half .clock-wrap{width:min(62vw,32vh,280px);margin:0}
@@ -285,18 +285,109 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 @media (max-height:640px){.key{min-height:46px;font-size:22px}.opt{min-height:54px;font-size:26px}.padin{font-size:30px}.task .emo{font-size:34px}.task .say{font-size:15px}.task .target{font-size:28px}.digital{font-size:32px}.words{font-size:16px}.mode{min-height:64px}.mode .emo{font-size:24px}h1{font-size:22px}}
 @media (min-width:700px) and (min-height:700px){.clock-wrap{width:min(60vw,48vh,440px)}.modes{max-width:600px}.mode{min-height:92px;font-size:16px}}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+/* ========== 軟陶玩具風（整套介面的皮）：奶油色的軟陶塊、圓滾滾、浮起來有光影；按鈕像糖果，按下去會扁 ========== */
+:root{
+  --ink:#5b4034;--muted:#8f7566;--paper:#fffaf2;--panel:#fffaf2;--line:rgba(140,95,70,.22);
+  --sun:#ffc64f;--sun-d:#e39a2c;--hour:#3f86dc;--minute:#ee5a58;--mint:#66cf9c;--coral:#ff8a7a;
+  --face:#fffaf0;
+  --clay:0 7px 16px rgba(110,70,60,.24),inset 0 -6px 9px rgba(200,145,105,.22),inset 0 3px 4px #fff;
+  --clay-s:0 4px 9px rgba(110,70,60,.22),inset 0 -4px 6px rgba(200,145,105,.2),inset 0 2px 3px #fff;
+  --clay-in:inset 0 3px 6px rgba(140,95,70,.28),inset 0 -2px 2px rgba(255,255,255,.9);
+  --clay-c:inset 0 -5px 7px rgba(0,0,0,.1),inset 0 3px 4px rgba(255,255,255,.7);   /* 有顏色的軟陶：暗亮都用半透明，什麼顏色都能用 */
+  --pan:linear-gradient(180deg,#fffdf9,#fff2e2);
+}
+body{background:#bfe6ff}
+h1{color:#fff;text-shadow:0 2px 0 #e58aa2,0 4px 0 rgba(150,70,95,.35),0 6px 10px rgba(120,60,80,.35);padding:2px 0 8px 2px}
+.hintline,.pet-name{color:#fff;text-shadow:0 1.5px 0 #c9788f,0 3px 6px rgba(120,60,80,.45)}
+.legend{color:var(--ink);text-shadow:none}.legend span{background:var(--pan);box-shadow:var(--clay-s);padding:5px 11px}.legend i{border:0;box-shadow:inset 0 -2px 2px rgba(0,0,0,.12),inset 0 1px 1px rgba(255,255,255,.7)}
+/* 奶油色軟陶塊 */
+.timecard,.task,.info,.gear,.card,.bubble,.padin,.vtask,.lights,.tut-note,.pick,.pet-card,.q,.bk-confirm{background:var(--pan);border:0;box-shadow:var(--clay);backdrop-filter:none}
+.chip,.icon-btn,.link-btn,.lights,.vtask,.tut-note,.setbtn,.name-sug button{background:var(--pan);border:0;box-shadow:var(--clay-s)}
+.chip:active,.icon-btn:active,.link-btn:active,.setbtn:active,.mode:active,.opt:active,.key:active,.pick:active,.pet-card:active,.gear button:active,.langs button:active,.sw:active,.opt-row button:active,.who-list button:active{transform:translateY(2px) scale(.98)}
+.timecard{border-radius:26px}.task{border-radius:26px}.card{border-radius:30px;box-shadow:0 18px 40px rgba(80,45,60,.35),inset 0 -8px 12px rgba(200,145,105,.2),inset 0 4px 5px #fff}
+.hhead{background:#fffbf4}
+.overlay{background:rgba(88,56,74,.5)}
+.vmid{background:var(--pan);border:0;box-shadow:0 0 12px rgba(110,70,60,.3),inset 0 3px 3px #fff,inset 0 -3px 5px rgba(200,145,105,.22)}
+.digital{color:var(--ink)}
+.chip.ok,.q.done,.mcard.done .fr{background:linear-gradient(180deg,#e6fbef,#c9f1da)}
+.chip.todo::after{width:13px;height:13px;top:-3px;right:-3px;background:radial-gradient(circle at 35% 30%,#ffb1a6,#ff7a6b 60%);box-shadow:0 0 0 2.5px #fffaf2,0 2px 3px rgba(0,0,0,.25)}
+/* 糖果按鈕 */
+.btn{background:linear-gradient(180deg,#ffdc7a,#ffbd45);color:var(--ink);box-shadow:0 5px 0 #df962b,0 10px 14px rgba(170,105,30,.3),inset 0 3px 3px rgba(255,255,255,.75),inset 0 -4px 6px rgba(215,130,25,.3)}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #df962b,0 3px 6px rgba(170,105,30,.3),inset 0 3px 3px rgba(255,255,255,.75),inset 0 -4px 6px rgba(215,130,25,.3)}
+.btn.alt{background:var(--pan);box-shadow:0 5px 0 #e3ccb4,0 10px 14px rgba(110,70,60,.2),inset 0 3px 3px #fff,inset 0 -4px 6px rgba(200,145,105,.2)}
+.btn.alt:active{box-shadow:0 1px 0 #e3ccb4,0 3px 6px rgba(110,70,60,.2),inset 0 3px 3px #fff,inset 0 -4px 6px rgba(200,145,105,.2)}
+.btn:disabled{filter:grayscale(.5);opacity:.6}
+.key{background:var(--pan);border:0;box-shadow:0 3px 0 #e3ccb4,0 6px 8px rgba(110,70,60,.18),inset 0 2px 2px #fff,inset 0 -3px 5px rgba(200,145,105,.2);color:var(--ink)}
+.key.ok{background:linear-gradient(180deg,#ffdc7a,#ffbd45);box-shadow:0 3px 0 #df962b,0 6px 8px rgba(170,105,30,.25),inset 0 2px 2px rgba(255,255,255,.75),inset 0 -3px 5px rgba(215,130,25,.3)}
+.pad .key,.pad .padin{background:var(--pan)}
+.padin{box-shadow:var(--clay-in);background:#fff6e9}
+/* 主選單的五顆大鈕：每顆一個顏色 */
+.mode{border:0;border-radius:24px;color:var(--ink);background:linear-gradient(180deg,var(--m1),var(--m2));box-shadow:0 5px 0 var(--m3),0 10px 14px rgba(110,70,60,.25),var(--clay-c);--m1:#fffdf9;--m2:#fff2e2;--m3:#e3ccb4}
+.mode:active{transform:translateY(4px);box-shadow:0 1px 0 var(--m3),0 3px 6px rgba(110,70,60,.25),var(--clay-c)}
+.mode[data-mode=day]{--m1:#ffe3c4;--m2:#ffc999;--m3:#e9a06a}
+.mode[data-mode=read]{--m1:#d6eeff;--m2:#aedbff;--m3:#7fb5e6}
+.mode[data-mode=match]{--m1:#fff3b0;--m2:#ffe07a;--m3:#e5b740}
+.mode[data-mode=shop]{--m1:#e6dcff;--m2:#cdbdf5;--m3:#a48fdc}
+.mode[data-mode=versus]{--m1:#d3f6de;--m2:#a8e8bf;--m3:#72c693}
+.mode .emo{font-size:34px;background:rgba(255,255,255,.6);border-radius:50%;padding:5px;box-shadow:inset 0 2px 3px rgba(120,80,60,.14),0 1px 0 rgba(255,255,255,.7)}
+.m-lock{background:linear-gradient(180deg,#8fe3b6,#66cf9c);color:#1f4a35;box-shadow:0 2px 0 #46a878,inset 0 1px 1px rgba(255,255,255,.7);top:-10px}
+.m-lock.locked{background:var(--pan);box-shadow:0 2px 0 #e3ccb4,inset 0 1px 1px #fff;padding:2px 5px}
+/* 可以選的東西：沒選是凹下去的淺色，選了是亮亮的藍色軟陶 */
+.langs button,.sw,.opt-row button,.who-list button,.gear button{border:0;background:var(--pan);box-shadow:var(--clay-s);color:var(--ink)}
+.langs button[aria-pressed=true],.sw[aria-pressed=true],.opt-row button[aria-pressed=true],.who-list button[aria-pressed=true],.gear button[aria-pressed=true]{background:linear-gradient(180deg,#d9ecff,#b3d8ff);color:#245f9e;box-shadow:0 3px 0 #7fb5e6,0 6px 9px rgba(60,110,170,.25),var(--clay-c)}
+.sw[aria-pressed=true]{background:linear-gradient(180deg,#b9f0d2,#8fe3b6);color:#1f5a3d;box-shadow:0 3px 0 #58bd8b,0 6px 9px rgba(50,130,90,.25),var(--clay-c)}
+.pick{border:0}.pick[aria-pressed=true]{background:linear-gradient(180deg,#d9ecff,#b3d8ff);box-shadow:0 4px 0 #7fb5e6,0 9px 12px rgba(60,110,170,.25),var(--clay-c)}
+.name-in,.bk-out{border:0;background:#fff6e9;box-shadow:var(--clay-in)}.name-in:focus{box-shadow:var(--clay-in),0 0 0 3px #b3d8ff}
+.xbtn{background:var(--pan);box-shadow:var(--clay-s);font-size:18px;color:var(--muted)}
+.danger{border:0;background:linear-gradient(180deg,#ffe1dc,#ffc7be);color:#b33a2c;box-shadow:0 3px 0 #ea9a8e,var(--clay-c)}
+.gate-a i{border:0;background:#fff6e9;box-shadow:var(--clay-in)}
+.q .bar,.pet-bar,.vbar{background:#f3e3d2;box-shadow:var(--clay-in);border:0}.q .bar i,.vbar i{background:linear-gradient(180deg,#8fe3b6,#58c78f);box-shadow:inset 0 2px 2px rgba(255,255,255,.6)}
+.pet-bar{height:16px;border-radius:8px}.pet-bar i{background:linear-gradient(180deg,#ffdc7a,#ffb53d);box-shadow:inset 0 2px 2px rgba(255,255,255,.6);border-radius:8px}
+/* 提示泡泡、答案卡 */
+.bubble{border:0;box-shadow:0 0 0 4px #ffd36b,var(--clay)}.bubble.good{box-shadow:0 0 0 4px #8fe3b6,var(--clay)}
+.bubble.over{box-shadow:0 0 0 4px #ffd36b,0 14px 34px rgba(80,45,60,.35),inset 0 -6px 9px rgba(200,145,105,.22),inset 0 3px 4px #fff}
+.opt{border:0;background:var(--pan);box-shadow:0 4px 0 #e3ccb4,0 9px 12px rgba(110,70,60,.2),inset 0 3px 3px #fff,inset 0 -4px 6px rgba(200,145,105,.2);color:var(--ink)}
+.opt.no{opacity:.45;box-shadow:var(--clay-in);border:0}
+.opt.yes{background:linear-gradient(180deg,#e6fbef,#bff0d5);box-shadow:0 4px 0 #58bd8b,0 0 0 4px rgba(102,207,156,.45),var(--clay-c)}
+.tag{background:linear-gradient(180deg,#fffbe6,#ffefb8);border:0;box-shadow:0 4px 0 #dcb04e,0 9px 12px rgba(110,70,60,.22),inset 0 3px 3px #fff,inset 0 -4px 6px rgba(215,160,45,.22)}
+.tag::before{background:#bfe6ff;border:0;box-shadow:var(--clay-in)}
+.tag.fixed{background:linear-gradient(180deg,#e6fbef,#bff0d5);box-shadow:0 4px 0 #58bd8b,0 9px 12px rgba(50,130,90,.22),var(--clay-c)}
+/* 配對的卡片 */
+.mcard .f{border:0;border-radius:20px;box-shadow:0 4px 0 #e3ccb4,0 8px 10px rgba(110,70,60,.2),inset 0 3px 3px #fff,inset 0 -4px 6px rgba(200,145,105,.2)}
+.mcard .bk{background:linear-gradient(180deg,#ffd9e2,#ffb7c9);box-shadow:0 4px 0 #e58aa2,0 8px 10px rgba(150,70,95,.22),var(--clay-c)}
+.mcard .fr{background:var(--pan)}
+.mcard.done .fr{box-shadow:0 4px 0 #58bd8b,0 8px 10px rgba(50,130,90,.2),var(--clay-c)}
+/* 星圖 */
+.cell{stroke:#fffaf2;stroke-width:.9}.cell.new{fill:#f6ead9}.cell.learn{fill:#ffd27f}.cell.weak{fill:#ff9d8f}.cell.star{fill:#ffd84a}
+.sec-on .cell.on{stroke:#fffaf2}.mlab{fill:var(--ink);stroke:#fffaf2;stroke-width:2.5px}
+.hrow span{background:#f6ead9;box-shadow:inset 0 -2px 2px rgba(0,0,0,.08),inset 0 1px 1px #fff}
+.toast{background:linear-gradient(180deg,#75564a,#5b4034);box-shadow:0 8px 18px rgba(60,30,40,.4),inset 0 2px 2px rgba(255,255,255,.2)}
+.half.flip{background:rgba(255,255,255,.14)}
+.ring-n{fill:#c7574d}
+#splash{background:linear-gradient(#bfe6ff,#ffeef2 70%,#fff3df)}
+#splash .sp-title{text-shadow:0 3px 0 #e58aa2,0 6px 0 rgba(150,70,95,.3),0 8px 16px rgba(120,60,80,.35)}
+#splash img{box-shadow:0 14px 30px rgba(110,70,60,.3)}
+/* 圖示與插畫 */
+.ic{width:1.15em;height:1.15em;display:inline-block;vertical-align:-0.2em;flex:none;object-fit:contain}
+img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px 2px rgba(90,50,40,.25))}
+.emo .ic,.big .ic{display:block}.scene .emo .ic{display:inline-block}.big .ic{width:1.3em;height:1.3em;margin:0 auto}
+.big img.av{height:1.5em;margin:0 auto}
+.task .emo{font-size:52px}
+@media (max-height:640px){.task .emo{font-size:40px}.mode .emo{font-size:26px;padding:3px}}
+@media (max-width:420px){.mode{border-radius:20px}.mode .emo{font-size:28px!important;padding:4px}}
 </style>
 </head>
 <body>
 <canvas id="town"></canvas>
-<div id="splash" aria-hidden="true"><div class="sp-clock"><img src="assets/icons/icon-512.png" alt=""></div><b class="sp-title" data-t="title"></b></div>
+<svg id="ck-defs" width="0" height="0" style="position:absolute" aria-hidden="true"><defs><radialGradient id="ckRim" cx="32%" cy="24%" r="85%"><stop offset="0" stop-color="#ffefb0"/><stop offset=".55" stop-color="#ffcd62"/><stop offset="1" stop-color="#ee9f37"/></radialGradient><radialGradient id="ckFace"><stop offset="0" stop-color="#fffdf8"/><stop offset=".82" stop-color="#fff8ea"/><stop offset=".95" stop-color="#f6e3c6"/><stop offset="1" stop-color="#e3c69d"/></radialGradient><radialGradient id="ckRing"><stop offset="0" stop-color="#fff6e6"/><stop offset=".86" stop-color="#fff6e6"/><stop offset=".96" stop-color="#ffeccf"/><stop offset="1" stop-color="#f3d7ae"/></radialGradient><radialGradient id="ckSh"><stop offset=".8" stop-color="#5a3344" stop-opacity=".3"/><stop offset="1" stop-color="#5a3344" stop-opacity="0"/></radialGradient><linearGradient id="ckH"><stop offset="0" stop-color="#2f6cc0"/><stop offset=".4" stop-color="#6fb0f5"/><stop offset="1" stop-color="#2b63b3"/></linearGradient><linearGradient id="ckM"><stop offset="0" stop-color="#d64545"/><stop offset=".4" stop-color="#ff8a82"/><stop offset="1" stop-color="#cf3f40"/></linearGradient><radialGradient id="ckShell" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#b5ec8c"/><stop offset=".6" stop-color="#74c653"/><stop offset="1" stop-color="#4c9c3a"/></radialGradient><radialGradient id="ckSkin" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#d9f7b8"/><stop offset="1" stop-color="#9ad672"/></radialGradient><radialGradient id="ckFur" cx="38%" cy="28%" r="85%"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#fff3ec"/><stop offset="1" stop-color="#ecd3c8"/></radialGradient><radialGradient id="ckCap" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="#fff3b8"/><stop offset=".6" stop-color="#ffc64f"/><stop offset="1" stop-color="#e3922a"/></radialGradient><radialGradient id="ckBlush"><stop offset="0" stop-color="#ff8f9c" stop-opacity=".8"/><stop offset="1" stop-color="#ff8f9c" stop-opacity="0"/></radialGradient></defs></svg>
+<div id="splash" aria-hidden="true"><div class="sp-clock"><img src="assets/icons/splash.webp" alt=""></div><b class="sp-title" data-t="title"></b></div>
 
 <section class="screen" id="s-menu">
   <div class="top">
     <h1 data-t="title"></h1>
-    <div style="display:flex;gap:8px"><button class="chip who" id="go-who" type="button" data-ta="who.switch" hidden><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="currentColor"/></svg><b class="nm" id="who-nm"></b></button><button class="chip" id="go-pet" type="button" data-ta="menu.pet"><span aria-hidden="true">🌰</span><b id="b-acorn">0</b></button><button class="chip" id="go-quest" type="button"><span aria-hidden="true">📋</span><b id="q-count"></b></button><button class="icon-btn" id="go-map" type="button" data-ta="menu.map">🗺️</button><button class="icon-btn" id="go-set" type="button" data-ta="menu.set">⚙️</button></div>
+    <div style="display:flex;gap:8px"><button class="chip who" id="go-who" type="button" data-ta="who.switch" hidden><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="currentColor"/></svg><b class="nm" id="who-nm"></b></button><button class="chip" id="go-pet" type="button" data-ta="menu.pet"><span aria-hidden="true" data-ic="acorn"></span><b id="b-acorn">0</b></button><button class="chip" id="go-quest" type="button"><span aria-hidden="true" data-ic="quest"></span><b id="q-count"></b></button><button class="icon-btn" id="go-map" type="button" data-ta="menu.map" data-ic="map"></button><button class="icon-btn" id="go-set" type="button" data-ta="menu.set" data-ic="gear"></button></div>
   </div>
-  <div class="clock-wrap" id="clock"><button class="icon-btn now-btn" type="button" id="go-now" data-ta="menu.now">🕒</button></div>
+  <div class="clock-wrap" id="clock"><button class="icon-btn now-btn" type="button" id="go-now" data-ta="menu.now" data-ic="now"></button></div>
   <div class="timecard">
     <div class="digital" id="digital"></div>
     <div class="words" id="words"></div>
@@ -304,18 +395,18 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
   </div>
   <div class="hintline" id="hintline" data-t="menu.hint"></div>
   <div class="modes" id="modes">
-    <button class="mode" type="button" data-mode="day"><span class="emo">🏘️</span><span data-t="mode.day"></span></button>
-    <button class="mode" type="button" data-mode="read"><span class="emo">⏰</span><span data-t="mode.read"></span></button>
-    <button class="mode" type="button" data-mode="match" id="go-match"><span class="m-lock" hidden></span><span class="emo">🃏</span><span data-t="mode.match"></span></button>
-    <button class="mode" type="button" data-mode="shop" id="go-shop"><span class="m-lock" hidden></span><span class="emo">🔧</span><span data-t="mode.shop"></span></button>
-    <button class="mode" type="button" data-mode="versus" id="go-versus"><span class="m-lock" hidden></span><span class="emo">🤝</span><span data-t="mode.versus"></span></button>
+    <button class="mode" type="button" data-mode="day"><span class="emo" data-ic="house"></span><span data-t="mode.day"></span></button>
+    <button class="mode" type="button" data-mode="read"><span class="emo" data-ic="alarm"></span><span data-t="mode.read"></span></button>
+    <button class="mode" type="button" data-mode="match" id="go-match"><span class="m-lock" hidden></span><span class="emo" data-ic="cards"></span><span data-t="mode.match"></span></button>
+    <button class="mode" type="button" data-mode="shop" id="go-shop"><span class="m-lock" hidden></span><span class="emo" data-ic="wrench"></span><span data-t="mode.shop"></span></button>
+    <button class="mode" type="button" data-mode="versus" id="go-versus"><span class="m-lock" hidden></span><span class="emo" data-ic="two"></span><span data-t="mode.versus"></span></button>
   </div>
 </section>
 
 <section class="screen" id="s-tut" hidden>
   <div class="top"><div class="lights tut-dots" id="tut-dots" aria-hidden="true"></div><button class="link-btn" type="button" id="tut-skip" data-t="tut.skip"></button></div>
-  <div class="task"><span class="emo" id="tut-emo">🦉</span><div class="say" id="tut-say" aria-live="polite"></div></div>
-  <div class="clock-wrap" id="clock6"><div class="tut-finger" id="tut-finger" aria-hidden="true" hidden><span>👆</span></div></div>
+  <div class="task"><span class="emo" id="tut-emo" data-av="owl"></span><div class="say" id="tut-say" aria-live="polite"></div></div>
+  <div class="clock-wrap" id="clock6"><div class="tut-finger" id="tut-finger" aria-hidden="true" hidden><span data-ic="finger"></span></div></div>
   <div class="bubble" id="tut-hint" aria-live="polite" hidden></div>
   <div class="tut-pick" id="tut-pick" hidden></div>
   <div class="tut-note" id="tut-note" data-t="tut.pickP" hidden></div>
@@ -323,7 +414,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <section class="screen" id="s-day" hidden>
   <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights" id="day-lights" aria-live="polite"></div></div>
-  <div class="task" id="day-task"><span class="emo" id="day-emo">🐻</span><div class="say" id="day-say"></div><div class="target" id="day-target"></div></div>
+  <div class="task" id="day-task"><span class="emo" id="day-emo" data-av="bear"></span><div class="say" id="day-say"></div><div class="target" id="day-target"></div></div>
   <div class="clock-wrap" id="clock2"></div>
   <div class="timecard small"><div class="words" id="day-words"></div></div>
   <div class="bubble" id="day-hint" hidden></div>
@@ -331,7 +422,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <section class="screen" id="s-read" hidden>
   <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights" id="read-prog" aria-live="polite"></div></div>
-  <div class="task"><span class="emo" id="read-emo">🦉</span><div class="say" id="read-say"></div><div class="target" id="read-target" hidden></div></div>
+  <div class="task"><span class="emo" id="read-emo" data-av="owl"></span><div class="say" id="read-say"></div><div class="target" id="read-target" hidden></div></div>
   <div class="clock-wrap" id="clock3"></div>
   <div class="opts" id="read-opts"></div>
   <div class="pad" id="read-pad" hidden><div class="padin" id="read-in"></div><div class="keys" id="read-keys"></div></div>
@@ -340,16 +431,16 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <section class="screen" id="s-shop" hidden>
   <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights" id="shop-prog" aria-live="polite"></div></div>
-  <div class="task"><span class="emo" id="shop-emo">🦉</span><div class="say" id="shop-say"></div></div>
+  <div class="task"><span class="emo" id="shop-emo" data-av="owl"></span><div class="say" id="shop-say"></div></div>
   <div class="clock-wrap" id="clock5"></div>
   <div class="tag" id="shop-tag" aria-live="polite"></div>
-  <div class="shop-btns"><button class="btn sb-yes" type="button" id="shop-yes"><span aria-hidden="true">✓</span> <span data-t="shop.yes"></span></button><button class="btn alt sb-fix" type="button" id="shop-fix"><span aria-hidden="true">🔧</span> <span data-t="shop.fix"></span></button></div>
+  <div class="shop-btns"><button class="btn sb-yes" type="button" id="shop-yes"><span aria-hidden="true" data-ic="check"></span> <span data-t="shop.yes"></span></button><button class="btn alt sb-fix" type="button" id="shop-fix"><span aria-hidden="true" data-ic="wrench"></span> <span data-t="shop.fix"></span></button></div>
   <div class="bubble" id="shop-hint" hidden></div>
 </section>
 
 <div class="overlay" id="o-sdone" hidden>
   <div class="card">
-    <div class="big" id="sdone-stars">⭐</div>
+    <div class="big" id="sdone-stars" data-ic="star"></div>
     <h3 style="margin:0;text-align:center;font-size:24px" id="sdone-h"></h3>
     <button class="btn" type="button" id="sdone-again" data-t="read.again"></button>
     <button class="btn alt" type="button" id="sdone-home" data-t="home"></button>
@@ -358,14 +449,14 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <section class="screen" id="s-match" hidden>
   <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights" id="match-prog" aria-live="polite"></div></div>
-  <div class="task"><span class="emo" id="match-emo">🐿️</span><div class="say" data-t="match.say"></div></div>
+  <div class="task"><span class="emo" id="match-emo" data-av="squirrel"></span><div class="say" data-t="match.say"></div></div>
   <div class="mgrid" id="mgrid"></div>
   <div class="bubble" id="match-hint" hidden></div>
 </section>
 
 <div class="overlay" id="o-mdone" hidden>
   <div class="card">
-    <div class="big">🎉</div>
+    <div class="big" data-ic="party"></div>
     <h3 style="margin:0;text-align:center;font-size:24px" data-t="match.done"></h3>
     <p id="mdone-p"></p>
     <button class="btn" type="button" id="mdone-again" data-t="read.again"></button>
@@ -375,14 +466,14 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <section class="screen" id="s-versus" hidden>
   <div class="half" id="v-top">
-    <div class="vtask" id="v-task2"><span class="emo" id="v-emo2">🤖</span><span data-t="vs.task"></span><b id="v-t2"></b></div>
+    <div class="vtask" id="v-task2"><span class="emo" id="v-emo2" data-av="robot"></span><span data-t="vs.task"></span><b id="v-t2"></b></div>
     <div class="clock-wrap" id="clockB"></div>
-    <div class="robot" id="v-robot" hidden>🤖</div>
+    <div class="robot" id="v-robot" data-ic="robot" hidden></div>
     <div class="vbar" id="v-bar" hidden><i></i></div>
   </div>
-  <div class="vmid"><button class="link-btn" type="button" data-home data-t="back"></button><span id="v-emoA">🐻</span><span class="dots" id="v-dotsA"></span><span>:</span><span class="dots" id="v-dotsB"></span><span id="v-emoB">🤖</span></div>
+  <div class="vmid"><button class="link-btn" type="button" data-home data-t="back"></button><span id="v-emoA" class="emo" data-av="bear"></span><span class="dots" id="v-dotsA"></span><span>:</span><span class="dots" id="v-dotsB"></span><span id="v-emoB" class="emo" data-av="robot"></span></div>
   <div class="half" id="v-bottom">
-    <div class="vtask" id="v-task1"><span class="emo" id="v-emo1">🐻</span><span data-t="vs.task"></span><b id="v-t1"></b></div>
+    <div class="vtask" id="v-task1"><span class="emo" id="v-emo1" data-av="bear"></span><span data-t="vs.task"></span><b id="v-t1"></b></div>
     <div class="clock-wrap" id="clockA"></div>
   </div>
 </section>
@@ -401,7 +492,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <div class="overlay" id="o-vdone" hidden>
   <div class="card">
-    <div class="big" id="vdone-emo">🏆</div>
+    <div class="big" id="vdone-emo" data-ic="trophy"></div>
     <h3 style="margin:0;text-align:center;font-size:24px" id="vdone-h"></h3>
     <button class="btn" type="button" id="vdone-again" data-t="vs.again"></button>
     <button class="btn alt" type="button" id="vdone-home" data-t="home"></button>
@@ -409,10 +500,10 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 </div>
 
 <section class="screen" id="s-pet" hidden>
-  <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights"><span aria-hidden="true">🌰</span><span id="pet-acorn">0</span></div></div>
+  <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights"><span aria-hidden="true" data-ic="acorn"></span><span id="pet-acorn">0</span></div></div>
   <div class="pet-scroll">
     <div id="pet-pick" hidden>
-      <div class="task" style="margin-bottom:10px"><span class="emo">🥚</span><div class="say" data-t="pet.pick"></div></div>
+      <div class="task" style="margin-bottom:10px"><span class="emo" data-ic="egg"></span><div class="say" data-t="pet.pick"></div></div>
       <div class="pet-cards" id="pet-cards"></div>
     </div>
     <div id="pet-show" hidden>
@@ -434,7 +525,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <div class="overlay" id="o-rdone" hidden>
   <div class="card">
-    <div class="big" id="rdone-stars">⭐</div>
+    <div class="big" id="rdone-stars" data-ic="star"></div>
     <h3 style="margin:0;text-align:center;font-size:24px" id="rdone-h"></h3>
     <p id="rdone-p"></p>
     <button class="btn" type="button" id="rdone-again" data-t="read.again"></button>
@@ -444,7 +535,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <div class="overlay" id="o-done" hidden>
   <div class="card">
-    <div class="big">🎆</div>
+    <div class="big" data-ic="party"></div>
     <h3 style="margin:0;text-align:center;font-size:24px" data-t="day.done"></h3>
     <p id="done-p"></p>
     <button class="btn" type="button" id="done-again" data-t="day.again"></button>
@@ -454,7 +545,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <div class="overlay" id="o-set" hidden>
   <div class="card">
-    <div class="hhead"><h3 data-t="set.title"></h3><button class="xbtn" type="button" id="set-close" data-ta="close">✕</button></div>
+    <div class="hhead"><h3 data-t="set.title"></h3><button class="xbtn" type="button" id="set-close" data-ta="close" data-ic="close"></button></div>
     <div class="row"><span class="lab"><span data-t="set.who"></span><small class="sub" id="set-whoD"></small></span><button class="setbtn" type="button" id="set-who" data-t="who.switch"></button></div>
     <div class="lab" data-t="set.lang"></div>
     <div class="langs" id="set-lang"></div>
@@ -476,7 +567,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <div class="overlay" id="o-who" hidden>
   <div class="card">
-    <div class="hhead"><h3 data-t="who.title"></h3><button class="xbtn" type="button" id="who-close" data-ta="close">✕</button></div>
+    <div class="hhead"><h3 data-t="who.title"></h3><button class="xbtn" type="button" id="who-close" data-ta="close" data-ic="close"></button></div>
     <p data-t="who.p" style="margin:0"></p>
     <div class="who-list" id="who-list"></div>
     <div class="who-hint" id="who-hint"></div>
@@ -491,7 +582,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <div class="overlay" id="o-bk" hidden>
   <div class="card">
-    <div class="hhead"><h3 data-t="bk.title"></h3><button class="xbtn" type="button" id="bk-close" data-ta="close">✕</button></div>
+    <div class="hhead"><h3 data-t="bk.title"></h3><button class="xbtn" type="button" id="bk-close" data-ta="close" data-ic="close"></button></div>
     <p data-t="bk.p" style="margin:0"></p>
     <h4 data-t="bk.exportT" style="margin:4px 0 0"></h4>
     <div class="btn-col"><button class="btn alt" type="button" id="bk-file" data-t="bk.file"></button><button class="btn alt" type="button" id="bk-copy" data-t="bk.copy"></button></div>
@@ -509,7 +600,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <div class="overlay" id="o-lock" hidden>
   <div class="card">
-    <div class="big">🔒</div>
+    <div class="big" data-ic="lock"></div>
     <h3 id="lock-title" style="margin:0;text-align:center"></h3>
     <p id="lock-p" style="margin:0;text-align:center"></p>
     <div class="btn-col"><button class="btn" type="button" id="lock-ok" data-t="lock.ok"></button><button class="btn alt" type="button" id="lock-ask" data-t="lock.ask"></button></div>
@@ -529,7 +620,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <div class="overlay" id="o-help" hidden>
   <div class="card help">
-    <div class="hhead"><h3 data-t="help.title"></h3><button class="xbtn" type="button" id="help-close" data-ta="close">✕</button></div>
+    <div class="hhead"><h3 data-t="help.title"></h3><button class="xbtn" type="button" id="help-close" data-ta="close" data-ic="close"></button></div>
     <h4 data-t="help.clockT"></h4><ul data-th="help.clock"></ul>
     <h4 data-t="help.dayT"></h4><ul data-th="help.day"></ul><ul data-th="help.day3" class="more"></ul>
     <h4 data-t="help.readT"></h4><ul data-th="help.read"></ul><ul data-th="help.read3" class="more"></ul>
@@ -546,7 +637,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <div class="overlay" id="o-about" hidden>
   <div class="card about">
-    <div class="hhead"><h3 data-t="about.title"></h3><button class="xbtn" type="button" id="about-close" data-ta="close">✕</button></div>
+    <div class="hhead"><h3 data-t="about.title"></h3><button class="xbtn" type="button" id="about-close" data-ta="close" data-ic="close"></button></div>
     <h4 data-t="about.whyT"></h4><p data-t="about.why"></p>
     <h4 data-t="about.levelT"></h4><p data-t="about.level"></p><p data-t="about.level3"></p>
     <h4 data-t="about.privT"></h4><p data-t="about.priv"></p>
@@ -559,7 +650,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 
 <div class="overlay" id="o-quest" hidden>
   <div class="card">
-    <div class="hhead"><h3 data-t="quest.title"></h3><button class="xbtn" type="button" id="quest-close" data-ta="close">✕</button></div>
+    <div class="hhead"><h3 data-t="quest.title"></h3><button class="xbtn" type="button" id="quest-close" data-ta="close" data-ic="close"></button></div>
     <div class="qlist" id="quest-list"></div>
     <div class="badges"><span id="quest-badges"></span><span id="quest-streak"></span></div>
   </div>
@@ -605,7 +696,7 @@ const STR = {
     'hint.dur1': '從 {t1} 到 {t2}，數數看兔子走了幾分鐘。', 'help.read3': '<li>選「過了多久」時，還會問 24 小時制（下午 3 點 = 15 點），和「幾點出門、幾點到，走了幾分鐘」。</li>', 'help.day3': '<li>選「過了多久」時，有些時刻會寫成 24 小時制：15:20 就是下午 3:20，烏龜指著 3。</li>', 'about.level3': '選「過了多久」時還會練：24 小時制（讀鐘時寫成 15:20，撥鐘時看到 15:20 要撥到 3:20）、從幾點到幾點過了幾分鐘（跨過整點時，提示會畫一條時間線：先走到整點，再走剩下的）、1 分鐘的小格。',
     'town.new': '小鎮多了{x}！', 'deco.flowers': '一片花', 'deco.tree': '一棵大樹', 'deco.bench': '一張長椅', 'deco.swing': '鞦韆', 'deco.fountain': '噴水池', 'deco.bakery': '麵包店', 'deco.windmill': '風車', 'deco.balloon': '熱氣球', 'help.townT': '小鎮', 'help.town': '<li>撥對時間，動物會從家裡走出去做事。</li><li>每玩完一次，小鎮就長大一點：花、大樹、長椅、鞦韆、噴水池、麵包店、風車、熱氣球。</li><li>鐘樓上的鐘，跟主選單的鐘一起走。</li>',
     'mode.shop': '修鐘店', 'menu.now': '跳到現在的時間', 'shop.say': '{who}的修鐘店：這個鐘的標籤對嗎？', 'shop.yes': '對', 'shop.fix': '要修', 'shop.good': '對！標籤沒錯。', 'shop.fixed': '修好了！', 'shop.oops': '標籤寫的是虛線的時間，跟鐘不一樣喔。', 'shop.wasOk': '這個標籤其實是對的！再看一次烏龜和兔子。', 'shop.done': '今天修了 {n} 個鐘！', 'shop.doneAll': '全部都看對了！好厲害的修鐘師傅！', 'q.shop': '在修鐘店看 {n} 個鐘', 'help.shopT': '修鐘店', 'help.shop': '<li>每個鐘都掛著一張標籤。標籤寫的時間跟鐘一樣，就按「對」；不一樣就按「要修」。</li><li>看錯了也沒關係：虛線會告訴你標籤寫的是哪個時間。</li><li>一輪 10 個鐘。</li>',
-    'lock.trialN': '試玩 {n} 次', 'lock.locked': '🔒', 'lock.title': '{name}的試玩用完囉！', 'lock.p': '小鎮的一天、幾點了、星圖和寵物都可以一直玩喔！', 'lock.ask': '給大人看', 'lock.ok': '好', 'trial.start': '免費試玩！還可以再試玩 {n} 次', 'trial.last': '免費試玩！這是最後一次', 'gate.buy': '要購買或使用優惠碼，請大人先回答這一題。', 'buy.title': '解鎖全部遊戲', 'buy.list': '<li>{g}，三個遊戲都可以一直玩。</li><li><b>一次購買，永久使用</b>：不是訂閱，沒有廣告，也沒有其他要買的東西。</li><li>這台裝置上的每個玩家都能玩。</li>', 'buy.thanks': '你的支持，讓作者能繼續做新的練習遊戲。謝謝！', 'buy.go': '購買 {p}', 'buy.goNoP': '購買', 'buy.restore': '恢復購買', 'buy.code': '使用優惠碼', 'buy.later': '之後再說', 'buy.codeAnd': '按「購買」後，在 Google Play 付款畫面點付款方式，選「兌換代碼」輸入優惠碼。', 'buy.wait': '跟商店連線中…', 'buy.done': '解鎖了！三個遊戲都可以一直玩囉！', 'buy.owned': '已經解鎖了，謝謝你的支持！', 'buy.noProd': '現在讀不到商店的商品，請稍後再試。', 'buy.codeOld': '這台裝置不能在 App 裡兌換，請到 App Store 的帳號頁面兌換代碼。', 'buy.pending': '付款還在處理中，完成後就會解鎖。', 'buy.fail': '購買沒有完成，可以再試一次。', 'buy.none': '這個帳號沒有找到購買紀錄。', 'buy.offline': '連不上商店，等一下再試。', 'set.unlock': '解鎖全部遊戲', 'set.unlockD': '小鎮的一天、幾點了免費；另外三個遊戲一次購買解鎖', 'set.unlockOk': '三個遊戲都解鎖了', 'set.unlockGo': '看看', 'about.privLink': '隱私權政策',
+    'lock.trialN': '試玩 {n} 次', 'lock.locked': '', 'lock.title': '{name}的試玩用完囉！', 'lock.p': '小鎮的一天、幾點了、星圖和寵物都可以一直玩喔！', 'lock.ask': '給大人看', 'lock.ok': '好', 'trial.start': '免費試玩！還可以再試玩 {n} 次', 'trial.last': '免費試玩！這是最後一次', 'gate.buy': '要購買或使用優惠碼，請大人先回答這一題。', 'buy.title': '解鎖全部遊戲', 'buy.list': '<li>{g}，三個遊戲都可以一直玩。</li><li><b>一次購買，永久使用</b>：不是訂閱，沒有廣告，也沒有其他要買的東西。</li><li>這台裝置上的每個玩家都能玩。</li>', 'buy.thanks': '你的支持，讓作者能繼續做新的練習遊戲。謝謝！', 'buy.go': '購買 {p}', 'buy.goNoP': '購買', 'buy.restore': '恢復購買', 'buy.code': '使用優惠碼', 'buy.later': '之後再說', 'buy.codeAnd': '按「購買」後，在 Google Play 付款畫面點付款方式，選「兌換代碼」輸入優惠碼。', 'buy.wait': '跟商店連線中…', 'buy.done': '解鎖了！三個遊戲都可以一直玩囉！', 'buy.owned': '已經解鎖了，謝謝你的支持！', 'buy.noProd': '現在讀不到商店的商品，請稍後再試。', 'buy.codeOld': '這台裝置不能在 App 裡兌換，請到 App Store 的帳號頁面兌換代碼。', 'buy.pending': '付款還在處理中，完成後就會解鎖。', 'buy.fail': '購買沒有完成，可以再試一次。', 'buy.none': '這個帳號沒有找到購買紀錄。', 'buy.offline': '連不上商店，等一下再試。', 'set.unlock': '解鎖全部遊戲', 'set.unlockD': '小鎮的一天、幾點了免費；另外三個遊戲一次購買解鎖', 'set.unlockOk': '三個遊戲都解鎖了', 'set.unlockGo': '看看', 'about.privLink': '隱私權政策',
     'p.night': '半夜', 'p.morning': '早上', 'p.noon': '中午', 'p.afternoon': '下午', 'p.evening': '晚上',
     'ampm.am': '上午', 'ampm.pm': '下午',
     // 小鎮的作息
@@ -679,7 +770,7 @@ const STR = {
     'help.day3': '<li>With "How long?", some times are in 24-hour time: 15:20 means 3:20 PM, so Tortoise points at 3.</li>', 'about.level3': 'Level 3 also practices 24-hour time (write 15:20 when reading; set 3:20 when you see 15:20), minutes from one time to another (when it passes the hour, the hint draws a timeline: first to the hour, then the rest), and the little 1-minute ticks.',
     'town.new': 'The town got {x}!', 'deco.flowers': 'some flowers', 'deco.tree': 'a big tree', 'deco.bench': 'a bench', 'deco.swing': 'a swing', 'deco.fountain': 'a fountain', 'deco.bakery': 'a bakery', 'deco.windmill': 'a windmill', 'deco.balloon': 'a hot air balloon', 'help.townT': 'The town', 'help.town': '<li>Set the time right and an animal walks out of its house.</li><li>Every game you finish makes the town grow: flowers, a big tree, a bench, a swing, a fountain, a bakery, a windmill, a hot air balloon.</li><li>The clock tower shows the same time as the menu clock.</li>',
     'mode.shop': 'Fix-it Shop', 'menu.now': 'Jump to the time now', 'shop.say': '{who}\'s Fix-it Shop: Is this clock\'s tag right?', 'shop.yes': 'Right', 'shop.fix': 'Fix it', 'shop.good': 'Yes! The tag is right.', 'shop.fixed': 'Fixed!', 'shop.oops': 'The tag says the dotted time. That is not what the clock says.', 'shop.wasOk': 'This tag was actually right! Look at Tortoise and Rabbit again.', 'shop.done': 'You checked {n} clocks today!', 'shop.doneAll': 'All of them right! What a clock fixer!', 'q.shop': 'Check {n} clocks at the Fix-it Shop', 'help.shopT': 'Fix-it Shop', 'help.shop': '<li>Each clock has a tag. If the tag shows the same time as the clock, tap "Right". If not, tap "Fix it".</li><li>Got it wrong? No problem: the dotted hands show what the tag says.</li><li>10 clocks in a round.</li>',
-    'lock.trialN': v => `${v.n} ${v.n === 1 ? 'try' : 'tries'}`, 'lock.locked': '🔒', 'lock.title': 'No more free tries of {name}!', 'lock.p': 'You can always play Town Day, What time?, the star map and your pet!', 'lock.ask': 'For grown-ups', 'lock.ok': 'OK', 'trial.start': v => `Free try! ${v.n} more ${v.n === 1 ? 'try' : 'tries'} left`, 'trial.last': 'Free try! This is the last one', 'gate.buy': 'To buy or use a promo code, a grown-up needs to answer this first.', 'buy.title': 'Unlock all games', 'buy.list': '<li>Play all three games ({g}) as much as you like.</li><li><b>One purchase, yours to keep</b>: no subscription, no ads, nothing else to buy.</li><li>Every player on this device can play.</li>', 'buy.thanks': 'Your support helps the author keep making new practice games. Thank you!', 'buy.go': 'Buy for {p}', 'buy.goNoP': 'Buy', 'buy.restore': 'Restore purchase', 'buy.code': 'Use a promo code', 'buy.later': 'Not now', 'buy.codeAnd': 'Tap "Buy", then on the Google Play payment screen tap the payment method and choose "Redeem code".', 'buy.wait': 'Talking to the store…', 'buy.done': 'Unlocked! Play all three games anytime!', 'buy.owned': 'All unlocked. Thank you for your support!', 'buy.noProd': 'The store item isn\'t available right now. Please try again later.', 'buy.codeOld': 'This device can\'t redeem codes in the app. Please redeem it from your account page in the App Store.', 'buy.pending': 'The payment is still processing. The games unlock when it goes through.', 'buy.fail': 'The purchase did not go through. You can try again.', 'buy.none': 'No purchase found for this account.', 'buy.offline': 'Cannot reach the store. Try again later.', 'set.unlock': 'Unlock all games', 'set.unlockD': 'Town Day and What time? are free. One purchase unlocks the other three', 'set.unlockOk': 'All three games are unlocked', 'set.unlockGo': 'View', 'about.privLink': 'Privacy policy',
+    'lock.trialN': v => `${v.n} ${v.n === 1 ? 'try' : 'tries'}`, 'lock.locked': '', 'lock.title': 'No more free tries of {name}!', 'lock.p': 'You can always play Town Day, What time?, the star map and your pet!', 'lock.ask': 'For grown-ups', 'lock.ok': 'OK', 'trial.start': v => `Free try! ${v.n} more ${v.n === 1 ? 'try' : 'tries'} left`, 'trial.last': 'Free try! This is the last one', 'gate.buy': 'To buy or use a promo code, a grown-up needs to answer this first.', 'buy.title': 'Unlock all games', 'buy.list': '<li>Play all three games ({g}) as much as you like.</li><li><b>One purchase, yours to keep</b>: no subscription, no ads, nothing else to buy.</li><li>Every player on this device can play.</li>', 'buy.thanks': 'Your support helps the author keep making new practice games. Thank you!', 'buy.go': 'Buy for {p}', 'buy.goNoP': 'Buy', 'buy.restore': 'Restore purchase', 'buy.code': 'Use a promo code', 'buy.later': 'Not now', 'buy.codeAnd': 'Tap "Buy", then on the Google Play payment screen tap the payment method and choose "Redeem code".', 'buy.wait': 'Talking to the store…', 'buy.done': 'Unlocked! Play all three games anytime!', 'buy.owned': 'All unlocked. Thank you for your support!', 'buy.noProd': 'The store item isn\'t available right now. Please try again later.', 'buy.codeOld': 'This device can\'t redeem codes in the app. Please redeem it from your account page in the App Store.', 'buy.pending': 'The payment is still processing. The games unlock when it goes through.', 'buy.fail': 'The purchase did not go through. You can try again.', 'buy.none': 'No purchase found for this account.', 'buy.offline': 'Cannot reach the store. Try again later.', 'set.unlock': 'Unlock all games', 'set.unlockD': 'Town Day and What time? are free. One purchase unlocks the other three', 'set.unlockOk': 'All three games are unlocked', 'set.unlockGo': 'View', 'about.privLink': 'Privacy policy',
     'p.night': 'night', 'p.morning': 'morning', 'p.noon': 'noon', 'p.afternoon': 'afternoon', 'p.evening': 'evening',
     'ampm.am': 'AM', 'ampm.pm': 'PM',
     back: '‹ Menu', home: 'Back to menu',
@@ -753,7 +844,7 @@ const STR = {
     'hint.minOne': '{m5}分から、小さい めもり 1つが 1分。うさぎが あと いくつ すすんだか かぞえてね！', 'hint.dur1': '{t1}から {t2}まで、うさぎが なん分 すすんだか かぞえてね。', 'help.read3': '<li>「たった時間」では、24時間せい（ごご3時 = 15時）や「なん時に 出て、なん時に ついた？ なん分？」も 出るよ。</li>', 'help.day3': '<li>「たった時間」では、24時間せいで かいて ある 時こくも あるよ：15:20は ごご3:20。かめは 3を さすよ。</li>', 'about.level3': 'レベル3では、24時間制（読むときは 15:20 と書く、15:20 を見たら 3:20 に合わせる）、ある時刻から別の時刻まで何分か（ちょうどの時刻をまたぐときは、まずちょうどの時刻まで、次に残りという時間の線をヒントで描きます）、1分の小さい目もりも練習します。',
     'town.new': 'まちに {x}が できたよ！', 'deco.flowers': 'お花', 'deco.tree': '大きな 木', 'deco.bench': 'ベンチ', 'deco.swing': 'ブランコ', 'deco.fountain': 'ふんすい', 'deco.bakery': 'パンやさん', 'deco.windmill': 'ふうしゃ', 'deco.balloon': 'ききゅう', 'help.townT': 'まち', 'help.town': '<li>時こくを あわせると、どうぶつが おうちから 出かけるよ。</li><li>ゲームを 1つ おえるたびに、まちが 大きく なるよ：お花、大きな 木、ベンチ、ブランコ、ふんすい、パンやさん、ふうしゃ、ききゅう。</li><li>とけいとうの とけいは、メニューの とけいと いっしょに うごくよ。</li>',
     'mode.shop': 'とけいやさん', 'menu.now': 'いまの 時こくに する', 'shop.say': '{who}の とけいやさん：この とけいの ふだ、あってる？', 'shop.yes': 'あってる', 'shop.fix': 'なおす', 'shop.good': 'そう！ ふだは あってるよ。', 'shop.fixed': 'なおったよ！', 'shop.oops': 'ふだに かいて あるのは てんせんの 時こく。とけいと ちがうよ。', 'shop.wasOk': 'この ふだは あってたよ！ かめと うさぎを もういちど 見てね。', 'shop.done': 'きょうは {n}こ なおしたよ！', 'shop.doneAll': 'ぜんぶ せいかい！ すごい とけいやさん！', 'q.shop': 'とけいやさんで {n}こ 見る', 'help.shopT': 'とけいやさん', 'help.shop': '<li>とけいに ふだが ついてるよ。ふだの 時こくが とけいと おなじなら「あってる」、ちがったら「なおす」を おしてね。</li><li>まちがえても だいじょうぶ。てんせんが ふだの 時こくを おしえて くれるよ。</li><li>1かいで とけい 10こ。</li>',
-    'lock.trialN': 'あと{n}', 'lock.locked': '🔒', 'lock.title': '{name}の おためしは おしまい！', 'lock.p': 'まちの一日、いま何時？、星マップ、ペットは いつでも あそべるよ！', 'lock.ask': 'おうちの人むけ', 'lock.ok': 'わかった', 'trial.start': 'おためし！ あと {n}かい ためせるよ', 'trial.last': 'おためし！ これが さいごだよ', 'gate.buy': '購入やコードの入力には、大人の方がこの問題に答えてください。', 'buy.title': 'すべてのゲームを解除', 'buy.list': '<li>{g}の3つのゲームが、いつでも遊べるようになります。</li><li><b>1回の購入でずっと使えます</b>：サブスクリプションではなく、広告もほかの課金もありません。</li><li>この端末のすべてのプレイヤーが遊べます。</li>', 'buy.thanks': 'ご支援が、新しい練習ゲームづくりの力になります。ありがとうございます！', 'buy.go': '{p}で購入', 'buy.goNoP': '購入', 'buy.restore': '購入を復元', 'buy.code': 'コードを使う', 'buy.later': 'あとで', 'buy.codeAnd': '「購入」をタップし、Google Play の支払い画面で支払い方法をタップして「コードを利用」を選んでください。', 'buy.wait': 'ストアに接続中…', 'buy.done': 'ひらいたよ！ 3つの ゲームが いつでも あそべるよ！', 'buy.owned': '解除済みです。ご支援ありがとうございます！', 'buy.noProd': 'いまストアの商品を読み込めません。しばらくしてからお試しください。', 'buy.codeOld': 'この端末ではアプリ内でコードを使えません。App Store のアカウントページから引き換えてください。', 'buy.pending': 'お支払いを処理中です。完了するとゲームが解除されます。', 'buy.fail': '購入が完了しませんでした。もう一度お試しください。', 'buy.none': 'このアカウントの購入履歴が見つかりません。', 'buy.offline': 'ストアに接続できません。しばらくしてからお試しください。', 'set.unlock': 'ぜんぶの ゲームを ひらく', 'set.unlockD': 'まちの一日・いま何時？は むりょう。ほかの 3つは 1かいの 購入で ひらくよ', 'set.unlockOk': '3つの ゲームが ぜんぶ あそべるよ', 'set.unlockGo': 'みる', 'about.privLink': 'プライバシーポリシー',
+    'lock.trialN': 'あと{n}', 'lock.locked': '', 'lock.title': '{name}の おためしは おしまい！', 'lock.p': 'まちの一日、いま何時？、星マップ、ペットは いつでも あそべるよ！', 'lock.ask': 'おうちの人むけ', 'lock.ok': 'わかった', 'trial.start': 'おためし！ あと {n}かい ためせるよ', 'trial.last': 'おためし！ これが さいごだよ', 'gate.buy': '購入やコードの入力には、大人の方がこの問題に答えてください。', 'buy.title': 'すべてのゲームを解除', 'buy.list': '<li>{g}の3つのゲームが、いつでも遊べるようになります。</li><li><b>1回の購入でずっと使えます</b>：サブスクリプションではなく、広告もほかの課金もありません。</li><li>この端末のすべてのプレイヤーが遊べます。</li>', 'buy.thanks': 'ご支援が、新しい練習ゲームづくりの力になります。ありがとうございます！', 'buy.go': '{p}で購入', 'buy.goNoP': '購入', 'buy.restore': '購入を復元', 'buy.code': 'コードを使う', 'buy.later': 'あとで', 'buy.codeAnd': '「購入」をタップし、Google Play の支払い画面で支払い方法をタップして「コードを利用」を選んでください。', 'buy.wait': 'ストアに接続中…', 'buy.done': 'ひらいたよ！ 3つの ゲームが いつでも あそべるよ！', 'buy.owned': '解除済みです。ご支援ありがとうございます！', 'buy.noProd': 'いまストアの商品を読み込めません。しばらくしてからお試しください。', 'buy.codeOld': 'この端末ではアプリ内でコードを使えません。App Store のアカウントページから引き換えてください。', 'buy.pending': 'お支払いを処理中です。完了するとゲームが解除されます。', 'buy.fail': '購入が完了しませんでした。もう一度お試しください。', 'buy.none': 'このアカウントの購入履歴が見つかりません。', 'buy.offline': 'ストアに接続できません。しばらくしてからお試しください。', 'set.unlock': 'ぜんぶの ゲームを ひらく', 'set.unlockD': 'まちの一日・いま何時？は むりょう。ほかの 3つは 1かいの 購入で ひらくよ', 'set.unlockOk': '3つの ゲームが ぜんぶ あそべるよ', 'set.unlockGo': 'みる', 'about.privLink': 'プライバシーポリシー',
     'p.night': 'よなか', 'p.morning': 'あさ', 'p.noon': 'ひる', 'p.afternoon': 'ごご', 'p.evening': 'よる',
     'ampm.am': 'ごぜん', 'ampm.pm': 'ごご',
     back: '‹ メニュー', home: 'メニューへ',
@@ -826,7 +917,7 @@ const STR = {
     'hint.minOne': '{m5}분부터 작은 눈금 하나가 1분이야. 토끼가 몇 칸 더 갔는지 세어 봐!', 'hint.dur1': '{t1}부터 {t2}까지 토끼가 몇 분 갔는지 세어 봐.', 'help.read3': '<li>"얼마나 지났지?"를 고르면 24시간제(오후 3시 = 15시)와 "몇 시에 나가서 몇 시에 도착했어? 몇 분?"도 나와.</li>', 'help.day3': '<li>"얼마나 지났지?"에서는 24시간제로 쓴 시각도 있어: 15:20 = 오후 3:20. 거북이 자리는 3이야.</li>', 'about.level3': '3단계에서는 24시간제(읽을 때는 15:20으로 쓰기, 15:20을 보면 3:20으로 맞추기), 어떤 시각부터 다른 시각까지 몇 분인지(정각을 넘어갈 때는 힌트로 먼저 정각까지, 그다음 나머지를 시간 막대로 그려 줍니다), 1분짜리 작은 눈금도 연습합니다.',
     'town.new': '마을에 {x} 생겼어!', 'deco.flowers': '꽃밭이', 'deco.tree': '큰 나무가', 'deco.bench': '벤치가', 'deco.swing': '그네가', 'deco.fountain': '분수가', 'deco.bakery': '빵집이', 'deco.windmill': '풍차가', 'deco.balloon': '열기구가', 'help.townT': '마을', 'help.town': '<li>시간을 맞게 맞추면 동물이 집에서 나와 일하러 가.</li><li>게임을 하나 끝낼 때마다 마을이 조금씩 커져: 꽃밭, 큰 나무, 벤치, 그네, 분수, 빵집, 풍차, 열기구.</li><li>시계탑의 시계는 메뉴의 시계랑 같이 움직여.</li>',
     'mode.shop': '시계 수리점', 'menu.now': '지금 시각으로', 'shop.say': '{who}의 시계 수리점: 이 시계의 이름표가 맞을까?', 'shop.yes': '맞아', 'shop.fix': '고쳐', 'shop.good': '맞아! 이름표가 맞아.', 'shop.fixed': '고쳤다!', 'shop.oops': '이름표에 쓴 건 점선 시각이야. 시계랑 달라.', 'shop.wasOk': '이 이름표는 맞았어! 거북이랑 토끼를 다시 봐.', 'shop.done': '오늘 시계 {n}개를 봤어!', 'shop.doneAll': '다 맞혔어! 최고의 시계 수리공!', 'q.shop': '시계 수리점에서 시계 {n}개 보기', 'help.shopT': '시계 수리점', 'help.shop': '<li>시계마다 이름표가 붙어 있어. 이름표 시각이 시계랑 같으면 "맞아", 다르면 "고쳐"를 눌러.</li><li>틀려도 괜찮아. 점선이 이름표에 쓴 시각을 알려 줘.</li><li>한 판에 시계 10개.</li>',
-    'lock.trialN': '체험 {n}번', 'lock.locked': '🔒', 'lock.title': '{name} 무료 체험이 끝났어!', 'lock.p': '마을의 하루, 몇 시야?, 별 지도, 펫은 언제든 할 수 있어!', 'lock.ask': '어른용', 'lock.ok': '좋아', 'trial.start': '무료 체험! {n}번 더 할 수 있어', 'trial.last': '무료 체험! 이번이 마지막이야', 'gate.buy': '구매하거나 프로모션 코드를 쓰려면 먼저 어른이 이 문제를 풀어 주세요.', 'buy.title': '모든 게임 열기', 'buy.list': '<li>세 게임({g})을 마음껏 할 수 있습니다.</li><li><b>한 번 구매로 계속 이용</b>: 구독 없음, 광고 없음, 추가 구매 없음.</li><li>이 기기의 모든 플레이어가 이용할 수 있습니다.</li>', 'buy.thanks': '구매해 주시면 제작자가 새 연습 게임을 계속 만드는 데 큰 힘이 됩니다. 감사합니다!', 'buy.go': '{p}에 구매', 'buy.goNoP': '구매', 'buy.restore': '구매 복원', 'buy.code': '프로모션 코드 사용', 'buy.later': '다음에', 'buy.codeAnd': '"구매"를 누른 뒤 Google Play 결제 화면에서 결제 수단을 누르고 "코드 사용"을 선택하세요.', 'buy.wait': '스토어에 연결 중…', 'buy.done': '열렸어! 세 게임을 언제든 할 수 있어!', 'buy.owned': '모두 열려 있습니다. 응원해 주셔서 감사합니다!', 'buy.noProd': '지금은 스토어 상품을 이용할 수 없습니다. 잠시 후 다시 시도해 주세요.', 'buy.codeOld': '이 기기에서는 앱 안에서 코드를 사용할 수 없습니다. App Store의 계정 페이지에서 사용해 주세요.', 'buy.pending': '결제가 아직 처리 중입니다. 완료되면 게임이 열립니다.', 'buy.fail': '구매가 완료되지 않았습니다. 다시 시도할 수 있습니다.', 'buy.none': '이 계정의 구매 내역이 없습니다.', 'buy.offline': '스토어에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.', 'set.unlock': '모든 게임 열기', 'set.unlockD': '마을의 하루, 몇 시야?는 무료예요. 한 번 구매하면 나머지 세 게임이 열려요', 'set.unlockOk': '세 게임이 모두 열렸어요', 'set.unlockGo': '보기', 'about.privLink': '개인정보 처리방침',
+    'lock.trialN': '체험 {n}번', 'lock.locked': '', 'lock.title': '{name} 무료 체험이 끝났어!', 'lock.p': '마을의 하루, 몇 시야?, 별 지도, 펫은 언제든 할 수 있어!', 'lock.ask': '어른용', 'lock.ok': '좋아', 'trial.start': '무료 체험! {n}번 더 할 수 있어', 'trial.last': '무료 체험! 이번이 마지막이야', 'gate.buy': '구매하거나 프로모션 코드를 쓰려면 먼저 어른이 이 문제를 풀어 주세요.', 'buy.title': '모든 게임 열기', 'buy.list': '<li>세 게임({g})을 마음껏 할 수 있습니다.</li><li><b>한 번 구매로 계속 이용</b>: 구독 없음, 광고 없음, 추가 구매 없음.</li><li>이 기기의 모든 플레이어가 이용할 수 있습니다.</li>', 'buy.thanks': '구매해 주시면 제작자가 새 연습 게임을 계속 만드는 데 큰 힘이 됩니다. 감사합니다!', 'buy.go': '{p}에 구매', 'buy.goNoP': '구매', 'buy.restore': '구매 복원', 'buy.code': '프로모션 코드 사용', 'buy.later': '다음에', 'buy.codeAnd': '"구매"를 누른 뒤 Google Play 결제 화면에서 결제 수단을 누르고 "코드 사용"을 선택하세요.', 'buy.wait': '스토어에 연결 중…', 'buy.done': '열렸어! 세 게임을 언제든 할 수 있어!', 'buy.owned': '모두 열려 있습니다. 응원해 주셔서 감사합니다!', 'buy.noProd': '지금은 스토어 상품을 이용할 수 없습니다. 잠시 후 다시 시도해 주세요.', 'buy.codeOld': '이 기기에서는 앱 안에서 코드를 사용할 수 없습니다. App Store의 계정 페이지에서 사용해 주세요.', 'buy.pending': '결제가 아직 처리 중입니다. 완료되면 게임이 열립니다.', 'buy.fail': '구매가 완료되지 않았습니다. 다시 시도할 수 있습니다.', 'buy.none': '이 계정의 구매 내역이 없습니다.', 'buy.offline': '스토어에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.', 'set.unlock': '모든 게임 열기', 'set.unlockD': '마을의 하루, 몇 시야?는 무료예요. 한 번 구매하면 나머지 세 게임이 열려요', 'set.unlockOk': '세 게임이 모두 열렸어요', 'set.unlockGo': '보기', 'about.privLink': '개인정보 처리방침',
     'p.night': '밤', 'p.morning': '아침', 'p.noon': '낮', 'p.afternoon': '오후', 'p.evening': '저녁',
     'ampm.am': '오전', 'ampm.pm': '오후',
     back: '‹ 메뉴', home: '메뉴로',
@@ -899,7 +990,7 @@ const STR = {
     'help.day3': '<li>En "¿Cuánto tiempo?" algunas horas están en formato de 24 horas: 15:20 son las 3:20 p. m., así que la tortuga apunta al 3.</li>', 'about.level3': 'El nivel 3 también practica el formato de 24 horas (escribir 15:20 al leer; poner 3:20 al ver 15:20), los minutos entre dos horas (si pasa por la hora en punto, la pista dibuja una línea de tiempo: primero hasta la hora en punto y luego el resto) y las rayitas de 1 minuto.',
     'town.new': '¡El pueblo tiene {x}!', 'deco.flowers': 'flores', 'deco.tree': 'un árbol grande', 'deco.bench': 'una banca', 'deco.swing': 'un columpio', 'deco.fountain': 'una fuente', 'deco.bakery': 'una panadería', 'deco.windmill': 'un molino', 'deco.balloon': 'un globo aerostático', 'help.townT': 'El pueblo', 'help.town': '<li>Si pones bien la hora, un animal sale de su casa.</li><li>Cada juego que terminas hace crecer el pueblo: flores, un árbol grande, una banca, un columpio, una fuente, una panadería, un molino y un globo aerostático.</li><li>El reloj de la torre marca la misma hora que el reloj del menú.</li>',
     'mode.shop': 'El taller', 'menu.now': 'Ir a la hora de ahora', 'shop.say': 'El taller de {who}: ¿la etiqueta de este reloj está bien?', 'shop.yes': 'Bien', 'shop.fix': 'Arreglar', 'shop.good': '¡Sí! La etiqueta está bien.', 'shop.fixed': '¡Arreglado!', 'shop.oops': 'La etiqueta dice la hora punteada. No es la del reloj.', 'shop.wasOk': '¡Esta etiqueta estaba bien! Mira otra vez la tortuga y el conejo.', 'shop.done': '¡Revisaste {n} relojes hoy!', 'shop.doneAll': '¡Todos bien! ¡Qué buen relojero!', 'q.shop': 'Revisa {n} relojes en el taller', 'help.shopT': 'El taller', 'help.shop': '<li>Cada reloj tiene una etiqueta. Si la etiqueta dice la misma hora que el reloj, toca "Bien". Si no, toca "Arreglar".</li><li>¿Te equivocaste? No pasa nada: las agujas punteadas muestran lo que dice la etiqueta.</li><li>10 relojes por partida.</li>',
-    'lock.trialN': v => `${v.n} gratis`, 'lock.locked': '🔒', 'lock.title': '¡Ya probaste {name}!', 'lock.p': '¡Siempre puedes jugar Día del pueblo, ¿Qué hora es?, el mapa y tu mascota!', 'lock.ask': 'Para adultos', 'lock.ok': 'OK', 'trial.start': v => `¡Prueba gratis! ${v.n === 1 ? 'Te queda' : 'Te quedan'} ${v.n}`, 'trial.last': '¡Prueba gratis! Es la última', 'gate.buy': 'Para comprar o usar un código promocional, primero un adulto debe responder esto.', 'buy.title': 'Desbloquear todos los juegos', 'buy.list': '<li>Juegue los tres juegos ({g}) todo lo que quiera.</li><li><b>Una sola compra, para siempre</b>: sin suscripción, sin anuncios, nada más que comprar.</li><li>Todos los jugadores de este dispositivo pueden jugar.</li>', 'buy.thanks': 'Su apoyo ayuda al autor a seguir creando juegos de práctica. ¡Gracias!', 'buy.go': 'Comprar por {p}', 'buy.goNoP': 'Comprar', 'buy.restore': 'Restaurar compra', 'buy.code': 'Usar código promocional', 'buy.later': 'Ahora no', 'buy.codeAnd': 'Toque "Comprar" y, en la pantalla de pago de Google Play, toque el método de pago y elija "Canjear código".', 'buy.wait': 'Conectando con la tienda…', 'buy.done': '¡Desbloqueado! Los tres juegos ya están disponibles.', 'buy.owned': 'Todo desbloqueado. ¡Gracias por su apoyo!', 'buy.noProd': 'El artículo no está disponible en la tienda en este momento. Inténtelo más tarde.', 'buy.codeOld': 'Este dispositivo no puede canjear códigos en la app. Canjéelo desde la página de su cuenta en el App Store.', 'buy.pending': 'El pago aún se está procesando. Los juegos se desbloquean cuando se complete.', 'buy.fail': 'La compra no se completó. Puede intentarlo de nuevo.', 'buy.none': 'No se encontró ninguna compra en esta cuenta.', 'buy.offline': 'No se puede conectar con la tienda. Inténtelo más tarde.', 'set.unlock': 'Desbloquear todos los juegos', 'set.unlockD': 'Día del pueblo y ¿Qué hora es? son gratis. Una compra desbloquea los otros tres', 'set.unlockOk': 'Los tres juegos están desbloqueados', 'set.unlockGo': 'Ver', 'about.privLink': 'Política de privacidad',
+    'lock.trialN': v => `${v.n} gratis`, 'lock.locked': '', 'lock.title': '¡Ya probaste {name}!', 'lock.p': '¡Siempre puedes jugar Día del pueblo, ¿Qué hora es?, el mapa y tu mascota!', 'lock.ask': 'Para adultos', 'lock.ok': 'OK', 'trial.start': v => `¡Prueba gratis! ${v.n === 1 ? 'Te queda' : 'Te quedan'} ${v.n}`, 'trial.last': '¡Prueba gratis! Es la última', 'gate.buy': 'Para comprar o usar un código promocional, primero un adulto debe responder esto.', 'buy.title': 'Desbloquear todos los juegos', 'buy.list': '<li>Juegue los tres juegos ({g}) todo lo que quiera.</li><li><b>Una sola compra, para siempre</b>: sin suscripción, sin anuncios, nada más que comprar.</li><li>Todos los jugadores de este dispositivo pueden jugar.</li>', 'buy.thanks': 'Su apoyo ayuda al autor a seguir creando juegos de práctica. ¡Gracias!', 'buy.go': 'Comprar por {p}', 'buy.goNoP': 'Comprar', 'buy.restore': 'Restaurar compra', 'buy.code': 'Usar código promocional', 'buy.later': 'Ahora no', 'buy.codeAnd': 'Toque "Comprar" y, en la pantalla de pago de Google Play, toque el método de pago y elija "Canjear código".', 'buy.wait': 'Conectando con la tienda…', 'buy.done': '¡Desbloqueado! Los tres juegos ya están disponibles.', 'buy.owned': 'Todo desbloqueado. ¡Gracias por su apoyo!', 'buy.noProd': 'El artículo no está disponible en la tienda en este momento. Inténtelo más tarde.', 'buy.codeOld': 'Este dispositivo no puede canjear códigos en la app. Canjéelo desde la página de su cuenta en el App Store.', 'buy.pending': 'El pago aún se está procesando. Los juegos se desbloquean cuando se complete.', 'buy.fail': 'La compra no se completó. Puede intentarlo de nuevo.', 'buy.none': 'No se encontró ninguna compra en esta cuenta.', 'buy.offline': 'No se puede conectar con la tienda. Inténtelo más tarde.', 'set.unlock': 'Desbloquear todos los juegos', 'set.unlockD': 'Día del pueblo y ¿Qué hora es? son gratis. Una compra desbloquea los otros tres', 'set.unlockOk': 'Los tres juegos están desbloqueados', 'set.unlockGo': 'Ver', 'about.privLink': 'Política de privacidad',
     'p.night': 'de la noche', 'p.morning': 'de la mañana', 'p.noon': 'del mediodía', 'p.afternoon': 'de la tarde', 'p.evening': 'de la noche',
     'ampm.am': 'a. m.', 'ampm.pm': 'p. m.',
     back: '‹ Menú', home: 'Volver al menú',
@@ -985,6 +1076,201 @@ function fitTitle() {
 addEventListener('resize', fitTitle); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitle);
 function setLang() { LANG = STR[DB.set.lang] ? DB.set.lang : langAuto(); applyStr(); if (typeof renderLocks === 'function' && $('#go-match')) try { renderLocks(); } catch (e) {} }
 
+// ---------- 美術：全部自己畫（SVG），「軟陶玩具」的樣子——每一塊都有立體的光影和細顆粒
+// ART.doc(name, opt) 回一整個 <svg>；ART.url(name, opt) 回 data URL（給 <img>、canvas 用）
+const ART = (() => {
+  // 軟陶濾鏡：c 給 120 單位的大圖、cs 給 48 單位的小圖示。做法：邊緣一圈暗（右下）＋一圈亮（左上）＋細顆粒
+  const clay = (id, b, dx, dy, sh, hl, gr) => `<filter id="${id}" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+<feGaussianBlur in="SourceAlpha" stdDeviation="${b}" result="b"/>
+<feOffset in="b" dx="${-dx}" dy="${-dy}" result="b1"/><feComposite in="SourceAlpha" in2="b1" operator="out" result="s1"/>
+<feFlood flood-color="#4a1f10" flood-opacity="${sh}"/><feComposite in2="s1" operator="in" result="sh"/>
+<feOffset in="b" dx="${dx}" dy="${dy}" result="b2"/><feComposite in="SourceAlpha" in2="b2" operator="out" result="s2"/>
+<feFlood flood-color="#fff" flood-opacity="${hl}"/><feComposite in2="s2" operator="in" result="hl"/>
+<feTurbulence type="fractalNoise" baseFrequency="${gr}" numOctaves="2" seed="7" result="n"/>
+<feColorMatrix in="n" type="matrix" values="0 0 0 0 .35  0 0 0 0 .2  0 0 0 0 .15  0 0 0 -1.1 .5" result="n1"/><feComposite in="n1" in2="SourceAlpha" operator="in" result="grain"/>
+<feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="grain"/><feMergeNode in="sh"/><feMergeNode in="hl"/></feMerge></filter>`;
+  const DEFS = `<defs>${clay('c', 2.6, 2.2, 3.2, 0.34, 0.6, 0.9)}${clay('cs', 1.25, 1, 1.5, 0.3, 0.6, 1.6)}${clay('cb', 4.5, 3.5, 5, 0.3, 0.55, 0.7)}
+<radialGradient id="blush"><stop offset="0" stop-color="#ff8f9c" stop-opacity=".75"/><stop offset="1" stop-color="#ff8f9c" stop-opacity="0"/></radialGradient>
+<radialGradient id="glow"><stop offset="0" stop-color="#fff3a8" stop-opacity=".95"/><stop offset="1" stop-color="#ffe27a" stop-opacity="0"/></radialGradient>
+<filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.5"/></filter></defs>`;
+  const P = (s, f = 'c') => `<g filter="url(#${f})">${s}</g>`;   // 一塊軟陶
+  const el = (cx, cy, rx, ry, fill, x = '') => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}"${x ? ' ' + x : ''}/>`;
+  const ci = (cx, cy, r, fill, x = '') => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}"${x ? ' ' + x : ''}/>`;
+  const pa = (d, fill, x = '') => `<path d="${d}" fill="${fill}"${x ? ' ' + x : ''}/>`;
+  const rc = (x, y, w, h, r, fill, t = '') => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${fill}"${t ? ' ' + t : ''}/>`;
+  const INK = '#4a332b';
+  // 臉：亮亮的眼睛、腮紅
+  const eye = (x, y, r = 4.2) => ci(x, y, r, INK) + ci(x - r * 0.3, y - r * 0.35, r * 0.38, '#fff') + ci(x + r * 0.32, y + r * 0.3, r * 0.17, '#fff', 'opacity=".8"');
+  const sleepEye = (x, y, r = 4.2) => `<path d="M${x - r} ${y}q${r} ${r * 0.9} ${r * 2} 0" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linecap="round"/>`;
+  const blush = (x, y, rx = 7, ry = 4.5) => el(x, y, rx, ry, 'url(#blush)');
+  const shadow = (cx, cy, rx, ry = rx * 0.2) => el(cx, cy, rx, ry, '#3a2a55', 'opacity=".18" filter="url(#soft)"');
+  const mouth = (x, y, w = 5) => `<path d="M${x - w} ${y}q${w / 2} ${w * 0.6} ${w} 0q${w / 2} ${w * 0.6} ${w} 0" fill="none" stroke="${INK}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+  // ---------- 動物（120×120，腳底在 y=114；頭中心 HEAD[k] = [x, y, r] 給配件用）
+  const HEAD = { bear: [60, 50, 32], bunny: [60, 58, 29], squirrel: [56, 54, 29], owl: [60, 52, 34] };
+  const C = {
+    bear(o = {}) {
+      const f = '#e6a868', d = '#cf8a4c', l = '#fdebd0';
+      return P(el(60, 93, 23, 21, f)) + P(el(60, 97, 13.5, 13, l)) + P(el(45, 111, 11, 7, d) + el(75, 111, 11, 7, d)) + P(el(36.5, 88, 7.5, 11, f, 'transform="rotate(18 36.5 88)"') + el(83.5, 88, 7.5, 11, f, 'transform="rotate(-18 83.5 88)"'))
+        + P(ci(34, 27, 12.5, f) + ci(86, 27, 12.5, f)) + ci(34, 28, 6.5, '#f7c9a8') + ci(86, 28, 6.5, '#f7c9a8')
+        + P(el(60, 50, 37, 31, f)) + P(el(60, 61, 13.5, 10.5, l)) + el(60, 56.5, 5, 3.6, '#6b4636') + ci(58.6, 55.5, 1.2, '#fff', 'opacity=".7"') + mouth(60, 62.5, 4.2)
+        + (o.sleep ? sleepEye(43, 52) + sleepEye(77, 52) : eye(43, 51) + eye(77, 51)) + blush(33, 61) + blush(87, 61);
+    },
+    bunny(o = {}) {
+      const f = '#fff6ee', d = '#f3e2d6', p = '#ffc0cd';
+      return P(el(60, 96, 20, 18, f)) + P(el(47, 111, 10, 6.5, d) + el(73, 111, 10, 6.5, d)) + P(el(40, 92, 6.5, 10, f, 'transform="rotate(18 40 92)"') + el(80, 92, 6.5, 10, f, 'transform="rotate(-18 80 92)"'))
+        + P(el(46, 24, 9, 23, f, 'transform="rotate(-9 46 24)"') + el(74, 24, 9, 23, f, 'transform="rotate(9 74 24)"')) + el(46, 25, 4.2, 15, p, 'transform="rotate(-9 46 25)"') + el(74, 25, 4.2, 15, p, 'transform="rotate(9 74 25)"')
+        + P(el(60, 58, 34, 28, f)) + el(60, 63, 3.4, 2.5, '#ff8fa3') + mouth(60, 66.5, 3.6)
+        + (o.sleep ? sleepEye(44, 59) + sleepEye(76, 59) : eye(44, 58) + eye(76, 58)) + blush(34, 67) + blush(86, 67);
+    },
+    squirrel(o = {}) {
+      const f = '#f2a057', d = '#dc8440', l = '#fff0d8';
+      return P(pa('M78 112C106 114 116 86 108 62C102 40 80 34 74 52C70 64 84 66 86 58C90 74 84 92 70 100Z', d)) + P(pa('M82 104C100 102 106 82 100 64C97 56 90 52 86 58C90 74 84 92 76 99Z', '#f6b877'))
+        + P(el(56, 95, 20, 18.5, f)) + P(el(56, 98, 12, 12, l)) + P(el(44, 111, 10, 6.5, d) + el(68, 111, 10, 6.5, d)) + P(el(37.5, 91, 6.5, 10, f, 'transform="rotate(18 37.5 91)"') + el(74.5, 91, 6.5, 10, f, 'transform="rotate(-18 74.5 91)"'))
+        + P(pa('M30 36Q27 14 44 26Z', f) + pa('M82 36Q85 14 68 26Z', f)) + pa('M33 32Q32 21 41 27Z', '#f9c9a5') + pa('M79 32Q80 21 71 27Z', '#f9c9a5')
+        + P(el(56, 54, 33, 28, f)) + P(el(44, 63, 12, 9.5, l) + el(68, 63, 12, 9.5, l), 'cs') + el(56, 58.5, 3.6, 2.6, '#6b4636') + mouth(56, 62, 3.4)
+        + (o.sleep ? sleepEye(41, 53) + sleepEye(71, 53) : eye(41, 52) + eye(71, 52)) + blush(31, 62, 6, 4) + blush(81, 62, 6, 4);
+    },
+    owl(o = {}) {
+      const f = '#b9a2e6', d = '#9a82d2', l = '#fff3df';
+      return P(el(49, 112, 8, 4.5, '#ffb347') + el(71, 112, 8, 4.5, '#ffb347'), 'cs') + P(pa('M32 30Q26 8 46 22Z', d) + pa('M88 30Q94 8 74 22Z', d))
+        + P(pa('M60 16C88 16 98 44 98 68C98 96 82 112 60 112C38 112 22 96 22 68C22 44 32 16 60 16Z', f))
+        + P(pa('M60 60C76 60 84 72 84 86C84 100 74 108 60 108C46 108 36 100 36 86C36 72 44 60 60 60Z', l))
+        + `<path d="M48 84q4 4 8 0M64 84q4 4 8 0M56 94q4 4 8 0" fill="none" stroke="#e8cfa6" stroke-width="2" stroke-linecap="round"/>`
+        + P(pa('M22 62C12 70 12 92 26 98C24 86 24 74 26 62Z', d) + pa('M98 62C108 70 108 92 94 98C96 86 96 74 94 62Z', d))
+        + P(ci(45, 50, 15.5, l) + ci(75, 50, 15.5, l)) + (o.sleep ? sleepEye(40, 51, 5) + sleepEye(70, 51, 5) : eye(46, 50, 6.2) + eye(74, 50, 6.2))
+        + P(pa('M60 55L65 62Q60 68 55 62Z', '#ffb347'), 'cs') + blush(31, 64, 6, 4) + blush(89, 64, 6, 4);
+    },
+  };
+  const art = {};
+  for (const k in C) art[k] = { w: 120, h: 120, s: o => shadow(60, 114, 30, 4.5) + C[k](o) };
+  art.rabbit = art.bunny;
+
+
+  // ---------- 房子（120×130，地面在 y=126）：六種顏色、三種屋頂；lit 窗戶亮燈
+  const HOUSE = [['#ffe1c4', '#ff9a8a', 0], ['#fff0b8', '#7fc8f0', 1], ['#d8efff', '#ffb35c', 2], ['#eadcff', '#ff8fb0', 0], ['#ffdbe6', '#8fd6a8', 1], ['#d9f5dd', '#b79be8', 2]];
+  const WIN = [[35, 95], [85, 95]];   // 窗戶中心（120 單位）
+  function house(i, o = {}) {
+    const [wall, roof, kind] = HOUSE[i], glass = o.lit ? '#ffe680' : '#bfe6ff';
+    const roofD = ['M8 68Q60 -14 112 68Q114 78 104 78H16Q6 78 8 68Z', 'M10 70L54 14Q60 8 66 14L110 70Q114 78 104 78H16Q6 78 10 70Z', 'M6 66Q10 34 60 30Q110 34 114 66Q116 78 104 78H16Q4 78 6 66Z'][kind];
+    return shadow(60, 126, 46, 5) + P(rc(80, [12, 14, 22][kind], 15, 30, 5, '#d98a6a')) + P(rc(18, 62, 84, 64, 14, wall)) + P(pa(roofD, roof))
+      + [[38, 52], [60, 40], [82, 52]].map(([x, y]) => ci(x, y + (kind === 2 ? 6 : 0), 4, '#fff', 'opacity=".45"')).join('')
+      + P(pa('M48 126V104a12 12 0 0 1 24 0V126Z', '#c98a5e'), 'cs') + ci(66, 112, 2.2, '#ffd36b')
+      + WIN.map(([x, y]) => P(ci(x, y, 11, '#fffaf2'), 'cs') + ci(x, y, 7.5, glass) + (o.lit ? ci(x, y, 16, 'url(#glow)', 'opacity=".7"') : `<path d="M${x - 7.5} ${y}h15M${x} ${y - 7.5}v15" stroke="#fffaf2" stroke-width="2"/>`)).join('');
+  }
+  for (let i = 0; i < 6; i++) { art['house-' + i] = { w: 120, h: 130, s: o => house(i, o) }; }
+  // ---------- 鐘樓（120×270，地面在 y=266）：鐘面中心 (60, 96)、半徑 27，指針由程式畫
+  art.tower = { w: 120, h: 270, s: () => shadow(60, 266, 48, 5.5)
+    + P(rc(30, 120, 60, 146, 14, '#fff0d6')) + rc(30, 168, 60, 12, 0, '#ffd9a8', 'opacity=".8"') + rc(30, 204, 60, 12, 0, '#ffd9a8', 'opacity=".8"')
+    + P(pa('M48 266V240a12 12 0 0 1 24 0V266Z', '#c98a5e'), 'cs') + ci(66, 250, 2.2, '#ffd36b') + P(pa('M60 186c-3-6-12-4-12 3c0 6 8 10 12 13c4-3 12-7 12-13c0-7-9-9-12-3Z', '#ff9aae'), 'cs')
+    + P(rc(18, 60, 84, 74, 22, '#ffe7c2')) + P(pa('M12 64Q20 22 60 4Q100 22 108 64Q110 72 100 72H20Q10 72 12 64Z', '#ff8a7a')) + P(ci(60, 6, 6, '#ffd36b'), 'cs')
+    + P(ci(60, 96, 31, '#ffd36b')) + ci(60, 96, 26, '#fffaf0') };
+  const TOWER = { ar: 120 / 270, cy: 96 / 270, cr: 26 / 120 };
+  // ---------- 天上的：太陽、月亮、雲、星星
+  art.sun = { w: 120, h: 120, s: () => P(Array.from({ length: 10 }, (_, i) => rc(54, 2, 12, 22, 6, '#ffc24a', `transform="rotate(${i * 36} 60 60)"`)).join('')) + P(ci(60, 60, 36, '#ffd95c'), 'cb') + eye(47, 58, 4) + eye(73, 58, 4) + mouth(60, 68, 5) + blush(40, 68) + blush(80, 68) };
+  art.moon = { w: 120, h: 120, s: () => P(pa('M74 10A52 52 0 1 0 110 84A42 42 0 0 1 74 10Z', '#fff0b3'), 'cb') + sleepEye(40, 62, 5) + mouth(52, 76, 3.5) + blush(36, 74, 6, 4) };
+  art.cloud1 = { w: 160, h: 90, s: () => P(ci(48, 54, 26, '#fff') + ci(84, 40, 32, '#fff') + ci(118, 56, 24, '#fff') + rc(30, 52, 104, 30, 15, '#fff'), 'cb') + eye(70, 58, 3.4) + eye(98, 58, 3.4) + mouth(84, 64, 3.6) + blush(60, 66, 6, 4) + blush(108, 66, 6, 4) };
+  art.cloud2 = { w: 160, h: 90, s: () => P(ci(44, 56, 22, '#fff') + ci(74, 44, 26, '#fff') + ci(108, 46, 28, '#fff') + rc(26, 52, 110, 28, 14, '#fff'), 'cb') };
+  art.bush = { w: 120, h: 70, s: () => P(ci(32, 46, 22, '#7fcf7a') + ci(62, 34, 28, '#8ad884') + ci(92, 46, 22, '#7fcf7a') + rc(12, 44, 96, 24, 12, '#7fcf7a')) };
+  const IC = {
+  acorn: '<path d="M12 21Q12 42 24 44Q36 42 36 21Z" fill="#e0a050"/><path d="M9 21Q24 3 39 21Z" fill="#8a5a33"/><path d="M24 11L26 5"/>',
+  quest: '<rect x="10" y="8" width="28" height="35" rx="4" fill="#fff8e6"/><rect x="18" y="4" width="12" height="8" rx="3" fill="#ffb53d"/><path d="M16 21H32M16 28H32M16 35H26"/>',
+  map: '<circle cx="24" cy="24" r="19" fill="#4a6fd0"/><circle cx="24" cy="24" r="12" stroke="#9db8ff" stroke-width="1.6"/><polygon points="24.0,15.0 26.4,20.8 32.6,21.2 27.8,25.2 29.3,31.3 24.0,28.0 18.7,31.3 20.2,25.2 15.4,21.2 21.6,20.8" fill="#ffd23f"/><circle cx="37" cy="14" r="1.6" fill="#fff" stroke="none"/><circle cx="11" cy="30" r="1.6" fill="#fff" stroke="none"/>',
+  gear: '<rect x="19.5" y="4" width="9" height="40" rx="2.5" fill="#b8c4d0" transform="rotate(0 24 24)"/><rect x="19.5" y="4" width="9" height="40" rx="2.5" fill="#b8c4d0" transform="rotate(45 24 24)"/><rect x="19.5" y="4" width="9" height="40" rx="2.5" fill="#b8c4d0" transform="rotate(90 24 24)"/><rect x="19.5" y="4" width="9" height="40" rx="2.5" fill="#b8c4d0" transform="rotate(135 24 24)"/><circle cx="24" cy="24" r="13.5" fill="#b8c4d0"/><circle cx="24" cy="24" r="5.5" fill="#fff8e6"/>',
+  now: '<circle cx="24" cy="24" r="19" fill="#fffaf0"/><path d="M24 24V12" stroke="#e8514f" stroke-width="3.4"/><path d="M24 24L32 29" stroke="#3a7bd5" stroke-width="3.8"/><circle cx="24" cy="24" r="2" fill="#5a3d2b"/>',
+  alarm: '<path d="M14 40L10 45M34 40L38 45"/><circle cx="12" cy="10" r="5.5" fill="#e8514f"/><circle cx="36" cy="10" r="5.5" fill="#e8514f"/><circle cx="24" cy="27" r="16" fill="#fffaf0"/><path d="M24 27V17" stroke="#e8514f" stroke-width="3.2"/><path d="M24 27L31 31" stroke="#3a7bd5" stroke-width="3.6"/>',
+  house: '<rect x="10" y="22" width="28" height="21" rx="2" fill="#ffd36b"/><path d="M5 25L24 7L43 25Z" fill="#e8514f"/><rect x="20" y="30" width="8" height="13" rx="3.5" fill="#8a5a33"/>',
+  cards: '<rect x="7" y="9" width="22" height="30" rx="4" fill="#ffb53d" transform="rotate(-10 18 24)"/><rect x="19" y="10" width="22" height="30" rx="4" fill="#fff8e6" transform="rotate(8 30 25)"/><g transform="rotate(8 30 25)"><circle cx="30" cy="25" r="6.5" fill="#fffaf0"/><path d="M30 25V21M30 25L33 26" stroke-width="2"/></g>',
+  wrench: '<rect x="-4.5" y="0" width="9" height="27" rx="4.5" fill="#b8c4d0" transform="translate(27 21) rotate(45)"/><path d="M34.6 6.3L33 14.5L41.7 13.4A10 10 0 1 1 34.6 6.3Z" fill="#b8c4d0"/>',
+  two: '<path d="M4 41Q4 27 16 27Q28 27 28 41Z" fill="#7ec4ff"/><circle cx="16" cy="17" r="7.5" fill="#ffd9b0"/><path d="M22 41Q22 29 33 29Q44 29 44 41Z" fill="#ffb53d"/><circle cx="33" cy="20" r="6.5" fill="#ffd9b0"/>',
+  bulb: '<rect x="19" y="31" width="10" height="9" rx="2.5" fill="#b8c4d0"/><circle cx="24" cy="19" r="13" fill="#ffe27a"/><path d="M20 20Q24 26 28 20" stroke-width="2"/>',
+  star: '<polygon points="24.0,5.5 29.3,18.2 43.0,19.3 32.6,28.3 35.8,41.7 24.0,34.5 12.2,41.7 15.4,28.3 5.0,19.3 18.7,18.2" fill="#ffd23f"/>',
+  starhappy: '<polygon points="24.0,4.5 30.2,17.0 44.0,19.0 34.0,28.7 36.3,42.5 24.0,36.0 11.7,42.5 14.0,28.7 4.0,19.0 17.8,17.0" fill="#ffd23f"/><circle cx="20" cy="24" r="1.7" fill="#5a3d2b" stroke="none"/><circle cx="28" cy="24" r="1.7" fill="#5a3d2b" stroke="none"/><path d="M20.5 28.5Q24 32 27.5 28.5" stroke-width="2"/>',
+  moon: '<path d="M30 6A19 19 0 1 0 42 31A15 15 0 0 1 30 6Z" fill="#ffe9a8"/>',
+  lock: '<path d="M16 21V15a8 8 0 0 1 16 0V21"/><rect x="10" y="20" width="28" height="23" rx="5.5" fill="#ffb53d"/><circle cx="24" cy="30" r="3" fill="#5a3d2b" stroke="none"/><path d="M24 31V36"/>',
+  close: '<path d="M14 14L34 34M34 14L14 34" stroke-width="5"/>',
+  check: '<path d="M9 25L20 36L39 13" stroke-width="5.5"/>',
+  arrow: '<path d="M8 24H38M27 13L38 24L27 35" stroke-width="4.5"/>',
+  back: '<path d="M17 10H40a3 3 0 0 1 3 3V35a3 3 0 0 1-3 3H17L5 24Z" fill="#fff8e6"/><path d="M23 18L34 30M34 18L23 30" stroke-width="3"/>',
+  zzz: '<g stroke="#7fb0ff" stroke-width="4"><path d="M8 10H22L8 26H22"/><path d="M28 24H40L28 38H40"/></g>',
+  finger: '<path d="M19 44V25l-4 3a3.2 3.2 0 0 1-4.4-4.6L19 15V8a4.2 4.2 0 0 1 8.4 0V20h5.6a5.5 5.5 0 0 1 5.5 5.5V35a9 9 0 0 1-9 9Z" fill="#ffd9b0"/>',
+  paw: '<ellipse cx="24" cy="32" rx="11" ry="9" fill="#fff8e6"/><circle cx="10" cy="21" r="4.6" fill="#fff8e6"/><circle cx="19" cy="12" r="4.6" fill="#fff8e6"/><circle cx="29" cy="12" r="4.6" fill="#fff8e6"/><circle cx="38" cy="21" r="4.6" fill="#fff8e6"/>',
+  trophy: '<path d="M14 11H8a6.5 6.5 0 0 0 7 9M34 11H40a6.5 6.5 0 0 1-7 9"/><rect x="20.5" y="29" width="7" height="9" fill="#ffd23f"/><rect x="14" y="37" width="20" height="7" rx="2.5" fill="#c98a3a"/><path d="M13 6H35V20a11 11 0 0 1-22 0Z" fill="#ffd23f"/>',
+  party: '<polygon points="24.0,11.0 28.1,20.3 38.3,21.4 30.7,28.2 32.8,38.1 24.0,33.0 15.2,38.1 17.3,28.2 9.7,21.4 19.9,20.3" fill="#ffd23f"/><circle cx="8" cy="10" r="3.2" fill="#ff7a6b"/><circle cx="40" cy="9" r="3.2" fill="#7ec4ff"/><circle cx="41" cy="40" r="3.2" fill="#5fcf9a"/><circle cx="7" cy="39" r="3.2" fill="#c99bff"/><path d="M24 3V7M4 24H8M40 24H44" stroke-width="2.4"/>',
+  egg: '<path d="M24 4C34 4 41 21 41 30a17 15 0 0 1-34 0C7 21 14 4 24 4Z" fill="#fff3d6"/><circle cx="18" cy="20" r="3" fill="#ffd36b" stroke="none"/><circle cx="30" cy="30" r="3.6" fill="#ffd36b" stroke="none"/><circle cx="19" cy="35" r="2.2" fill="#ffd36b" stroke="none"/>',
+  turtle: '<ellipse cx="24" cy="26" rx="18" ry="15" fill="#7fc24a"/><path d="M13 21Q24 10 35 21M18 31Q24 36 30 31" stroke-width="2.2"/><circle cx="17.5" cy="24" r="2.2" fill="#5a3d2b" stroke="none"/><circle cx="30.5" cy="24" r="2.2" fill="#5a3d2b" stroke="none"/>',
+  robot: '<path d="M24 12V6M11 36L7 40M37 36L41 40"/><circle cx="24" cy="5" r="2.8" fill="#ff7a6b"/><rect x="15" y="32" width="18" height="12" rx="4" fill="#8fb0d8"/><rect x="10" y="11" width="28" height="21" rx="7" fill="#c4dcf4"/><circle cx="18" cy="21" r="3.6" fill="#fff"/><circle cx="30" cy="21" r="3.6" fill="#fff"/><circle cx="18" cy="21" r="1.3" fill="#5a3d2b" stroke="none"/><circle cx="30" cy="21" r="1.3" fill="#5a3d2b" stroke="none"/><path d="M19 27.5H29" stroke-width="2.2"/>',
+  bowl: '<path d="M31 20L40 5" stroke-width="3.4"/><path d="M5 22H43a19 18 0 0 1-38 0Z" fill="#7ec4ff"/><ellipse cx="24" cy="22" rx="19" ry="5" fill="#ffe9a8"/>',
+  backpack: '<path d="M19 14V10a5 5 0 0 1 10 0V14"/><rect x="10" y="13" width="28" height="30" rx="9" fill="#e8514f"/><rect x="16" y="27" width="16" height="11" rx="3.5" fill="#ff9a8c"/><path d="M16 21H32" stroke-width="2.2"/>',
+  riceball: '<path d="M24 5Q28 5 31 11L42 33Q45 42 36 42H12Q3 42 6 33L17 11Q20 5 24 5Z" fill="#fff"/><rect x="17" y="30" width="14" height="12" rx="1.5" fill="#3f4f3f"/>',
+  book: '<path d="M24 13Q14 8 5 12V38Q14 34 24 39Z" fill="#fff8e6"/><path d="M24 13Q34 8 43 12V38Q34 34 24 39Z" fill="#fff8e6"/><path d="M10 19Q15 17 19 19M10 25Q15 23 19 25M29 19Q33 17 38 19M29 25Q33 23 38 25" stroke-width="1.8"/>',
+  ball: '<circle cx="24" cy="24" r="19" fill="#fff"/><polygon points="24.0,16.5 31.1,21.7 28.4,30.1 19.6,30.1 16.9,21.7" fill="#5a3d2b"/><path d="M24 16.5V6M31.1 21.7L41.5 17.5M28.4 30.1L35 39.5M19.6 30.1L13 39.5M16.9 21.7L6.5 17.5" stroke-width="2.2"/>',
+  pot: '<g stroke="#b9a58c" stroke-width="2.4"><path d="M18 11Q15 8 18 4M26 11Q23 8 26 4M34 11Q31 8 34 4"/></g><path d="M9 26H4M39 26H44"/><rect x="9" y="20" width="30" height="22" rx="6" fill="#ff9f6b"/><path d="M7 20H41" stroke-width="3.4"/>',
+  bath: '<circle cx="14" cy="17" r="5.5" fill="#d6ecff"/><circle cx="23" cy="13" r="6.5" fill="#d6ecff"/><circle cx="32" cy="18" r="5" fill="#d6ecff"/><path d="M14 40L12 45M34 40L36 45"/><path d="M5 23H43V29a11 11 0 0 1-11 11H16A11 11 0 0 1 5 29Z" fill="#fff"/>',
+  books: '<rect x="7" y="32" width="34" height="10" rx="2.5" fill="#ff7a6b"/><rect x="10" y="22" width="29" height="10" rx="2.5" fill="#7ec4ff"/><rect x="8" y="12" width="31" height="10" rx="2.5" fill="#ffd36b"/><path d="M13 37H22M15 27H23M13 17H21" stroke-width="1.8"/>',
+  };
+  // 圖示（48×48）：細細的可可色邊＋軟陶光影。名字 i-xxx；小鎮裡的小東西 p-xxx 用同一張
+  const IC_OPEN = '<g fill="none" stroke="#8a6250" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round">';
+  for (const k in IC) { art['i-' + k] = { w: 48, h: 48, s: () => P(IC_OPEN + IC[k] + '</g>', 'cs') }; }
+  for (const k of ['bowl', 'backpack', 'riceball', 'book', 'ball', 'pot', 'bath', 'books']) art['p-' + k] = art['i-' + k];
+  art.zzz = art['i-zzz'];
+
+  // ---------- 配件（以原點為中心畫，寬約 40；戴在頭上時由 pet() 擺位置）
+  const G = {
+    bow: () => P(pa('M0 0C-8 -12 -22 -12 -22 0C-22 12 -8 12 0 0Z', '#ff6f7d') + pa('M0 0C8 -12 22 -12 22 0C22 12 8 12 0 0Z', '#ff6f7d'), 'cs') + P(ci(0, 0, 5.5, '#ff94a0'), 'cs'),
+    scarf: () => P(rc(-22, -6, 44, 12, 6, '#ff8a5c') + pa('M8 2h11v20a3 3 0 0 1-3 3h-5a3 3 0 0 1-3-3Z', '#ff8a5c'), 'cs') + [-13, -3, 7].map(x => rc(x, -6, 5, 12, 0, '#ffe08a', 'opacity=".9"')).join('') + rc(8, 16, 11, 4, 0, '#ffe08a', 'opacity=".9"'),
+    glasses: () => `<path d="M-4 -1q4 -3 8 0" fill="none" stroke="#3b3550" stroke-width="2.6" stroke-linecap="round"/>` + P(rc(-22, -8, 18, 15, 7, '#3b3550') + rc(4, -8, 18, 15, 7, '#3b3550'), 'cs') + pa('M-19 -4q4 -3 8 -1', 'none', 'stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"') + pa('M7 -4q4 -3 8 -1', 'none', 'stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"'),
+    hat: () => P(el(0, 8, 23, 6, '#4f8fe0') + rc(-13, -16, 26, 25, 6, '#5b9bea'), 'cs') + rc(-13, 0, 26, 5.5, 0, '#ffd36b'),
+    star: () => P(`<polygon points="0,-13 3.8,-4.6 13,-3.6 6.2,2.6 8,11.6 0,7 -8,11.6 -6.2,2.6 -13,-3.6 -3.8,-4.6" fill="#ffd84a" stroke="#ffd84a" stroke-width="3" stroke-linejoin="round"/>`, 'cs'),
+    crown: () => P(pa('M-17 10L-20 -8L-9 0L0 -13L9 0L20 -8L17 10Z', '#ffd24a', 'stroke="#ffd24a" stroke-width="3" stroke-linejoin="round"'), 'cs') + ci(0, 3, 3, '#ff7a8a') + ci(-10, 5, 2.2, '#7fc8f0') + ci(10, 5, 2.2, '#7fc8f0'),
+  };
+  for (const k in G) art['g-' + k] = { w: 56, h: 56, s: () => `<g transform="translate(28 ${k === 'scarf' ? 22 : 29}) scale(1.08)">${G[k]()}</g>` };
+  // 頭、眼睛、脖子在哪裡（120 單位）：配件用
+  const FIT = { bear: { top: [60, 21], eye: [60, 51, 17], neck: [60, 80, 1.05], side: 24 }, squirrel: { top: [56, 28], eye: [56, 52, 15], neck: [56, 80, 0.95], side: 21 }, owl: { top: [60, 17], eye: [60, 50, 14], neck: [60, 76, 1.5], side: 22 }, bunny: { top: [60, 32], eye: [60, 58, 16], neck: [60, 84, 0.95], side: 20 } };
+  function gearOn(kind, id) {
+    const f = FIT[kind], at = (x, y, sc, rot = 0) => `<g data-g="${id}" transform="translate(${x} ${y}) rotate(${rot}) scale(${sc})">${G[id]()}</g>`;
+    return id === 'bow' ? at(f.top[0] - f.side, f.top[1] + 9, 0.62, -18) : id === 'star' ? at(f.top[0] + f.side, f.top[1] + 9, 0.72, 14) : id === 'hat' ? at(f.top[0], f.top[1] - 4, 0.95) : id === 'crown' ? at(f.top[0], f.top[1] - 2, 0.85)
+      : id === 'glasses' ? at(f.eye[0], f.eye[1] + 1, f.eye[2] / 14.5) : id === 'scarf' ? at(f.neck[0], f.neck[1], f.neck[2]) : '';
+  }
+  // ---------- 寵物（120×120）：0 是蛋；1～4 同一隻越長越大，1 還坐在蛋殼裡，4 身邊有小星星
+  const PETC = { owl: '#b9a2e6', squirrel: '#f2a057', bear: '#e6a868' }, PSC = [0, 0.5, 0.66, 0.83, 1];
+  function pet(kind, st, wear) {
+    const col = PETC[kind]; if (!col) return '';
+    if (st === 0) return shadow(60, 112, 26, 4.5) + P(pa('M60 30C82 30 94 62 94 80a34 31 0 0 1-68 0C26 62 38 30 60 30Z', '#fff6e2'), 'cb') + ci(48, 62, 5.5, col, 'opacity=".75"') + ci(72, 80, 7, col, 'opacity=".75"') + ci(50, 92, 4, col, 'opacity=".75"') + ci(70, 52, 3.4, col, 'opacity=".75"');
+    const k = PSC[st], w = wear || {}, gear = ['neck', 'head', 'face'].map(sl => w[sl] && G[w[sl]] ? gearOn(kind, w[sl]) : '').join('');
+    return shadow(60, 114, 12 + 20 * k, 4.5) + `<g transform="translate(60 114) scale(${k}) translate(-60 -114)">${C[kind]({})}${gear}</g>`
+      + (st === 1 ? P(pa('M34 96l7 6l7 -7l6 7l6 -7l6 7l7 -7l7 6l1 0a26 20 0 0 1-53 0Z', '#fff6e2')) + ci(50, 108, 2.6, col, 'opacity=".7"') + ci(70, 106, 3.2, col, 'opacity=".7"') : '')
+      + (st === 4 ? [[14, 30, 1], [106, 42, 0.8], [100, 12, 0.6]].map(([x, y, sc]) => `<g transform="translate(${x} ${y}) scale(${sc * 0.6})">${G.star()}</g>`).join('') : '');
+  }
+  for (const kd in PETC) for (let st = 0; st < 5; st++) art[`pet-${kd}-${st}`] = { w: 120, h: 120, s: () => pet(kd, st) };
+  // ---------- 小鎮的裝飾（玩越多長越多）
+  const flower = (x, y, c, sc = 1) => `<g transform="translate(${x} ${y}) scale(${sc})">` + pa('M0 0V24', 'none', 'stroke="#5fb56a" stroke-width="3.4" stroke-linecap="round"') + P([0, 72, 144, 216, 288].map(a => ci(0, -7, 5.4, c, `transform="rotate(${a})"`)).join(''), 'cs') + ci(0, 0, 3.6, '#ffd24a') + '</g>';
+  art.flowers = { w: 120, h: 70, s: () => shadow(60, 66, 44, 4) + P(ci(26, 54, 15, '#7fcf7a') + ci(60, 48, 19, '#8ad884') + ci(94, 54, 15, '#7fcf7a') + rc(12, 50, 96, 16, 8, '#7fcf7a')) + flower(26, 28, '#ff9aae') + flower(60, 18, '#fff3f0', 1.15) + flower(93, 30, '#ffc24a') + flower(43, 40, '#b79be8', 0.8) + flower(77, 40, '#ff8a7a', 0.8) };
+  art.tree = { w: 120, h: 140, s: () => shadow(60, 136, 30, 4.5) + P(pa('M52 136V92h16v44Z', '#b9825a')) + P(ci(36, 70, 26, '#74c96f') + ci(84, 70, 26, '#74c96f') + ci(60, 46, 34, '#84d67c') + ci(60, 80, 28, '#7fd078'), 'cb') + P([[40, 62], [78, 76], [62, 38], [86, 54], [50, 86]].map(([x, y]) => ci(x, y, 5.6, '#ff6f6f')).join(''), 'cs') };
+  art.bench = { w: 120, h: 62, s: () => shadow(60, 58, 50, 4) + P(rc(18, 34, 8, 24, 3, '#a8744f') + rc(94, 34, 8, 24, 3, '#a8744f')) + P(rc(8, 6, 104, 13, 6.5, '#ffb35c') + rc(8, 22, 104, 13, 6.5, '#ffc778')) + P(rc(4, 36, 112, 12, 6, '#ffb35c')) };
+  art.swing = { w: 120, h: 112, s: () => shadow(60, 108, 52, 4) + P(pa('M14 108L26 12h8L22 108ZM106 108L94 12h-8L98 108Z', '#7fc8f0')) + P(rc(14, 6, 92, 11, 5.5, '#ff8fb0')) + pa('M46 17V78M74 17V78', 'none', 'stroke="#c9a27a" stroke-width="2.6"') + P(rc(38, 76, 44, 9, 4.5, '#ffd24a'), 'cs') };
+  art.fountain = { w: 120, h: 104, s: () => shadow(60, 100, 52, 4.5) + P(pa('M40 26Q46 4 60 4Q74 4 80 26Q70 16 60 16Q50 16 40 26Z', '#a8dcff'), 'cs') + P(rc(54, 26, 12, 50, 6, '#e8e2f2')) + P(el(60, 40, 30, 9, '#e8e2f2')) + el(60, 37, 24, 5, '#9bd5ff') + P(pa('M6 72h108v10a18 18 0 0 1-18 18H24A18 18 0 0 1 6 82Z', '#e8e2f2')) + el(60, 73, 50, 9, '#9bd5ff') + el(44, 71, 10, 2.6, '#fff', 'opacity=".6"') };
+  art.bakery = { w: 140, h: 124, s: () => shadow(70, 120, 60, 5) + P(rc(14, 42, 112, 78, 12, '#ffe7c2')) + P(pa('M6 30Q8 16 22 16H118Q132 16 134 30V44a10.7 9 0 0 1-21.3 0a10.7 9 0 0 1-21.3 0a10.7 9 0 0 1-21.3 0a10.7 9 0 0 1-21.3 0a10.7 9 0 0 1-21.3 0a10.7 9 0 0 1-21.3 0Z', '#ff8fa3'))
+    + [27.3, 70, 112.7].map(x => `<path d="M${x - 10.7} 17h21.4V44a10.7 9 0 0 1-21.4 0Z" fill="#fff" opacity=".85"/>`).join('') + P(pa('M84 120V88a13 13 0 0 1 26 0V120Z', '#c98a5e'), 'cs') + ci(104, 104, 2.4, '#ffd36b') + P(rc(24, 68, 48, 34, 8, '#fffaf2'), 'cs') + rc(28, 72, 40, 26, 5, '#bfe6ff') + P(el(41, 90, 8, 5.5, '#e2a15c') + el(56, 89, 9, 6.5, '#d9914a'), 'cs') };
+  art.windmill = { w: 120, h: 190, s: () => shadow(60, 186, 34, 5) + P(pa('M40 186L48 70h24l8 116Z', '#ffe7c2')) + P(pa('M44 76Q60 52 76 76Z', '#ff8a7a')) + P(pa('M52 186V164a8 8 0 0 1 16 0V186Z', '#c98a5e'), 'cs') + P(ci(60, 124, 7, '#bfe6ff'), 'cs')
+    + P([20, 110, 200, 290].map(a => `<g transform="rotate(${a} 60 70)">${rc(55, 8, 22, 54, 6, '#fffaf2')}${rc(57.5, 6, 5, 60, 2.5, '#c9a27a')}</g>`).join('')) + P(ci(60, 70, 7, '#ffd24a'), 'cs') };
+  art.balloon = { w: 100, h: 140, s: () => pa('M34 88L42 112M66 88L58 112', 'none', 'stroke="#c9a27a" stroke-width="2"') + P(pa('M50 4C78 4 92 26 92 46C92 68 72 82 64 92H36C28 82 8 68 8 46C8 26 22 4 50 4Z', '#ff8fa3'), 'cb') + pa('M50 4C40 22 38 62 44 92H56C62 62 60 22 50 4Z', '#fff3c4') + pa('M50 4C30 12 18 40 30 84L36 92H44C38 62 40 22 50 4Z', '#7fc8f0', 'opacity=".9"') + pa('M50 4C70 12 82 40 70 84L64 92H56C62 62 60 22 50 4Z', '#b79be8', 'opacity=".9"') + P(rc(38, 110, 24, 20, 6, '#d9a066'), 'cs') };
+
+  function doc(name, opt = {}) { const a = art[name]; if (!a) return ''; const px = opt.px || a.w * 2; return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${a.w} ${a.h}" width="${px}" height="${Math.round(px * a.h / a.w)}">${DEFS}${a.s(opt)}</svg>`; }
+  const cache = {};
+  const url = (name, opt) => { const k = name + JSON.stringify(opt || ''); return cache[k] || (cache[k] = 'data:image/svg+xml;utf8,' + encodeURIComponent(doc(name, opt))); };
+  return { doc, url, art, HEAD, TOWER, WIN, pet, DEFS, P, el, ci, pa, rc, eye, blush, shadow, mouth, sleepEye, INK };
+})();
+// 圖從哪裡來：assets/clay/ 裡有的（CLAY 列出的，ChatGPT 生成的軟陶插畫）用檔案，沒有的用上面自己畫的
+const CLAY = new Set('bakery balloon bear bench bunny bush cloud1 cloud2 flowers fountain g-bow g-crown g-glasses g-hat g-scarf g-star house-0 house-1 house-2 house-3 house-4 house-5 i-acorn i-alarm i-bulb i-cards i-finger i-gear i-house i-lock i-map i-now i-party i-paw i-quest i-robot i-star i-starhappy i-trophy i-two i-wrench i-zzz moon owl p-backpack p-ball p-bath p-book p-books p-bowl p-pot p-riceball pet-bear-0 pet-bear-1 pet-bear-2 pet-bear-3 pet-bear-4 pet-owl-0 pet-owl-1 pet-owl-2 pet-owl-3 pet-owl-4 pet-squirrel-0 pet-squirrel-1 pet-squirrel-2 pet-squirrel-3 pet-squirrel-4 rabbithead squirrel sun swing title tower tree turtle windmill'.split(' '));
+// 同一張圖的別名（圖示借用小東西、烏龜、月亮、蛋的圖）
+const CLAY_AS = { 'i-bowl': 'p-bowl', 'i-backpack': 'p-backpack', 'i-riceball': 'p-riceball', 'i-book': 'p-book', 'i-ball': 'p-ball', 'i-pot': 'p-pot', 'i-bath': 'p-bath', 'i-books': 'p-books', 'i-turtle': 'turtle', 'i-moon': 'moon', 'i-egg': 'pet-owl-0', zzz: 'i-zzz', rabbit: 'bunny' };
+const clayName = name => { const n = CLAY_AS[name] || name; return CLAY.has(n) ? n : ''; };
+const artSrc = name => clayName(name) ? `assets/clay/${clayName(name)}.webp` : ART.url(name);
+const ic = name => `<img class="ic" src="${artSrc('i-' + name)}" alt="" aria-hidden="true" draggable="false">`;
+const av = who => `<img class="av" src="${artSrc(who === 'rabbit' ? 'bunny' : who === 'robot' ? 'i-robot' : who)}" alt="" draggable="false">`;
+function fillIcons(root) { (root || document).querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = ic(e.dataset.ic); }); (root || document).querySelectorAll('[data-av]').forEach(e => { e.innerHTML = av(e.dataset.av); }); }
+
 // ---------- 存檔
 // 多人（照九九）：WHO = { cur, list:[{id, name}] } 存在 tick-town-who；每個人一把存檔 key，第一個人 id 是空字串（沿用舊 key，舊存檔自動變成第一個人）
 let KEY = 'tick-town-v1', bkFrozen = false;   // bkFrozen：備份匯入寫完、重新載入之前，記憶體裡的舊紀錄不能再寫回去
@@ -1003,21 +1289,13 @@ const whoCur = () => WHO.list.find(x => x.id === WHO.cur) || WHO.list[0];
 KEY = keyFor(WHO.cur);
 const ERRS = ['hourLate', 'minIndex', 'handSwap', 'halfHour', 'minNear', 'hourOff', 'minOne', 'carry', 'ampm', 'read12', 'other'];   // 撥鐘／讀鐘的錯法（minNear 差一格、hourOff 小時差很多、carry 跨整點、other 判不出來）
 const QIDS = ['day', 'read', 'set', 'star', 'match', 'vs', 'shop'];
-// ---------- 寵物資料：住在鐘樓的動物。圖檔 assets/pets/{kind}-{stage}.png（還沒有圖時用 emoji 代替）
-const PET_KINDS = Object.create(null); Object.assign(PET_KINDS, { owl: { e: '🦉', c: '#8a6fd1' }, squirrel: { e: '🐿️', c: '#e38b4f' }, bear: { e: '🐻', c: '#8c5a3c' } });
+// ---------- 寵物資料：住在鐘樓的動物（圖在 ART.pet）
+const PET_KINDS = Object.create(null); Object.assign(PET_KINDS, { owl: { c: '#8a6fd1' }, squirrel: { c: '#e38b4f' }, bear: { c: '#8c5a3c' } });
 const PET_STAGES = [0, 30, 100, 250, 500];   // fed 到幾顆升到幼體、少年、成體、究極
 const FEED = 10;
 const petStage = fed => PET_STAGES.reduce((st, at, i) => fed >= at ? i : st, 0);
-// 配件：徽章門檻；圖檔 assets/gear/{id}.png（沒有圖時用 emoji）；place 回 [中心 x, 中心 y, 寬]（120 單位）
-// place(hx, hy, hr, top, ny, f) 回 [中心 x, 中心 y, 寬, 旋轉]；f 是臉：ex 臉中心 x、ey 眼睛高度、ew 兩眼外緣距離、hb 帽沿高度、hw 帽寬
-const GEAR = [
-  { id: 'bow', at: 1, slot: 'head', e: '🎀', ar: 1.196, place: (hx, hy, hr, top, ny, f) => [f.ex - f.hw * 0.38, f.hb + hr * 0.05, f.hw * 0.5, -15] },
-  { id: 'scarf', at: 2, slot: 'neck', e: '🧣', ar: 0.949, place: (hx, hy, hr, top, ny, f) => { const w = f.hw * 0.62; return [f.ex, ny + w / 0.949 * 0.4, w, 0]; } },
-  { id: 'glasses', at: 4, slot: 'face', e: '🕶️', ar: 2.695, place: (hx, hy, hr, top, ny, f) => [f.ex, f.ey, f.ew * 1.3, 0] },
-  { id: 'hat', at: 6, slot: 'head', e: '🎩', ar: 1.225, place: (hx, hy, hr, top, ny, f) => { const w = f.hw * 0.95; return [f.ex, f.hb - w / 1.225 * 0.38, w, 0]; } },
-  { id: 'star', at: 8, slot: 'head', e: '⭐', ar: 1.455, place: (hx, hy, hr, top, ny, f) => [f.ex + f.hw * 0.38, f.hb + hr * 0.05, f.hw * 0.45, 15] },
-  { id: 'crown', at: 12, slot: 'head', e: '👑', ar: 1.231, place: (hx, hy, hr, top, ny, f) => { const w = f.hw * 0.65; return [f.ex, f.hb - w / 1.231 * 0.38, w, 0]; } },
-];
+// 配件：徽章門檻、戴在哪裡（圖在 ART 的 G，位置在 FIT）
+const GEAR = [{ id: 'bow', at: 1, slot: 'head' }, { id: 'scarf', at: 2, slot: 'neck' }, { id: 'glasses', at: 4, slot: 'face' }, { id: 'hat', at: 6, slot: 'head' }, { id: 'star', at: 8, slot: 'head' }, { id: 'crown', at: 12, slot: 'head' }];
 const GEAR_BY = Object.create(null); GEAR.forEach(g => { GEAR_BY[g.id] = g; });
 const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, music: true, chime: true, level: 2, ring: true }, daily: {}, pet: { kind: '', fed: 0, acorn: 0, wear: { head: '', face: '', neck: '' } }, retest: [], town: { lit: [] }, free: 7 * 60, hinted: false, tut: false });
 let DB = fresh();
@@ -1069,7 +1347,7 @@ const midi = n => 440 * Math.pow(2, (n - 69) / 12);
 const TRACKS = {
   // 白天：C–Am–F–G，三角波琶音像音樂盒，慢慢的
   town: { bpm: 84, div: 2, len: 8, chords: [[72, 76, 79], [69, 72, 76], [65, 69, 72], [67, 71, 74]], bass: [48, 45, 41, 43], arp: [0, 1, 2, 1, 2, 1, 0, 1], oct: 12, arpType: 'triangle', arpV: 0.03, pad: true, sparkle: true },
-  // 晚上：F–Dm–B♭–C 的搖籃曲，正弦波、更慢、更小聲
+  // 晚上：F–Dm–B 降–C 的搖籃曲，正弦波、更慢、更小聲
   night: { bpm: 58, div: 2, len: 8, chords: [[65, 69, 72], [62, 65, 69], [58, 62, 65], [60, 64, 67]], bass: [41, 38, 34, 36], arp: [0, 1, 2, 1, 0, 1, 2, 1], oct: 12, arpType: 'sine', arpV: 0.032, pad: true },
   // 玩遊戲：G–Em–C–D，輕輕的拍子，每兩輪一次主旋律；不催人（沒有加速）
   play: { bpm: 100, div: 4, len: 16, chords: [[67, 71, 74], [64, 67, 71], [60, 64, 67], [62, 66, 69]], bass: [43, 40, 36, 38], arp: [0, 1, 2, 1, 0, 2, 1, 2], oct: 12, arpType: 'triangle', arpV: 0.03, bassType: 'triangle', bassSteps: [0, 8], kick: [0, 8], hat: true, melType: 'sine', melV: 0.045,
@@ -1115,39 +1393,55 @@ function Clock(el, opts = {}) {
   const svgNS = 'http://www.w3.org/2000/svg';
   const mk = (n, a = {}) => { const e = document.createElementNS(svgNS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
   const svg = mk('svg', { viewBox: '0 0 200 200', role: 'img' });
+  // 軟陶的光影全部用漸層做（不用濾鏡：拖指針時每一格都要重畫，濾鏡在手機上會卡）；漸層放在頁面最前面的 #ck-defs（放在藏起來的畫面裡會失效）
   // 外圈：鐘外面一圈 00、05、10…55，兔子指到的那個會亮起來（設定可以關；開的時候 viewBox 放大，鐘本身稍微變小、把手放大回原本的像素）
   const gr = mk('g', { class: 'ring', 'aria-hidden': 'true' }), ringN = [], ringB = [];
-  gr.appendChild(mk('circle', { cx: C, cy: C, r: 117, fill: '#fff3dc', stroke: '#e8c98f', 'stroke-width': 2 }));
+  gr.appendChild(mk('circle', { cx: C, cy: C + 5, r: 124, fill: 'url(#ckSh)' }));
+  gr.appendChild(mk('circle', { cx: C, cy: C, r: 117, fill: 'url(#ckRing)' }));
   for (let i = 0; i < 12; i++) { const a = i * 30 * Math.PI / 180, x = C + 108 * Math.sin(a), y = C - 108 * Math.cos(a); const b = mk('circle', { class: 'ring-b', cx: x, cy: y, r: 8.5 }); const t = mk('text', { class: 'ring-n', x, y: y + 3.8 }); t.textContent = String(i * 5).padStart(2, '0'); gr.appendChild(b); gr.appendChild(t); ringB.push(b); ringN.push(t); }
   svg.appendChild(gr);
   // 鐘面
-  svg.appendChild(mk('circle', { cx: C, cy: C, r: 96, fill: '#e8c98f' }));
-  svg.appendChild(mk('circle', { cx: C, cy: C, r: 90, fill: 'var(--face)' }));
+  svg.appendChild(mk('circle', { class: 'ck-sh', cx: C, cy: C + 5, r: 104, fill: 'url(#ckSh)' }));
+  svg.appendChild(mk('circle', { cx: C, cy: C, r: 96, fill: 'url(#ckRim)', stroke: '#dd932e', 'stroke-width': 1 }));
+  svg.appendChild(mk('path', { d: 'M 14.5 72 A 90 90 0 0 1 72 14.5', fill: 'none', stroke: '#fff', 'stroke-width': 3.2, 'stroke-linecap': 'round', opacity: 0.75 }));   // 鐘框左上的反光
+  svg.appendChild(mk('circle', { cx: C, cy: C, r: 89.5, fill: '#d98f33', opacity: 0.55 }));
+  svg.appendChild(mk('circle', { cx: C, cy: C, r: 88, fill: 'url(#ckFace)' }));
   const tks = [];
-  for (let i = 0; i < 60; i++) { const big = i % 5 === 0, a = i * 6 * Math.PI / 180, r1 = big ? 78 : 83, r2 = 87; svg.appendChild(tks[i] = mk('line', { x1: C + r1 * Math.sin(a), y1: C - r1 * Math.cos(a), x2: C + r2 * Math.sin(a), y2: C - r2 * Math.cos(a), stroke: big ? '#5b4a3a' : '#b9a58c', 'stroke-width': big ? 3 : 1.5, 'stroke-linecap': 'round' })); }
-  for (let n = 1; n <= 12; n++) { const a = n * 30 * Math.PI / 180, t = mk('text', { x: C + 66 * Math.sin(a), y: C - 66 * Math.cos(a) + 7, 'text-anchor': 'middle', 'font-size': 19, 'font-weight': 900, fill: '#3b2f2f', 'font-family': 'var(--f-num)' }); t.textContent = n; svg.appendChild(t); }
-  // 時針：烏龜
+  for (let i = 0; i < 60; i++) { const big = i % 5 === 0, a = i * 6 * Math.PI / 180, r1 = big ? 77 : 81.5, r2 = 85; svg.appendChild(tks[i] = mk('line', { x1: C + r1 * Math.sin(a), y1: C - r1 * Math.cos(a), x2: C + r2 * Math.sin(a), y2: C - r2 * Math.cos(a), stroke: big ? '#7a5544' : '#d6bda0', 'stroke-width': big ? 3.2 : 1.6, 'stroke-linecap': 'round' })); }
+  for (let n = 1; n <= 12; n++) { const a = n * 30 * Math.PI / 180, t = mk('text', { x: C + 66 * Math.sin(a), y: C - 66 * Math.cos(a) + 7, 'text-anchor': 'middle', 'font-size': 19, 'font-weight': 900, fill: '#5b4034', 'font-family': 'var(--f-num)' }); t.textContent = n; svg.appendChild(t); }
+  // 時針：烏龜（從上面看，頭朝外）。有軟陶插畫（assets/clay/turtle.webp）就用插畫；插畫的烏龜往裡面放（最外面到半徑 58），不蓋住牠指的數字
   const gh = mk('g', { class: 'hand hour' });
-  gh.appendChild(mk('rect', { x: C - 5, y: C - 50, width: 10, height: 58, rx: 5, fill: 'var(--hour)' }));
-  const tort = mk('g', { transform: `translate(${C} ${C - 52})` });
-  tort.appendChild(mk('ellipse', { cx: 0, cy: 0, rx: 12, ry: 10, fill: '#7fc24a', stroke: '#4f8f2a', 'stroke-width': 2 }));
-  tort.appendChild(mk('path', { d: 'M-7 -3 Q0 -9 7 -3 M-4 2 Q0 5 4 2', fill: 'none', stroke: '#4f8f2a', 'stroke-width': 1.5 }));
-  tort.appendChild(mk('circle', { cx: -4, cy: -2, r: 1.8, fill: '#223' })); tort.appendChild(mk('circle', { cx: 4, cy: -2, r: 1.8, fill: '#223' }));
+  gh.appendChild(mk('rect', { x: C - 5.5, y: C - 46, width: 11, height: 54, rx: 5.5, fill: 'url(#ckH)', stroke: '#2a5ea8', 'stroke-width': 0.7 }));
+  const tort = mk('g', { transform: `translate(${C} ${C - 50})` });
+  if (CLAY.has('turtle')) tort.appendChild(mk('image', { href: 'assets/clay/turtle.webp', x: -16, y: -9, width: 32, height: 32 }));
+  else {
+    for (const [x, y] of [[-9.5, -5], [9.5, -5], [-9.5, 7], [9.5, 7]]) tort.appendChild(mk('circle', { cx: x, cy: y, r: 3.6, fill: 'url(#ckSkin)', stroke: '#6fae52', 'stroke-width': 0.6 }));
+    tort.appendChild(mk('circle', { cx: 0, cy: -8.6, r: 5, fill: 'url(#ckSkin)', stroke: '#6fae52', 'stroke-width': 0.6 }));
+    tort.appendChild(mk('ellipse', { cx: 0, cy: 2, rx: 11, ry: 10.5, fill: 'url(#ckShell)', stroke: '#458f35', 'stroke-width': 0.8 }));
+    tort.appendChild(mk('path', { d: 'M0 -3.5l4.8 2.8v5.4L0 7.5l-4.8-2.8v-5.4ZM0 -3.5V-8M4.8 -0.7l5 -2.4M4.8 4.7l5 2.4M0 7.5V12M-4.8 4.7l-5 2.4M-4.8 -0.7l-5 -2.4', fill: 'none', stroke: '#3f8a30', 'stroke-width': 1, 'stroke-linejoin': 'round', opacity: 0.6 }));
+    tort.appendChild(mk('ellipse', { cx: -4, cy: -3, rx: 3.6, ry: 2.2, fill: '#fff', opacity: 0.35, transform: 'rotate(-30 -4 -3)' }));
+    tort.appendChild(mk('circle', { cx: -2, cy: -9.6, r: 1.05, fill: '#4a332b' })); tort.appendChild(mk('circle', { cx: 2, cy: -9.6, r: 1.05, fill: '#4a332b' }));
+    tort.appendChild(mk('ellipse', { cx: -3.6, cy: -7.6, rx: 1.6, ry: 1, fill: 'url(#ckBlush)' })); tort.appendChild(mk('ellipse', { cx: 3.6, cy: -7.6, rx: 1.6, ry: 1, fill: 'url(#ckBlush)' }));
+  }
   gh.appendChild(tort);
   gh.appendChild(mk('circle', { class: 'knob', cx: C, cy: C - 52, r: KR }));
-  // 分針：兔子
+  // 分針：兔子（耳朵朝外）。有軟陶插畫（assets/clay/rabbithead.webp）就用插畫
   const gm = mk('g', { class: 'hand minute' });
-  gm.appendChild(mk('rect', { x: C - 3.5, y: C - 76, width: 7, height: 84, rx: 3.5, fill: 'var(--minute)' }));
+  gm.appendChild(mk('rect', { x: C - 4, y: C - 72, width: 8, height: 80, rx: 4, fill: 'url(#ckM)', stroke: '#c23a3b', 'stroke-width': 0.7 }));
   const rab = mk('g', { transform: `translate(${C} ${C - 78})` });
-  rab.appendChild(mk('ellipse', { cx: -4, cy: -13, rx: 3, ry: 8, fill: '#fff', stroke: '#e3a3a3', 'stroke-width': 1.5 }));
-  rab.appendChild(mk('ellipse', { cx: 4, cy: -13, rx: 3, ry: 8, fill: '#fff', stroke: '#e3a3a3', 'stroke-width': 1.5 }));
-  rab.appendChild(mk('circle', { cx: 0, cy: 0, r: 10, fill: '#fff', stroke: '#e3a3a3', 'stroke-width': 2 }));
-  rab.appendChild(mk('circle', { cx: -3.5, cy: -1.5, r: 1.8, fill: '#223' })); rab.appendChild(mk('circle', { cx: 3.5, cy: -1.5, r: 1.8, fill: '#223' }));
-  rab.appendChild(mk('ellipse', { cx: 0, cy: 3, rx: 2, ry: 1.4, fill: '#f08a8a' }));
+  if (CLAY.has('rabbithead')) rab.appendChild(mk('image', { href: 'assets/clay/rabbithead.webp', x: -12.5, y: -22, width: 25, height: 33 }));
+  else {
+    for (const sx of [-1, 1]) { rab.appendChild(mk('ellipse', { cx: 4.2 * sx, cy: -13, rx: 3.4, ry: 8.5, fill: 'url(#ckFur)', stroke: '#dcbcb0', 'stroke-width': 0.7, transform: `rotate(${6 * sx} ${4.2 * sx} -6)` })); rab.appendChild(mk('ellipse', { cx: 4.2 * sx, cy: -12.5, rx: 1.5, ry: 5.6, fill: '#ffbccb', transform: `rotate(${6 * sx} ${4.2 * sx} -6)` })); }
+    rab.appendChild(mk('ellipse', { cx: 0, cy: 0.5, rx: 10.5, ry: 9.5, fill: 'url(#ckFur)', stroke: '#dcbcb0', 'stroke-width': 0.8 }));
+    rab.appendChild(mk('circle', { cx: -3.8, cy: -0.5, r: 1.6, fill: '#4a332b' })); rab.appendChild(mk('circle', { cx: 3.8, cy: -0.5, r: 1.6, fill: '#4a332b' }));
+    rab.appendChild(mk('circle', { cx: -4.3, cy: -1.1, r: 0.55, fill: '#fff' })); rab.appendChild(mk('circle', { cx: 3.3, cy: -1.1, r: 0.55, fill: '#fff' }));
+    rab.appendChild(mk('ellipse', { cx: 0, cy: 2.6, rx: 1.5, ry: 1.1, fill: '#ff8fa3' }));
+    rab.appendChild(mk('ellipse', { cx: -6.6, cy: 3, rx: 2.4, ry: 1.5, fill: 'url(#ckBlush)' })); rab.appendChild(mk('ellipse', { cx: 6.6, cy: 3, rx: 2.4, ry: 1.5, fill: 'url(#ckBlush)' }));
+  }
   gm.appendChild(rab);
   gm.appendChild(mk('circle', { class: 'knob', cx: C, cy: C - 78, r: KR }));
   svg.appendChild(gh); svg.appendChild(gm);
-  svg.appendChild(mk('circle', { cx: C, cy: C, r: 6, fill: '#5b4a3a' }));
+  svg.appendChild(mk('circle', { cx: C, cy: C, r: 7.5, fill: 'url(#ckCap)', stroke: '#d98a2a', 'stroke-width': 0.8 })); svg.appendChild(mk('circle', { cx: C - 2.2, cy: C - 2.4, r: 2, fill: '#fff', opacity: 0.7 }));
   el.appendChild(svg);
 
   let tot = 0, ring = false, ringOn = -1;   // tot：一天裡的第幾分鐘（0～1439），可以是小數（拖的時候）
@@ -1205,104 +1499,136 @@ const CLOCKS = [];   // 會跟著設定開關外圈的鐘（小卡片上的迷�
 function setRingAll(on) { CLOCKS.forEach(c => c.setRing(on)); }
 
 // ---------- 小鎮（canvas 背景）：天空、太陽／月亮、山、房子、路燈、動物都跟著時刻變
+// 鐘樓的鐘面在圖的哪裡（ar 寬高比、cy 鐘面中心在圖高的幾分之幾、cr 鐘面半徑是圖寬的幾分之幾、perch／px 貓頭鷹站的地方）；房子的窗戶 [x, y, 半徑]（都是圖寬高的比例）
+const CLAY_TOWER = { ar: 0.406, cy: 0.417, cr: 0.335, perch: 0.335, px: 0.47 }, CLAY_WIN = [0, 1, 2, 3, 4, 5].map(() => [[0.245, 0.682, 0.07], [0.757, 0.682, 0.07]]);
+const TOWER_AT = () => CLAY.has('tower') ? CLAY_TOWER : Object.assign({ perch: 0.235, px: 0.3 }, ART.TOWER);
+const HOUSE_WIN = i => CLAY.has('house-' + i) ? (CLAY_WIN[i] || []) : ART.WIN.map(([x, y]) => [x / 120, y / 130, 7.5 / 120, 1]);   // 第四個是 1：圓窗（自己畫的房子）；插畫的窗是圓角方形
+// ---------- 小鎮：軟陶玩具的小鎮。天空用漸層畫；山、草地、小路畫一次存起來；房子、鐘樓、動物是一張張的圖（SPR）
+// 晚上的做法：地上的東西先畫在另一層（land），整層蓋一層藍，再疊回天空上，最後才畫會發光的（窗戶、路燈、鐘面）
 const Town = (() => {
-  const cv = $('#town'), g = cv.getContext('2d'); let W = 0, H = 0, DPR = 1, t = 7 * 60, stars = [];
+  const cv = $('#town'), g0 = cv.getContext('2d'); let g = g0, W = 0, H = 0, DPR = 1, t = 7 * 60, stars = [];
+  const land = document.createElement('canvas'), lg = land.getContext('2d'), back = document.createElement('canvas'), bg = back.getContext('2d'); let backKey = '';
   const lerp = (a, b, k) => a + (b - a) * k;
   const hex = c => [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)];
   const mix = (a, b, k) => { const A = hex(a), B = hex(b); return `rgb(${Math.round(lerp(A[0], B[0], k))},${Math.round(lerp(A[1], B[1], k))},${Math.round(lerp(A[2], B[2], k))})`; };
   // 天空關鍵影格：[小時, 上色, 下色, 亮度]
-  const KF = [[0, '#141c3f', '#2a3566', 0.25], [4.5, '#141c3f', '#2a3566', 0.25], [6, '#6c6aa8', '#ffb98a', 0.6], [7.5, '#8fc9ff', '#ffe9c9', 0.95], [12, '#7ec4ff', '#eaf7ff', 1], [16.5, '#86c3ff', '#ffe3b8', 0.95], [18, '#f29a6a', '#ffd3a0', 0.75], [19.5, '#4a3f7a', '#d2786e', 0.45], [21, '#141c3f', '#2a3566', 0.25], [24, '#141c3f', '#2a3566', 0.25]];
+  const KF = [[0, '#1b2452', '#3b4585', 0.25], [4.5, '#1b2452', '#3b4585', 0.25], [6, '#8d8fd2', '#ffc9ab', 0.6], [7.5, '#a6dbff', '#fff0e2', 0.95], [12, '#9bd5ff', '#f1fbff', 1], [16.5, '#a6d8ff', '#ffe9cf', 0.95], [18, '#ffab8c', '#ffdcb2', 0.75], [19.5, '#5d5097', '#e8938c', 0.45], [21, '#1b2452', '#3b4585', 0.25], [24, '#1b2452', '#3b4585', 0.25]];
   const sky = h => { let i = 0; while (i < KF.length - 2 && KF[i + 1][0] <= h) i++; const a = KF[i], b = KF[i + 1], k = clamp((h - a[0]) / (b[0] - a[0]), 0, 1); return { top: mix(a[1], b[1], k), bot: mix(a[2], b[2], k), br: lerp(a[3], b[3], k) }; };
-  function resize() { DPR = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; cv.style.width = W + 'px'; cv.style.height = H + 'px'; g.setTransform(DPR, 0, 0, DPR, 0, 0); stars = Array.from({ length: 70 }, () => [Math.random() * W, Math.random() * H * 0.55, Math.random() * 1.4 + 0.5]); draw(); }
-  const dim = (c, br) => { const [r, gg, b] = typeof c === 'string' && c[0] === '#' ? hex(c) : c.match(/\d+/g).map(Number); return `rgb(${Math.round(r * br)},${Math.round(gg * br)},${Math.round(b * br)})`; };
-  const rr = (x, y, w, hh, r) => { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + hh, r); g.arcTo(x + w, y + hh, x, y + hh, r); g.arcTo(x, y + hh, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); };
-  // 圖：動物借用寵物圖（成體），兔子和裝飾在 assets/town/；沒有圖就畫 emoji
-  const IMG = {}, SRC = { bear: 'assets/pets/bear-3.png', squirrel: 'assets/pets/squirrel-3.png', owl: 'assets/pets/owl-3.png' };
-  for (const k of ['bunny', 'tree', 'flowers', 'bench', 'fountain', 'swing', 'windmill', 'balloon', 'bakery']) SRC[k] = `assets/town/${k}.png`;
-  for (const [k, u] of Object.entries(SRC)) { const im = new Image(); im.onload = () => { IMG[k] = im; draw(); }; im.src = u; }
-  const EMO = { bear: '🐻', bunny: '🐰', squirrel: '🐿️', owl: '🦉', tree: '🌳', flowers: '🌷', bench: '🪑', fountain: '⛲', swing: '🎠', windmill: '🎡', balloon: '🎈', bakery: '🏪' };
-  // 畫一樣東西：底部中間在 (x, y)，高 sz；有圖用圖，沒圖用 emoji；dir = -1 左右翻
-  function thing(k, x, y, sz, br, dir = 1) {
-    const im = IMG[k];
-    if (im) { const w = sz * im.width / im.height; g.save(); g.translate(x, y); if (dir < 0) g.scale(-1, 1); if (br < 0.9) g.filter = `brightness(${Math.max(0.45, br)})`; g.drawImage(im, -w / 2, -sz, w, sz); g.restore(); }
-    else { g.save(); g.font = `${sz * 0.8}px system-ui,sans-serif`; g.textAlign = 'center'; g.textBaseline = 'bottom'; if (br < 0.9) g.globalAlpha = Math.max(0.55, br); g.fillText(EMO[k] || '', x, y); g.restore(); }
+  function resize() {
+    DPR = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight;
+    for (const c of [cv, land, back]) { c.width = W * DPR; c.height = H * DPR; } cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    for (const c of [g0, lg, bg]) c.setTransform(DPR, 0, 0, DPR, 0, 0);
+    stars = Array.from({ length: 60 }, () => [Math.random() * W, Math.random() * H * 0.55, Math.random() * 1.4 + 0.6]); bmpC = {}; backKey = ''; draw();
   }
-  function critter(k, x, y, sz, br, prop, dir) { thing(k, x, y, k === 'bunny' && IMG.bunny ? sz * 0.82 : sz, br, dir); if (prop) { g.save(); g.font = `${sz * 0.42}px system-ui,sans-serif`; g.textAlign = 'center'; g.textBaseline = 'bottom'; g.fillText(prop, x + sz * 0.45, y - sz * 0.05); g.restore(); } }
-  // 鐘樓：鐘面跟著現在的時刻
-  function tower(x, gy, tw, br, night) {
-    const th = tw * 2.0, y = gy - th;
-    g.fillStyle = dim('#f3e3c3', br); rr(x - tw / 2, y, tw, th, 4); g.fill(); g.strokeStyle = dim('#c9a86a', br); g.lineWidth = 2; g.stroke();
-    g.fillStyle = dim('#d9534f', br); g.beginPath(); g.moveTo(x - tw / 2 - 6, y + 2); g.lineTo(x, y - tw * 0.75); g.lineTo(x + tw / 2 + 6, y + 2); g.closePath(); g.fill();
-    const cr = tw * 0.34, cy = y + tw * 0.5; g.fillStyle = '#fffaf0'; g.beginPath(); g.arc(x, cy, cr, 0, 7); g.fill(); g.strokeStyle = dim('#8a6a3a', br); g.lineWidth = 2; g.stroke();
-    const mA = (t % 60) / 60 * Math.PI * 2, hA = ((t / 60) % 12) / 12 * Math.PI * 2; g.lineCap = 'round';
-    g.strokeStyle = '#3a6fd8'; g.lineWidth = 3; g.beginPath(); g.moveTo(x, cy); g.lineTo(x + Math.sin(hA) * cr * 0.5, cy - Math.cos(hA) * cr * 0.5); g.stroke();
-    g.strokeStyle = '#e5534b'; g.lineWidth = 2; g.beginPath(); g.moveTo(x, cy); g.lineTo(x + Math.sin(mA) * cr * 0.8, cy - Math.cos(mA) * cr * 0.8); g.stroke();
-    g.fillStyle = night ? '#ffe27a' : dim('#bfe6ff', br); rr(x - tw * 0.16, y + tw * 1.05, tw * 0.32, tw * 0.36, 6); g.fill();   // 窗
-    g.fillStyle = dim('#7a4a2a', br); rr(x - tw * 0.2, gy - tw * 0.5, tw * 0.4, tw * 0.5, 8); g.fill();   // 門
+  const rr = (x, y, w, hh, r) => { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + hh, r); g.arcTo(x + w, y + hh, x, y + hh, r); g.arcTo(x, y + hh, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); };
+  const rnd01 = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };   // 固定的亂數（每次畫都一樣，小花才不會跳來跳去）
+  // ---------- 圖：有檔案（CLAY 列出的）用 assets/clay/名字.webp，沒有就用自己畫的（ART）。載入後先縮成要用的大小存起來（bmp），之後每次只是貼上去
+  const SPR = {}; let bmpC = {};
+  function spr(name) {
+    let s = SPR[name]; if (s) return s.ok ? s.im : null;
+    s = SPR[name] = { im: new Image(), ok: false }; s.im.onload = () => { s.ok = true; backKey = ''; draw(); };
+    const src = clayName(name) ? `assets/clay/${clayName(name)}.webp` : ART.art[name.split(':')[0]] ? ART.url(name.split(':')[0], name.includes(':lit') ? { lit: 1 } : name.includes(':sleep') ? { sleep: 1 } : undefined) : '';
+    if (src) s.im.src = src; return null;
+  }
+  function bmp(name, hpx) {
+    const im = spr(name); if (!im) return null; const hh = Math.max(4, Math.round(hpx * DPR)), k = name + '|' + hh; if (bmpC[k]) return bmpC[k];
+    const c = document.createElement('canvas'); c.height = hh; c.width = Math.max(1, Math.round(hh * im.naturalWidth / im.naturalHeight)); const x = c.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(im, 0, 0, c.width, c.height); return bmpC[k] = c;
+  }
+  // 畫一樣東西：底部中間在 (x, y)，高 sz；dir = -1 左右翻；sh 腳下的影子
+  function thing(name, x, y, sz, dir = 1, sh = 0) {
+    const b = bmp(name, sz); if (!b) return 0; const w = b.width / DPR, hh = b.height / DPR;
+    if (sh) { const rg = g.createRadialGradient(x, y, 0, x, y, w * sh); rg.addColorStop(0, 'rgba(60,40,80,.28)'); rg.addColorStop(1, 'rgba(60,40,80,0)'); g.save(); g.translate(x, y); g.scale(1, 0.22); g.translate(-x, -y); g.fillStyle = rg; g.beginPath(); g.arc(x, y, w * sh, 0, 7); g.fill(); g.restore(); }
+    g.save(); g.translate(x, y); if (dir < 0) g.scale(-1, 1); g.drawImage(b, -w / 2, -hh, w, hh); g.restore(); return w;
+  }
+  const prop = (name, x, y, sz) => thing('p-' + name, x, y, sz, 1, 0.5);
+  function critter(k, x, y, sz, pr, dir) { const w = thing(k, x, y, k === 'bunny' ? sz * 1.16 : sz, dir, 0.42); if (pr) prop(pr, x + (w || sz * 0.7) * 0.5 + sz * 0.2, y + 2, sz * 0.44); }   // 小兔有長耳朵，整張圖比較高
+  const glow = (x, y, r, a, col = '255,228,130') => { const rg = g.createRadialGradient(x, y, 0, x, y, r); rg.addColorStop(0, `rgba(${col},${a})`); rg.addColorStop(1, `rgba(${col},0)`); g.fillStyle = rg; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); };
+  // ---------- 山、草地、小路：畫一次存在 back（視窗大小變了才重畫）
+  function hill(cx, top, rx, ry, c1, c2) {
+    const path = () => { g.beginPath(); g.ellipse(cx, top + ry, rx, ry, 0, Math.PI, 0); g.lineTo(cx + rx, H); g.lineTo(cx - rx, H); g.closePath(); };
+    const gr = g.createLinearGradient(0, top, 0, top + ry * 1.2); gr.addColorStop(0, c1); gr.addColorStop(1, c2); g.fillStyle = gr; path(); g.fill();
+    g.save(); path(); g.clip(); g.shadowColor = 'rgba(255,255,255,.75)'; g.shadowBlur = 14; g.shadowOffsetY = 9 * DPR; g.strokeStyle = 'rgba(255,255,255,.5)'; g.lineWidth = 5; g.beginPath(); g.ellipse(cx, top + ry - 6, rx, ry, 0, Math.PI, 0); g.stroke(); g.restore();   // 山頂的一圈亮邊（軟陶的反光）
+  }
+  function drawBack(gy, hw) {
+    g = bg; g.clearRect(0, 0, W, H); const u = Math.min(W, 900);
+    hill(W * 0.2, gy - u * 0.22, u * 0.4, u * 0.34, '#c9efc0', '#a5dfa2'); hill(W * 0.82, gy - u * 0.26, u * 0.44, u * 0.36, '#c9efc0', '#a5dfa2'); if (W > 700) hill(W * 0.5, gy - u * 0.18, u * 0.3, u * 0.26, '#d2f3c8', '#afe4aa');
+    hill(W * 0.46, gy - u * 0.115, u * 0.5, u * 0.3, '#b2e6a4', '#8fd58a'); hill(W * -0.02, gy - u * 0.095, u * 0.3, u * 0.24, '#a6e09a', '#86cf82'); hill(W * 1.02, gy - u * 0.105, u * 0.32, u * 0.26, '#a6e09a', '#86cf82');
+    for (const [fx, dy, sz] of [[0.05, 0.062, 30], [0.31, 0.092, 24], [0.64, 0.095, 26], [0.94, 0.07, 32]]) thing('bush', W * fx, gy - u * dy + sz * 0.3, sz * Math.min(1.5, W / 420 + 0.2));
+    // 草地：上亮下深，地平線下面一條亮邊
+    const gg = g.createLinearGradient(0, gy, 0, H); gg.addColorStop(0, '#b4e89e'); gg.addColorStop(0.12, '#9fdf8c'); gg.addColorStop(1, '#84cf7c'); g.fillStyle = gg; g.fillRect(0, gy, W, H - gy);
+    g.save(); g.beginPath(); g.rect(0, gy, W, H - gy); g.clip(); g.shadowColor = 'rgba(255,255,255,.8)'; g.shadowBlur = 12; g.shadowOffsetY = 8 * DPR; g.strokeStyle = 'rgba(255,255,255,.6)'; g.lineWidth = 4; g.beginPath(); g.moveTo(-20, gy - 5); g.lineTo(W + 20, gy - 5); g.stroke(); g.restore();
+    // 小路：從鐘樓的門彎出來，奶油色、邊邊亮亮的
+    { const pw = Math.min(64, W / 9) * 0.5, x = W / 2, y1 = H + 10, path = () => { g.beginPath(); g.moveTo(x - pw * 0.45, gy + 2); g.bezierCurveTo(x - pw * 1.4, gy + (y1 - gy) * 0.3, x + pw * 0.4, gy + (y1 - gy) * 0.55, x - pw * 1.6, y1); g.lineTo(x + pw * 1.9, y1); g.bezierCurveTo(x + pw * 3.2, gy + (y1 - gy) * 0.55, x + pw * 0.4, gy + (y1 - gy) * 0.3, x + pw * 0.45, gy + 2); g.closePath(); };
+      g.save(); g.shadowColor = 'rgba(70,110,60,.35)'; g.shadowBlur = 8; g.shadowOffsetY = 3 * DPR; g.fillStyle = '#fbe7c0'; path(); g.fill(); g.restore();
+      g.save(); path(); g.clip(); g.shadowColor = 'rgba(255,255,255,.9)'; g.shadowBlur = 6; g.shadowOffsetX = 3 * DPR; g.shadowOffsetY = 3 * DPR; g.strokeStyle = 'rgba(255,255,255,.7)'; g.lineWidth = 4; g.translate(-4, -2); path(); g.stroke(); g.restore(); }
+    // 小花和草尖
+    for (let i = 0; i < 30; i++) { const x = rnd01(i) * W, y = gy + 16 + rnd01(i + 50) * (H - gy - 26), q = 4 + rnd01(i + 90) * 3; if (Math.abs(x - W / 2) < Math.min(64, W / 9) * 1.4) continue;
+      if (i % 3 === 0) { const col = ['#ffffff', '#ffc9d6', '#ffe680'][i % 9 / 3 | 0]; g.fillStyle = 'rgba(60,110,60,.25)'; g.beginPath(); g.ellipse(x, y + 3, 5, 2, 0, 0, 7); g.fill(); for (let k = 0; k < 5; k++) { const a = k * Math.PI * 0.4; g.fillStyle = col; g.beginPath(); g.arc(x + Math.cos(a) * 3.2, y + Math.sin(a) * 3.2, 2.6, 0, 7); g.fill(); } g.fillStyle = '#ffc24a'; g.beginPath(); g.arc(x, y, 2.2, 0, 7); g.fill(); }
+      else { g.strokeStyle = 'rgba(95,175,95,.9)'; g.lineWidth = 2.6; g.lineCap = 'round'; g.beginPath(); g.moveTo(x - q, y - q * 0.9); g.quadraticCurveTo(x - q * 0.3, y - q * 0.3, x, y); g.quadraticCurveTo(x + q * 0.3, y - q * 0.5, x + q, y - q); g.moveTo(x, y); g.lineTo(x, y - q * 1.3); g.stroke(); } }
+    // 細顆粒：整片地蓋一層很淡的雜點（像紙、像黏土）
+    if (!drawBack.noise) { const n = document.createElement('canvas'); n.width = n.height = 96; const x = n.getContext('2d'), d = x.createImageData(96, 96); for (let i = 0; i < d.data.length; i += 4) { const v = Math.random(); d.data[i] = d.data[i + 1] = d.data[i + 2] = v > 0.5 ? 255 : 60; d.data[i + 3] = Math.abs(v - 0.5) * 34; } x.putImageData(d, 0, 0); drawBack.noise = n; }
+    g.save(); g.globalCompositeOperation = 'source-atop'; g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = g.createPattern(drawBack.noise, 'repeat'); g.fillRect(0, 0, back.width, back.height); g.restore();
   }
   // 小鎮會長大：玩完越多次，多越多東西（每個人的小鎮各自長）
-  function deco(gy, hw, br, layer) {
+  function deco(gy, hw, layer) {
     const k = DECOR.filter(d => townPts() >= d.at).map(d => d.id), has = id => k.includes(id);
-    if (layer === 'back') {
-      if (has('windmill')) thing('windmill', W - hw * 0.3, gy + 2, hw * 2.3, br);
-      return;
-    }
-    if (has('flowers')) { thing('flowers', W * 0.07, gy + hw * 0.45, hw * 0.7, br); thing('flowers', W * 0.93, gy + hw * 0.45, hw * 0.7, br); }
-    if (has('tree')) thing('tree', W * 0.1, gy + hw * 1.55, hw * 1.35, br);
-    if (has('bakery')) thing('bakery', W * 0.28, gy + hw * 1.6, hw * 0.95, br);
-    if (has('bench')) thing('bench', W * 0.68, gy + hw * 1.35, hw * 0.5, br);
-    if (has('swing')) thing('swing', W * 0.86, gy + hw * 1.6, hw * 0.85, br);
-    if (has('fountain')) thing('fountain', W * 0.5, gy + hw * 1.45, hw * 0.95, br);
-    if (has('balloon')) thing('balloon', W * 0.16, H * 0.3 + Math.sin(t / 37) * 8, hw * 1.1, Math.max(br, 0.7));
+    if (layer === 'back') { if (has('windmill')) thing('windmill', W - hw * 0.3, gy + 2, hw * 2.3, 1, 0.4); return; }
+    if (layer === 'sky') { if (has('balloon')) thing('balloon', W * 0.16, H * 0.3 + Math.sin(t / 37) * 8, hw * 1.15); return; }
+    if (has('flowers')) { thing('flowers', W * 0.07, gy + hw * 0.45, hw * 0.7, 1, 0.5); thing('flowers', W * 0.93, gy + hw * 0.45, hw * 0.7, -1, 0.5); }
+    if (has('tree')) thing('tree', W * 0.1, gy + hw * 1.55, hw * 1.4, 1, 0.45);
+    if (has('bakery')) thing('bakery', W * 0.28, gy + hw * 1.6, hw * 1.0, 1, 0.5);
+    if (has('bench')) thing('bench', W * 0.68, gy + hw * 1.35, hw * 0.52, 1, 0.5);
+    if (has('swing')) thing('swing', W * 0.86, gy + hw * 1.6, hw * 0.9, 1, 0.5);
+    if (has('fountain')) thing('fountain', W * 0.5, gy + hw * 1.45, hw * 1.0, 1, 0.5);
   }
   function draw() {
-    const h = t / 60, S = sky(h), br = S.br, night = br < 0.5;
-    const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, S.top); gr.addColorStop(1, S.bot); g.fillStyle = gr; g.fillRect(0, 0, W, H);
-    // 星星
-    const sa = clamp((0.55 - br) / 0.3, 0, 1); if (sa > 0) { g.fillStyle = `rgba(255,255,255,${0.9 * sa})`; stars.forEach(([x, y, r]) => { g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); }); }
-    // 太陽（6:00～18:30 在天上）與月亮（18:30～6:00）
-    const arc = (from, to, col, glow, r) => { let k = (h - from) / (to - from); if (h < from) k = (h + 24 - from) / (to - from); if (k < 0 || k > 1) return; const x = lerp(W * 0.1, W * 0.9, k), y = H * 0.42 - Math.sin(k * Math.PI) * H * 0.33; const rg = g.createRadialGradient(x, y, r * 0.6, x, y, r * 3); rg.addColorStop(0, glow); rg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = rg; g.fillRect(x - r * 3, y - r * 3, r * 6, r * 6); g.fillStyle = col; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); return [x, y]; };
-    arc(6, 18.5, '#ffd84d', 'rgba(255,220,100,.55)', Math.min(W, H) * 0.06);
-    const mp = arc(18.5, 30, '#fff4c8', 'rgba(255,255,220,.35)', Math.min(W, H) * 0.045);   // 月亮：18:30 → 隔天 6:00
-    if (!mp && h < 6) arc(-5.5, 6, '#fff4c8', 'rgba(255,255,220,.35)', Math.min(W, H) * 0.045);
-    // 遠山
-    const gy = H * 0.74;
-    g.fillStyle = dim('#8fcf7a', br); g.beginPath(); g.moveTo(0, gy); for (let x = 0; x <= W; x += 8) g.lineTo(x, gy - 40 - Math.sin(x / 90) * 22 - Math.sin(x / 37) * 8); g.lineTo(W, gy); g.fill();
-    g.fillStyle = dim('#6fbb63', br); g.beginPath(); g.moveTo(0, gy); for (let x = 0; x <= W; x += 8) g.lineTo(x, gy - 14 - Math.sin(x / 60 + 2) * 14); g.lineTo(W, gy); g.fill();
-    // 地面
-    g.fillStyle = dim('#79c35e', br); g.fillRect(0, gy, W, H - gy);
-    // 房子：左右各 3 間，中間是鐘樓（鐘樓上的鐘跟著現在的時刻走）
-    const n = 6, hw = Math.min(64, W / (n + 3)), tw = hw * 1.15, lit = (h >= 17.5 && h < 22.5) || (h >= 5.5 && h < 7.5);
+    if (!W) return; const h = t / 60, S = sky(h), br = S.br, night = br < 0.5;
+    const gy = H * 0.74, n = 6, hw = Math.min(64, W / (n + 3)), tw = hw * 1.15, lit = (h >= 17.5 && h < 22.5) || (h >= 5.5 && h < 7.5);
     const side = (W - tw) / 2, gapS = (side - 3 * hw) / 4, HX = [];
     for (let i = 0; i < 3; i++) HX.push(gapS + i * (hw + gapS)); for (let i = 0; i < 3; i++) HX.push(W / 2 + tw / 2 + gapS + i * (hw + gapS));
-    const cols = ['#ff8f6b', '#ffd36b', '#7fd3ff', '#c99bff', '#ffa6c9', '#9be7a8'];
-    deco(gy, hw, br, 'back');   // 房子後面的（樹、風車、麵包店）
-    tower(W / 2, gy, tw, br, night);
-    for (let i = 0; i < n; i++) {
-      const x = HX[i], hh = hw * 0.9, y = gy - hh;
-      g.fillStyle = dim('#8a4a32', br); g.fillRect(x + hw * 0.66, y - hw * 0.42, hw * 0.13, hw * 0.3);   // 煙囪
-      g.fillStyle = dim(cols[i], br); rr(x, y, hw, hh, 4); g.fill();
-      g.fillStyle = 'rgba(0,0,0,.08)'; g.fillRect(x, y + hh * 0.86, hw, hh * 0.14);
-      g.fillStyle = dim('#a35a3a', br); g.beginPath(); g.moveTo(x - 6, y + 2); g.lineTo(x + hw / 2, y - hw * 0.5); g.lineTo(x + hw + 6, y + 2); g.closePath(); g.fill();
-      g.strokeStyle = dim('#7c3f28', br); g.lineWidth = 2; g.stroke();
-      const on = lit || (mode === 'day' && litT && i < Math.round(litN / litT * n));   // 小鎮的一天：做完幾件事就亮幾間
-      g.fillStyle = on ? '#ffe27a' : night ? dim('#5a6a8a', br) : dim('#bfe6ff', br); rr(x + hw * 0.16, y + hh * 0.2, hw * 0.26, hw * 0.26, 3); g.fill(); rr(x + hw * 0.58, y + hh * 0.2, hw * 0.26, hw * 0.26, 3); g.fill();
-      if (on) { g.fillStyle = 'rgba(255,226,122,.25)'; g.fillRect(x + hw * 0.08, y + hh * 0.1, hw * 0.84, hw * 0.48); }
-      g.fillStyle = dim('#7a4a2a', br); rr(x + hw * 0.37, y + hh * 0.56, hw * 0.26, hh * 0.44, 5); g.fill();   // 門
-      g.fillStyle = dim('#ffd36b', br); g.beginPath(); g.arc(x + hw * 0.57, y + hh * 0.8, 1.8, 0, 7); g.fill();
-    }
-    // 路燈
-    for (const x of [HX[2] + hw + gapS / 2, HX[3] - gapS / 2]) { g.fillStyle = dim('#55606e', br); g.fillRect(x - 2, gy - 70, 4, 70); g.fillStyle = night ? '#ffe27a' : dim('#dde', br); g.beginPath(); g.arc(x, gy - 74, 6, 0, 7); g.fill(); if (night) { const rg = g.createRadialGradient(x, gy - 74, 4, x, gy - 74, 60); rg.addColorStop(0, 'rgba(255,226,122,.45)'); rg.addColorStop(1, 'rgba(255,226,122,0)'); g.fillStyle = rg; g.beginPath(); g.arc(x, gy - 74, 60, 0, 7); g.fill(); } }
-    deco(gy, hw, br, 'front');   // 房子前面的（花、長椅、鞦韆、噴水池）與天上的（熱氣球）
+    // 天空
+    g = g0; const gr = g.createLinearGradient(0, 0, 0, H * 0.8); gr.addColorStop(0, S.top); gr.addColorStop(1, S.bot); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    const sa = clamp((0.55 - br) / 0.3, 0, 1); if (sa > 0) stars.forEach(([x, y, r], i) => { const q = r * (i % 5 === 0 ? 3.4 : 1.7); g.fillStyle = `rgba(255,246,200,${(i % 5 === 0 ? 1 : 0.8) * sa})`; g.beginPath(); g.moveTo(x, y - q); g.quadraticCurveTo(x, y, x + q, y); g.quadraticCurveTo(x, y, x, y + q); g.quadraticCurveTo(x, y, x - q, y); g.quadraticCurveTo(x, y, x, y - q); g.fill(); });
+    // 太陽（6:00～18:30）與月亮
+    const R0 = clamp(Math.min(W, H) * 0.16, 54, 110), at = (from, to) => { let k = (h - from) / (to - from); if (h < from) k = (h + 24 - from) / (to - from); return k < 0 || k > 1 ? null : [lerp(W * 0.1, W * 0.9, k), H * 0.42 - Math.sin(k * Math.PI) * H * 0.33]; };
+    const sp = at(6, 18.5); if (sp) { glow(sp[0], sp[1], R0 * 1.5, 0.45, '255,244,190'); thing('sun', sp[0], sp[1] + R0 / 2, R0); }
+    const mp = at(18.5, 30) || (h < 6 ? at(-5.5, 6) : null); if (mp) { glow(mp[0], mp[1], R0 * 1.4, 0.3, '255,250,215'); thing('moon', mp[0], mp[1] + R0 * 0.4, R0 * 0.8); }
+    // 雲（白天才有，跟著時間慢慢飄）
+    const ca = clamp((br - 0.4) / 0.35, 0, 1); if (ca > 0) { g.globalAlpha = ca; [['cloud1', 0.12, 0.15, 1.1, 0.5], ['cloud2', 0.55, 0.08, 0.8, 0.3], ['cloud1', 0.85, 0.24, 0.9, 0.4]].forEach(([nm, fx, fy, sc, v]) => { const span = W + 240; thing(nm, ((fx * span + t * v) % span) - 120, H * fy + 50, 52 * sc * Math.min(1.5, W / 420 + 0.3)); }); g.globalAlpha = 1; }
+    // 地上的一層：山、草地、小路（存好的）→ 風車、鐘樓、房子、路燈、裝飾、動物
+    const key = W + 'x' + H + 'x' + DPR; if (backKey !== key) { drawBack(gy, hw); backKey = key; }
+    g = lg; g.clearRect(0, 0, W, H); g.drawImage(back, 0, 0, W, H);
+    deco(gy, hw, 'back');
+    const T = TOWER_AT(), th = tw * 2.6, twW = th * T.ar, towerTop = gy + 4 - th, tcx = W / 2, tcy = towerTop + th * T.cy, tcr = twW * T.cr; thing('tower', tcx, gy + 4, th, 1, 0.42);
+    const onI = i => lit || (mode === 'day' && litT && i < Math.round(litN / litT * n)), hh = hw * (CLAY.has('house-0') ? 1.24 : 1.42), wins = [];   // 小鎮的一天：做完幾件事就亮幾間
+    for (let i = 0; i < n; i++) { const w = thing('house-' + i, HX[i] + hw / 2, gy + 4, hh, 1, 0.5); if (w && onI(i)) for (const [fx, fy, fr, rd] of HOUSE_WIN(i)) wins.push([HX[i] + hw / 2 + (fx - 0.5) * w, gy + 4 - hh + fy * hh, fr * w, rd]); }
+    const lamps = [HX[2] + hw + gapS / 2, HX[3] - gapS / 2];
+    for (const x of lamps) { const pg = g.createLinearGradient(x - 3, 0, x + 3, 0); pg.addColorStop(0, '#c9d3e0'); pg.addColorStop(0.4, '#f4f7fb'); pg.addColorStop(1, '#9aa7b8'); g.strokeStyle = pg; g.lineWidth = 5; g.lineCap = 'round'; g.beginPath(); g.moveTo(x, gy + 2); g.lineTo(x, gy - hw); g.stroke();
+      const lgd = g.createRadialGradient(x - 2, gy - hw - 7, 1, x, gy - hw - 4, 8); lgd.addColorStop(0, '#ffffff'); lgd.addColorStop(1, '#ffe9a8'); g.fillStyle = lgd; g.beginPath(); g.arc(x, gy - hw - 4, 7.5, 0, 7); g.fill(); }
+    deco(gy, hw, 'front');
     // 動物：依作息站在自己家門口（小熊住第 2 間、小兔第 5 間、松鼠第 6 間），晚上貓頭鷹在鐘樓上
-    const sc = scene(t), sz = hw * 1.3, door = i => HX[i] + hw / 2;
-    const AT = { wake: ['bear', door(1), ''], breakfast: ['bear', door(1), '🥣'], school: ['bunny', door(4) + hw * 0.7, IMG.bunny ? '' : '🎒'], lunch: ['squirrel', door(5), '🍙'], class: ['bunny', door(4), '📖'], park: ['bear', W * 0.36, '⚽'], dinner: ['squirrel', door(5), '🍲'], bath: ['bunny', door(4), '🛁'], story: ['bear', door(1), '📚'] }[sc];
+    const sc = scene(t), sz = hw * 1.25, door = i => HX[i] + hw / 2;
+    const AT = { wake: ['bear', door(1), ''], breakfast: ['bear', door(1), 'bowl'], school: ['bunny', door(4) + hw * 0.7, 'backpack'], lunch: ['squirrel', door(5), 'riceball'], class: ['bunny', door(4), 'book'], park: ['bear', W * 0.36, 'ball'], dinner: ['squirrel', door(5), 'pot'], bath: ['bunny', door(4), 'bath'], story: ['bear', door(1), 'books'] }[sc];
     const walking = walks.map(w => w.who);
-    if (AT && !walking.includes(AT[0])) critter(AT[0], AT[1], gy + hw * 0.45, sz, br, AT[2]);
-    if (sc === 'sleep' || sc === 'owl') critter('owl', W / 2, gy - tw * 2.05, hw * 0.9, 1, '');
-    if (sc === 'sleep' || sc === 'owl') { g.font = `${Math.min(22, W * 0.05)}px system-ui,sans-serif`; g.textAlign = 'center'; g.fillText('💤', door(1), gy - hw * 1.1); g.fillText('💤', door(4), gy - hw * 1.05); }
-    // 走出門的動物（撥對時）：從家門口跳著走出去
-    for (const w of walks) { const k = clamp((now() - w.t0) / 1600, 0, 1), x0 = door(w.home), dir = w.home < 3 ? 1 : -1, down = Math.min(1, k / 0.3); critter(w.who, x0 + dir * Math.max(0, k - 0.3) / 0.7 * hw * 2.6, gy + hw * (0.1 + 0.9 * down) - Math.abs(Math.sin(k * Math.PI * 6)) * sz * 0.14, sz, br, '', dir); }   // 先從門口走下來，再往草地中間跳著走
+    if (AT && !walking.includes(AT[0])) critter(AT[0], AT[1], gy + hw * 0.5, sz, AT[2]);
+    for (const w of walks) { const k = clamp((now() - w.t0) / 1600, 0, 1), x0 = door(w.home), dir = w.home < 3 ? 1 : -1, down = Math.min(1, k / 0.3); critter(w.who, x0 + dir * Math.max(0, k - 0.3) / 0.7 * hw * 2.6, gy + hw * (0.1 + 0.9 * down) - Math.abs(Math.sin(k * Math.PI * 6)) * sz * 0.14, sz, '', dir); }   // 先從門口走下來，再往草地中間跳著走
+    // 天色：整層蓋一層顏色（傍晚偏暖、晚上深藍），只蓋在有畫東西的地方
+    const ta = clamp((0.97 - br) / 0.72, 0, 1) * 0.62; if (ta > 0.01) { g.save(); g.globalCompositeOperation = 'source-atop'; g.fillStyle = br > 0.55 ? `rgba(214,120,96,${ta * 0.8})` : mix('#7a5a96', '#1f2c6b', clamp((0.55 - br) / 0.2, 0, 1)).replace('rgb', 'rgba').replace(')', `,${ta})`); g.fillRect(0, 0, W, H); g.restore(); }
+    g = g0; g.drawImage(land, 0, 0, W, H);
+    deco(gy, hw, 'sky');
+    // 會發光的：窗戶、路燈、鐘面；鐘樓的指針跟著現在的時刻走
+    for (const [x, y, r, rd] of wins) { g.fillStyle = '#ffe680'; rr(x - r, y - r, r * 2, r * 2, rd ? r : r * 0.45); g.fill(); g.fillStyle = 'rgba(255,255,255,.5)'; g.beginPath(); g.arc(x - r * 0.3, y - r * 0.3, r * 0.35, 0, 7); g.fill(); if (br < 0.9) glow(x, y, r * 4, 0.5 * (1 - br) + 0.15); }
+    if (night) for (const x of lamps) { g.fillStyle = '#fff3b0'; g.beginPath(); g.arc(x, gy - hw - 4, 7.5, 0, 7); g.fill(); glow(x, gy - hw - 4, 60, 0.55); }
+    if (bmp('tower', th)) {
+      if (night) glow(tcx, tcy, tcr * 2.8, 0.5); g.fillStyle = night ? '#fff6cf' : '#fffaf0'; g.beginPath(); g.arc(tcx, tcy, tcr, 0, 7); g.fill();
+      const eg = g.createRadialGradient(tcx, tcy, tcr * 0.7, tcx, tcy, tcr); eg.addColorStop(0, 'rgba(200,150,90,0)'); eg.addColorStop(1, 'rgba(200,150,90,.28)'); g.fillStyle = eg; g.beginPath(); g.arc(tcx, tcy, tcr, 0, 7); g.fill();
+      for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; g.fillStyle = '#b89a82'; g.beginPath(); g.arc(tcx + Math.sin(a) * tcr * 0.82, tcy - Math.cos(a) * tcr * 0.82, Math.max(0.9, tcr * (i % 3 ? 0.045 : 0.075)), 0, 7); g.fill(); }
+      const mA = (t % 60) / 60 * Math.PI * 2, hA = ((t / 60) % 12) / 12 * Math.PI * 2; g.lineCap = 'round';
+      g.strokeStyle = '#3f86dc'; g.lineWidth = Math.max(2.6, tcr * 0.2); g.beginPath(); g.moveTo(tcx, tcy); g.lineTo(tcx + Math.sin(hA) * tcr * 0.48, tcy - Math.cos(hA) * tcr * 0.48); g.stroke();
+      g.strokeStyle = '#ee5a58'; g.lineWidth = Math.max(2, tcr * 0.14); g.beginPath(); g.moveTo(tcx, tcy); g.lineTo(tcx + Math.sin(mA) * tcr * 0.76, tcy - Math.cos(mA) * tcr * 0.76); g.stroke();
+      g.fillStyle = '#ffc64f'; g.beginPath(); g.arc(tcx, tcy, Math.max(1.8, tcr * 0.12), 0, 7); g.fill();
+    }
+    if (sc === 'sleep' || sc === 'owl') { critter('owl', W / 2 + twW * T.px, towerTop + th * T.perch, hw * 0.95, ''); thing('zzz', door(1), gy - hw * 1.2, hw * 0.42); thing('zzz', door(4), gy - hw * 1.15, hw * 0.42); }
   }
   // 撥對時動物走出門：home 是哪一間（小熊 1、小兔 4、松鼠 5；貓頭鷹從鐘樓飛，當作 4）
   let walks = [], raf = 0;
@@ -1315,7 +1641,7 @@ const Town = (() => {
   let litN = 0, litT = 0;
   function scene(min) { const h = min / 60; return h < 6 ? 'sleep' : h < 7 ? 'wake' : h < 8 ? 'breakfast' : h < 12 ? 'school' : h < 13 ? 'lunch' : h < 15.5 ? 'class' : h < 17.5 ? 'park' : h < 19 ? 'dinner' : h < 20 ? 'bath' : h < 21 ? 'story' : 'owl'; }
   addEventListener('resize', resize);
-  return { set(min) { t = min; draw(); }, resize, scene, lit(n, tot) { litN = n; litT = tot; draw(); }, walk, walking: () => walks.map(w => w.who), img: () => Object.keys(IMG) };
+  return { set(min) { t = min; draw(); }, resize, scene, lit(n, tot) { litN = n; litT = tot; draw(); }, walk, walking: () => walks.map(w => w.who), img: () => Object.keys(SPR).filter(k => SPR[k].ok) };
 })();
 
 // ---------- 小鎮會長大：玩完幾次就多一樣東西
@@ -1352,7 +1678,7 @@ function showTime(tot) {
   $('#digital').innerHTML = `${w.digital}<small>${w.ampm}</small>`;
   $('#words').textContent = timePhrase(w, true);
   if (mode === 'menu') Music.track(Music.forTime(tot));
-  const sc = Town.scene(tot); $('#scene').innerHTML = `<span class="emo">${{ sleep: '💤', owl: '🦉', wake: '🐻', breakfast: '🥣', school: '🎒', lunch: '🍙', class: '📖', park: '⚽', dinner: '🍲', bath: '🛁', story: '📚' }[sc]}</span>${tx('scene.' + sc)}`;
+  const sc = Town.scene(tot); $('#scene').innerHTML = `<span class="emo">${ic({ sleep: 'zzz', owl: 'moon', wake: 'bulb', breakfast: 'bowl', school: 'backpack', lunch: 'riceball', class: 'book', park: 'ball', dinner: 'pot', bath: 'bath', story: 'books' }[sc])}</span>${tx('scene.' + sc)}`;
   Town.set(tot);
 }
 clock.onChange = (tot, dragging) => { showTime(tot); if (dragging) SFX.chimeStop(); else { DB.free = tot; save(); if (tot % 60 === 0 && mode === 'menu') SFX.chime(Math.floor(tot / 60) % 12 || 12); } if (dragging && !$('#hintline').hidden) { DB.hinted = true; save(); $('#hintline').hidden = true; } };   // 拖過一次就不用再提示（矮螢幕那一行會蓋到動物）
@@ -1433,7 +1759,7 @@ function classifySet(T, A) {
 // ---------- 貓頭鷹的修鐘店：鐘掛著標籤，標籤對就按「對」，不對就按「要修」。錯的標籤專挑孩子常犯的錯
 const clock5 = Clock($('#clock5'), { snap: 1, drag: false });
 const Shop = (() => {
-  const N = 10, WHOS = ['owl', 'bear', 'rabbit', 'squirrel'], EMO = { bear: '🐻', rabbit: '🐰', squirrel: '🐿️', owl: '🦉' };
+  const N = 10, WHOS = ['owl', 'bear', 'rabbit', 'squirrel'];
   let S = null;
   const key = (h, m) => `r:${h % 12 || 12}:${m}`;
   // 出題：照讀鐘的權重（錯過的、會誘發弱點的時刻多出）
@@ -1449,7 +1775,7 @@ const Shop = (() => {
   const fmt = (h, m) => `${h}:${String(m).padStart(2, '0')}`;
   function start() { S = { i: 0, right: 0, recent: [], q: null }; show('shop'); $('#o-sdone').hidden = true; next(); }
   function stop() { clock5.ghost(null); clock5.countStop(); S = null; }
-  function prog() { $('#shop-prog').innerHTML = `<span aria-hidden="true">🔧</span>${tx('read.prog', { n: S.i, t: N })}`; }
+  function prog() { $('#shop-prog').innerHTML = `<span aria-hidden="true">${ic('wrench')}</span>${tx('read.prog', { n: S.i, t: N })}`; }
   function next() {
     const [h, m] = pick(), who = WHOS[S.i % WHOS.length];
     let tag = ['ok', h, m];
@@ -1457,7 +1783,7 @@ const Shop = (() => {
     const H = h === 12 ? 12 : h < 6 ? h + 12 : Math.random() < 0.5 ? h : h + 12;
     S.q = { h, m, tag, who, at: now(), done: false, wrong: false };
     clock5.set(H, m); clock5.ghost(null); clock5.countStop(); Town.set(H * 60 + m);
-    $('#shop-emo').textContent = EMO[who]; $('#shop-say').textContent = tx('shop.say', { who: tx('who.' + who) });
+    $('#shop-emo').innerHTML = av(who); $('#shop-say').textContent = tx('shop.say', { who: tx('who.' + who) });
     const words = DB.set.level === 1 && LANG !== 'en' && Math.random() < 0.5, el = $('#shop-tag');   // 等級 1 有時候寫成文字（「7 點半」），練看字
     el.className = 'tag' + (words ? ' words' : ''); el.textContent = words ? timeWords(tag[1] * 60 + tag[2]).main : fmt(tag[1], tag[2]);
     $('#shop-hint').hidden = true; $('#shop-yes').disabled = false; $('#shop-fix').disabled = false; prog();
@@ -1480,7 +1806,7 @@ const Shop = (() => {
     const emo = $('#shop-emo'); emo.classList.remove('tilt'); void emo.offsetWidth; emo.classList.add('tilt'); SFX.hm();
   }
   function finish() {
-    const all = S.right === N; $('#sdone-stars').textContent = all ? '🌟' : S.right >= N / 2 ? '⭐' : '🌙'; $('#sdone-h').textContent = all ? tx('shop.doneAll') : tx('shop.done', { n: N });
+    const all = S.right === N; $('#sdone-stars').innerHTML = ic(all ? 'starhappy' : S.right >= N / 2 ? 'star' : 'moon'); $('#sdone-h').textContent = all ? tx('shop.doneAll') : tx('shop.done', { n: N });
     if (all) FX.confetti(70); $('#o-sdone').hidden = false; DB.best.shops = num(DB.best.shops) + 1; save();
   }
   $('#shop-yes').addEventListener('click', () => answer(true)); $('#shop-fix').addEventListener('click', () => answer(false));
@@ -1507,7 +1833,6 @@ function timeline(t1, t2) {
 const clock2 = Clock($('#clock2'), { snap: 5 });
 const Day = (() => {
   const WHO = { wake: 'bear', breakfast: 'squirrel', school: 'rabbit', lunch: 'bear', park: 'squirrel', dinner: 'rabbit', bath: 'rabbit', story: 'bear', sleep: 'bear' };
-  const EMO = { bear: '🐻', rabbit: '🐰', squirrel: '🐿️', owl: '🦉' };
   let S = null, judgeT = 0, hintN = 0;
   // 一天 7 件事，時刻依等級：1 整點半點、2 五分、3 一分（其中兩件用「走了幾分鐘」問）
   // 每件事在自己的時段裡挑時刻：錯過的時刻、會誘發孩子最常犯的錯的時刻比較常出（同讀鐘的 pick()）；上一輪出過的少出
@@ -1539,11 +1864,11 @@ const Day = (() => {
   }
   function start() { S = { tasks: makeDay(), i: 0, lit: 0, tries: 0 }; hintN = 0; show('day'); $('#o-done').hidden = true; next(); }
   function stop() { clearTimeout(judgeT); clock2.ghost(null); clock2.countStop(); S = null; }
-  function lights() { const t = S ? S.tasks.length : 7, n = S ? S.lit : 0; $('#day-lights').innerHTML = `<span aria-hidden="true">💡</span>${tx('day.lights', { n, t })}`; $('#day-lights').setAttribute('aria-label', tx('day.aria', { n, t })); Town.lit(n, t); }
+  function lights() { const t = S ? S.tasks.length : 7, n = S ? S.lit : 0; $('#day-lights').innerHTML = `<span aria-hidden="true">${ic('bulb')}</span>${tx('day.lights', { n, t })}`; $('#day-lights').setAttribute('aria-label', tx('day.aria', { n, t })); Town.lit(n, t); }
   function next() {
     const k = S.tasks[S.i]; S.tries = 0; clearTimeout(judgeT); clock2.ghost(null); clock2.countStop(); $('#day-hint').hidden = true;
     const w = timeWords(k.t), who = tx('who.' + k.who);
-    $('#day-emo').textContent = EMO[k.who]; $('#day-emo').className = 'emo';
+    $('#day-emo').innerHTML = av(k.who); $('#day-emo').className = 'emo';
     const tw = timePhrase(w, false);
     if (k.from !== undefined) { const w1 = timeWords(k.from); $('#day-say').textContent = tx('say.elapsed', { who, t1: w1.digital, d: k.d }); $('#day-target').innerHTML = `${w1.digital}<small>+${k.d}</small>`; }
     else if (k.h24) { const d24 = `${Math.floor(k.t / 60)}:${String(k.t % 60).padStart(2, '0')}`; $('#day-say').textContent = tx('say.' + k.sc, { who, t: d24 }); $('#day-target').innerHTML = `${d24}<small>${esc(tx('u.h24'))}</small>`; }
@@ -1589,7 +1914,7 @@ const Day = (() => {
 // ---------- 幾點了？（讀鐘）：先選三張卡，熟了才打數字
 const clock3 = Clock($('#clock3'), { snap: 1, drag: false });
 const Read = (() => {
-  const N = 8, WHOS = ['owl', 'bear', 'rabbit', 'squirrel'], EMO = { bear: '🐻', rabbit: '🐰', squirrel: '🐿️', owl: '🦉' };
+  const N = 8, WHOS = ['owl', 'bear', 'rabbit', 'squirrel'];
   const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1)), shuffle = a => a.sort(() => Math.random() - 0.5);
   let S = null;
   const key = (h, m) => `r:${h % 12 || 12}:${m}`;   // 讀鐘的鍵用 12 小時（上下午在鐘面上看不出來）
@@ -1629,7 +1954,7 @@ const Read = (() => {
   }
   function start() { S = { i: 0, right: 0, recent: [], q: null, lastKind: '' }; show('read'); $('#o-rdone').hidden = true; next(); }
   function stop() { clock3.countStop(); clock3.ghost(null); S = null; }
-  function prog() { $('#read-prog').innerHTML = `<span aria-hidden="true">⭐</span>${tx('read.prog', { n: S.right, t: N })}`; }
+  function prog() { $('#read-prog').innerHTML = `<span aria-hidden="true">${ic('star')}</span>${tx('read.prog', { n: S.right, t: N })}`; }
   function next() {
     const kd = kind(); S.lastKind = kd; const who = WHOS[S.i % WHOS.length]; $('#read-target').hidden = true;
     if (kd !== 'clock') return nextL3(kd, who);
@@ -1637,7 +1962,7 @@ const Read = (() => {
     S.q = { kind: 'clock', h, m, who, keys, at: now(), fk: 0, wrong: false, typed: '' };
     const H = h === 12 ? (Math.random() < 0.5 ? 0 : 12) : h < 6 ? h + 12 : Math.random() < 0.5 ? h : h + 12;   // 上下午隨便，小鎮的太陽只是氣氛
     clock3.set(H, m); Town.set(H * 60 + m); clock3.ghost(null); clock3.countStop();
-    $('#read-emo').textContent = EMO[who]; $('#read-emo').className = 'emo'; $('#read-say').textContent = tx(keys ? 'read.sayKeys' : 'read.say', { who: tx('who.' + who) });
+    $('#read-emo').innerHTML = av(who); $('#read-emo').className = 'emo'; $('#read-say').textContent = tx(keys ? 'read.sayKeys' : 'read.say', { who: tx('who.' + who) });
     $('#read-hint').hidden = true; prog();
     $('#read-opts').hidden = keys; $('#read-pad').hidden = !keys; $('#clock3').classList.toggle('small', keys);
     if (keys) { renderPad(); fitRead(); } else { $('#clock3').style.width = ''; }
@@ -1648,7 +1973,7 @@ const Read = (() => {
     let q; if (kd === 'h24') { const [H, m] = pick24(); q = { kind: 'h24', H, h: H % 12 || 12, m, T: H * 60 + m }; } else { const [t1, d] = pickDur(); const T = t1 + d; q = { kind: 'dur', t1, d, T, h: Math.floor(T / 60) % 12 || 12, m: T % 60 }; }
     S.q = Object.assign(q, { who, keys: true, at: now(), fk: 0, wrong: false, typed: '' });
     clock3.set(Math.floor(q.T / 60), q.T % 60); Town.set(q.T); clock3.ghost(null); clock3.countStop();
-    $('#read-emo').textContent = EMO[who]; $('#read-emo').className = 'emo';
+    $('#read-emo').innerHTML = av(who); $('#read-emo').className = 'emo';
     const wT = timeWords(q.T);
     if (kd === 'h24') $('#read-say').textContent = tx('read.say24', { who: tx('who.' + who), p: wT.period });
     else { const w1 = timeWords(q.t1); $('#read-say').textContent = tx('read.sayDur', { who: tx('who.' + who), t1: w1.digital }); $('#read-target').innerHTML = `${w1.digital}<small>→ ?</small>`; $('#read-target').hidden = false; }
@@ -1663,7 +1988,7 @@ const Read = (() => {
     c.style.width = Math.max(110, c.getBoundingClientRect().width - over) + 'px';
   }
   addEventListener('resize', () => { if (S) fitRead(); });
-  function renderPad() { $('#read-in').textContent = fmt(S.q.typed); $('#read-in').className = 'padin'; if (!$('#read-keys').children.length) $('#read-keys').innerHTML = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'del', 0, 'ok'].map(k => `<button type="button" class="key${k === 'ok' ? ' ok' : ''}" data-k="${k}">${k === 'ok' ? tx('key.ok') : k === 'del' ? '⌫' : k}</button>`).join(''); $('#read-keys .ok').textContent = tx('key.ok'); }
+  function renderPad() { $('#read-in').textContent = fmt(S.q.typed); $('#read-in').className = 'padin'; if (!$('#read-keys').children.length) $('#read-keys').innerHTML = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'del', 0, 'ok'].map(k => `<button type="button" class="key${k === 'ok' ? ' ok' : ''}" data-k="${k}">${k === 'ok' ? tx('key.ok') : k === 'del' ? ic('back') : k}</button>`).join(''); $('#read-keys .ok').textContent = tx('key.ok'); }
   const fmt = t => S && S.q && S.q.kind === 'dur' ? (t ? tx('u.min', { n: t }) : '·') : t.length <= 2 ? (t || '·') : t.slice(0, -2) + ':' + t.slice(-2);   // 720 → 7:20、1230 → 12:30；走了幾分鐘：25 → 25 分
   function hint(type, h, m) {
     const q = S.q, h1 = h, h2 = h % 12 + 1, wT = timeWords(q.T !== undefined ? q.T : h * 60 + m);
@@ -1686,7 +2011,7 @@ const Read = (() => {
     const me = S; setTimeout(() => { if (S !== me) return; if (++S.i < N) next(); else finish(); }, 900);
   }
   function finish() {
-    const all = S.right === N; $('#rdone-stars').textContent = all ? '🌟' : S.right >= N / 2 ? '⭐' : '🌙'; $('#rdone-h').textContent = all ? tx('read.doneAll') : tx('read.done', { n: S.right }); $('#rdone-p').textContent = '';
+    const all = S.right === N; $('#rdone-stars').innerHTML = ic(all ? 'starhappy' : S.right >= N / 2 ? 'star' : 'moon'); $('#rdone-h').textContent = all ? tx('read.doneAll') : tx('read.done', { n: S.right }); $('#rdone-p').textContent = '';
     if (all) FX.confetti(70); $('#o-rdone').hidden = false; DB.best.reads = num(DB.best.reads) + 1; save();
   }
   $('#read-opts').addEventListener('click', e => {
@@ -1727,7 +2052,7 @@ const Gate = (() => {
   let fn = null, ans = 0, typed = '', miss = 0, waitUntil = 0;
   const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
   function make(hard) { const a = rnd(3, 9), b = rnd(3, 9), c = rnd(12, 19); if (!hard) { ans = a + b * c; return `${a} + ${b} × ${c} =`; } let d, e; do { d = rnd(2, 6); e = rnd(3, 9); } while (a + b * c - d * e < 10); ans = a + b * c - d * e; return `${a} + ${b} × ${c} − ${d} × ${e} =`; }
-  function render() { $('#gate-a').innerHTML = String(ans).split('').map((_, i) => `<i>${typed[i] || ''}</i>`).join(''); if (!$('#gate-keys').children.length) $('#gate-keys').innerHTML = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'del', 0, ''].map(k => k === '' ? '<span></span>' : `<button type="button" class="key" data-k="${k}">${k === 'del' ? '⌫' : k}</button>`).join(''); }
+  function render() { $('#gate-a').innerHTML = String(ans).split('').map((_, i) => `<i>${typed[i] || ''}</i>`).join(''); if (!$('#gate-keys').children.length) $('#gate-keys').innerHTML = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'del', 0, ''].map(k => k === '' ? '<span></span>' : `<button type="button" class="key" data-k="${k}">${k === 'del' ? ic('back') : k}</button>`).join(''); }
   function open(f, hard = true) { if (now() < waitUntil) { toast(tx('gate.wait')); return; } fn = f; typed = ''; $('#gate-q').textContent = make(hard); $('#gate-q').dataset.hard = hard ? '1' : ''; render(); $('#o-gate').hidden = false; }
   $('#gate-keys').addEventListener('click', e => {
     const b = e.target.closest('.key'); if (!b) return; const k = b.dataset.k;
@@ -1755,7 +2080,7 @@ const mustBuy = m => PAID.includes(m) && !unlocked() && !trialLeft(m);
 const famOK = m => !PAID.includes(m) || unlocked() || trialLeft(m) > 0;   // 每日任務只出玩得到的遊戲
 document.documentElement.classList.toggle('app', APP);
 function renderLocks() {
-  PAID.forEach(m => { const e = $(`#go-${m} .m-lock`); if (!e) return; const show = !unlocked(); e.hidden = !show; if (!show) return; const n = trialLeft(m); e.textContent = n ? tx('lock.trialN', { n }) : tx('lock.locked'); e.classList.toggle('locked', !n); });
+  PAID.forEach(m => { const e = $(`#go-${m} .m-lock`); if (!e) return; const show = !unlocked(); e.hidden = !show; if (!show) return; const n = trialLeft(m); if (n) e.textContent = tx('lock.trialN', { n }); else e.innerHTML = ic('lock'); e.classList.toggle('locked', !n); });
   $$('.app-only').forEach(e => e.hidden = !APP); renderSetUnlock();
 }
 // 開付費遊戲：試玩用完就給鎖卡（孩子看的只說「試玩用完囉，其他的都可以一直玩」，大人按「給大人看」才進家長關卡）；還有試玩就扣一次
@@ -1822,7 +2147,7 @@ $('#about-privacy').addEventListener('click', () => Gate.open(() => { window.ope
 
 // ---------- 每日任務：每天 3 個，做完徽章 +1、連續天數；沒有懲罰、沒有過期提醒
 const Quest = (() => {
-  const POOL = [{ id: 'day', n: 1, em: '🏘️' }, { id: 'read', n: 8, em: '⏰' }, { id: 'set', n: 5, em: '🐢' }, { id: 'star', n: 2, em: '⭐' }, { id: 'match', n: 1, em: '🃏' }, { id: 'vs', n: 1, em: '🤝' }, { id: 'shop', n: 6, em: '🔧' }];
+  const POOL = [{ id: 'day', n: 1, em: 'house' }, { id: 'read', n: 8, em: 'alarm' }, { id: 'set', n: 5, em: 'turtle' }, { id: 'star', n: 2, em: 'star' }, { id: 'match', n: 1, em: 'cards' }, { id: 'vs', n: 1, em: 'two' }, { id: 'shop', n: 6, em: 'wrench' }];
   const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const yesterday = () => { const d = new Date(); d.setDate(d.getDate() - 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const stars = () => { let n = 0; for (let h = 1; h <= 12; h++) for (let m = 0; m < 60; m += 5) if (StarMap.stateOf(h, m) === 'star') n++; return n; };
@@ -1840,7 +2165,7 @@ const Quest = (() => {
   }
   function render() {
     ensure(); const D = DB.daily;
-    $('#quest-list').innerHTML = D.tasks.map(q => `<div class="q${q.done ? ' done' : ''}"><span class="em">${POOL.find(x => x.id === q.id).em}</span><span style="flex:1">${text(q)}<div class="bar"><i style="width:${Math.round(q.p / q.n * 100)}%"></i></div></span><small>${q.done ? '✓' : q.p + '/' + q.n}</small></div>`).join('');
+    $('#quest-list').innerHTML = D.tasks.map(q => `<div class="q${q.done ? ' done' : ''}"><span class="em">${ic(POOL.find(x => x.id === q.id).em)}</span><span style="flex:1">${text(q)}<div class="bar"><i style="width:${Math.round(q.p / q.n * 100)}%"></i></div></span><small>${q.done ? ic('check') : q.p + '/' + q.n}</small></div>`).join('');
     $('#quest-badges').textContent = tx('quest.badges', { n: num(D.badges) }); $('#quest-streak').textContent = num(D.streak) > 1 && (D.lastDone === today() || D.lastDone === yesterday()) ? tx('quest.streak', { n: D.streak }) : '';
   }
   $('#go-quest').addEventListener('click', () => { render(); $('#o-quest').hidden = false; });
@@ -1851,7 +2176,7 @@ const Quest = (() => {
   $('#about-close').addEventListener('click', () => { $('#o-about').hidden = true; $('#o-set').hidden = false; });
   return { ensure, add, render, stars };
 })();
-function refreshMenu() { Quest.ensure(); $('#b-acorn').textContent = DB.pet.acorn; const D = DB.daily, done = D.tasks.filter(q => q.done).length, all = done === 3; const c = $('#go-quest'); c.classList.toggle('todo', !all); c.classList.toggle('ok', all); $('#q-count').textContent = all ? '✓' : `${done}/3`; }
+function refreshMenu() { Quest.ensure(); $('#b-acorn').textContent = DB.pet.acorn; const D = DB.daily, done = D.tasks.filter(q => q.done).length, all = done === 3; const c = $('#go-quest'); c.classList.toggle('todo', !all); c.classList.toggle('ok', all); $('#q-count').innerHTML = all ? ic('check') : `${done}/3`; }
 
 // ---------- 配對（翻牌）：指針鐘、數字鐘、文字三種樣子配成對
 const Match = (() => {
@@ -1876,11 +2201,11 @@ const Match = (() => {
     const ts = times(), cards = [];
     ts.forEach((t, i) => reps(t[0], t[1]).forEach(r => cards.push({ t, r, i })));
     S = { cards: shuffle(cards), open: [], done: 0, flips: 0 }; lock = false;
-    $('#mgrid').innerHTML = S.cards.map((c, i) => `<button type="button" class="mcard" data-i="${i}" aria-label="?"><div class="inner"><div class="f bk">🐾</div><div class="f fr">${face(c.t, c.r)}</div></div></button>`).join('');
+    $('#mgrid').innerHTML = S.cards.map((c, i) => `<button type="button" class="mcard" data-i="${i}" aria-label="?"><div class="inner"><div class="f bk">${ic('paw')}</div><div class="f fr">${face(c.t, c.r)}</div></div></button>`).join('');
     $('#match-hint').hidden = true; $('#o-mdone').hidden = true; prog(); show('match'); Town.set(clock.get().tot);
   }
   function stop() { S = null; }
-  function prog() { $('#match-prog').innerHTML = `<span aria-hidden="true">🃏</span>${tx('match.prog', { n: S.done, t: PAIRS })}`; }
+  function prog() { $('#match-prog').innerHTML = `${ic('cards')}${tx('match.prog', { n: S.done, t: PAIRS })}`; }
   function flip(i) {
     if (!S || lock) return; const c = S.cards[i], el = $(`#mgrid .mcard[data-i="${i}"]`); if (c.done || S.open.includes(i)) return;
     el.classList.add('open'); S.open.push(i); S.flips++; SFX.tick(); $('#match-hint').hidden = true;
@@ -1932,11 +2257,11 @@ const Versus = (() => {
   function start() {
     S = { score: { A: 0, B: 0 }, t: {}, at: {}, times: [] }; $('#o-vs').hidden = true; $('#o-vdone').hidden = true; show('versus');
     const cpu = opp === 'cpu'; $('#v-top').classList.toggle('flip', !cpu); $('#v-robot').hidden = !cpu; $('#v-bar').hidden = !cpu; clockB.drag = !cpu; $('#clockB').hidden = false;
-    $('#v-emoB').textContent = cpu ? '🤖' : '🐰'; $('#v-emo2').textContent = cpu ? '🤖' : '🐰'; clockA.setSnap(DB.set.level === 3 ? 1 : 5); clockB.setSnap(!cpu && hard ? 1 : DB.set.level === 3 ? 1 : 5); dots(); give('A'); give('B');
+    $('#v-emoB').innerHTML = av(cpu ? 'robot' : 'rabbit'); $('#v-emo2').innerHTML = av(cpu ? 'robot' : 'rabbit'); clockA.setSnap(DB.set.level === 3 ? 1 : 5); clockB.setSnap(!cpu && hard ? 1 : DB.set.level === 3 ? 1 : 5); dots(); give('A'); give('B');
   }
   function stop() { cancelAnimationFrame(raf); S = null; }
   let hidAt = 0; document.addEventListener('visibilitychange', () => { if (document.hidden) hidAt = now(); else if (S && S.shift && hidAt) { S.shift(now() - hidAt); S.at.A += now() - hidAt; } hidAt = 0; });   // 切到背景的時間不算機器人在想、也不算孩子在撥
-  function finish(k) { cancelAnimationFrame(raf); const cpu = opp === 'cpu'; const win = k === 'A' || !cpu; $('#vdone-emo').textContent = win ? '🏆' : '🤖'; $('#vdone-h').textContent = k === 'A' ? tx('vs.win', { who: tx('vs.p1') }) : cpu ? tx('vs.cpuWin') : tx('vs.win', { who: tx('vs.p2') }); if (win) FX.confetti(60); $('#o-vdone').hidden = false; const me = S; S = null; DB.best.vs = num(DB.best.vs) + 1; save(); Quest.add('vs'); }
+  function finish(k) { cancelAnimationFrame(raf); const cpu = opp === 'cpu'; const win = k === 'A' || !cpu; $('#vdone-emo').innerHTML = ic(win ? 'trophy' : 'robot'); $('#vdone-h').textContent = k === 'A' ? tx('vs.win', { who: tx('vs.p1') }) : cpu ? tx('vs.cpuWin') : tx('vs.win', { who: tx('vs.p2') }); if (win) FX.confetti(60); $('#o-vdone').hidden = false; const me = S; S = null; DB.best.vs = num(DB.best.vs) + 1; save(); Quest.add('vs'); }
   clockA.onChange = (tot, dragging) => { if (!S || dragging) return; if (tot % 720 === S.t.A % 720) point('A'); };
   clockB.onChange = (tot, dragging) => { if (!S || dragging || opp === 'cpu') return; if (tot % 720 === S.t.B % 720) point('B'); };
   clockA.onSnap = clockB.onSnap = () => SFX.tick();
@@ -1950,32 +2275,21 @@ const Versus = (() => {
 })();
 
 // ---------- 寵物：答對掉橡果，餵了會長大；徽章解鎖配件。沒有飢餓、沒有倒扣
-let PET_IMG = false; { const im = new Image(); im.onload = () => { PET_IMG = true; if (mode === 'pet') Pet.render(); }; im.src = 'assets/pets/owl-0.png'; }   // 有圖檔就用圖，沒有就用 emoji
-// 每隻每階段的頭：[hx, hy, hr, top, ny]（120 單位：頭中心、頭半徑、圖最高點、下巴高度），由 tools/pet-sheet.cjs 的格線圖目測
-// 臉 PET_FACE：{ ex 臉中心 x, ey 眼睛高度, ew 兩眼外緣距離, hb 帽沿高度, hw 帽寬 }；null 用 faceOf() 從頭圓推算
-const PET_HEAD = {
-  owl: [[60, 94, 17, 72, 108], [61, 93, 22, 72, 100], [60, 67, 20, 47, 87], [60, 47, 20, 27, 67], [60, 33, 21, 3, 55]],
-  squirrel: [[60, 94, 17, 70, 108], [48, 86, 15, 66, 100], [47, 66, 19, 40, 85], [43, 42, 18, 20, 60], [42, 36, 19, 3, 55]],
-  bear: [[60, 94, 17, 69, 108], [60, 88, 14, 71, 102], [61, 63, 17, 46, 80], [60, 28, 18, 10, 47], [60, 27, 18, 3, 45]],
-};
-const faceOf = (hx, hy, hr) => ({ ex: hx, ey: hy - hr * 0.2, ew: hr * 1.3, hb: hy - hr * 0.55, hw: hr * 1.7 });
-const PET_FACE = {
-  owl: [null, { ex: 61, ey: 92, ew: 26, hb: 73, hw: 44 }, { ex: 60, ey: 69, ew: 35, hb: 54, hw: 48 }, { ex: 60, ey: 50, ew: 35, hb: 35, hw: 46 }, { ex: 60, ey: 35, ew: 40, hb: 20, hw: 50 }],
-  squirrel: [null, { ex: 48, ey: 87, ew: 23, hb: 75, hw: 32 }, { ex: 47, ey: 70, ew: 32, hb: 52, hw: 40 }, { ex: 43, ey: 45, ew: 30, hb: 30, hw: 40 }, { ex: 42, ey: 40, ew: 30, hb: 23, hw: 40 }],
-  bear: [null, { ex: 60, ey: 87, ew: 25, hb: 76, hw: 34 }, { ex: 61, ey: 65, ew: 30, hb: 51, hw: 40 }, { ex: 60, ey: 30, ew: 30, hb: 15, hw: 42 }, { ex: 60, ey: 28, ew: 30, hb: 13, hw: 44 }],
-};
-function gearSVG(id, hx, hy, hr, top, ny, f) {
-  const g = GEAR_BY[id]; if (!g) return '';
-  const [cx, cy, w, rot] = g.place(hx, hy, hr, top, ny, f), h = w / g.ar;
-  if (!PET_IMG) return `<text x="${cx}" y="${cy + w * 0.35}" text-anchor="middle" font-size="${w}">${g.e}</text>`;
-  return `<image href="assets/gear/${id}.png" x="${(cx - w / 2).toFixed(1)}" y="${(cy - h / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}"${rot ? ` transform="rotate(${rot} ${cx.toFixed(1)} ${cy.toFixed(1)})"` : ''}/>`;
-}
+// 寵物的圖：自己畫的（ART.pet：蛋 → 坐在蛋殼裡 → 越長越大），配件直接畫在同一張圖裡、跟著縮放
+// 插畫版：CLAY_PET[種類][階段] = [兩眼中間 x, 眼睛 y, 兩眼距離, 頭頂 y, 寬高比]（x、兩眼距離是圖寬的比例，y 是圖高的比例；tools/cut-clay.py 切完後用眼睛的兩顆黑點量的）
+const CLAY_PET = { owl: [[0, 0, 0, 0, 0.85], [0.496, 0.309, 0.301, 0.003, 0.925], [0.5, 0.299, 0.332, 0, 0.83], [0.498, 0.305, 0.332, 0.003, 0.818], [0.503, 0.315, 0.346, 0, 0.812]],
+  squirrel: [[0, 0, 0, 0, 0.838], [0.501, 0.368, 0.327, 0.087, 0.868], [0.385, 0.365, 0.328, 0.095, 0.82], [0.363, 0.346, 0.312, 0.092, 0.83], [0.361, 0.353, 0.319, 0.098, 0.84]],
+  bear: [[0, 0, 0, 0, 0.795], [0.493, 0.357, 0.347, 0.098, 0.792], [0.494, 0.347, 0.402, 0.09, 0.652], [0.499, 0.34, 0.398, 0.08, 0.64], [0.499, 0.342, 0.408, 0.077, 0.637]] };
+const PET_H = [56, 62, 68, 80, 92];   // 每個階段畫多高（120 單位）
+// 配件：[寬是兩眼距離的幾倍, 寬高比, 放哪裡(ex, ey, u, top) => [中心 x, 中心 y], 旋轉]
+const GEAR_FIT = { bow: [1.15, 1.225, (ex, ey, u, top) => [ex - u * 0.95, top + u * 0.42], -18], star: [1.35, 1.753, (ex, ey, u, top) => [ex + u * 1.0, top + u * 0.5], 16], hat: [1.7, 1.243, (ex, ey, u, top) => [ex, top - u * 0.27], 0], crown: [1.55, 1.552, (ex, ey, u, top) => [ex, top - u * 0.22], 0],
+  glasses: [2.0, 2.349, (ex, ey) => [ex, ey], 0], scarf: [1.3, 0.883, (ex, ey, u) => [ex, ey + u * 1.28], 0] };
 function petSVG(kind, st, wear) {
-  const K = PET_KINDS[kind]; if (!K) return '';
-  const [hx, hy, hr, top, ny] = PET_HEAD[kind][st], f = PET_FACE[kind][st] || faceOf(hx, hy, hr), size = 50 + st * 14;
-  const body = PET_IMG ? `<image href="assets/pets/${kind}-${st}.png" x="0" y="0" width="120" height="120"/>` : (st === 0 ? `<ellipse cx="60" cy="72" rx="26" ry="34" fill="${K.c}" opacity=".85"/><ellipse cx="52" cy="60" rx="7" ry="10" fill="#fff" opacity=".5"/>` : `<text x="60" y="${hy + hr * 1.4}" text-anchor="middle" font-size="${size}">${K.e}</text>`);
-  const gear = sl => { const id = wear && wear[sl]; return id && GEAR_BY[id] && st > 0 ? gearSVG(id, hx, hy, hr, top, ny, f) : ''; };
-  return `<svg viewBox="0 0 120 120"><ellipse cx="60" cy="116" rx="34" ry="5" fill="rgba(0,0,0,.15)"/>${body}${gear('neck')}${gear('head')}${gear('face')}</svg>`;
+  if (!PET_KINDS[kind]) return '';
+  if (!CLAY.has(`pet-${kind}-${st}`)) return `<svg viewBox="0 0 120 120">${ART.DEFS}${ART.pet(kind, st, st > 0 ? wear : null)}</svg>`;
+  const d = CLAY_PET[kind][st], hh = PET_H[st], w = hh * d[4], x0 = 60 - w / 2, y0 = 115 - hh, ex = x0 + d[0] * w, ey = y0 + d[1] * hh, u = d[2] * w, top = y0 + d[3] * hh;
+  const gear = sl => { const id = st > 0 && wear && wear[sl], f = GEAR_FIT[id]; if (!f || !CLAY.has('g-' + id)) return ''; const gw = f[0] * u, gh = gw / f[1], [cx, cy] = f[2](ex, ey, u, top); return `<image data-g="${id}" href="assets/clay/g-${id}.webp" x="${(cx - gw / 2).toFixed(1)}" y="${(cy - gh / 2).toFixed(1)}" width="${gw.toFixed(1)}" height="${gh.toFixed(1)}"${f[3] ? ` transform="rotate(${f[3]} ${cx.toFixed(1)} ${cy.toFixed(1)})"` : ''}/>`; };
+  return `<svg viewBox="0 0 120 120"><ellipse cx="60" cy="114" rx="${(w * 0.42).toFixed(1)}" ry="4.5" fill="#3a2a55" opacity=".16"/><image href="assets/clay/pet-${kind}-${st}.webp" x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${w.toFixed(1)}" height="${hh}"/>${gear('neck')}${gear('head')}${gear('face')}</svg>`;
 }
 const Pet = (() => {
   const P = () => DB.pet, name = () => tx('kname.' + P().kind);
@@ -1983,13 +2297,13 @@ const Pet = (() => {
   function open() { show('pet'); Town.set(clock.get().tot); render(); }
   function render() {
     const p = P(), has = !!PET_KINDS[p.kind]; $('#pet-acorn').textContent = p.acorn; $('#pet-pick').hidden = has; $('#pet-show').hidden = !has;
-    if (!has) { $('#pet-cards').innerHTML = Object.keys(PET_KINDS).map(k => `<button type="button" class="pet-card" data-kind="${k}"><span class="emo">🥚</span>${tx('kind.' + k)}<small>${tx('kname.' + k)}</small></button>`).join(''); return; }
+    if (!has) { $('#pet-cards').innerHTML = Object.keys(PET_KINDS).map(k => `<button type="button" class="pet-card" data-kind="${k}"><span class="emo"><img class="av" src="${artSrc('pet-' + k + '-0')}" alt=""></span>${tx('kind.' + k)}<small>${tx('kname.' + k)}</small></button>`).join(''); return; }
     const st = petStage(p.fed), next = PET_STAGES[st + 1], prev = PET_STAGES[st];
     $('#pet-stage').innerHTML = petSVG(p.kind, st, p.wear); $('#pet-name').innerHTML = `${name()}<small>${tx('stage.' + st)}</small>`;
     $('#pet-barwrap').hidden = !next; $('#pet-bar').style.width = next ? Math.round((p.fed - prev) / (next - prev) * 100) + '%' : '100%';
     $('#pet-feed').hidden = !next; $('#pet-feed').disabled = p.acorn < FEED; $('#pet-feed').textContent = p.acorn < FEED ? tx('pet.feedLack', { d: FEED - p.acorn }) : tx('pet.feed', { n: FEED });
     const badges = num(DB.daily.badges);
-    $('#pet-gear').innerHTML = `<div class="gear-t">${tx('gear.title')}</div>` + GEAR.map(g => { const ok = badges >= g.at, on = p.wear[g.slot] === g.id; return `<button type="button" data-gear="${g.id}" aria-pressed="${on}"${ok ? '' : ' aria-disabled="true"'}><span class="emo">${g.e}</span>${tx('gear.' + g.id)}<small>${ok ? '' : tx('gear.badges', { n: g.at })}</small></button>`; }).join('');
+    $('#pet-gear').innerHTML = `<div class="gear-t">${tx('gear.title')}</div>` + GEAR.map(g => { const ok = badges >= g.at, on = p.wear[g.slot] === g.id; return `<button type="button" data-gear="${g.id}" aria-pressed="${on}"${ok ? '' : ' aria-disabled="true"'}><span class="emo"><img class="av" src="${artSrc('g-' + g.id)}" alt=""></span>${tx('gear.' + g.id)}<small>${ok ? '' : tx('gear.badges', { n: g.at })}</small></button>`; }).join('');
   }
   function feed() {
     const p = P(); if (p.acorn < FEED || !PET_KINDS[p.kind]) return; const before = petStage(p.fed); p.acorn -= FEED; p.fed += FEED; save(); render();
@@ -2033,7 +2347,7 @@ const StarMap = (() => {
     const cc = mk('circle', { cx: C, cy: C, r: R0 - 3, fill: 'rgba(255,255,255,.75)' }); svg.appendChild(cc);
     const t12 = mk('text', { x: C, y: C + 4, class: 'mlab', style: 'fill:#3b2f2f;stroke:none;font-size:11px' }); t12.textContent = '1→12'; svg.appendChild(t12);
     svg.classList.toggle('sec-on', sel >= 0); el.appendChild(svg);
-    $('#map-count').innerHTML = `<span aria-hidden="true">⭐</span>${tx('map.count', { n: lit, t: tot })}`; $('#map-count').setAttribute('aria-label', tx('map.aria', { n: lit, t: tot }));
+    $('#map-count').innerHTML = `<span aria-hidden="true">${ic('star')}</span>${tx('map.count', { n: lit, t: tot })}`; $('#map-count').setAttribute('aria-label', tx('map.aria', { n: lit, t: tot }));
     info();
   }
   function info() {
@@ -2079,8 +2393,8 @@ const Tut = (() => {
   function pick() {
     clear(); S.i = 3; S.busy = true; dots(); finger(false); clock6.drag = false; clock6.mark(null); clock6.ghost(null); Town.set(10 * 60);   // 選等級時小鎮固定在白天（孩子可能把鐘撥到半夜）
     $('#clock6').hidden = true; $('#tut-hint').hidden = true; $('#tut-skip').hidden = true; $('#tut-say').textContent = tx('tut.pick');
-    const EX = { 1: [[3, 0], [3, 30], ''], 2: [[7, 20], [9, 45], ''], 3: [[2, 40], [3, 15], '➜'] }, dg = ([h, m]) => `${h}:${String(m).padStart(2, '0')}`;
-    $('#tut-pick').innerHTML = [1, 2, 3].map(l => `<button class="pick" type="button" data-level="${l}" aria-pressed="${S.replay && DB.set.level === l}"><span class="pc" data-c="${EX[l][0]}"></span>${EX[l][2] ? `<span class="arrow" aria-hidden="true">${EX[l][2]}</span>` : ''}<span class="pc" data-c="${EX[l][1]}"></span><span class="pt"><b>${tx('level.' + l)}</b><i>${dg(EX[l][0])} ${EX[l][2] || '·'} ${dg(EX[l][1])}</i></span></button>`).join('');
+    const EX = { 1: [[3, 0], [3, 30], ''], 2: [[7, 20], [9, 45], ''], 3: [[2, 40], [3, 15], ic('arrow')] }, dg = ([h, m]) => `${h}:${String(m).padStart(2, '0')}`;
+    $('#tut-pick').innerHTML = [1, 2, 3].map(l => `<button class="pick" type="button" data-level="${l}" aria-pressed="${S.replay && DB.set.level === l}"><span class="pc" data-c="${EX[l][0]}"></span>${EX[l][2] ? `<span class="arrow" aria-hidden="true">${EX[l][2]}</span>` : ''}<span class="pc" data-c="${EX[l][1]}"></span><span class="pt"><b>${tx('level.' + l)}</b><i>${dg(EX[l][0])} ${EX[l][2] ? '→' : '·'} ${dg(EX[l][1])}</i></span></button>`).join('');
     $$('#tut-pick .pc').forEach(el => { const [h, m] = el.dataset.c.split(',').map(Number); Clock(el, { drag: false, ring: false }).set(h, m); });
     $('#tut-pick').hidden = false; $('#tut-note').hidden = false;
   }
@@ -2207,7 +2521,7 @@ $('#bk-close').addEventListener('click', () => { $('#o-bk').hidden = true; rende
 try { if (sessionStorage.getItem(BK_DONE)) { sessionStorage.removeItem(BK_DONE); setTimeout(() => toast(tx('bk.done')), 400); } } catch (e) {}
 
 // ---------- 開始
-loadDB(); setLang(); setRingAll(DB.set.ring); Town.resize(); Music.track(Music.forTime(DB.free)); Music.start();
+fillIcons(); loadDB(); setLang(); setRingAll(DB.set.ring); Town.resize(); Music.track(Music.forTime(DB.free)); Music.start();
 if (DB.hinted) $('#hintline').hidden = true; refreshMenu(); whoChip(); renderLocks();
 setTimeout(() => { const sp = $('#splash'); if (sp) sp.remove(); }, 1900);
 if (!DB.tut) Tut.start(false);

@@ -18,13 +18,13 @@ const SAVE = lang => JSON.stringify({ set: { lang, sound: false, music: false, l
     { const p = await b.newPage({ viewport: { width: 1024, height: 500 } });
       const shot = await (async () => { const q = await b.newPage({ viewport: { width: 390, height: 760 }, deviceScaleFactor: 2 }); await q.addInitScript(`localStorage.setItem('tick-town-v1', ${JSON.stringify(SAVE(lang))});`); await q.goto(URL); await q.waitForTimeout(2300); const buf = await q.screenshot(); await q.close(); return buf.toString('base64'); })();
       const font = lang === 'ja' ? 'zenmaru-900' : 'chiron-900';
-      await p.setContent(`<html><head><style>@font-face{font-family:T;src:url(${URL.replace('index.html', '')}assets/fonts/${font}.woff2)}
-        body{margin:0;width:1024px;height:500px;overflow:hidden;background:linear-gradient(#8fc9ff,#ffe9c9);font-family:T,sans-serif;position:relative}
-        .l{position:absolute;left:56px;top:60px;width:560px}.i{width:128px;height:128px;border-radius:28px;box-shadow:0 8px 20px rgba(0,0,0,.15)}
-        h1{margin:18px 0 8px;font-size:64px;color:#fff;text-shadow:0 4px 0 rgba(0,0,0,.25);letter-spacing:2px;line-height:1.1}
-        p{margin:0;font-size:36px;line-height:1.3;color:#3b2f2f}.badge{display:inline-block;margin-top:22px;background:#fff;border-radius:999px;padding:8px 20px;font-size:22px;color:#c77a10}
-        .ph{position:absolute;right:56px;top:34px;width:230px;height:449px;border-radius:30px;border:8px solid #2b2b33;overflow:hidden;background:#000;box-shadow:0 10px 30px rgba(0,0,0,.25)}.ph img{width:100%}
-        .gr{position:absolute;left:0;right:0;bottom:-60px;height:140px;background:#79c35e;border-radius:50% 50% 0 0}</style></head>
+      await p.setContent(`<html><head><style>@font-face{font-family:T;src:url(data:font/woff2;base64,${fs.readFileSync(path.join(ROOT, 'assets/fonts', font + '.woff2')).toString('base64')})}
+        body{margin:0;width:1024px;height:500px;overflow:hidden;background:linear-gradient(160deg,#a6dbff,#dcefff 50%,#ffe6ee);font-family:T,sans-serif;position:relative;color:#5b4034}
+        .l{position:absolute;left:56px;top:60px;width:560px}.i{width:128px;height:128px;border-radius:28px;box-shadow:0 10px 22px rgba(110,70,60,.25)}
+        h1{margin:18px 0 8px;font-size:66px;color:#fff;text-shadow:0 4px 0 #e58aa2,0 8px 0 rgba(150,70,95,.3),0 10px 18px rgba(120,60,80,.3);letter-spacing:2px;line-height:1.1}
+        p{margin:0;font-size:36px;line-height:1.3;color:#5b4034}.badge{display:inline-block;margin-top:22px;background:linear-gradient(#fffdf9,#fff2e2);border-radius:999px;padding:9px 22px;font-size:22px;color:#c77a10;box-shadow:0 6px 12px rgba(110,70,60,.2),inset 0 -4px 6px rgba(200,145,105,.2),inset 0 2px 3px #fff}
+        .ph{position:absolute;right:56px;top:34px;width:230px;height:449px;border-radius:30px;border:8px solid #fffaf2;overflow:hidden;background:#fffaf2;box-shadow:0 14px 30px rgba(110,70,60,.3)}.ph img{width:100%}
+        .gr{position:absolute;left:0;right:0;bottom:-60px;height:140px;background:linear-gradient(#b4e89e,#8fd58a);border-radius:50% 50% 0 0}</style></head>
         <body><div class="gr"></div><div class="l"><img class="i" src="${URL.replace('index.html', '')}assets/icons/icon-512.png"><h1>${g.title}</h1><p>${g.tagline}</p><span class="badge">${g.badge}</span></div><div class="ph"><img src="data:image/png;base64,${shot}"></div></body></html>`);
       await p.waitForTimeout(800); fs.mkdirSync(path.join(ROOT, 'store/graphic'), { recursive: true }); await p.screenshot({ path: path.join(ROOT, `store/graphic/feature-${lang}.png`) }); await p.close(); }
     // 手機截圖：主選單、小鎮的一天、幾點了、修鐘店、星圖

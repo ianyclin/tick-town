@@ -7,3 +7,4 @@ android/
 *.keystore
 *.jks
 keystore.properties
+preview/

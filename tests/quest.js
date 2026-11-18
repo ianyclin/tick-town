@@ -22,7 +22,7 @@ const solve = async p => { const q = await p.textContent('#gate-q'); const ans =
     ok(done === (starQ ? 2 : 3), `${lang} 推進後完成 ${done} 項（${starQ ? '有' : '沒有'}點亮星星任務）`);
     if (starQ) { await p.evaluate(() => { const DB = window.__tt.DB(); for (let i = 1; i <= 3; i++) DB.facts['r:' + i + ':0'] = { n: 4, err: 0, w: 0, t: 1000 }; window.__tt.Quest.add('star'); }); await p.waitForTimeout(200); D = (await db()).daily; }
     ok(D.tasks.every(t => t.done) && D.badges === 1 && D.streak === 1, `${lang} 全完成：徽章 ${D.badges}、連續 ${D.streak}`);
-    await p.waitForTimeout(1400); ok(await p.textContent('#q-count') === '✓', `${lang} chip 變 ✓`);
+    await p.waitForTimeout(1400); ok(await p.evaluate(() => { const e = document.querySelector('#q-count'); return !!e.querySelector('img.ic') && !/\d/.test(e.textContent) && document.querySelector('#go-quest').classList.contains('ok'); }), `${lang} chip 變成打勾的圖`);
     // 家長關卡：答錯換題、答對才清
     await p.click('#go-set'); await p.click('#set-reset'); await p.waitForTimeout(150);
     ok(await p.isVisible('#o-gate') && /−/.test(await p.textContent('#gate-q')), `${lang} 清除走難的關卡：${await p.textContent('#gate-q')}`);

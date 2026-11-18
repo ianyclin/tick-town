@@ -38,7 +38,7 @@ const FAKE = owned => `window.__iap = { owned: ${owned}, calls: [] }; window.Cap
     ok(await p.evaluate(() => { const L = [...document.querySelectorAll('.m-lock')].filter(e => !e.hidden).map(e => e.getBoundingClientRect()); return L.every(r => r.left >= 0 && r.right <= innerWidth) && L.every((r, i) => !i || r.left >= L[i - 1].right - 1) && [...document.querySelectorAll('.m-lock')].every(e => e.hidden || e.scrollWidth <= e.clientWidth + 1); }), `${tag} 標籤在畫面內、不互相重疊、字沒被切`);
     if (SHOT && lang === 'zh-Hant') await p.screenshot({ path: `${SHOT}/app-menu.png` });
     for (let i = 0; i < 3; i++) { await p.click('[data-mode=match]'); await p.waitForTimeout(150); ok(await p.isVisible('#s-match') && await p.isVisible('#toast'), `${tag} 試玩第 ${i + 1} 次：「${await p.textContent('#toast')}」`); await p.click('#s-match [data-home]'); await p.waitForTimeout(100); }
-    ok(/🔒/.test(await p.textContent('#go-match .m-lock')), `${tag} 用完了：「${await p.textContent('#go-match .m-lock')}」`);
+    ok(await p.evaluate(() => { const e = document.querySelector('#go-match .m-lock'); return e.classList.contains('locked') && !!e.querySelector('img.ic') && !e.hidden; }), `${tag} 用完了：鈕上是鎖頭的圖`);
     await p.click('[data-mode=match]'); await p.waitForTimeout(150);
     ok(await p.isHidden('#s-match') && await p.isVisible('#o-lock'), `${tag} 第 4 次：鎖卡「${await p.textContent('#lock-title')}」`);
     const lockTxt = await p.textContent('#o-lock'); ok(!/\$|NT|元|price|precio/i.test(lockTxt), `${tag} 鎖卡沒有價錢`);
