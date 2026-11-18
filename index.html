@@ -70,6 +70,24 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 .toast.mid{bottom:auto;top:calc(50% - 60px)}   /* 拔河時放中線上面，不蓋到下面那位的鐘 */
 .toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom));transform:translateX(-50%);background:rgba(59,47,47,.92);color:#fff;padding:12px 18px;border-radius:999px;font-weight:900;font-size:16px;z-index:9;max-width:calc(100% - 32px);text-align:center;text-wrap:balance;pointer-events:none;animation:toastIn .25s ease}
 @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}}
+.chip.who{color:var(--hour);max-width:7.5em}.chip.who .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+@media (max-width:374px){.chip.who .nm{display:none}}
+.who-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.who-list button{min-height:56px;border-radius:16px;border:2px solid var(--line);background:#fff;font-weight:900;font-size:17px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px 8px;overflow:hidden}
+.who-list button[aria-pressed=true]{border-color:var(--hour);background:#e4efff;color:var(--hour)}
+.who-list button small{font-size:12px;font-weight:700;color:var(--muted)}
+.who-list button span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.name-in{min-height:52px;border-radius:14px;border:2px solid var(--line);padding:0 14px;font:inherit;font-size:20px;font-weight:700;background:#fff;width:100%;user-select:text;-webkit-user-select:text}
+.name-in:focus{outline:none;border-color:var(--hour)}
+.name-sug{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.name-sug button{min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:15px}
+.btn-col{display:flex;flex-direction:column;gap:10px}
+.who-hint{font-size:14px;font-weight:700;color:var(--muted);text-align:center;min-height:0}
+.who-hint:empty{display:none}
+.bk-out{width:100%;min-height:90px;border-radius:12px;border:1px solid var(--line);padding:8px;font:12px/1.4 ui-monospace,monospace;word-break:break-all;user-select:text;-webkit-user-select:text;background:#fff}
+.bk-msg{font-size:14px;font-weight:700;color:var(--hour);text-align:center}.bk-msg.bad{color:#c0392b}.bk-msg:empty{display:none}
+.bk-confirm{display:flex;flex-direction:column;gap:10px;background:#fff3dc;border-radius:16px;padding:12px}
+.card.about p.about-ded,.about-ded{margin:14px 0 2px;font-size:13px;line-height:1.6;color:var(--muted);text-align:center;text-wrap:balance}
+.setbtn{min-height:44px;padding:0 16px;border-radius:999px;background:#fff;border:2px solid var(--line);font-weight:900;font-size:15px;flex:none}
 .chip{min-height:44px;border-radius:999px;background:var(--panel);border:1px solid var(--line);padding:0 11px;font-weight:900;font-size:15px;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 0 rgba(0,0,0,.08);position:relative}
 .chip.todo::after{content:'';position:absolute;top:-2px;right:-2px;width:12px;height:12px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 2px #fff}
 .chip.ok{background:#dff7ea;border-color:var(--mint)}
@@ -234,7 +252,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 <section class="screen" id="s-menu">
   <div class="top">
     <h1 data-t="title"></h1>
-    <div style="display:flex;gap:8px"><button class="chip" id="go-pet" type="button" data-ta="menu.pet"><span aria-hidden="true">🌰</span><b id="b-acorn">0</b></button><button class="chip" id="go-quest" type="button"><span aria-hidden="true">📋</span><b id="q-count"></b></button><button class="icon-btn" id="go-map" type="button" data-ta="menu.map">🗺️</button><button class="icon-btn" id="go-set" type="button" data-ta="menu.set">⚙️</button></div>
+    <div style="display:flex;gap:8px"><button class="chip who" id="go-who" type="button" data-ta="who.switch" hidden><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="currentColor"/></svg><b class="nm" id="who-nm"></b></button><button class="chip" id="go-pet" type="button" data-ta="menu.pet"><span aria-hidden="true">🌰</span><b id="b-acorn">0</b></button><button class="chip" id="go-quest" type="button"><span aria-hidden="true">📋</span><b id="q-count"></b></button><button class="icon-btn" id="go-map" type="button" data-ta="menu.map">🗺️</button><button class="icon-btn" id="go-set" type="button" data-ta="menu.set">⚙️</button></div>
   </div>
   <div class="clock-wrap" id="clock"></div>
   <div class="timecard">
@@ -376,6 +394,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 <div class="overlay" id="o-set" hidden>
   <div class="card">
     <div class="hhead"><h3 data-t="set.title"></h3><button class="xbtn" type="button" id="set-close" data-ta="close">✕</button></div>
+    <div class="row"><span class="lab"><span data-t="set.who"></span><small class="sub" id="set-whoD"></small></span><button class="setbtn" type="button" id="set-who" data-t="who.switch"></button></div>
     <div class="lab" data-t="set.lang"></div>
     <div class="langs" id="set-lang"></div>
     <div class="lab" data-t="set.level"></div>
@@ -386,8 +405,43 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
     <div class="row"><span class="lab"><span data-t="set.chime"></span><small class="sub" data-t="set.chimeD"></small></span><button class="sw" type="button" data-set="chime" aria-pressed="true" data-t="on"></button></div>
     <div class="linkrow"><button class="link-btn" type="button" id="go-tut" data-t="set.tut" style="grid-column:1/-1"></button><button class="link-btn" type="button" id="go-help" data-t="set.help"></button><button class="link-btn" type="button" id="go-about" data-t="set.about"></button></div>
     <div class="lab parent" data-t="set.parent"></div>
-    <div class="row"><span class="lab" data-t="set.resetP"></span><button class="danger" type="button" id="set-reset" data-t="set.reset"></button></div>
+    <div class="row"><span class="lab"><span data-t="set.backup"></span><small class="sub" data-t="set.backupD"></small></span><button class="setbtn" type="button" id="go-backup" data-t="set.backupGo"></button></div>
+    <div class="row"><span class="lab" id="set-resetP"></span><button class="danger" type="button" id="set-reset" data-t="set.reset"></button></div>
+    <div class="row"><span class="lab"><span data-t="set.del"></span><small class="sub" id="set-delD"></small></span><button class="danger" type="button" id="set-del" data-t="set.delGo"></button></div>
     <div class="legal" data-t="legal"></div>
+  </div>
+</div>
+
+<div class="overlay" id="o-who" hidden>
+  <div class="card">
+    <div class="hhead"><h3 data-t="who.title"></h3><button class="xbtn" type="button" id="who-close" data-ta="close">✕</button></div>
+    <p data-t="who.p" style="margin:0"></p>
+    <div class="who-list" id="who-list"></div>
+    <div class="who-hint" id="who-hint"></div>
+    <input class="name-in" id="who-in" type="text" maxlength="10" autocomplete="off" autocapitalize="off" enterkeyhint="done" data-tp="who.ph" data-ta="who.inAria">
+    <div class="name-sug" id="who-sug"></div>
+    <div class="btn-col">
+      <button class="btn" type="button" id="who-add" data-t="who.add"></button>
+      <button class="btn alt" type="button" id="who-rename" data-t="who.rename"></button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="o-bk" hidden>
+  <div class="card">
+    <div class="hhead"><h3 data-t="bk.title"></h3><button class="xbtn" type="button" id="bk-close" data-ta="close">✕</button></div>
+    <p data-t="bk.p" style="margin:0"></p>
+    <h4 data-t="bk.exportT" style="margin:4px 0 0"></h4>
+    <div class="btn-col"><button class="btn alt" type="button" id="bk-file" data-t="bk.file"></button><button class="btn alt" type="button" id="bk-copy" data-t="bk.copy"></button></div>
+    <textarea class="bk-out" id="bk-out" readonly hidden></textarea>
+    <h4 data-t="bk.importT" style="margin:4px 0 0"></h4>
+    <p data-t="bk.importP" style="margin:0"></p>
+    <input type="file" id="bk-in-file" accept=".json,application/json,text/plain" hidden>
+    <div class="btn-col"><button class="btn alt" type="button" id="bk-pick" data-t="bk.pick"></button></div>
+    <textarea class="bk-out" id="bk-in" data-tp="bk.pastePh"></textarea>
+    <button class="btn alt" type="button" id="bk-paste" data-t="bk.pasteGo"></button>
+    <div class="bk-msg" id="bk-msg" aria-live="polite"></div>
+    <div class="bk-confirm" id="bk-confirm" hidden><button class="btn" type="button" id="bk-yes" data-t="bk.yes"></button><button class="btn alt" type="button" id="bk-no" data-t="gate.cancel"></button></div>
   </div>
 </div>
 
@@ -402,6 +456,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
     <h4 data-t="help.mapT"></h4><ul data-th="help.map"></ul>
     <h4 data-t="help.questT"></h4><ul data-th="help.quest"></ul>
     <h4 data-t="help.petT"></h4><ul data-th="help.pet"></ul>
+    <h4 data-t="help.whoT"></h4><ul data-th="help.who"></ul>
   </div>
 </div>
 
@@ -413,6 +468,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
     <h4 data-t="about.privT"></h4><p data-t="about.priv"></p>
     <h4 data-t="about.madeT"></h4><p data-t="about.made"></p>
     <div class="legal" data-t="about.fonts"></div>
+    <p class="about-ded" data-th="about.ded"></p>
   </div>
 </div>
 
@@ -501,7 +557,12 @@ const STR = {
     'about.privT': '隱私', 'about.priv': '沒有廣告、沒有追蹤、不收集任何個人資料。遊戲紀錄只存在這台裝置上，不會上傳；玩的時候不需要網路。設定的家長區可以清掉所有紀錄。',
     'about.madeT': '製作', 'about.made': '指數三寶飯（ianyclin）。版本 0.1。意見請寄 gigigagagogogege@gmail.com。',
     'about.fonts': '字型：Lilita One、Chiron GoRound TC、Zen Maru Gothic（SIL Open Font License）。',
-    'set.parent': '家長區', 'set.resetP': '清掉這台裝置上的所有紀錄', 'set.reset': '清除所有紀錄', 'reset.done': '紀錄清掉了',
+    'sep': '、', 'who.title': '誰在玩？', 'who.switch': '換人', 'who.p': '每個人有自己的紀錄、星圖、寵物和難度。', 'who.ph': '名字（6 個字內）', 'who.inAria': '名字', 'who.sug': '哥哥|姊姊|弟弟|妹妹', 'who.add': '新增一個人', 'who.rename': '幫目前的人改名', 'who.renameFirst': '我就叫這個名字', 'who.noName': '沒有名字', 'who.me': '現在是你', 'who.mine': '換我', 'who.hintFirst': '先打你的名字，再按「我就叫這個名字」。', 'who.full': '最多 4 個人。',
+    'who.turn': '{name}，換你玩！', 'who.need': '先打名字', 'who.taken': '已經有這個名字了', 'who.welcome': '{name}，歡迎加入！', 'who.hi': '{name}，你好！', 'who.cleared': '{name}的紀錄刪掉了', 'set.who': '誰在玩', 'set.whoD': '現在是：{name}', 'set.titleWho': '設定（{name}）', 'set.del': '刪除玩家', 'set.delD': '刪掉「{name}」的名字和所有紀錄', 'set.delGo': '刪除', 'set.backup': '備份紀錄', 'set.backupD': '換裝置、從網頁版搬到 App 時用',
+    'set.backupGo': '打開', 'set.resetP': '清掉「{name}」的紀錄（名字留著）', 'set.reset': '清除紀錄', 'bk.title': '備份紀錄', 'bk.p': '備份包含這台裝置上所有人的紀錄、星圖、寵物和設定。網頁版和 App 版的紀錄是分開存的，要靠備份搬過去；也可以存起來以防萬一。', 'bk.exportT': '匯出', 'bk.file': '存成備份檔', 'bk.copy': '複製備份碼', 'bk.saved': '備份檔已經產生。', 'bk.copied': '備份碼已經複製，可以貼到備忘錄或傳給自己保存。', 'bk.copyManual': '請長按下面的備份碼，全選後複製。',
+    'bk.importT': '匯入', 'bk.importP': '匯入會取代這台裝置上所有人的紀錄。', 'bk.pick': '選擇備份檔', 'bk.pastePh': '或把備份碼貼在這裡', 'bk.pasteGo': '用備份碼匯入', 'bk.bad': '看不懂這個備份。請確認是滴答小鎮的備份檔或備份碼，而且有完整複製。', 'bk.found': '備份裡有 {n} 個人：{names}（{date} 備份）。匯入後，這台裝置原本的紀錄會被取代。', 'bk.yes': '確定匯入', 'bk.done': '匯入完成！', 'bk.fail': '匯入失敗，這台裝置的空間可能不夠。', 'about.ded': '獻給一直支持我的老婆和三個寶貝',
+    'help.whoT': '誰在玩', 'help.who': '<li>家裡最多 4 個人可以一起玩，每個人有自己的紀錄、星圖、寵物和難度。</li><li>在「設定 → 誰在玩」取名字、新增一個人。有名字以後，主選單左上角會出現名字，點它就能換人。</li><li>新加的人會先玩一次教學，再選要練什麼。</li>',
+    'set.resetP0': '清掉這台裝置上的所有紀錄', 'set.parent': '家長區', 'reset.done': '紀錄清掉了',
     'gate.title': '請大人來', 'gate.p': '請大人算這一題，才能繼續。', 'gate.cancel': '取消', 'gate.wait': '錯太多次了，等 30 秒再試',
     'menu.map': '星圖', 'map.count': '{n}/{t}', 'map.aria': '亮了 {n} 顆星，一共 {t} 顆', 'map.legend': '裡面那圈是 1 點，外面是 12 點；一片是 5 分',
     'map.info': '每個時刻一顆星，讀對、撥對幾次就會亮。<b>裡面那圈是 1 點，最外面是 12 點</b>，一片是 5 分。點一片看看。', 'map.weak': '最常搞混的是：<b>{e}</b>。多玩幾次就會了！', 'map.sector': '<b>{m} 分</b>的題（1 點到 12 點）：',
@@ -563,7 +624,14 @@ const STR = {
     'about.privT': 'Privacy', 'about.priv': 'No ads, no tracking, no personal data collected. Progress is saved only on this device and never uploaded. No internet is needed to play. A grown-up can erase everything from Settings.',
     'about.madeT': 'Made by', 'about.made': 'ianyclin. Version 0.1. Feedback: gigigagagogogege@gmail.com.',
     'about.fonts': 'Fonts: Lilita One, Chiron GoRound TC, Zen Maru Gothic (SIL Open Font License).',
-    'set.parent': 'For grown-ups', 'set.resetP': 'Erase all progress on this device', 'set.reset': 'Erase everything', 'reset.done': 'Progress erased',
+    'sep': ', ', 'who.title': 'Who\'s playing?', 'who.switch': 'Switch player', 'who.p': 'Everyone gets their own records, star map, pet and level.', 'who.ph': 'Name (max 10)', 'who.inAria': 'Name', 'who.sug': 'Big Bro|Big Sis|Little Bro|Little Sis', 'who.add': 'Add a player', 'who.rename': 'Rename this player', 'who.renameFirst': 'That\'s my name',
+    'who.noName': 'No name', 'who.me': 'That\'s you', 'who.mine': 'My turn', 'who.hintFirst': 'Type your name, then tap "That\'s my name".', 'who.full': 'Up to 4 players.', 'who.turn': '{name}, it\'s your turn!', 'who.need': 'Type a name first', 'who.taken': 'That name is taken', 'who.welcome': 'Welcome, {name}!', 'who.hi': 'Hi, {name}!',
+    'who.cleared': '{name} was deleted', 'set.who': 'Who\'s playing', 'set.whoD': 'Now: {name}', 'set.titleWho': 'Settings ({name})', 'set.del': 'Delete player', 'set.delD': 'Delete {name} and all of their records', 'set.delGo': 'Delete', 'set.backup': 'Back up records', 'set.backupD': 'For moving to a new device, or from the website to the app',
+    'set.backupGo': 'Open', 'set.resetP': 'Erase {name}\'s records (keeps the name)', 'set.reset': 'Erase records', 'bk.title': 'Back up records', 'bk.p': 'A backup holds every player\'s records, star map, pet and settings on this device. The website and the app keep separate records, so use a backup to move them. You can also keep one just in case.',
+    'bk.exportT': 'Export', 'bk.file': 'Save backup file', 'bk.copy': 'Copy backup code', 'bk.saved': 'Backup file created.', 'bk.copied': 'Backup code copied. Paste it into Notes or send it to yourself to keep it.', 'bk.copyManual': 'Press and hold the code below, select all, then copy.', 'bk.importT': 'Import', 'bk.importP': 'Importing replaces every player\'s records on this device.',
+    'bk.pick': 'Choose backup file', 'bk.pastePh': 'Or paste a backup code here', 'bk.pasteGo': 'Import from code', 'bk.bad': 'This doesn\'t look like a Tick-Tock Town backup. Check that it\'s the right file or that the whole code was copied.', 'bk.found': 'This backup has {n} player(s): {names} (saved {date}). Importing replaces the records on this device.',
+    'bk.yes': 'Import', 'bk.done': 'Import complete!', 'bk.fail': 'Import failed. This device may be out of storage.', 'about.ded': 'For my wife and our three kids, who always cheer me on.', 'help.whoT': 'Who\'s playing', 'help.who': '<li>Up to 4 people can play on one device. Everyone gets their own records, star map, pet and level.</li><li>Add names and players in Settings → Who\'s playing. Once someone has a name, it shows at the top left of the menu. Tap it to switch.</li><li>A new player starts with the short tutorial, then picks what to practice.</li>',
+    'set.resetP0': 'Erase all progress on this device', 'set.parent': 'For grown-ups', 'reset.done': 'Progress erased',
     'gate.title': 'Ask a grown-up', 'gate.p': 'A grown-up needs to solve this to continue.', 'gate.cancel': 'Cancel', 'gate.wait': 'Too many misses. Try again in 30 seconds',
     'menu.map': 'Star map', 'map.count': '{n}/{t}', 'map.aria': '{n} of {t} stars lit', 'map.legend': 'Inner ring is 1 o\'clock, outer is 12; each slice is 5 minutes',
     'map.info': 'Every time has a star. Read it or set it right a few times and it lights up. <b>The inner ring is 1 o\'clock, the outer ring is 12.</b> Each slice is 5 minutes. Tap a slice!', 'map.weak': 'Mixed up most often: <b>{e}</b>. A few more tries and you\'ll get it!', 'map.sector': '<b>{m} minutes</b> (1 to 12 o\'clock):',
@@ -625,7 +693,13 @@ const STR = {
     'about.privT': 'プライバシー', 'about.priv': '広告なし、トラッキングなし、個人情報は一切集めません。記録はこの端末の中だけに保存され、アップロードされません。遊ぶのにインターネットは不要です。設定の「おうちの人へ」から記録をすべて消せます。',
     'about.madeT': '制作', 'about.made': 'ianyclin。バージョン 0.1。ご意見は gigigagagogogege@gmail.com へ。',
     'about.fonts': 'フォント：Lilita One、Chiron GoRound TC、Zen Maru Gothic（SIL Open Font License）。',
-    'set.parent': 'おうちの人へ', 'set.resetP': 'この たんまつの きろくを ぜんぶ けす', 'set.reset': 'ぜんぶ けす', 'reset.done': 'きろくを けしました',
+    'sep': '、', 'who.title': 'だれが あそぶ？', 'who.switch': '人を かえる', 'who.p': 'ひとりひとりに、きろく・星マップ・ペット・むずかしさが あるよ。', 'who.ph': '名前（6文字まで）', 'who.inAria': '名前', 'who.sug': 'おにいちゃん|おねえちゃん|おとうと|いもうと', 'who.add': '人を ふやす', 'who.rename': 'いまの 人の 名前を かえる', 'who.renameFirst': 'この 名前に する', 'who.noName': '名前なし', 'who.me': 'いまは きみ', 'who.mine': 'こうたい',
+    'who.hintFirst': '名前を うって、「この 名前に する」を おしてね。', 'who.full': '4人まで。', 'who.turn': '{name}、きみの 番だよ！', 'who.need': '先に 名前を うってね', 'who.taken': 'その 名前は もう あるよ', 'who.welcome': '{name}、ようこそ！', 'who.hi': '{name}、こんにちは！', 'who.cleared': '{name}を けしたよ', 'set.who': 'だれが あそぶ', 'set.whoD': 'いまは：{name}', 'set.titleWho': 'せってい（{name}）',
+    'set.del': 'プレイヤーを けす', 'set.delD': '「{name}」の 名前と きろくを ぜんぶ けす', 'set.delGo': 'けす', 'set.backup': 'きろくの バックアップ', 'set.backupD': 'ほかの タブレットや アプリに うつす ときに つかうよ', 'set.backupGo': 'ひらく', 'set.resetP': '「{name}」の きろくを けす（名前は のこる）', 'set.reset': 'きろくを けす', 'bk.title': '記録のバックアップ', 'bk.p': 'この端末にいる全員の記録・星マップ・ペット・設定をまとめて保存します。Web版とアプリ版の記録は別々に保存されるため、移すときはバックアップを使ってください。念のため保存しておくこともできます。',
+    'bk.exportT': '書き出し', 'bk.file': 'バックアップファイルを保存', 'bk.copy': 'バックアップコードをコピー', 'bk.saved': 'バックアップファイルを作成しました。', 'bk.copied': 'コードをコピーしました。メモアプリなどに貼り付けて保存してください。', 'bk.copyManual': '下のコードを長押しして、すべて選択してからコピーしてください。', 'bk.importT': '読み込み', 'bk.importP': '読み込むと、この端末の全員の記録が置き換わります。', 'bk.pick': 'バックアップファイルを選ぶ', 'bk.pastePh': 'またはバックアップコードをここに貼り付け',
+    'bk.pasteGo': 'コードから読み込む', 'bk.bad': 'チクタクタウンのバックアップとして読み取れませんでした。正しいファイルか、コードを最後までコピーしたか確認してください。', 'bk.found': 'バックアップには {n} 人分の記録があります：{names}（{date} に保存）。読み込むと、この端末の記録は置き換わります。', 'bk.yes': '読み込む', 'bk.done': '読み込みが完了しました！', 'bk.fail': '読み込みに失敗しました。端末の空き容量が足りない可能性があります。', 'about.ded': 'いつも応援してくれる妻と、<br>3人の子どもたちへ',
+    'help.whoT': 'だれが あそぶ', 'help.who': '<li>1つの タブレットで 4人まで あそべるよ。ひとりひとりに きろく・星マップ・ペット・むずかしさが あるよ。</li><li>「せってい → だれが あそぶ」で 名前を つけたり、人を ふやしたり できるよ。名前を つけると、メニューの 左上に 名前が でるよ。おすと 人を かえられるよ。</li><li>あたらしい 人は さいしょに あそびかたを やってから、なにを れんしゅうするか えらぶよ。</li>',
+    'set.resetP0': 'この たんまつの きろくを ぜんぶ けす', 'set.parent': 'おうちの人へ', 'reset.done': 'きろくを けしました',
     'gate.title': 'おうちの人を よんでね', 'gate.p': 'つづけるには、おうちの人が この もんだいを といてください。', 'gate.cancel': 'やめる', 'gate.wait': 'まちがいが おおいので、30びょう まってね',
     'menu.map': '星マップ', 'map.count': '{n}/{t}', 'map.aria': '星が {t}こ中 {n}こ ついた', 'map.legend': '内がわが 1時、外がわが 12時。1まいが 5分',
     'map.info': 'どの時こくにも 星が 1つ。何回か 正かいすると 光るよ。<b>内がわの わが 1時、いちばん外が 12時</b>。1まいが 5分だよ。タップしてみてね。', 'map.weak': 'いちばん まちがえやすいのは：<b>{e}</b>。もう少し あそべば できるよ！', 'map.sector': '<b>{m}分</b>の もんだい（1時から 12時）：',
@@ -687,7 +761,12 @@ const STR = {
     'about.privT': '개인정보', 'about.priv': '광고, 추적, 개인정보 수집이 없습니다. 기록은 이 기기에만 저장되고 어디에도 올라가지 않습니다. 인터넷 없이 놀 수 있습니다. 어른이 설정에서 모든 기록을 지울 수 있습니다.',
     'about.madeT': '만든 사람', 'about.made': 'ianyclin. 버전 0.1. 의견: gigigagagogogege@gmail.com.',
     'about.fonts': '글꼴: Lilita One, Chiron GoRound TC, Zen Maru Gothic (SIL Open Font License).',
-    'set.parent': '어른용', 'set.resetP': '이 기기의 기록을 모두 지우기', 'set.reset': '모두 지우기', 'reset.done': '기록을 지웠습니다',
+    'sep': ', ', 'who.title': '누가 할까?', 'who.switch': '사람 바꾸기', 'who.p': '사람마다 기록, 별 지도, 펫, 단계가 따로 있어.', 'who.ph': '이름 (6자까지)', 'who.inAria': '이름', 'who.sug': '첫째|둘째|셋째|막내', 'who.add': '사람 추가', 'who.rename': '지금 사람 이름 바꾸기', 'who.renameFirst': '이 이름으로 할래', 'who.noName': '이름 없음', 'who.me': '지금 너야', 'who.mine': '내 차례', 'who.hintFirst': '이름을 쓰고 "이 이름으로 할래"를 눌러.',
+    'who.full': '4명까지 할 수 있어.', 'who.turn': '{name}, 이제 네 차례야!', 'who.need': '먼저 이름을 써', 'who.taken': '이미 있는 이름이야', 'who.welcome': '어서 와, {name}!', 'who.hi': '안녕, {name}!', 'who.cleared': '{name}의 기록을 지웠어요', 'set.who': '누가 할까', 'set.whoD': '지금: {name}', 'set.titleWho': '설정 ({name})', 'set.del': '플레이어 삭제', 'set.delD': '{name}의 이름과 기록을 모두 지워요',
+    'set.delGo': '삭제', 'set.backup': '기록 백업', 'set.backupD': '새 기기로, 또는 웹에서 앱으로 옮길 때 써요', 'set.backupGo': '열기', 'set.resetP': '{name}의 기록 지우기 (이름은 남아요)', 'set.reset': '기록 지우기', 'bk.title': '기록 백업', 'bk.p': '백업에는 이 기기의 모든 플레이어의 기록, 별 지도, 펫, 설정이 들어 있습니다. 웹과 앱은 기록이 따로 저장되므로 백업으로 옮기세요. 만일을 위해 보관해 두어도 좋습니다.', 'bk.exportT': '내보내기',
+    'bk.file': '백업 파일 저장', 'bk.copy': '백업 코드 복사', 'bk.saved': '백업 파일을 만들었습니다.', 'bk.copied': '백업 코드를 복사했습니다. 메모에 붙여 넣거나 자신에게 보내 보관하세요.', 'bk.copyManual': '아래 코드를 길게 눌러 전체 선택한 뒤 복사하세요.', 'bk.importT': '가져오기', 'bk.importP': '가져오면 이 기기의 모든 플레이어 기록이 바뀝니다.', 'bk.pick': '백업 파일 선택', 'bk.pastePh': '또는 여기에 백업 코드 붙여 넣기', 'bk.pasteGo': '코드로 가져오기',
+    'bk.bad': '째깍 마을 백업이 아닌 것 같습니다. 올바른 파일인지, 코드를 전부 복사했는지 확인해 주세요.', 'bk.found': '플레이어 {n}명: {names} ({date} 백업). 가져오면 이 기기의 기록이 바뀝니다.', 'bk.yes': '가져오기', 'bk.done': '가져오기 완료!', 'bk.fail': '가져오기에 실패했습니다. 기기 저장 공간이 부족할 수 있습니다.', 'about.ded': '언제나 응원해 주는 아내와 세 아이에게.', 'help.whoT': '누가 할까', 'help.who': '<li>한 기기에서 4명까지 할 수 있어. 사람마다 기록, 별 지도, 펫, 단계가 따로 있어.</li><li>"설정 → 누가 할까"에서 이름을 넣거나 사람을 추가해. 이름이 있으면 메뉴 왼쪽 위에 이름이 나와. 누르면 사람을 바꿀 수 있어.</li><li>새로 온 사람은 먼저 노는 방법을 해 보고, 무엇을 연습할지 골라.</li>',
+    'set.resetP0': '이 기기의 기록을 모두 지우기', 'set.parent': '어른용', 'reset.done': '기록을 지웠습니다',
     'gate.title': '어른 확인', 'gate.p': '계속하려면 어른이 이 문제를 풀어 주세요.', 'gate.cancel': '취소', 'gate.wait': '너무 많이 틀렸습니다. 30초 후에 다시 해 주세요',
     'menu.map': '별 지도', 'map.count': '{n}/{t}', 'map.aria': '별 {t}개 중 {n}개 켜짐', 'map.legend': '안쪽 고리가 1시, 바깥쪽이 12시. 한 조각이 5분',
     'map.info': '시각마다 별이 하나씩 있어. 몇 번 맞게 읽거나 맞추면 별이 켜져. <b>안쪽 고리가 1시, 바깥쪽 고리가 12시.</b> 한 조각이 5분이야. 조각을 눌러 봐!', 'map.weak': '가장 많이 헷갈린 것: <b>{e}</b>. 몇 번만 더 하면 알게 될 거야!', 'map.sector': '<b>{m}분</b> (1시부터 12시까지):',
@@ -749,7 +828,15 @@ const STR = {
     'about.privT': 'Privacidad', 'about.priv': 'Sin anuncios, sin seguimiento y sin recopilar datos personales. El progreso se guarda solo en este dispositivo y nunca se sube a internet. No se necesita internet para jugar. Un adulto puede borrarlo todo desde Ajustes.',
     'about.madeT': 'Hecho por', 'about.made': 'ianyclin. Versión 0.1. Comentarios: gigigagagogogege@gmail.com.',
     'about.fonts': 'Fuentes: Lilita One, Chiron GoRound TC, Zen Maru Gothic (SIL Open Font License).',
-    'set.parent': 'Para adultos', 'set.resetP': 'Borrar todo el progreso de este dispositivo', 'set.reset': 'Borrar todo', 'reset.done': 'Progreso borrado',
+    'sep': ', ', 'who.title': '¿Quién juega?', 'who.switch': 'Cambiar jugador', 'who.p': 'Cada quien tiene su propio progreso, mapa de estrellas, mascota y nivel.', 'who.ph': 'Nombre (máx. 10)', 'who.inAria': 'Nombre', 'who.sug': 'Hermano|Hermana|Hermanito|Hermanita', 'who.add': 'Agregar jugador', 'who.rename': 'Cambiar nombre',
+    'who.renameFirst': 'Ese es mi nombre', 'who.noName': 'Sin nombre', 'who.me': 'Eres tú', 'who.mine': 'Me toca', 'who.hintFirst': 'Escribe tu nombre y toca "Ese es mi nombre".', 'who.full': 'Hasta 4 jugadores.', 'who.turn': '¡{name}, te toca!', 'who.need': 'Primero escribe un nombre', 'who.taken': 'Ese nombre ya existe',
+    'who.welcome': '¡Hola, {name}! ¡A jugar!', 'who.hi': '¡Hola, {name}!', 'who.cleared': 'Se borró a {name}', 'set.who': 'Quién juega', 'set.whoD': 'Ahora: {name}', 'set.titleWho': 'Ajustes ({name})', 'set.del': 'Borrar jugador', 'set.delD': 'Borra a {name} y todo su progreso', 'set.delGo': 'Borrar', 'set.backup': 'Respaldo',
+    'set.backupD': 'Para pasar a otro dispositivo, o de la web a la app', 'set.backupGo': 'Abrir', 'set.resetP': 'Borrar el progreso de {name} (se queda el nombre)', 'set.reset': 'Borrar progreso', 'bk.title': 'Copia de seguridad', 'bk.p': 'Una copia de seguridad guarda el progreso, el mapa de estrellas, la mascota y los ajustes de todos los jugadores de este dispositivo. La web y la app guardan el progreso por separado, así que use una copia para pasarlo. También puede guardarla por si acaso.',
+    'bk.exportT': 'Exportar', 'bk.file': 'Guardar respaldo', 'bk.copy': 'Copiar código de respaldo', 'bk.saved': 'Archivo de respaldo creado.', 'bk.copied': 'Código copiado. Péguelo en Notas o envíeselo a usted mismo para guardarlo.', 'bk.copyManual': 'Mantenga presionado el código de abajo, seleccione todo y cópielo.',
+    'bk.importT': 'Importar', 'bk.importP': 'Importar reemplaza el progreso de todos los jugadores de este dispositivo.', 'bk.pick': 'Elegir archivo de respaldo', 'bk.pastePh': 'O pegue aquí un código de respaldo', 'bk.pasteGo': 'Importar desde código', 'bk.bad': 'Esto no parece un respaldo de Pueblo Tictac. Revise que sea el archivo correcto o que haya copiado todo el código.',
+    'bk.found': 'Este respaldo tiene {n} jugador(es): {names} (guardado el {date}). Importar reemplaza el progreso de este dispositivo.', 'bk.yes': 'Importar', 'bk.done': '¡Importación completa!', 'bk.fail': 'No se pudo importar. Puede que este dispositivo no tenga espacio.', 'about.ded': 'Para mi esposa y nuestros tres hijos, que siempre me apoyan.',
+    'help.whoT': 'Quién juega', 'help.who': '<li>Hasta 4 personas pueden jugar en un dispositivo. Cada quien tiene su propio progreso, mapa de estrellas, mascota y nivel.</li><li>En Ajustes → Quién juega puedes poner nombres y agregar jugadores. Cuando alguien tiene nombre, aparece arriba a la izquierda del menú. Tócalo para cambiar.</li><li>Un jugador nuevo empieza con el tutorial y luego elige qué practicar.</li>',
+    'set.resetP0': 'Borrar todo el progreso de este dispositivo', 'set.parent': 'Para adultos', 'reset.done': 'Progreso borrado',
     'gate.title': 'Para un adulto', 'gate.p': 'Un adulto debe resolver esto para continuar.', 'gate.cancel': 'Cancelar', 'gate.wait': 'Demasiados intentos. Espere 30 segundos',
     'menu.map': 'Mapa de estrellas', 'map.count': '{n}/{t}', 'map.aria': '{n} de {t} estrellas encendidas', 'map.legend': 'El aro de adentro es la 1, el de afuera son las 12; cada porción son 5 minutos',
     'map.info': 'Cada hora tiene una estrella. Léela o ponla bien varias veces y se enciende. <b>El aro de adentro es la 1, el de afuera son las 12.</b> Cada porción son 5 minutos. ¡Toca una porción!', 'map.weak': 'Lo que más confundes: <b>{e}</b>. ¡Unas veces más y te saldrá!', 'map.sector': '<b>{m} minutos</b> (de la 1 a las 12):',
@@ -773,19 +860,35 @@ function applyStr() {
   $$('[data-t]').forEach(el => el.textContent = tx(el.dataset.t));
   $$('[data-th]').forEach(el => el.innerHTML = tx(el.dataset.th));
   $$('[data-ta]').forEach(el => el.setAttribute('aria-label', tx(el.dataset.ta)));
+  $$('[data-tp]').forEach(el => el.setAttribute('placeholder', tx(el.dataset.tp)));
   fitTitle();
 }
 // 標題一行放不下就縮字（英文 "Tick-Tock Town" 在窄手機上會被右邊的鈕切掉）；縮到 11px 還放不下（320px 寬的英、日文）才折成兩行
 function fitTitle() {
-  const h = $('h1'); if (!h) return; h.classList.remove('two'); h.style.fontSize = ''; h.textContent = tx('title'); if (!h.clientWidth) return;
+  const h = $('h1'); if (!h) return; h.style.visibility = ''; h.classList.remove('two'); h.style.fontSize = ''; h.textContent = tx('title'); if (!h.clientWidth) return;
   let px = parseFloat(getComputedStyle(h).fontSize); while (h.scrollWidth > h.clientWidth && px > 11) { px = Math.max(11, px - 1); h.style.fontSize = px + 'px'; }
   if (h.scrollWidth > h.clientWidth) { h.style.fontSize = ''; h.classList.add('two'); h.innerHTML = tx('title2').split('|').join('<br>'); }
+  h.style.visibility = h.scrollWidth > h.clientWidth + 1 ? 'hidden' : '';   // 兩行也放不下（窄手機又有名字鈕）：標題藏起來，名字鈕和其他鈕優先
 }
 addEventListener('resize', fitTitle); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitle);
 function setLang() { LANG = STR[DB.set.lang] ? DB.set.lang : langAuto(); applyStr(); }
 
 // ---------- 存檔
-const KEY = 'tick-town-v1';
+// 多人（照九九）：WHO = { cur, list:[{id, name}] } 存在 tick-town-who；每個人一把存檔 key，第一個人 id 是空字串（沿用舊 key，舊存檔自動變成第一個人）
+let KEY = 'tick-town-v1', bkFrozen = false;   // bkFrozen：備份匯入寫完、重新載入之前，記憶體裡的舊紀錄不能再寫回去
+const PKEY = 'tick-town-who', WHO_MAX = 4;
+let WHO = { cur: '', list: [{ id: '', name: '' }] };
+try {
+  const w = JSON.parse(localStorage.getItem(PKEY));
+  if (w && Array.isArray(w.list) && w.list.length) WHO = { cur: typeof w.cur === 'string' ? w.cur : '', list: w.list.filter(x => x && typeof x.id === 'string' && (x.id === '' || /^p[0-9a-z]{1,16}$/.test(x.id))).map(x => ({ id: x.id, name: typeof x.name === 'string' ? x.name.slice(0, 10) : '' })).slice(0, WHO_MAX) };
+} catch (e) {}
+WHO.list = WHO.list.filter((x, i, a) => a.findIndex(y => y.id === x.id) === i);
+if (!WHO.list.length) WHO.list = [{ id: '', name: '' }];
+if (!WHO.list.some(x => x.id === WHO.cur)) WHO.cur = WHO.list[0].id;
+const keyFor = id => id ? `tick-town-v1:${id}` : 'tick-town-v1';
+const saveWho = () => { if (bkFrozen) return; try { localStorage.setItem(PKEY, JSON.stringify(WHO)); } catch (e) {} };
+const whoCur = () => WHO.list.find(x => x.id === WHO.cur) || WHO.list[0];
+KEY = keyFor(WHO.cur);
 const ERRS = ['hourLate', 'minIndex', 'handSwap', 'halfHour', 'minNear', 'hourOff', 'minOne', 'carry', 'ampm', 'read12', 'other'];   // 撥鐘／讀鐘的錯法（minNear 差一格、hourOff 小時差很多、carry 跨整點、other 判不出來）
 const QIDS = ['day', 'read', 'set', 'star', 'match', 'vs'];
 // ---------- 寵物資料：住在鐘樓的動物。圖檔 assets/pets/{kind}-{stage}.png（還沒有圖時用 emoji 代替）
@@ -824,7 +927,7 @@ function loadDB() {
   const P = f.pet; if (!PET_KINDS[P.kind]) P.kind = ''; P.fed = clamp(num(P.fed), 0, 1e6); P.acorn = clamp(num(P.acorn), 0, 1e6); if (!P.wear || typeof P.wear !== 'object') P.wear = {}; for (const sl of ['head', 'face', 'neck']) if (typeof P.wear[sl] !== 'string' || (P.wear[sl] && !GEAR_BY[P.wear[sl]])) P.wear[sl] = '';
   DB = f;
 }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
+function save() { if (bkFrozen) return; try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
 
 // ---------- 音效（Web Audio 合成，沒有音檔）
 let AC = null;
@@ -1070,7 +1173,12 @@ clock.onSnap = (tot, bell) => { if (bell) SFX.bell(); else SFX.tick(); };
 
 // ---------- 設定
 const LANGS = { 'zh-Hant': '繁體中文', en: 'English', ja: '日本語', ko: '한국어', es: 'Español' };
+const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const whoLabel = x => x.name || tx('who.noName');
 function renderSet() {
+  const me = whoLabel(whoCur()); $('#o-set h3').textContent = whoCur().name ? tx('set.titleWho', { name: whoCur().name }) : tx('set.title');
+  $('#set-whoD').textContent = tx('set.whoD', { name: me }); const alone = !whoCur().name && WHO.list.length === 1;   // 只有一個人又沒名字：說「這台裝置的紀錄」，也不給刪除玩家（沒有可以刪的人）
+  $('#set-resetP').textContent = alone ? tx('set.resetP0') : tx('set.resetP', { name: me }); $('#set-delD').textContent = tx('set.delD', { name: me }); $('#set-del').closest('.row').hidden = alone;
   $('#set-lang').innerHTML = Object.keys(LANGS).map(k => `<button type="button" data-lang="${k}" aria-pressed="${LANG === k}">${LANGS[k]}</button>`).join('');
   $('#set-level').innerHTML = [1, 2, 3].map(l => `<button type="button" data-level="${l}" aria-pressed="${DB.set.level === l}">${tx('level.' + l)}</button>`).join('');
   for (const k of ['sound', 'ring', 'music', 'chime']) { const sw = $(`.sw[data-set=${k}]`); sw.setAttribute('aria-pressed', String(DB.set[k])); sw.textContent = tx(DB.set[k] ? 'on' : 'off'); }
@@ -1083,7 +1191,7 @@ $('.sw[data-set=sound]').addEventListener('click', () => { DB.set.sound = !DB.se
 $('.sw[data-set=music]').addEventListener('click', () => { DB.set.music = !DB.set.music; save(); DB.set.music ? Music.start() : Music.stop(); renderSet(); SFX.ding(); });
 $('.sw[data-set=chime]').addEventListener('click', () => { DB.set.chime = !DB.set.chime; save(); renderSet(); if (DB.set.chime) SFX.chime(1); else SFX.chimeStop(); });   // 打開時敲一下讓大人聽聽看
 $('.sw[data-set=ring]').addEventListener('click', () => { DB.set.ring = !DB.set.ring; save(); setRingAll(DB.set.ring); renderSet(); SFX.ding(); });
-document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for (const id of ['#o-help', '#o-about', '#o-quest', '#o-set']) if (!$(id).hidden) { $(id).hidden = true; if (id === '#o-help' || id === '#o-about') $('#o-set').hidden = false; return; } });
+document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for (const id of ['#o-gate', '#o-who', '#o-bk', '#o-help', '#o-about', '#o-quest', '#o-set']) if (!$(id).hidden) { $(id).hidden = true; if (id === '#o-gate') { $('#gate-cancel').click(); return; } if (id === '#o-help' || id === '#o-about' || id === '#o-bk') $('#o-set').hidden = false; return; } });
 
 // ---------- 模式（還在蓋）
 let toastT = 0;
@@ -1306,7 +1414,7 @@ const Gate = (() => {
   $('#gate-cancel').addEventListener('click', () => { $('#o-gate').hidden = true; fn = null; });
   return { open };
 })();
-$('#set-reset').addEventListener('click', () => Gate.open(() => { const lang = DB.set.lang; DB = fresh(); DB.set.lang = lang; DB.tut = true; save(); setRingAll(DB.set.ring); Music.start(); setLang(); renderSet(); clock.setSnap(5); clock.set(7, 0); showTime(clock.get().tot); Quest.ensure(); refreshMenu(); toast(tx('reset.done')); }, true));
+$('#set-reset').addEventListener('click', () => Gate.open(() => { const lang = DB.set.lang; DB = fresh(); DB.set.lang = lang; DB.tut = true; save(); setRingAll(DB.set.ring); Music.start(); setLang(); renderSet(); clock.setSnap(5); clock.set(7, 0); showTime(clock.get().tot); Quest.ensure(); refreshMenu(); toast(tx('reset.done')); }, true));   // 只清目前這個人的紀錄（名字和其他人不動）
 
 // ---------- 每日任務：每天 3 個，做完徽章 +1、連續天數；沒有懲罰、沒有過期提醒
 const Quest = (() => {
@@ -1588,13 +1696,119 @@ const Tut = (() => {
   return { start, stop, s: () => S };
 })();
 
+// ---------- 誰在玩（多人，照九九）：最多 4 人，各有自己的存檔；新的人先玩教學、選要練什麼
+const nameMax = () => /^(zh|ja|ko)/.test(LANG) ? 6 : 10;
+function whoChip() { const me = whoCur(), show = WHO.list.length > 1 || !!me.name; $('#go-who').hidden = !show; $('#who-nm').textContent = me.name || ''; fitTitle(); }
+function renderWho() {
+  const cur = whoCur(), noName = !cur.name;
+  $('#who-list').innerHTML = WHO.list.map(x => `<button type="button" data-who="${esc(x.id)}" aria-pressed="${x.id === WHO.cur}"><span>${esc(whoLabel(x))}</span><small>${tx(x.id === WHO.cur ? 'who.me' : 'who.mine')}</small></button>`).join('');
+  $('#who-list').hidden = noName && WHO.list.length === 1;   // 只有一個人又還沒取名：名單沒意義
+  $('#who-add').hidden = noName || WHO.list.length >= WHO_MAX;   // 目前的人還沒名字：先取名（紀錄才不會留在「沒有名字」那裡）
+  $('#who-rename').textContent = tx(noName ? 'who.renameFirst' : 'who.rename'); $('#who-rename').className = noName ? 'btn' : 'btn alt';
+  $('#who-hint').textContent = noName ? tx('who.hintFirst') : WHO.list.length >= WHO_MAX ? tx('who.full') : '';
+  $('#who-sug').innerHTML = tx('who.sug').split('|').filter(n => !WHO.list.some(x => x.name === n)).map(n => `<button type="button" data-n="${esc(n)}">${esc(n)}</button>`).join('');
+  $('#who-in').maxLength = nameMax();
+}
+function openWho() { renderWho(); $('#who-in').value = ''; $('#o-set').hidden = true; $('#o-who').hidden = false; }
+// 換人：存好目前的人，載入另一個人的存檔（語言、難度、外圈、音樂都跟著那個人）
+function switchWho(id, noSave) {   // noSave：剛刪掉目前的人，不要把他的紀錄又存回去
+  if (!WHO.list.some(x => x.id === id)) return;
+  if (!noSave) save(); WHO.cur = id; saveWho(); KEY = keyFor(id); loadDB(); setLang(); setRingAll(DB.set.ring);
+  clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); goHome(); whoChip();
+  DB.set.music ? Music.start() : Music.stop();
+  if (!DB.tut) Tut.start(false);   // 新的人：先玩教學、選要練什麼
+}
+const whoTaken = name => WHO.list.some(x => x.name === name);
+const whoName = () => $('#who-in').value.trim().slice(0, nameMax());
+$('#go-who').addEventListener('click', openWho);
+$('#set-who').addEventListener('click', openWho);
+$('#who-close').addEventListener('click', () => { $('#o-who').hidden = true; $('#who-in').blur(); });
+$('#who-sug').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) { $('#who-in').value = b.dataset.n; SFX.tick(); } });
+$('#who-list').addEventListener('click', e => { const b = e.target.closest('[data-who]'); if (!b) return; $('#o-who').hidden = true; if (b.dataset.who === WHO.cur) return; switchWho(b.dataset.who); SFX.ding(); toast(tx('who.turn', { name: whoLabel(whoCur()) })); });
+$('#who-add').addEventListener('click', () => {
+  const name = whoName(); if (!name) { $('#who-in').focus(); toast(tx('who.need')); return; }
+  if (!whoCur().name) { $('#who-rename').click(); return; }
+  if (WHO.list.length >= WHO_MAX) { toast(tx('who.full')); return; }
+  if (whoTaken(name)) { toast(tx('who.taken')); return; }
+  const id = 'p' + Date.now().toString(36), lang = DB.set.lang;
+  WHO.list.push({ id, name }); saveWho();
+  try { localStorage.setItem(keyFor(id), JSON.stringify(Object.assign(fresh(), { tut: false, set: Object.assign(fresh().set, { lang, sound: DB.set.sound, music: DB.set.music, chime: DB.set.chime }) }))); } catch (e) {}   // 新的人沿用剛剛的語言和聲音設定，tut:false 讓他先玩教學
+  $('#who-in').value = ''; $('#o-who').hidden = true; switchWho(id); SFX.ding(); toast(tx('who.welcome', { name }));
+});
+$('#who-rename').addEventListener('click', () => {
+  const name = whoName(); if (!name) { $('#who-in').focus(); toast(tx('who.need')); return; }
+  if (whoTaken(name) && whoCur().name !== name) { toast(tx('who.taken')); return; }
+  const first = !whoCur().name; whoCur().name = name; saveWho(); renderWho(); whoChip(); $('#who-in').value = ''; $('#who-in').blur(); SFX.ding(); toast(tx('who.hi', { name }));
+  if (first) $('#o-who').hidden = true;
+});
+$('#who-in').addEventListener('keydown', e => { e.stopPropagation(); if (e.key !== 'Enter') return; e.preventDefault(); if (!whoCur().name || WHO.list.length >= WHO_MAX) $('#who-rename').click(); else $('#who-add').click(); });
+// 家長區：刪除目前的玩家（名字和紀錄）；只剩一個人時就變回沒有名字的新玩家
+$('#set-del').addEventListener('click', () => {
+  const me = whoCur();
+  Gate.open(() => {
+    try { localStorage.removeItem(keyFor(me.id)); } catch (e) {}
+    WHO.list = WHO.list.filter(x => x.id !== me.id); if (!WHO.list.length) WHO.list = [{ id: '', name: '' }];
+    saveWho(); $('#o-set').hidden = true; switchWho(WHO.list[0].id, true); toast(tx('who.cleared', { name: whoLabel(me) }));
+  }, true);
+});
+
+// ---------- 備份紀錄（匯出／匯入，照九九）：網頁版和 App 版的 localStorage 分開，要靠備份搬
+// 內容是 WHO 加每個人的存檔原文；匯出成 .json 檔或備份碼（BK_PRE + base64）；匯入取代這台裝置所有人的紀錄（家長關卡），寫完重新載入，存檔照常經過 loadDB() 消毒
+const BK_APP = 'tick-town', BK_PRE = 'TTWN1:', BK_DONE = 'tick-town-bk-done';
+let bkPending = null;
+const bkMsg = (t, bad) => { const m = $('#bk-msg'); m.textContent = t; m.classList.toggle('bad', !!bad); };
+const dateStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+function backupObj() { save(); const saves = {}; WHO.list.forEach(x => { const k = keyFor(x.id); try { const r = localStorage.getItem(k); if (r) saves[k] = JSON.parse(r); } catch (e) {} }); return { app: BK_APP, v: 1, at: new Date().toISOString(), who: { cur: WHO.cur, list: WHO.list }, saves }; }
+const b64e = t => { const u = new TextEncoder().encode(t); let b = ''; for (let i = 0; i < u.length; i += 0x8000) b += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(b); };
+const b64d = t => new TextDecoder().decode(Uint8Array.from(atob(t), c => c.charCodeAt(0)));
+function bkParse(text) {
+  text = String(text || '').trim(); if (!text || text.length > 4e6) return null;
+  try {
+    let o = null; const i = text.indexOf(BK_PRE);
+    if (i >= 0) { const t = (text.slice(i + BK_PRE.length).replace(/\s+/g, '').match(/^[A-Za-z0-9+/]*={0,2}/) || [''])[0]; for (let L = t.length - t.length % 4, end = Math.max(0, L - 64); L > end && !o; L -= 4) { try { o = JSON.parse(b64d(t.slice(0, L))); } catch (e) {} } }   // 備份碼前後多貼了字也沒關係
+    else o = JSON.parse(text);
+    if (!o || o.app !== BK_APP || !o.who || !Array.isArray(o.who.list) || !o.saves || typeof o.saves !== 'object') return null;
+    const list = o.who.list.filter(x => x && typeof x.id === 'string' && (x.id === '' || /^p[0-9a-z]{1,16}$/.test(x.id))).filter((x, i, a) => a.findIndex(y => y.id === x.id) === i).slice(0, WHO_MAX).map(x => ({ id: x.id, name: String(x.name || '').slice(0, 10) }));
+    if (!list.length) return null;
+    const saves = {}; list.forEach(x => { const sv = o.saves[keyFor(x.id)]; if (sv && typeof sv === 'object' && !Array.isArray(sv)) saves[keyFor(x.id)] = sv; });
+    return { at: typeof o.at === 'string' ? o.at.slice(0, 10) : '', who: { cur: list.some(x => x.id === o.who.cur) ? o.who.cur : list[0].id, list }, saves };
+  } catch (e) { return null; }
+}
+function openBackup() { bkPending = null; $('#bk-out').hidden = true; $('#bk-out').value = ''; $('#bk-in').value = ''; $('#bk-confirm').hidden = true; bkMsg(''); $('#o-set').hidden = true; $('#o-bk').hidden = false; $('#o-bk .card').scrollTop = 0; }
+async function bkFile() {
+  const text = JSON.stringify(backupObj()), name = `tick-town-backup-${dateStr()}.json`;
+  try { const f = new File([text], name, { type: 'application/json' }); if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: name }); bkMsg(tx('bk.saved')); return; } } catch (e) { if (e && e.name === 'AbortError') return; }   // iPad／手機：分享面板
+  if (window.Capacitor) return bkCopy();   // App 的 WebView 不能下載，改給備份碼
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); bkMsg(tx('bk.saved'));
+}
+async function bkCopy() { const code = BK_PRE + b64e(JSON.stringify(backupObj())), out = $('#bk-out'); out.value = code; out.hidden = false; try { await navigator.clipboard.writeText(code); bkMsg(tx('bk.copied')); } catch (e) { out.focus(); out.select(); bkMsg(tx('bk.copyManual')); } }
+function bkCheck(text) { const b = bkParse(text); bkPending = b; $('#bk-confirm').hidden = !b; if (!b) { bkMsg(tx('bk.bad'), true); return; } bkMsg(tx('bk.found', { n: b.who.list.length, names: b.who.list.map(x => x.name || tx('who.noName')).join(tx('sep')), date: b.at || '?' })); }
+function bkApply(b) {   // 取代：舊的人在備份裡沒有的存檔刪掉，寫入備份的每個人與 WHO，然後重新載入（期間 bkFrozen 擋住記憶體裡的舊資料寫回）
+  bkFrozen = true;
+  try { WHO.list.forEach(x => { const k = keyFor(x.id); if (!(k in b.saves)) localStorage.removeItem(k); }); b.who.list.forEach(x => { const k = keyFor(x.id); if (b.saves[k]) localStorage.setItem(k, JSON.stringify(b.saves[k])); else localStorage.removeItem(k); }); localStorage.setItem(PKEY, JSON.stringify(b.who)); }
+  catch (e) { bkFrozen = false; save(); saveWho(); return false; }
+  try { sessionStorage.setItem(BK_DONE, '1'); } catch (e) {}
+  location.reload(); return true;
+}
+$('#go-backup').addEventListener('click', openBackup);   // 匯出不改紀錄，不用家長關卡；匯入按「確定匯入」才要
+$('#bk-file').addEventListener('click', bkFile);
+$('#bk-copy').addEventListener('click', bkCopy);
+$('#bk-pick').addEventListener('click', () => { $('#bk-in-file').value = ''; $('#bk-in-file').click(); });
+$('#bk-in-file').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (!f) return; if (f.size > 4e6) { bkMsg(tx('bk.bad'), true); return; } const r = new FileReader(); r.onload = () => bkCheck(r.result); r.onerror = () => bkMsg(tx('bk.bad'), true); r.readAsText(f); });
+$('#bk-paste').addEventListener('click', () => bkCheck($('#bk-in').value));
+$('#bk-in').addEventListener('keydown', e => e.stopPropagation());
+$('#bk-yes').addEventListener('click', () => { const b = bkPending; if (!b) return; Gate.open(() => { if (!bkApply(b)) bkMsg(tx('bk.fail'), true); }, true); });
+$('#bk-no').addEventListener('click', () => { bkPending = null; $('#bk-confirm').hidden = true; bkMsg(''); });
+$('#bk-close').addEventListener('click', () => { $('#o-bk').hidden = true; renderSet(); $('#o-set').hidden = false; });   // 從設定打開的，關掉回到設定
+try { if (sessionStorage.getItem(BK_DONE)) { sessionStorage.removeItem(BK_DONE); setTimeout(() => toast(tx('bk.done')), 400); } } catch (e) {}
+
 // ---------- 開始
 loadDB(); setLang(); setRingAll(DB.set.ring); Town.resize(); Music.track(Music.forTime(DB.free)); Music.start();
-if (DB.hinted) $('#hintline').hidden = true; refreshMenu();
+if (DB.hinted) $('#hintline').hidden = true; refreshMenu(); whoChip();
 if (!DB.tut) Tut.start(false);
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock6, Tut, Music, SFX, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock6, Tut, Music, SFX, WHO: () => WHO, keyFor, bkParse, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet };   // 給測試用
 })();
 </script>
 </body>

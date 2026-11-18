@@ -38,6 +38,8 @@
    - **鐘面元件** `Clock(el, opts)`：SVG 200×200 viewBox；`set(h, m)`、`get()`、`onChange`、`snap`（5 或 1 分）、`drag`（可不可以拖）。拖分針：用連續角度累計（跨 12 會進位小時），時針同步；拖烏龜：**分針不動**，只換小時（吸附到「整點 + 原本的分鐘」，`hourSnap()`）。一次只認一根手指（`drag.id`，第二指不理，兩指同時按會把角度差算亂）；`lostpointercapture` 也當放手。`snapTick` 每吸附一格 `SFX.tick()`，整點 `SFX.bell()`。
    - **外圈** `setRing(on)`：鐘外面一圈 00～55（`.ring`，紅色小字），兔子指到（差 1.5 分以內）的數字亮 `.on`；開的時候 viewBox 從 `0 0 200 200` 放大到 `-19 -19 238 238`（鐘本身稍微變小），把手半徑 ×`RS` 放大回原本的像素。`countTo(m)` 開外圈時改成外圈數字一格一格亮 `.lit`（不另外疊字）。設定 `DB.set.ring`（預設 true，舊存檔沒有這欄當 true），`setRingAll()` 改全部的鐘；`Clock(el, { ring: false })` 的迷你鐘（配對、選等級卡）不在 `CLOCKS` 裡、不畫外圈。量把手大小要在兔子朝上時量（斜的時候外框會比較大）。
    - **教學** `Tut`（`#s-tut`、`clock6`）：全新的第一次打開（沒有存檔）先動手撥三下：兔子跑一圈（7:00 起，離開 50 分以上才算）→ 烏龜拖到 3 → 兔子拖到 6（半），最後三張大卡選「要練什麼」＝ `set.level`（全遊戲唯一決定難度的地方，設定頁同一個）。選了才存 `DB.tut = true`；沒選就關掉下次還是教學。有教學以前的舊存檔（`loadDB()` 的 `had`）當作看過；清除紀錄後也不再跳。「我會了」直接到選等級；設定頁「再看一次怎麼玩」`Tut.start(true)`（現在的等級先亮著）。鐘面為教學加了 `clock.only = 'm'／'h'`（只准拖一根，碰另一根呼叫 `onWrong` → 提醒「那是烏龜喔」並讓對的那根閃 `nudge()`）、`mark(n)` 圈出數字；手指 👆 用 CSS 變數 `--a0`／`--a1`／`--r` 沿著把手的路徑示範，孩子一拖就消失、放手沒做到 1.8 秒後再示範並出虛線（不說錯）。
+   - **誰在玩**（照九九）：`WHO = { cur, list:[{id, name}] }` 存在 `tick-town-who`，最多 4 人；每個人一把存檔 `keyFor(id)`（第一個人 id 是空字串＝舊的 `tick-town-v1`，舊存檔自動變成第一個人；之後的人 `tick-town-v1:p…`）。語言、難度、外圈、聲音、紀錄、星圖、寵物、每日任務都跟著人。主選單的名字鈕 `#go-who` 只在有名字或兩個人以上才出現（一個孩子的家庭不多一顆鈕）；設定頁最上面「誰在玩」一定有。沒名字時先取名才能新增；新增的人先存一份 `tut:false`（沿用語言和聲音），`switchWho` 後跑教學選等級。上排放不下時 `fitTitle()` 先縮、再兩行、再把標題藏起來（`visibility:hidden`），名字鈕在 375px 以下只剩圖示。
+   - **家長區**：備份紀錄（`#o-bk`，匯出不用關卡；匯入取代所有人，要難的家長關卡）、清除紀錄（只清目前這個人，名字留著）、刪除玩家（名字和存檔一起刪，`switchWho(next, true)` 不要先存回去；只有一個沒名字的人時不顯示）。備份格式照九九：`{ app:'tick-town', v:1, at, who, saves:{ key: 存檔 } }`，檔案 `tick-town-backup-日期.json` 或備份碼 `TTWN1:` + base64；`bkParse()` 檢查 app、id 格式、最多 4 人，前後多貼了字也讀得懂；`bkApply()` 寫完 `location.reload()`，期間 `bkFrozen` 擋住 `save()`。關於頁最後有獻詞 `about.ded`。
    - **小鎮** `Town`：canvas 畫天空、太陽／月亮、遠山、房子、路燈、動物；`Town.set(minutesOfDay)`。
    - `SFX`：Web Audio 合成（tick、bell、ding、hm）；`DB.set.sound` 關掉就不出聲。**報時** `SFX.chime(n)`：鐘樓敲 n 下（0.62 秒一下），走自己的 `chimeBus` 才能 `chimeStop()` 中途停；只看 `DB.set.chime`（跟音效分開）。主選單放手停在整點才報時（拖的途中經過整點只 `bell()` 一聲；又開始拖、離開主選單、切到背景都停）；教學第 2 步烏龜到 3 敲 3 下；遊戲裡不報時（不打斷題目）。敲鐘時音樂 `duck`。
    - **音樂** `Music`（照九九，Web Audio 即時合成、沒有音檔）：`TRACKS` 三首，`town`（白天音樂盒 C–Am–F–G）、`night`（搖籃曲 F–Dm–B♭–C）、`play`（遊戲中 G–Em–C–D，輕拍子、每兩輪一次主旋律，不加速）。`show(name)` 換畫面時換歌：主選單看鐘上的時刻（`forTime`：6～19 點白天）、教學／星圖／寵物 `town`、其他遊戲 `play`；主選單拖鐘時 `showTime` 也跟著換。瀏覽器要先碰一下才能出聲：`pointerdown`／`keydown`（capture）時 `Music.start()`；`visibilitychange` 切背景停、回來再開。`DB.set.music` 預設開。
@@ -73,5 +75,6 @@
 - [x] 教學（`Tut`：第一次打開動手撥三下、選要練什麼；設定可再看）
 - [x] 鐘面外圈（`setRing`：00～55、兔子指到的亮、提示一格一格亮；設定可關）
 - [x] 韓文、西班牙文（`STR.ko`／`STR.es`，`timePhrase`）
+- [x] 誰在玩（最多 4 人）、備份紀錄、家長區（備份／清除／刪除玩家）、獻詞（`tests/who.js`）
 - [x] 音樂、報時（`Music` 三首、`SFX.chime`；設定頁音樂／音效／報時三個開關；`tests/sound.js`）
-- [ ] 其餘待辦與順序見 `ROADMAP.md`（多人與備份、三年級內容、插畫、App 版）
+- [ ] 其餘待辦與順序見 `ROADMAP.md`（三年級內容、插畫、App 版）
