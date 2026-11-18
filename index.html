@@ -381,7 +381,9 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
     <div class="lab" data-t="set.level"></div>
     <div class="langs" id="set-level"></div>
     <div class="row"><span class="lab"><span data-t="set.ring"></span><small class="sub" data-t="set.ringD"></small></span><button class="sw" type="button" data-set="ring" aria-pressed="true" data-t="on"></button></div>
-    <div class="row"><span class="lab" data-t="set.sound"></span><button class="sw" type="button" data-set="sound" aria-pressed="true" data-t="on"></button></div>
+    <div class="row"><span class="lab"><span data-t="set.music"></span><small class="sub" data-t="set.musicD"></small></span><button class="sw" type="button" data-set="music" aria-pressed="true" data-t="on"></button></div>
+    <div class="row"><span class="lab"><span data-t="set.sound"></span><small class="sub" data-t="set.soundD"></small></span><button class="sw" type="button" data-set="sound" aria-pressed="true" data-t="on"></button></div>
+    <div class="row"><span class="lab"><span data-t="set.chime"></span><small class="sub" data-t="set.chimeD"></small></span><button class="sw" type="button" data-set="chime" aria-pressed="true" data-t="on"></button></div>
     <div class="linkrow"><button class="link-btn" type="button" id="go-tut" data-t="set.tut" style="grid-column:1/-1"></button><button class="link-btn" type="button" id="go-help" data-t="set.help"></button><button class="link-btn" type="button" id="go-about" data-t="set.about"></button></div>
     <div class="lab parent" data-t="set.parent"></div>
     <div class="row"><span class="lab" data-t="set.resetP"></span><button class="danger" type="button" id="set-reset" data-t="set.reset"></button></div>
@@ -451,7 +453,7 @@ const STR = {
     'menu.hint': '用手拖兔子（長針）或烏龜（短針），小鎮會跟著變！',
     'mode.day': '小鎮的一天', 'mode.read': '幾點了？', 'mode.match': '配對', 'mode.versus': '兩個人一起',
     soon: '這裡還在蓋，先玩上面的鐘吧！',
-    'set.title': '設定', 'set.lang': '語言 Language', 'set.level': '要練什麼', 'set.sound': '音效', 'set.ring': '外圈的分鐘數字', 'set.ringD': '鐘的外面一圈 05、10、15…，兔子指到哪裡就是幾分。',
+    'set.title': '設定', 'set.lang': '語言 Language', 'set.level': '要練什麼', 'set.sound': '音效', 'set.soundD': '按鈕、咔咔聲、答對的聲音', 'set.music': '音樂', 'set.musicD': '背景音樂：白天、晚上、玩遊戲時不一樣', 'set.chime': '報時', 'set.chimeD': '鐘停在整點時，鐘樓敲幾下（3 點敲 3 下）', 'set.ring': '外圈的分鐘數字', 'set.ringD': '鐘的外面一圈 05、10、15…，兔子指到哪裡就是幾分。',
     'tut.s1': '這是兔子，長長的那一根。拖著牠跑一圈！', 'tut.ok1': '兔子跑一圈，烏龜才走一格！', 'tut.s2': '這是烏龜，短短的那一根。把牠拖到 3。', 'tut.ok2': '烏龜指 3，兔子在 12，就是 3 點！', 'tut.s3': '把兔子拖到 6，就是「半」。', 'tut.ok3': '{h} 點半！烏龜走到 {h} 和 {h2} 的中間了。',
     'tut.wrongM': '那是兔子喔！烏龜是短短的那一根。', 'tut.wrongH': '那是烏龜喔！兔子是長長的那一根。', 'tut.pick': '你想練什麼？', 'tut.pickP': '以後可以在設定裡換。', 'tut.skip': '我會了', 'set.tut': '再看一次怎麼玩',
     'level.1': '整點、半點', 'level.2': '幾點幾分', 'level.3': '過了多久',
@@ -486,7 +488,7 @@ const STR = {
     'q.day': '做完「小鎮的一天」', 'q.read': '讀對 {n} 個時刻', 'q.set': '幫動物撥對 {n} 次', 'q.star': '點亮 {n} 顆新星星',
     'set.help': '遊戲說明', 'set.about': '關於',
     'help.title': '遊戲說明',
-    'help.clockT': '鐘', 'help.clock': '<li>短的是<b>烏龜</b>，走得慢，管「幾點」。</li><li>長的是<b>兔子</b>，跑得快，管「幾分」。</li><li>用手拖兔子，它跑一格就是 5 分；烏龜會慢慢跟著走。</li><li>鐘外面那一圈小數字（05、10、15…）是「幾分」：兔子指到 4，外面寫 20，就是 20 分。不想看可以在設定關掉。</li><li>主選單的鐘可以隨便撥，小鎮會跟著變：太陽、燈、動物都不一樣。</li>',
+    'help.clockT': '鐘', 'help.clock': '<li>短的是<b>烏龜</b>，走得慢，管「幾點」。</li><li>長的是<b>兔子</b>，跑得快，管「幾分」。</li><li>用手拖兔子，它跑一格就是 5 分；烏龜會慢慢跟著走。</li><li>鐘外面那一圈小數字（05、10、15…）是「幾分」：兔子指到 4，外面寫 20，就是 20 分。不想看可以在設定關掉。</li><li>主選單的鐘可以隨便撥，小鎮會跟著變：太陽、燈、動物都不一樣。</li><li>放手時剛好停在整點，鐘樓會敲鐘：3 點敲 3 下，12 點敲 12 下。</li>',
     'help.dayT': '小鎮的一天', 'help.day': '<li>動物們一天有 7 件事。看牠要幾點做，把鐘撥好。</li><li>撥對了，牠就出門，牠家的燈會亮。</li><li>撥錯沒關係，等一下會有虛線告訴你正確的位置，再撥一次就好。</li><li>你容易搞混的時刻，動物們會多約幾次，可以多練幾次。</li><li>7 盞燈全亮，小鎮會放煙火！</li>',
     'help.readT': '幾點了？', 'help.read': '<li>看鐘，從三張卡片裡選出正確的時刻。</li><li>選錯沒關係，可以再選。</li><li>讀得很熟的時刻，會改成按數字打出來：先打幾點，再打幾分，按「好了」。</li>',
     'help.matchT': '配對', 'help.match': '<li>翻兩張牌，找出一樣的時刻。</li><li>指針鐘、數字鐘、文字，三種樣子都可能出現。</li>',
@@ -515,7 +517,7 @@ const STR = {
     'menu.hint': 'Drag the rabbit (long hand) or the tortoise (short hand). Watch the town change!',
     'mode.day': 'Town Day', 'mode.read': 'What time?', 'mode.match': 'Match', 'mode.versus': 'Two players',
     soon: 'Still being built. Play with the clock for now!',
-    'set.title': 'Settings', 'set.lang': 'Language', 'set.level': 'Practice', 'set.sound': 'Sound', 'set.ring': 'Minute ring', 'set.ringD': 'A ring of 05, 10, 15… around the clock. Where Rabbit points is the minutes.',
+    'set.title': 'Settings', 'set.lang': 'Language', 'set.level': 'Practice', 'set.sound': 'Sound', 'set.soundD': 'Buttons, clicks and right answers', 'set.music': 'Music', 'set.musicD': 'Background music: different for day, night and games', 'set.chime': 'Hour chime', 'set.chimeD': 'When the clock stops on the hour, the tower rings that many times (3 rings at 3 o\'clock)', 'set.ring': 'Minute ring', 'set.ringD': 'A ring of 05, 10, 15… around the clock. Where Rabbit points is the minutes.',
     'tut.s1': 'This is Rabbit, the long hand. Drag Rabbit all the way around!', 'tut.ok1': 'Rabbit ran a whole lap. Tortoise moved just one step!', 'tut.s2': 'This is Tortoise, the short hand. Drag Tortoise to 3.', 'tut.ok2': "Tortoise on 3, Rabbit on 12. That's 3 o'clock!", 'tut.s3': 'Drag Rabbit to 6. That means "half past".', 'tut.ok3': 'Half past {h}! Tortoise is halfway between {h} and {h2}.',
     'tut.wrongM': "That's Rabbit! Tortoise is the short one.", 'tut.wrongH': "That's Tortoise! Rabbit is the long one.", 'tut.pick': 'What do you want to practice?', 'tut.pickP': 'You can change this later in Settings.', 'tut.skip': 'Skip', 'set.tut': 'How to play (again)',
     'level.1': "O'clock, half", 'level.2': 'Minutes', 'level.3': 'How long?',
@@ -548,7 +550,7 @@ const STR = {
     'q.day': "Finish a Town's Day", 'q.read': 'Read {n} times right', 'q.set': 'Set the clock right {n} times', 'q.star': 'Light {n} new stars',
     'set.help': 'How to play', 'set.about': 'About',
     'help.title': 'How to play',
-    'help.clockT': 'The clock', 'help.clock': '<li>The short hand is <b>Tortoise</b>. It moves slowly and tells the hour.</li><li>The long hand is <b>Rabbit</b>. It moves fast and tells the minutes.</li><li>Drag Rabbit. Each number is 5 minutes. Tortoise follows slowly.</li><li>The small numbers around the outside (05, 10, 15…) are the minutes. Rabbit on 4? The ring says 20, so it\'s 20 minutes. You can turn the ring off in Settings.</li><li>On the menu you can spin the clock any way you like. Watch the sun, the lights and the animals change!</li>',
+    'help.clockT': 'The clock', 'help.clock': '<li>The short hand is <b>Tortoise</b>. It moves slowly and tells the hour.</li><li>The long hand is <b>Rabbit</b>. It moves fast and tells the minutes.</li><li>Drag Rabbit. Each number is 5 minutes. Tortoise follows slowly.</li><li>The small numbers around the outside (05, 10, 15…) are the minutes. Rabbit on 4? The ring says 20, so it\'s 20 minutes. You can turn the ring off in Settings.</li><li>On the menu you can spin the clock any way you like. Watch the sun, the lights and the animals change!</li><li>Let go right on the hour and the tower bell rings: 3 rings at 3 o\'clock, 12 rings at 12.</li>',
     'help.dayT': "Town's Day", 'help.day': '<li>The animals have 7 things to do each day. Set the clock to the right time.</li><li>Set it right and the animal goes out. Its house lights up.</li><li>Got it wrong? No worries. Dotted hands will show the right spot. Try again!</li><li>Times that trick you come up more often, so you get more practice.</li><li>Light all 7 and the town sets off fireworks!</li>',
     'help.readT': 'What time?', 'help.read': '<li>Look at the clock and pick the right time from three cards.</li><li>Picked wrong? Just pick again.</li><li>Times you know well switch to typing: type the hour, then the minutes, then tap "Done".</li>',
     'help.matchT': 'Match', 'help.match': '<li>Flip two cards and find the same time.</li><li>Clocks, digital times and words can all show up.</li>',
@@ -577,7 +579,7 @@ const STR = {
     'menu.hint': 'うさぎ（長いはり）か かめ（みじかいはり）を ゆびで うごかしてみよう！',
     'mode.day': 'まちの一日', 'mode.read': 'いま何時？', 'mode.match': 'ペアさがし', 'mode.versus': 'ふたりで',
     soon: 'ここは まだ じゅんび中。まずは とけいで あそんでね！',
-    'set.title': 'せってい', 'set.lang': 'ことば Language', 'set.level': 'なにを れんしゅうする？', 'set.sound': 'おと', 'set.ring': 'そとの 分の 数字', 'set.ringD': 'とけいの まわりに 05、10、15…。うさぎが さす ところが 何分か だよ。',
+    'set.title': 'せってい', 'set.lang': 'ことば Language', 'set.level': 'なにを れんしゅうする？', 'set.sound': 'こうか音', 'set.soundD': 'ボタン・カチカチ・せいかいの 音', 'set.music': '音楽', 'set.musicD': 'BGM：ひる・よる・ゲーム中で かわるよ', 'set.chime': '時ほう', 'set.chimeD': 'ちょうどの 時こくで とまると、かねが なるよ（3時は 3かい）', 'set.ring': 'そとの 分の 数字', 'set.ringD': 'とけいの まわりに 05、10、15…。うさぎが さす ところが 何分か だよ。',
     'tut.s1': 'これは うさぎ。長い はりだよ。ぐるっと 1しゅう まわしてみよう！', 'tut.ok1': 'うさぎが 1しゅう すると、かめは 1つだけ すすむよ！', 'tut.s2': 'これは かめ。みじかい はりだよ。3まで うごかそう。', 'tut.ok2': 'かめが 3、うさぎが 12。3時だね！', 'tut.s3': 'うさぎを 6まで うごかそう。「半」だよ。', 'tut.ok3': '{h}時半！かめは {h}と {h2}の まん中に いるよ。',
     'tut.wrongM': 'それは うさぎだよ！かめは みじかい ほう。', 'tut.wrongH': 'それは かめだよ！うさぎは 長い ほう。', 'tut.pick': 'なにを れんしゅうする？', 'tut.pickP': 'あとで せっていで かえられるよ。', 'tut.skip': 'スキップ', 'set.tut': 'あそびかたを もういちど 見る',
     'level.1': '何時・何時半', 'level.2': '何時何分', 'level.3': 'たった時間',
@@ -610,7 +612,7 @@ const STR = {
     'q.day': '「まちの一日」を さいごまで', 'q.read': '{n}こ よむ', 'q.set': 'とけいを {n}回 あわせる', 'q.star': '新しい 星を {n}こ つける',
     'set.help': 'あそびかた', 'set.about': 'このアプリ',
     'help.title': 'あそびかた',
-    'help.clockT': 'とけい', 'help.clock': '<li>みじかい はりは <b>かめ</b>。ゆっくり うごいて「何時」を おしえるよ。</li><li>長い はりは <b>うさぎ</b>。はやく うごいて「何分」を おしえるよ。</li><li>うさぎを ゆびで うごかそう。1つ すすむと 5分。かめも ゆっくり ついてくるよ。</li><li>とけいの そとの 小さい 数字（05、10、15…）は「何分」だよ。うさぎが 4を さしたら、そとは 20。20分だね。せっていで けせるよ。</li><li>メニューの とけいは じゆうに まわせるよ。太ようや あかりや どうぶつが かわるよ！</li>',
+    'help.clockT': 'とけい', 'help.clock': '<li>みじかい はりは <b>かめ</b>。ゆっくり うごいて「何時」を おしえるよ。</li><li>長い はりは <b>うさぎ</b>。はやく うごいて「何分」を おしえるよ。</li><li>うさぎを ゆびで うごかそう。1つ すすむと 5分。かめも ゆっくり ついてくるよ。</li><li>とけいの そとの 小さい 数字（05、10、15…）は「何分」だよ。うさぎが 4を さしたら、そとは 20。20分だね。せっていで けせるよ。</li><li>メニューの とけいは じゆうに まわせるよ。太ようや あかりや どうぶつが かわるよ！</li><li>ちょうどの 時こくで 手を はなすと、かねが なるよ。3時は 3かい、12時は 12かい。</li>',
     'help.dayT': 'まちの一日', 'help.day': '<li>どうぶつたちは 一日に 7つ やることが あるよ。何時に するか 見て、とけいを あわせよう。</li><li>あわせられたら、どうぶつは 出かけて、おうちの あかりが つくよ。</li><li>まちがえても だいじょうぶ。てんせんが ただしい ばしょを おしえてくれるよ。</li><li>まちがえやすい 時こくは、なんども 出てくるよ。たくさん れんしゅう できるね。</li><li>7つ ぜんぶ ついたら、はなびが あがるよ！</li>',
     'help.readT': 'いま何時？', 'help.read': '<li>とけいを 見て、3まいの カードから ただしい 時こくを えらぼう。</li><li>まちがえても、もういちど えらべるよ。</li><li>よく よめる 時こくは、すうじで うつように なるよ：何時、何分の じゅんに うって「できた」。</li>',
     'help.matchT': 'ペアさがし', 'help.match': '<li>2まい めくって、おなじ 時こくを さがそう。</li><li>はりの とけい、すうじの とけい、ことば、3つの かたちが 出るよ。</li>',
@@ -639,7 +641,7 @@ const STR = {
     'menu.hint': '토끼(긴바늘)나 거북이(짧은바늘)를 끌어 봐. 마을이 바뀌어!',
     'mode.day': '마을의 하루', 'mode.read': '몇 시야?', 'mode.match': '짝 맞추기', 'mode.versus': '둘이서',
     soon: '아직 만드는 중이야. 지금은 시계를 돌려 봐!',
-    'set.title': '설정', 'set.lang': '언어・Language', 'set.level': '무엇을 연습할까?', 'set.sound': '효과음', 'set.ring': '바깥쪽 분 숫자', 'set.ringD': '시계 바깥에 05, 10, 15…가 있어. 토끼가 가리키는 곳이 몇 분인지 알려 줘.',
+    'set.title': '설정', 'set.lang': '언어・Language', 'set.level': '무엇을 연습할까?', 'set.sound': '효과음', 'set.soundD': '버튼, 째깍 소리, 정답 소리', 'set.music': '음악', 'set.musicD': '배경 음악: 낮, 밤, 게임할 때 달라져', 'set.chime': '시보', 'set.chimeD': '시계가 정각에 멈추면 시계탑이 그 수만큼 울려 (3시는 3번)', 'set.ring': '바깥쪽 분 숫자', 'set.ringD': '시계 바깥에 05, 10, 15…가 있어. 토끼가 가리키는 곳이 몇 분인지 알려 줘.',
     'tut.s1': '이건 토끼야. 긴바늘이지. 한 바퀴 빙 돌려 봐!', 'tut.ok1': '토끼가 한 바퀴 돌면, 거북이는 한 칸만 가!', 'tut.s2': '이건 거북이야. 짧은바늘이지. 3까지 끌어 봐.', 'tut.ok2': '거북이는 3, 토끼는 12. 3시야!', 'tut.s3': '토끼를 6까지 끌어 봐. 그게 "반"이야.', 'tut.ok3': '{h}시 반! 거북이가 {h}하고 {h2} 사이 한가운데에 있어.',
     'tut.wrongM': '그건 토끼야! 거북이는 짧은 바늘이야.', 'tut.wrongH': '그건 거북이야! 토끼는 긴 바늘이야.', 'tut.pick': '무엇을 연습할까?', 'tut.pickP': '나중에 설정에서 바꿀 수 있어.', 'tut.skip': '건너뛰기', 'set.tut': '노는 방법 다시 보기',
     'level.1': '정각・반', 'level.2': '몇 시 몇 분', 'level.3': '얼마나 지났지?',
@@ -672,7 +674,7 @@ const STR = {
     'q.day': '마을의 하루 끝내기', 'q.read': '{n}번 맞게 읽기', 'q.set': '시계를 {n}번 맞게 맞추기', 'q.star': '새 별 {n}개 켜기',
     'set.help': '노는 방법', 'set.about': '정보',
     'help.title': '노는 방법',
-    'help.clockT': '시계', 'help.clock': '<li>짧은 바늘은 <b>거북이</b>. 천천히 움직이고 "몇 시"를 알려 줘.</li><li>긴 바늘은 <b>토끼</b>. 빨리 움직이고 "몇 분"을 알려 줘.</li><li>토끼를 끌어 봐. 숫자 한 칸이 5분이야. 거북이는 천천히 따라와.</li><li>바깥쪽 작은 숫자(05, 10, 15…)가 "몇 분"이야. 토끼가 4를 가리키면 바깥은 20, 그러니까 20분이야. 설정에서 끌 수 있어.</li><li>메뉴의 시계는 마음대로 돌려 봐. 해, 불빛, 동물들이 바뀌어!</li>',
+    'help.clockT': '시계', 'help.clock': '<li>짧은 바늘은 <b>거북이</b>. 천천히 움직이고 "몇 시"를 알려 줘.</li><li>긴 바늘은 <b>토끼</b>. 빨리 움직이고 "몇 분"을 알려 줘.</li><li>토끼를 끌어 봐. 숫자 한 칸이 5분이야. 거북이는 천천히 따라와.</li><li>바깥쪽 작은 숫자(05, 10, 15…)가 "몇 분"이야. 토끼가 4를 가리키면 바깥은 20, 그러니까 20분이야. 설정에서 끌 수 있어.</li><li>메뉴의 시계는 마음대로 돌려 봐. 해, 불빛, 동물들이 바뀌어!</li><li>손을 뗐을 때 딱 정각이면 시계탑이 울려: 3시는 3번, 12시는 12번.</li>',
     'help.dayT': '마을의 하루', 'help.day': '<li>동물들은 하루에 할 일이 7개 있어. 몇 시에 하는지 보고 시계를 맞춰.</li><li>맞추면 동물이 나가고, 그 집에 불이 켜져.</li><li>틀려도 괜찮아. 점선이 맞는 자리를 알려 주니까 다시 해 봐!</li><li>자주 헷갈리는 시각은 더 자주 나와. 그만큼 더 연습할 수 있어.</li><li>7개가 다 켜지면 마을에서 불꽃놀이를 해!</li>',
     'help.readT': '몇 시야?', 'help.read': '<li>시계를 보고 카드 세 장 중에서 맞는 시각을 골라.</li><li>틀려도 다시 고르면 돼.</li><li>잘 아는 시각은 숫자로 쳐서 대답해: 시, 분 순서로 치고 "다 했어"를 눌러.</li>',
     'help.matchT': '짝 맞추기', 'help.match': '<li>두 장을 뒤집어서 같은 시각을 찾아.</li><li>시계, 숫자, 글자가 섞여 나와.</li>',
@@ -701,7 +703,7 @@ const STR = {
     'menu.hint': 'Arrastra el conejo (aguja larga) o la tortuga (aguja corta). ¡Mira cómo cambia el pueblo!',
     'mode.day': 'Día del pueblo', 'mode.read': '¿Qué hora es?', 'mode.match': 'Parejas', 'mode.versus': 'Dos jugadores',
     soon: 'Todavía lo estamos haciendo. ¡Por ahora juega con el reloj!',
-    'set.title': 'Ajustes', 'set.lang': 'Idioma・Language', 'set.level': '¿Qué quieres practicar?', 'set.sound': 'Sonido', 'set.ring': 'Aro de minutos', 'set.ringD': 'Un aro con 05, 10, 15… alrededor del reloj. Donde apunta el conejo, esos son los minutos.',
+    'set.title': 'Ajustes', 'set.lang': 'Idioma・Language', 'set.level': '¿Qué quieres practicar?', 'set.sound': 'Sonido', 'set.soundD': 'Botones, clics y respuestas correctas', 'set.music': 'Música', 'set.musicD': 'Música de fondo: cambia de día, de noche y al jugar', 'set.chime': 'Campanadas', 'set.chimeD': 'Cuando el reloj se detiene en punto, la torre suena esas veces (3 a las 3)', 'set.ring': 'Aro de minutos', 'set.ringD': 'Un aro con 05, 10, 15… alrededor del reloj. Donde apunta el conejo, esos son los minutos.',
     'tut.s1': 'Este es el conejo, la aguja larga. ¡Dale una vuelta entera!', 'tut.ok1': '¡El conejo dio una vuelta y la tortuga solo avanzó un paso!', 'tut.s2': 'Esta es la tortuga, la aguja corta. Llévala al 3.', 'tut.ok2': '¡Tortuga en el 3, conejo en el 12: son las 3 en punto!', 'tut.s3': 'Lleva el conejo al 6. Eso es "y media".', 'tut.ok3': '¡Las {h} y media! La tortuga está justo entre el {h} y el {h2}.',
     'tut.wrongM': '¡Ese es el conejo! La tortuga es la corta.', 'tut.wrongH': '¡Esa es la tortuga! El conejo es el largo.', 'tut.pick': '¿Qué quieres practicar?', 'tut.pickP': 'Puedes cambiarlo después en Ajustes.', 'tut.skip': 'Saltar', 'set.tut': 'Cómo se juega (otra vez)',
     'level.1': 'En punto y media', 'level.2': 'Horas y minutos', 'level.3': '¿Cuánto tiempo?',
@@ -734,7 +736,7 @@ const STR = {
     'q.day': 'Termina un Día del pueblo', 'q.read': 'Lee bien la hora {n} veces', 'q.set': 'Pon bien el reloj {n} veces', 'q.star': 'Enciende {n} estrellas nuevas',
     'set.help': 'Cómo se juega', 'set.about': 'Acerca de',
     'help.title': 'Cómo se juega',
-    'help.clockT': 'El reloj', 'help.clock': '<li>La aguja corta es la <b>tortuga</b>. Se mueve despacio y marca la hora.</li><li>La aguja larga es el <b>conejo</b>. Se mueve rápido y marca los minutos.</li><li>Arrastra el conejo. Cada número son 5 minutos. La tortuga lo sigue despacio.</li><li>Los numeritos de afuera (05, 10, 15…) son los minutos. ¿El conejo en el 4? Afuera dice 20: son 20 minutos. Puedes quitar el aro en Ajustes.</li><li>En el menú puedes girar el reloj como quieras. ¡Mira cómo cambian el sol, las luces y los animales!</li>',
+    'help.clockT': 'El reloj', 'help.clock': '<li>La aguja corta es la <b>tortuga</b>. Se mueve despacio y marca la hora.</li><li>La aguja larga es el <b>conejo</b>. Se mueve rápido y marca los minutos.</li><li>Arrastra el conejo. Cada número son 5 minutos. La tortuga lo sigue despacio.</li><li>Los numeritos de afuera (05, 10, 15…) son los minutos. ¿El conejo en el 4? Afuera dice 20: son 20 minutos. Puedes quitar el aro en Ajustes.</li><li>En el menú puedes girar el reloj como quieras. ¡Mira cómo cambian el sol, las luces y los animales!</li><li>Si lo sueltas justo en punto, suena la campana de la torre: 3 veces a las 3, 12 veces a las 12.</li>',
     'help.dayT': 'Día del pueblo', 'help.day': '<li>Los animales tienen 7 cosas que hacer cada día. Pon el reloj a la hora correcta.</li><li>Si aciertas, el animal sale y se enciende la luz de su casa.</li><li>¿Te equivocaste? No pasa nada. Las agujas punteadas te muestran el lugar. ¡Prueba otra vez!</li><li>Las horas que te confunden salen más seguido, así practicas más.</li><li>¡Con las 7 luces encendidas, el pueblo lanza fuegos artificiales!</li>',
     'help.readT': '¿Qué hora es?', 'help.read': '<li>Mira el reloj y elige la hora correcta entre tres cartas.</li><li>¿Elegiste mal? Elige otra vez.</li><li>Las horas que ya sabes bien se escriben con números: primero la hora, luego los minutos, y toca "Listo".</li>',
     'help.matchT': 'Parejas', 'help.match': '<li>Voltea dos cartas y busca la misma hora.</li><li>Pueden salir relojes, horas en números y palabras.</li>',
@@ -802,13 +804,13 @@ const GEAR = [
   { id: 'crown', at: 12, slot: 'head', e: '👑', ar: 1.231, place: (hx, hy, hr, top, ny, f) => { const w = f.hw * 0.65; return [f.ex, f.hb - w / 1.231 * 0.38, w, 0]; } },
 ];
 const GEAR_BY = Object.create(null); GEAR.forEach(g => { GEAR_BY[g.id] = g; });
-const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, level: 2, ring: true }, daily: {}, pet: { kind: '', fed: 0, acorn: 0, wear: { head: '', face: '', neck: '' } }, retest: [], town: { lit: [] }, free: 7 * 60, hinted: false, tut: false });
+const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, music: true, chime: true, level: 2, ring: true }, daily: {}, pet: { kind: '', fed: 0, acorn: 0, wear: { head: '', face: '', neck: '' } }, retest: [], town: { lit: [] }, free: 7 * 60, hinted: false, tut: false });
 let DB = fresh();
 const num = (v, d = 0) => (typeof v === 'number' && Number.isFinite(v)) ? v : d;
 function loadDB() {
   let d = {}, had = false; try { const raw = localStorage.getItem(KEY); had = raw !== null; d = JSON.parse(raw || '{}') || {}; } catch (e) { d = {}; }
   const f = fresh(); if (d && typeof d === 'object') { for (const k of Object.keys(f)) if (k in d) f[k] = (f[k] && typeof f[k] === 'object' && !Array.isArray(f[k])) ? Object.assign(f[k], (d[k] && typeof d[k] === 'object') ? d[k] : {}) : d[k]; }
-  f.set.level = [1, 2, 3].includes(f.set.level) ? f.set.level : 2; f.set.sound = f.set.sound !== false; f.set.ring = f.set.ring !== false; if (typeof f.set.lang !== 'string') f.set.lang = '';
+  f.set.level = [1, 2, 3].includes(f.set.level) ? f.set.level : 2; f.set.sound = f.set.sound !== false; f.set.ring = f.set.ring !== false; f.set.music = f.set.music !== false; f.set.chime = f.set.chime !== false; if (typeof f.set.lang !== 'string') f.set.lang = '';
   f.free = clamp(Math.round(num(f.free, 7 * 60)), 0, 1439);
   f.tut = had ? !(d && d.tut === false) : false;   // 教學看過了沒：有教學以前的舊存檔當作看過，全新的才從教學開始
   if (!f.facts || typeof f.facts !== 'object') f.facts = {};
@@ -833,7 +835,63 @@ const SFX = {
   bell() { const c = ac(); if (!c) return; const t = c.currentTime; this.tone(880, t, 1.4, 'sine', 0.22); this.tone(1320, t, 1.0, 'sine', 0.1); this.tone(2640, t, 0.5, 'sine', 0.05); this.tone(440, t, 1.6, 'triangle', 0.08); },
   hm() { const c = ac(); if (!c) return; this.tone(330, c.currentTime, 0.25, 'triangle', 0.12, 260); },   // 動物歪頭「咦？」：短短一聲，不像失敗音
   ding() { const c = ac(); if (!c) return; const t = c.currentTime; this.tone(1047, t, 0.25, 'triangle', 0.18); this.tone(1568, t + 0.08, 0.3, 'triangle', 0.14); },
+  // 報時：鐘樓敲 n 下（3 點敲 3 下），一下 0.62 秒。設定「報時」關掉就不敲；跟「音效」分開（大人可以只留報時）
+  chimeBus: null, chimeN: 0, chimeT: 0,
+  chime(n) {
+    this.chimeStop(); if (!DB.set.chime) return; const c = ac(); if (!c) return;
+    const bus = c.createGain(); bus.gain.value = 1; bus.connect(c.destination); this.chimeBus = bus; this.chimeN = n;
+    const t0 = c.currentTime + 0.05, gap = 0.62;
+    for (let i = 0; i < n; i++) { const t = t0 + i * gap; for (const [f, len, type, v] of [[523.25, 1.6, 'sine', 0.2], [1046.5, 0.9, 'sine', 0.07], [1567.98, 0.45, 'sine', 0.035], [261.63, 1.8, 'triangle', 0.07]]) { const o = c.createOscillator(), g = c.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + len); o.connect(g).connect(bus); o.start(t); o.stop(t + len + 0.05); } }
+    Music.duck(true); this.chimeT = setTimeout(() => { this.chimeN = 0; Music.duck(false); }, (n * gap + 1.2) * 1000);   // 敲鐘時音樂小聲一點
+  },
+  chimeStop() { clearTimeout(this.chimeT); if (this.chimeN) Music.duck(false); this.chimeN = 0; if (this.chimeBus && AC) { try { this.chimeBus.gain.cancelScheduledValues(AC.currentTime); this.chimeBus.gain.setTargetAtTime(0, AC.currentTime, 0.03); const b = this.chimeBus; setTimeout(() => b.disconnect(), 300); } catch (e) {} } this.chimeBus = null; },
 };
+
+// ---------- 音樂（Web Audio 即時合成，照九九流星隊；沒有音檔）
+// 主選單跟著鐘上的時刻：白天音樂盒、晚上搖籃曲；玩遊戲時輕快一點。設定「音樂」可以關。
+const midi = n => 440 * Math.pow(2, (n - 69) / 12);
+const TRACKS = {
+  // 白天：C–Am–F–G，三角波琶音像音樂盒，慢慢的
+  town: { bpm: 84, div: 2, len: 8, chords: [[72, 76, 79], [69, 72, 76], [65, 69, 72], [67, 71, 74]], bass: [48, 45, 41, 43], arp: [0, 1, 2, 1, 2, 1, 0, 1], oct: 12, arpType: 'triangle', arpV: 0.03, pad: true, sparkle: true },
+  // 晚上：F–Dm–B♭–C 的搖籃曲，正弦波、更慢、更小聲
+  night: { bpm: 58, div: 2, len: 8, chords: [[65, 69, 72], [62, 65, 69], [58, 62, 65], [60, 64, 67]], bass: [41, 38, 34, 36], arp: [0, 1, 2, 1, 0, 1, 2, 1], oct: 12, arpType: 'sine', arpV: 0.032, pad: true },
+  // 玩遊戲：G–Em–C–D，輕輕的拍子，每兩輪一次主旋律；不催人（沒有加速）
+  play: { bpm: 100, div: 4, len: 16, chords: [[67, 71, 74], [64, 67, 71], [60, 64, 67], [62, 66, 69]], bass: [43, 40, 36, 38], arp: [0, 1, 2, 1, 0, 2, 1, 2], oct: 12, arpType: 'triangle', arpV: 0.03, bassType: 'triangle', bassSteps: [0, 8], kick: [0, 8], hat: true, melType: 'sine', melV: 0.045,
+    mel: [[79, 0, 0, 0, 83, 0, 81, 0, 79, 0, 0, 0, 74, 0, 0, 0], [76, 0, 0, 0, 79, 0, 0, 0, 83, 0, 81, 0, 79, 0, 0, 0], [76, 0, 0, 79, 0, 0, 84, 0, 83, 0, 81, 0, 79, 0, 0, 0], [78, 0, 0, 0, 81, 0, 0, 79, 0, 0, 78, 0, 74, 0, 0, 0]] },
+};
+const Music = (() => {
+  const M = { track: 'town', step: 0, next: 0, timer: 0, g: null, nb: null, duck: false };
+  const vol = () => M.duck ? 0.25 : 0.85;
+  function note(n, t, d, type, v, soft) { const c = AC, o = c.createOscillator(), gn = c.createGain(); o.type = type; o.frequency.setValueAtTime(midi(n), t); gn.gain.setValueAtTime(0.0001, t); gn.gain.exponentialRampToValueAtTime(v, t + (soft ? 0.12 : 0.006)); gn.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(gn).connect(M.g); o.start(t); o.stop(t + d + 0.05); }
+  function noise(t, d, v, hp) { const c = AC, sr = c.createBufferSource(), f = c.createBiquadFilter(), gn = c.createGain(); sr.buffer = M.nb; f.type = 'highpass'; f.frequency.value = hp; gn.gain.setValueAtTime(v, t); gn.gain.exponentialRampToValueAtTime(0.0001, t + d); sr.connect(f).connect(gn).connect(M.g); sr.start(t, Math.random() * 0.5); sr.stop(t + d + 0.02); }
+  function kick(t) { const c = AC, o = c.createOscillator(), gn = c.createGain(); o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.12); gn.gain.setValueAtTime(0.12, t); gn.gain.exponentialRampToValueAtTime(0.0001, t + 0.16); o.connect(gn).connect(M.g); o.start(t); o.stop(t + 0.2); }
+  function step(tr, k, t, spb) {
+    const nb = tr.chords.length, bar = Math.floor(k / tr.len) % nb, s = k % tr.len, ch = tr.chords[bar];
+    if (tr.pad && s === 0) { ch.forEach(n => note(n - 12, t, spb * tr.len * 0.98, 'sine', 0.025, true)); note(tr.bass[bar], t, spb * tr.len * 0.9, 'sine', 0.05, true); }
+    if (tr.sparkle && s === 5 && Math.random() < 0.4) note(ch[2] + 24, t, spb * 3, 'sine', 0.018, true);
+    note(ch[tr.arp[s % tr.arp.length]] + tr.oct, t, spb * 0.9, tr.arpType, tr.arpV);
+    if (tr.bassSteps && tr.bassSteps.includes(s)) note(tr.bass[bar], t, spb * 3, tr.bassType, 0.04);
+    if (tr.kick && tr.kick.includes(s)) kick(t);
+    if (tr.hat && s % 4 === 2) noise(t, 0.03, 0.015, 7000);
+    if (tr.mel && Math.floor(k / (tr.len * nb)) % 2 === 1) { const n = tr.mel[bar][s]; if (n) note(n, t, spb * 2.2, tr.melType, tr.melV); }
+  }
+  function tick() { const c = AC; if (!c || !M.g || c.state !== 'running') return; const tr = TRACKS[M.track], spb = 60 / tr.bpm / tr.div; if (M.next < c.currentTime - 0.05) M.next = c.currentTime + 0.05; while (M.next < c.currentTime + 0.12) { step(tr, M.step, M.next, spb); M.next += spb; M.step++; } }
+  function start() {
+    if (!DB.set.music || document.hidden) return; const c = ac(); if (!c) return;
+    if (!M.g) { M.g = c.createGain(); M.g.gain.value = 0; M.g.connect(c.destination); M.nb = c.createBuffer(1, c.sampleRate, c.sampleRate); const d = M.nb.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    M.g.gain.cancelScheduledValues(c.currentTime); M.g.gain.setTargetAtTime(vol(), c.currentTime, 0.3);
+    if (!M.timer) { M.next = c.currentTime + 0.08; M.timer = setInterval(tick, 25); }
+  }
+  function stop() { clearInterval(M.timer); M.timer = 0; if (M.g && AC) { M.g.gain.cancelScheduledValues(AC.currentTime); M.g.gain.setTargetAtTime(0, AC.currentTime, 0.05); } }
+  function track(name) { if (!TRACKS[name] || M.track === name) return; M.track = name; M.step = 0; if (AC) M.next = AC.currentTime + 0.06; }
+  function duck(on) { M.duck = on; if (M.g && AC && DB.set.music && M.timer) M.g.gain.setTargetAtTime(vol(), AC.currentTime, 0.1); }
+  const forTime = tot => { const H = Math.floor(tot / 60); return H >= 6 && H < 19 ? 'town' : 'night'; };   // 主選單：早上 6 點到晚上 7 點是白天
+  return { start, stop, track, duck, forTime, s: () => ({ track: M.track, on: !!M.timer, duck: M.duck }) };
+})();
+// 瀏覽器要孩子先碰一下畫面才能出聲：第一次碰到就開音樂；切到背景就停，回來再開
+document.addEventListener('pointerdown', () => { ac(); Music.start(); }, { capture: true });
+document.addEventListener('keydown', () => { ac(); Music.start(); }, { capture: true });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { Music.stop(); SFX.chimeStop(); } else Music.start(); });
 
 // ---------- 鐘面元件：烏龜是時針（短、慢、藍）、兔子是分針（長、快、紅）
 function Clock(el, opts = {}) {
@@ -1003,10 +1061,11 @@ function showTime(tot) {
   const w = timeWords(tot);
   $('#digital').innerHTML = `${w.digital}<small>${w.ampm}</small>`;
   $('#words').textContent = timePhrase(w, true);
+  if (mode === 'menu') Music.track(Music.forTime(tot));
   const sc = Town.scene(tot); $('#scene').innerHTML = `<span class="emo">${{ sleep: '💤', owl: '🦉', wake: '🐻', breakfast: '🥣', school: '🎒', lunch: '🍙', class: '📖', park: '⚽', dinner: '🍲', bath: '🛁', story: '📚' }[sc]}</span>${tx('scene.' + sc)}`;
   Town.set(tot);
 }
-clock.onChange = (tot, dragging) => { showTime(tot); if (!dragging) { DB.free = tot; save(); } if (dragging && !$('#hintline').hidden) { DB.hinted = true; save(); $('#hintline').hidden = true; } };   // 拖過一次就不用再提示（矮螢幕那一行會蓋到動物）
+clock.onChange = (tot, dragging) => { showTime(tot); if (dragging) SFX.chimeStop(); else { DB.free = tot; save(); if (tot % 60 === 0 && mode === 'menu') SFX.chime(Math.floor(tot / 60) % 12 || 12); } if (dragging && !$('#hintline').hidden) { DB.hinted = true; save(); $('#hintline').hidden = true; } };   // 拖過一次就不用再提示（矮螢幕那一行會蓋到動物）
 clock.onSnap = (tot, bell) => { if (bell) SFX.bell(); else SFX.tick(); };
 
 // ---------- 設定
@@ -1014,13 +1073,15 @@ const LANGS = { 'zh-Hant': '繁體中文', en: 'English', ja: '日本語', ko: '
 function renderSet() {
   $('#set-lang').innerHTML = Object.keys(LANGS).map(k => `<button type="button" data-lang="${k}" aria-pressed="${LANG === k}">${LANGS[k]}</button>`).join('');
   $('#set-level').innerHTML = [1, 2, 3].map(l => `<button type="button" data-level="${l}" aria-pressed="${DB.set.level === l}">${tx('level.' + l)}</button>`).join('');
-  for (const k of ['sound', 'ring']) { const sw = $(`.sw[data-set=${k}]`); sw.setAttribute('aria-pressed', String(DB.set[k])); sw.textContent = tx(DB.set[k] ? 'on' : 'off'); }
+  for (const k of ['sound', 'ring', 'music', 'chime']) { const sw = $(`.sw[data-set=${k}]`); sw.setAttribute('aria-pressed', String(DB.set[k])); sw.textContent = tx(DB.set[k] ? 'on' : 'off'); }
 }
 $('#go-set').addEventListener('click', () => { renderSet(); $('#o-set').hidden = false; });
 $('#set-close').addEventListener('click', () => { $('#o-set').hidden = true; });
 $('#set-lang').addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (!b) return; DB.set.lang = b.dataset.lang; save(); setLang(); renderSet(); showTime(clock.get().tot); SFX.ding(); });
 $('#set-level').addEventListener('click', e => { const b = e.target.closest('[data-level]'); if (!b) return; DB.set.level = +b.dataset.level; save(); clock.setSnap(DB.set.level === 3 ? 1 : 5); renderSet(); SFX.ding(); });
 $('.sw[data-set=sound]').addEventListener('click', () => { DB.set.sound = !DB.set.sound; save(); renderSet(); SFX.ding(); });
+$('.sw[data-set=music]').addEventListener('click', () => { DB.set.music = !DB.set.music; save(); DB.set.music ? Music.start() : Music.stop(); renderSet(); SFX.ding(); });
+$('.sw[data-set=chime]').addEventListener('click', () => { DB.set.chime = !DB.set.chime; save(); renderSet(); if (DB.set.chime) SFX.chime(1); else SFX.chimeStop(); });   // 打開時敲一下讓大人聽聽看
 $('.sw[data-set=ring]').addEventListener('click', () => { DB.set.ring = !DB.set.ring; save(); setRingAll(DB.set.ring); renderSet(); SFX.ding(); });
 document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for (const id of ['#o-help', '#o-about', '#o-quest', '#o-set']) if (!$(id).hidden) { $(id).hidden = true; if (id === '#o-help' || id === '#o-about') $('#o-set').hidden = false; return; } });
 
@@ -1030,7 +1091,7 @@ function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = 
 $('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (!b) return; ac(); if (b.dataset.mode === 'day') { Day.start(); return; } if (b.dataset.mode === 'read') { Read.start(); return; } if (b.dataset.mode === 'match') { Match.start(); return; } if (b.dataset.mode === 'versus') { Versus.open(); return; } toast(tx('soon')); SFX.ding(); });
 
 // ---------- 畫面切換
-function show(name) { $$('.screen').forEach(sc => sc.hidden = sc.id !== 's-' + name); mode = name; $('#toast').hidden = true; }
+function show(name) { $$('.screen').forEach(sc => sc.hidden = sc.id !== 's-' + name); mode = name; $('#toast').hidden = true; if (name !== 'menu') SFX.chimeStop(); Music.track(name === 'menu' ? Music.forTime(clock.get().tot) : name === 'tut' || name === 'map' || name === 'pet' ? 'town' : 'play'); }
 $$('[data-home]').forEach(b => b.addEventListener('click', goHome));
 function goHome() { Day.stop(); Read.stop(); Match.stop(); Versus.stop(); show('menu'); refreshMenu(); showTime(clock.get().tot); fitTitle(); }
 
@@ -1245,7 +1306,7 @@ const Gate = (() => {
   $('#gate-cancel').addEventListener('click', () => { $('#o-gate').hidden = true; fn = null; });
   return { open };
 })();
-$('#set-reset').addEventListener('click', () => Gate.open(() => { const lang = DB.set.lang; DB = fresh(); DB.set.lang = lang; DB.tut = true; save(); setRingAll(DB.set.ring); setLang(); renderSet(); clock.setSnap(5); clock.set(7, 0); showTime(clock.get().tot); Quest.ensure(); refreshMenu(); toast(tx('reset.done')); }, true));
+$('#set-reset').addEventListener('click', () => Gate.open(() => { const lang = DB.set.lang; DB = fresh(); DB.set.lang = lang; DB.tut = true; save(); setRingAll(DB.set.ring); Music.start(); setLang(); renderSet(); clock.setSnap(5); clock.set(7, 0); showTime(clock.get().tot); Quest.ensure(); refreshMenu(); toast(tx('reset.done')); }, true));
 
 // ---------- 每日任務：每天 3 個，做完徽章 +1、連續天數；沒有懲罰、沒有過期提醒
 const Quest = (() => {
@@ -1499,7 +1560,7 @@ const Tut = (() => {
   function good() {
     S.busy = true; clear(); clock6.drag = false; clock6.mark(null); clock6.ghost(null); finger(false);
     const t = clock6.get().tot, h = Math.floor(t / 60) % 12 || 12, el = $('#tut-hint'); el.className = 'bubble good'; el.textContent = tx('tut.ok' + (S.i + 1), { h, h2: h % 12 + 1 }); el.hidden = false;
-    SFX.bell(); const r = $('#clock6').getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 30);
+    if (S.i === 1 && DB.set.chime) SFX.chime(3); else SFX.bell(); const r = $('#clock6').getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 30);
     const emo = $('#tut-emo'); emo.classList.remove('jump'); void emo.offsetWidth; emo.classList.add('jump');
     later(() => { if (S.i + 1 < STEPS.length) step(S.i + 1); else pick(); }, 2400);
   }
@@ -1528,12 +1589,12 @@ const Tut = (() => {
 })();
 
 // ---------- 開始
-loadDB(); setLang(); setRingAll(DB.set.ring); Town.resize();
+loadDB(); setLang(); setRingAll(DB.set.ring); Town.resize(); Music.track(Music.forTime(DB.free)); Music.start();
 if (DB.hinted) $('#hintline').hidden = true; refreshMenu();
 if (!DB.tut) Tut.start(false);
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock6, Tut, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock6, Tut, Music, SFX, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet };   // 給測試用
 })();
 </script>
 </body>
