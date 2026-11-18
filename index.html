@@ -49,7 +49,9 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 .scene .emo{font-size:22px;vertical-align:-2px;margin-right:4px}
 .hintline{color:#fff;font-weight:900;font-size:15px;text-shadow:0 1px 0 rgba(0,0,0,.35),0 0 6px rgba(0,0,0,.4);text-align:center;text-wrap:balance;margin-top:-2px}
 @media (max-height:620px){.hintline{display:none}}   /* 矮螢幕放不下這一行，模式鈕會被擠出去 */
-.modes{margin-top:auto;width:100%;max-width:520px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding-bottom:6px}
+.modes{margin-top:auto;width:100%;max-width:560px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding-bottom:6px}
+@media (max-width:420px){.modes{gap:5px}.mode{font-size:clamp(11px,3.2vw,13px)!important;padding:4px 2px;border-radius:16px}.mode .emo{font-size:26px!important}}
+.now-btn{position:absolute;right:-6px;bottom:-6px;z-index:2;font-size:20px}
 .mode{background:var(--panel);border:1px solid var(--line);border-radius:20px;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:900;font-size:clamp(12px,3.6vw,14px);line-height:1.2;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,.08);text-wrap:balance;padding:6px 4px}
 .mode .emo{font-size:30px;line-height:1}
 .mode:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.08)}
@@ -192,6 +194,15 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 .ring-b{fill:transparent;transition:fill .15s}.ring-b.on,.ring-b.lit{fill:var(--minute)}
 @media (prefers-reduced-motion:reduce){.ring-n,.ring-b{transition:none}}
 .tk-lit{stroke:var(--minute);stroke-width:3.5}
+#s-shop .clock-wrap{width:min(66vw,36vh,320px)}
+.tag{position:relative;background:#fff8dc;border:3px solid #d9a441;border-radius:14px;padding:6px 22px 6px 30px;font-family:var(--f-num);font-size:38px;line-height:1.1;box-shadow:0 4px 0 rgba(0,0,0,.1);transform:rotate(-3deg);margin-top:-6px;min-width:120px;text-align:center}
+.tag::before{content:'';position:absolute;left:10px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#fff;border:2px solid #d9a441}
+.tag.words{font-family:var(--f-zh);font-size:24px;font-weight:900}
+.tag.no{animation:tilt .5s ease}.tag.fixed{background:#e8f8e3;border-color:#5cb85c;transform:rotate(0)}
+.shop-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:420px}
+.shop-btns .btn{min-height:64px;font-size:22px}
+@media (prefers-reduced-motion:reduce){.tag.no{animation:none}}
+@media (max-height:640px){#s-shop .clock-wrap{width:min(56vw,30vh,240px)}.tag{font-size:30px}.shop-btns .btn{min-height:54px;font-size:19px}}
 .bubble.over{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));width:calc(100% - 32px);max-width:520px;z-index:4;box-shadow:0 8px 30px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:8px;max-height:calc(100% - 140px);overflow-y:auto}
 .bubble.over .btn{align-self:center;min-width:140px}
 .bubble.good.over{bottom:auto;top:50%;transform:translate(-50%,-50%);width:auto;min-width:200px}
@@ -268,7 +279,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
     <h1 data-t="title"></h1>
     <div style="display:flex;gap:8px"><button class="chip who" id="go-who" type="button" data-ta="who.switch" hidden><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="currentColor"/></svg><b class="nm" id="who-nm"></b></button><button class="chip" id="go-pet" type="button" data-ta="menu.pet"><span aria-hidden="true">🌰</span><b id="b-acorn">0</b></button><button class="chip" id="go-quest" type="button"><span aria-hidden="true">📋</span><b id="q-count"></b></button><button class="icon-btn" id="go-map" type="button" data-ta="menu.map">🗺️</button><button class="icon-btn" id="go-set" type="button" data-ta="menu.set">⚙️</button></div>
   </div>
-  <div class="clock-wrap" id="clock"></div>
+  <div class="clock-wrap" id="clock"><button class="icon-btn now-btn" type="button" id="go-now" data-ta="menu.now">🕒</button></div>
   <div class="timecard">
     <div class="digital" id="digital"></div>
     <div class="words" id="words"></div>
@@ -279,6 +290,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
     <button class="mode" type="button" data-mode="day"><span class="emo">🏘️</span><span data-t="mode.day"></span></button>
     <button class="mode" type="button" data-mode="read"><span class="emo">⏰</span><span data-t="mode.read"></span></button>
     <button class="mode" type="button" data-mode="match"><span class="emo">🃏</span><span data-t="mode.match"></span></button>
+    <button class="mode" type="button" data-mode="shop"><span class="emo">🔧</span><span data-t="mode.shop"></span></button>
     <button class="mode" type="button" data-mode="versus"><span class="emo">🤝</span><span data-t="mode.versus"></span></button>
   </div>
 </section>
@@ -308,6 +320,24 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
   <div class="pad" id="read-pad" hidden><div class="padin" id="read-in"></div><div class="keys" id="read-keys"></div></div>
   <div class="bubble" id="read-hint" hidden></div>
 </section>
+
+<section class="screen" id="s-shop" hidden>
+  <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights" id="shop-prog" aria-live="polite"></div></div>
+  <div class="task"><span class="emo" id="shop-emo">🦉</span><div class="say" id="shop-say"></div></div>
+  <div class="clock-wrap" id="clock5"></div>
+  <div class="tag" id="shop-tag" aria-live="polite"></div>
+  <div class="shop-btns"><button class="btn sb-yes" type="button" id="shop-yes"><span aria-hidden="true">✓</span> <span data-t="shop.yes"></span></button><button class="btn alt sb-fix" type="button" id="shop-fix"><span aria-hidden="true">🔧</span> <span data-t="shop.fix"></span></button></div>
+  <div class="bubble" id="shop-hint" hidden></div>
+</section>
+
+<div class="overlay" id="o-sdone" hidden>
+  <div class="card">
+    <div class="big" id="sdone-stars">⭐</div>
+    <h3 style="margin:0;text-align:center;font-size:24px" id="sdone-h"></h3>
+    <button class="btn" type="button" id="sdone-again" data-t="read.again"></button>
+    <button class="btn alt" type="button" id="sdone-home" data-t="home"></button>
+  </div>
+</div>
 
 <section class="screen" id="s-match" hidden>
   <div class="top"><button class="link-btn" type="button" data-home data-t="back"></button><div class="lights" id="match-prog" aria-live="polite"></div></div>
@@ -466,6 +496,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
     <h4 data-t="help.dayT"></h4><ul data-th="help.day"></ul><ul data-th="help.day3" class="more"></ul>
     <h4 data-t="help.readT"></h4><ul data-th="help.read"></ul><ul data-th="help.read3" class="more"></ul>
     <h4 data-t="help.matchT"></h4><ul data-th="help.match"></ul>
+    <h4 data-t="help.shopT"></h4><ul data-th="help.shop"></ul>
     <h4 data-t="help.vsT"></h4><ul data-th="help.vs"></ul>
     <h4 data-t="help.mapT"></h4><ul data-th="help.map"></ul>
     <h4 data-t="help.questT"></h4><ul data-th="help.quest"></ul>
@@ -534,6 +565,7 @@ const STR = {
     'read.say24': '{who}問：現在是{p}。用 24 小時制怎麼寫？', 'read.sayDur': '{who}{t1} 出門，鐘上是到的時間。走了幾分鐘？', 'hint.ok': '知道了', 'u.min': '{n} 分', 'u.h24': '24 小時制', 'hint.ampm': '{p}的時刻，24 小時制要加 12：{h} + 12 = {H}。', 'hint.ampmAm': '{p}的時刻，24 小時制不用加 12，就是 {h} 點。', 'hint.ampmSet': '{H} 點就是{p} {h} 點（{H} − 12 = {h}），烏龜要指著 {h}。', 'hint.minOne': '從 {m5} 分開始，一小格是 1 分鐘。數數看兔子又走了幾小格！',
     'hint.dur1': '從 {t1} 到 {t2}，數數看兔子走了幾分鐘。', 'help.read3': '<li>選「過了多久」時，還會問 24 小時制（下午 3 點 = 15 點），和「幾點出門、幾點到，走了幾分鐘」。</li>', 'help.day3': '<li>選「過了多久」時，有些時刻會寫成 24 小時制：15:20 就是下午 3:20，烏龜指著 3。</li>', 'about.level3': '選「過了多久」時還會練：24 小時制（讀鐘時寫成 15:20，撥鐘時看到 15:20 要撥到 3:20）、從幾點到幾點過了幾分鐘（跨過整點時，提示會畫一條時間線：先走到整點，再走剩下的）、1 分鐘的小格。',
     'town.new': '小鎮多了{x}！', 'deco.flowers': '一片花', 'deco.tree': '一棵大樹', 'deco.bench': '一張長椅', 'deco.swing': '鞦韆', 'deco.fountain': '噴水池', 'deco.bakery': '麵包店', 'deco.windmill': '風車', 'deco.balloon': '熱氣球', 'help.townT': '小鎮', 'help.town': '<li>撥對時間，動物會從家裡走出去做事。</li><li>每玩完一次，小鎮就長大一點：花、大樹、長椅、鞦韆、噴水池、麵包店、風車、熱氣球。</li><li>鐘樓上的鐘，跟主選單的鐘一起走。</li>',
+    'mode.shop': '修鐘店', 'menu.now': '跳到現在的時間', 'shop.say': '{who}的修鐘店：這個鐘的標籤對嗎？', 'shop.yes': '對', 'shop.fix': '要修', 'shop.good': '對！標籤沒錯。', 'shop.fixed': '修好了！', 'shop.oops': '標籤寫的是虛線的時間，跟鐘不一樣喔。', 'shop.wasOk': '這個標籤其實是對的！再看一次烏龜和兔子。', 'shop.done': '今天修了 {n} 個鐘！', 'shop.doneAll': '全部都看對了！好厲害的修鐘師傅！', 'q.shop': '在修鐘店看 {n} 個鐘', 'help.shopT': '修鐘店', 'help.shop': '<li>每個鐘都掛著一張標籤。標籤寫的時間跟鐘一樣，就按「對」；不一樣就按「要修」。</li><li>看錯了也沒關係：虛線會告訴你標籤寫的是哪個時間。</li><li>一輪 10 個鐘。</li>',
     'p.night': '半夜', 'p.morning': '早上', 'p.noon': '中午', 'p.afternoon': '下午', 'p.evening': '晚上',
     'ampm.am': '上午', 'ampm.pm': '下午',
     // 小鎮的作息
@@ -606,6 +638,7 @@ const STR = {
     'hint.ampmSet': '{H} is {h} in the {p} ({H} − 12 = {h}). Tortoise points at {h}.', 'hint.minOne': 'Start at {m5}. Each little tick is 1 minute. Count how many more ticks Rabbit went!', 'hint.dur1': 'From {t1} to {t2}: count how many minutes Rabbit went.', 'help.read3': '<li>With "How long?", you also get 24-hour time (3 PM = 15:00) and "left at…, got there at…, how many minutes?"</li>',
     'help.day3': '<li>With "How long?", some times are in 24-hour time: 15:20 means 3:20 PM, so Tortoise points at 3.</li>', 'about.level3': 'Level 3 also practices 24-hour time (write 15:20 when reading; set 3:20 when you see 15:20), minutes from one time to another (when it passes the hour, the hint draws a timeline: first to the hour, then the rest), and the little 1-minute ticks.',
     'town.new': 'The town got {x}!', 'deco.flowers': 'some flowers', 'deco.tree': 'a big tree', 'deco.bench': 'a bench', 'deco.swing': 'a swing', 'deco.fountain': 'a fountain', 'deco.bakery': 'a bakery', 'deco.windmill': 'a windmill', 'deco.balloon': 'a hot air balloon', 'help.townT': 'The town', 'help.town': '<li>Set the time right and an animal walks out of its house.</li><li>Every game you finish makes the town grow: flowers, a big tree, a bench, a swing, a fountain, a bakery, a windmill, a hot air balloon.</li><li>The clock tower shows the same time as the menu clock.</li>',
+    'mode.shop': 'Fix-it Shop', 'menu.now': 'Jump to the time now', 'shop.say': '{who}\'s Fix-it Shop: Is this clock\'s tag right?', 'shop.yes': 'Right', 'shop.fix': 'Fix it', 'shop.good': 'Yes! The tag is right.', 'shop.fixed': 'Fixed!', 'shop.oops': 'The tag says the dotted time. That is not what the clock says.', 'shop.wasOk': 'This tag was actually right! Look at Tortoise and Rabbit again.', 'shop.done': 'You checked {n} clocks today!', 'shop.doneAll': 'All of them right! What a clock fixer!', 'q.shop': 'Check {n} clocks at the Fix-it Shop', 'help.shopT': 'Fix-it Shop', 'help.shop': '<li>Each clock has a tag. If the tag shows the same time as the clock, tap "Right". If not, tap "Fix it".</li><li>Got it wrong? No problem: the dotted hands show what the tag says.</li><li>10 clocks in a round.</li>',
     'p.night': 'night', 'p.morning': 'morning', 'p.noon': 'noon', 'p.afternoon': 'afternoon', 'p.evening': 'evening',
     'ampm.am': 'AM', 'ampm.pm': 'PM',
     back: '‹ Menu', home: 'Back to menu',
@@ -678,6 +711,7 @@ const STR = {
     'read.say24': '{who}が きいてるよ：いまは {p}。24時間せいで かくと？', 'read.sayDur': '{who}は {t1}に 出て、とけいの 時こくに ついたよ。なん分？', 'hint.ok': 'わかった', 'u.min': '{n}分', 'u.h24': '24時間せい', 'hint.ampm': '{p}の 時こくは、24時間せいだと 12を たすよ：{h} + 12 = {H}。', 'hint.ampmAm': '{p}の 時こくは、24時間せいでも そのまま {h}だよ。', 'hint.ampmSet': '{H}時は {p}{h}時（{H} − 12 = {h}）。かめは {h}を さすよ。',
     'hint.minOne': '{m5}分から、小さい めもり 1つが 1分。うさぎが あと いくつ すすんだか かぞえてね！', 'hint.dur1': '{t1}から {t2}まで、うさぎが なん分 すすんだか かぞえてね。', 'help.read3': '<li>「たった時間」では、24時間せい（ごご3時 = 15時）や「なん時に 出て、なん時に ついた？ なん分？」も 出るよ。</li>', 'help.day3': '<li>「たった時間」では、24時間せいで かいて ある 時こくも あるよ：15:20は ごご3:20。かめは 3を さすよ。</li>', 'about.level3': 'レベル3では、24時間制（読むときは 15:20 と書く、15:20 を見たら 3:20 に合わせる）、ある時刻から別の時刻まで何分か（ちょうどの時刻をまたぐときは、まずちょうどの時刻まで、次に残りという時間の線をヒントで描きます）、1分の小さい目もりも練習します。',
     'town.new': 'まちに {x}が できたよ！', 'deco.flowers': 'お花', 'deco.tree': '大きな 木', 'deco.bench': 'ベンチ', 'deco.swing': 'ブランコ', 'deco.fountain': 'ふんすい', 'deco.bakery': 'パンやさん', 'deco.windmill': 'ふうしゃ', 'deco.balloon': 'ききゅう', 'help.townT': 'まち', 'help.town': '<li>時こくを あわせると、どうぶつが おうちから 出かけるよ。</li><li>ゲームを 1つ おえるたびに、まちが 大きく なるよ：お花、大きな 木、ベンチ、ブランコ、ふんすい、パンやさん、ふうしゃ、ききゅう。</li><li>とけいとうの とけいは、メニューの とけいと いっしょに うごくよ。</li>',
+    'mode.shop': 'とけいやさん', 'menu.now': 'いまの 時こくに する', 'shop.say': '{who}の とけいやさん：この とけいの ふだ、あってる？', 'shop.yes': 'あってる', 'shop.fix': 'なおす', 'shop.good': 'そう！ ふだは あってるよ。', 'shop.fixed': 'なおったよ！', 'shop.oops': 'ふだに かいて あるのは てんせんの 時こく。とけいと ちがうよ。', 'shop.wasOk': 'この ふだは あってたよ！ かめと うさぎを もういちど 見てね。', 'shop.done': 'きょうは {n}こ なおしたよ！', 'shop.doneAll': 'ぜんぶ せいかい！ すごい とけいやさん！', 'q.shop': 'とけいやさんで {n}こ 見る', 'help.shopT': 'とけいやさん', 'help.shop': '<li>とけいに ふだが ついてるよ。ふだの 時こくが とけいと おなじなら「あってる」、ちがったら「なおす」を おしてね。</li><li>まちがえても だいじょうぶ。てんせんが ふだの 時こくを おしえて くれるよ。</li><li>1かいで とけい 10こ。</li>',
     'p.night': 'よなか', 'p.morning': 'あさ', 'p.noon': 'ひる', 'p.afternoon': 'ごご', 'p.evening': 'よる',
     'ampm.am': 'ごぜん', 'ampm.pm': 'ごご',
     back: '‹ メニュー', home: 'メニューへ',
@@ -749,6 +783,7 @@ const STR = {
     'read.say24': '{who}가 물어봐: {p} 시각이야. 24시간제로 어떻게 쓸까?', 'read.sayDur': '{who}가 {t1}에 나가서 시계 시각에 도착했어. 몇 분?', 'hint.ok': '알겠어', 'u.min': '{n}분', 'u.h24': '24시간제', 'hint.ampm': '{p} 시각은 24시간제로 쓰면 12를 더해: {h} + 12 = {H}.', 'hint.ampmAm': '{p} 시각은 24시간제로 써도 그대로 {h}시.', 'hint.ampmSet': '{H}시 = {p} {h}시 ({H} − 12 = {h}). 거북이 자리: {h}.',
     'hint.minOne': '{m5}분부터 작은 눈금 하나가 1분이야. 토끼가 몇 칸 더 갔는지 세어 봐!', 'hint.dur1': '{t1}부터 {t2}까지 토끼가 몇 분 갔는지 세어 봐.', 'help.read3': '<li>"얼마나 지났지?"를 고르면 24시간제(오후 3시 = 15시)와 "몇 시에 나가서 몇 시에 도착했어? 몇 분?"도 나와.</li>', 'help.day3': '<li>"얼마나 지났지?"에서는 24시간제로 쓴 시각도 있어: 15:20 = 오후 3:20. 거북이 자리는 3이야.</li>', 'about.level3': '3단계에서는 24시간제(읽을 때는 15:20으로 쓰기, 15:20을 보면 3:20으로 맞추기), 어떤 시각부터 다른 시각까지 몇 분인지(정각을 넘어갈 때는 힌트로 먼저 정각까지, 그다음 나머지를 시간 막대로 그려 줍니다), 1분짜리 작은 눈금도 연습합니다.',
     'town.new': '마을에 {x} 생겼어!', 'deco.flowers': '꽃밭이', 'deco.tree': '큰 나무가', 'deco.bench': '벤치가', 'deco.swing': '그네가', 'deco.fountain': '분수가', 'deco.bakery': '빵집이', 'deco.windmill': '풍차가', 'deco.balloon': '열기구가', 'help.townT': '마을', 'help.town': '<li>시간을 맞게 맞추면 동물이 집에서 나와 일하러 가.</li><li>게임을 하나 끝낼 때마다 마을이 조금씩 커져: 꽃밭, 큰 나무, 벤치, 그네, 분수, 빵집, 풍차, 열기구.</li><li>시계탑의 시계는 메뉴의 시계랑 같이 움직여.</li>',
+    'mode.shop': '시계 수리점', 'menu.now': '지금 시각으로', 'shop.say': '{who}의 시계 수리점: 이 시계의 이름표가 맞을까?', 'shop.yes': '맞아', 'shop.fix': '고쳐', 'shop.good': '맞아! 이름표가 맞아.', 'shop.fixed': '고쳤다!', 'shop.oops': '이름표에 쓴 건 점선 시각이야. 시계랑 달라.', 'shop.wasOk': '이 이름표는 맞았어! 거북이랑 토끼를 다시 봐.', 'shop.done': '오늘 시계 {n}개를 봤어!', 'shop.doneAll': '다 맞혔어! 최고의 시계 수리공!', 'q.shop': '시계 수리점에서 시계 {n}개 보기', 'help.shopT': '시계 수리점', 'help.shop': '<li>시계마다 이름표가 붙어 있어. 이름표 시각이 시계랑 같으면 "맞아", 다르면 "고쳐"를 눌러.</li><li>틀려도 괜찮아. 점선이 이름표에 쓴 시각을 알려 줘.</li><li>한 판에 시계 10개.</li>',
     'p.night': '밤', 'p.morning': '아침', 'p.noon': '낮', 'p.afternoon': '오후', 'p.evening': '저녁',
     'ampm.am': '오전', 'ampm.pm': '오후',
     back: '‹ 메뉴', home: '메뉴로',
@@ -808,7 +843,7 @@ const STR = {
   es: {
     title: 'Pueblo Tictac', title2: 'Pueblo|Tictac', 'menu.set': 'Ajustes', close: 'Cerrar', on: 'Sí', off: 'No',
     'menu.hint': 'Arrastra el conejo (aguja larga) o la tortuga (aguja corta). ¡Mira cómo cambia el pueblo!',
-    'mode.day': 'Día del pueblo', 'mode.read': '¿Qué hora es?', 'mode.match': 'Parejas', 'mode.versus': 'Dos jugadores',
+    'mode.day': 'Día del pueblo', 'mode.read': '¿Qué hora es?', 'mode.match': 'Parejas', 'mode.versus': 'A dos',
     soon: 'Todavía lo estamos haciendo. ¡Por ahora juega con el reloj!',
     'set.title': 'Ajustes', 'set.lang': 'Idioma・Language', 'set.level': '¿Qué quieres practicar?', 'set.sound': 'Sonido', 'set.soundD': 'Botones, clics y respuestas correctas', 'set.music': 'Música', 'set.musicD': 'Música de fondo: cambia de día, de noche y al jugar', 'set.chime': 'Campanadas', 'set.chimeD': 'Cuando el reloj se detiene en punto, la torre suena esas veces (3 a las 3)', 'set.ring': 'Aro de minutos', 'set.ringD': 'Un aro con 05, 10, 15… alrededor del reloj. Donde apunta el conejo, esos son los minutos.',
     'tut.s1': 'Este es el conejo, la aguja larga. ¡Dale una vuelta entera!', 'tut.ok1': '¡El conejo dio una vuelta y la tortuga solo avanzó un paso!', 'tut.s2': 'Esta es la tortuga, la aguja corta. Llévala al 3.', 'tut.ok2': '¡Tortuga en el 3, conejo en el 12: son las 3 en punto!', 'tut.s3': 'Lleva el conejo al 6. Eso es "y media".', 'tut.ok3': '¡Las {h} y media! La tortuga está justo entre el {h} y el {h2}.',
@@ -820,6 +855,7 @@ const STR = {
     'hint.ampmSet': 'Las {H} son las {h} {p} ({H} − 12 = {h}). La tortuga apunta al {h}.', 'hint.minOne': 'Empieza en {m5}. Cada rayita es 1 minuto. ¡Cuenta cuántas rayitas más avanzó el conejo!', 'hint.dur1': 'De {t1} a {t2}: cuenta cuántos minutos avanzó el conejo.', 'help.read3': '<li>En "¿Cuánto tiempo?" también sale el formato de 24 horas (3 p. m. = 15:00) y "salió a las…, llegó a las…, ¿cuántos minutos?".</li>',
     'help.day3': '<li>En "¿Cuánto tiempo?" algunas horas están en formato de 24 horas: 15:20 son las 3:20 p. m., así que la tortuga apunta al 3.</li>', 'about.level3': 'El nivel 3 también practica el formato de 24 horas (escribir 15:20 al leer; poner 3:20 al ver 15:20), los minutos entre dos horas (si pasa por la hora en punto, la pista dibuja una línea de tiempo: primero hasta la hora en punto y luego el resto) y las rayitas de 1 minuto.',
     'town.new': '¡El pueblo tiene {x}!', 'deco.flowers': 'flores', 'deco.tree': 'un árbol grande', 'deco.bench': 'una banca', 'deco.swing': 'un columpio', 'deco.fountain': 'una fuente', 'deco.bakery': 'una panadería', 'deco.windmill': 'un molino', 'deco.balloon': 'un globo aerostático', 'help.townT': 'El pueblo', 'help.town': '<li>Si pones bien la hora, un animal sale de su casa.</li><li>Cada juego que terminas hace crecer el pueblo: flores, un árbol grande, una banca, un columpio, una fuente, una panadería, un molino y un globo aerostático.</li><li>El reloj de la torre marca la misma hora que el reloj del menú.</li>',
+    'mode.shop': 'El taller', 'menu.now': 'Ir a la hora de ahora', 'shop.say': 'El taller de {who}: ¿la etiqueta de este reloj está bien?', 'shop.yes': 'Bien', 'shop.fix': 'Arreglar', 'shop.good': '¡Sí! La etiqueta está bien.', 'shop.fixed': '¡Arreglado!', 'shop.oops': 'La etiqueta dice la hora punteada. No es la del reloj.', 'shop.wasOk': '¡Esta etiqueta estaba bien! Mira otra vez la tortuga y el conejo.', 'shop.done': '¡Revisaste {n} relojes hoy!', 'shop.doneAll': '¡Todos bien! ¡Qué buen relojero!', 'q.shop': 'Revisa {n} relojes en el taller', 'help.shopT': 'El taller', 'help.shop': '<li>Cada reloj tiene una etiqueta. Si la etiqueta dice la misma hora que el reloj, toca "Bien". Si no, toca "Arreglar".</li><li>¿Te equivocaste? No pasa nada: las agujas punteadas muestran lo que dice la etiqueta.</li><li>10 relojes por partida.</li>',
     'p.night': 'de la noche', 'p.morning': 'de la mañana', 'p.noon': 'del mediodía', 'p.afternoon': 'de la tarde', 'p.evening': 'de la noche',
     'ampm.am': 'a. m.', 'ampm.pm': 'p. m.',
     back: '‹ Menú', home: 'Volver al menú',
@@ -922,7 +958,7 @@ const saveWho = () => { if (bkFrozen) return; try { localStorage.setItem(PKEY, J
 const whoCur = () => WHO.list.find(x => x.id === WHO.cur) || WHO.list[0];
 KEY = keyFor(WHO.cur);
 const ERRS = ['hourLate', 'minIndex', 'handSwap', 'halfHour', 'minNear', 'hourOff', 'minOne', 'carry', 'ampm', 'read12', 'other'];   // 撥鐘／讀鐘的錯法（minNear 差一格、hourOff 小時差很多、carry 跨整點、other 判不出來）
-const QIDS = ['day', 'read', 'set', 'star', 'match', 'vs'];
+const QIDS = ['day', 'read', 'set', 'star', 'match', 'vs', 'shop'];
 // ---------- 寵物資料：住在鐘樓的動物。圖檔 assets/pets/{kind}-{stage}.png（還沒有圖時用 emoji 代替）
 const PET_KINDS = Object.create(null); Object.assign(PET_KINDS, { owl: { e: '🦉', c: '#8a6fd1' }, squirrel: { e: '🐿️', c: '#e38b4f' }, bear: { e: '🐻', c: '#8c5a3c' } });
 const PET_STAGES = [0, 30, 100, 250, 500];   // fed 到幾顆升到幼體、少年、成體、究極
@@ -1240,7 +1276,7 @@ const Town = (() => {
 
 // ---------- 小鎮會長大：玩完幾次就多一樣東西
 const DECOR = [{ id: 'flowers', at: 1 }, { id: 'tree', at: 2 }, { id: 'bench', at: 4 }, { id: 'swing', at: 6 }, { id: 'fountain', at: 9 }, { id: 'bakery', at: 13 }, { id: 'windmill', at: 18 }, { id: 'balloon', at: 24 }];
-const townPts = () => num(DB.best.days) * 2 + num(DB.best.reads) + num(DB.best.matches) + num(DB.best.vs);
+const townPts = () => num(DB.best.days) * 2 + num(DB.best.reads) + num(DB.best.matches) + num(DB.best.vs) + num(DB.best.shops);
 // 回到主選單時看看小鎮有沒有長大：有就說一聲、在那個東西上放煙火
 function townGrow() {
   const n = DECOR.filter(d => townPts() >= d.at).length, seen = num(DB.town.seen);
@@ -1276,6 +1312,7 @@ function showTime(tot) {
   Town.set(tot);
 }
 clock.onChange = (tot, dragging) => { showTime(tot); if (dragging) SFX.chimeStop(); else { DB.free = tot; save(); if (tot % 60 === 0 && mode === 'menu') SFX.chime(Math.floor(tot / 60) % 12 || 12); } if (dragging && !$('#hintline').hidden) { DB.hinted = true; save(); $('#hintline').hidden = true; } };   // 拖過一次就不用再提示（矮螢幕那一行會蓋到動物）
+$('#go-now').addEventListener('click', e => { e.stopPropagation(); ac(); const d = new Date(), st = DB.set.level === 3 ? 1 : 5, tot = Math.round((d.getHours() * 60 + d.getMinutes()) / st) * st % 1440; clock.set(Math.floor(tot / 60), tot % 60); clock.onChange(clock.get().tot, false); SFX.ding(); });
 clock.onSnap = (tot, bell) => { if (bell) SFX.bell(); else SFX.tick(); };
 
 // ---------- 設定
@@ -1303,12 +1340,12 @@ document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for 
 // ---------- 模式（還在蓋）
 let toastT = 0;
 function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = false; el.classList.toggle('mid', mode === 'versus'); clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, 2200); }
-$('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (!b) return; ac(); if (b.dataset.mode === 'day') { Day.start(); return; } if (b.dataset.mode === 'read') { Read.start(); return; } if (b.dataset.mode === 'match') { Match.start(); return; } if (b.dataset.mode === 'versus') { Versus.open(); return; } toast(tx('soon')); SFX.ding(); });
+$('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (!b) return; ac(); if (b.dataset.mode === 'day') { Day.start(); return; } if (b.dataset.mode === 'read') { Read.start(); return; } if (b.dataset.mode === 'match') { Match.start(); return; } if (b.dataset.mode === 'versus') { Versus.open(); return; } if (b.dataset.mode === 'shop') { Shop.start(); return; } toast(tx('soon')); SFX.ding(); });
 
 // ---------- 畫面切換
 function show(name) { $$('.screen').forEach(sc => sc.hidden = sc.id !== 's-' + name); mode = name; $('#toast').hidden = true; if (name !== 'menu') SFX.chimeStop(); Music.track(name === 'menu' ? Music.forTime(clock.get().tot) : name === 'tut' || name === 'map' || name === 'pet' ? 'town' : 'play'); }
 $$('[data-home]').forEach(b => b.addEventListener('click', goHome));
-function goHome() { Day.stop(); Read.stop(); Match.stop(); Versus.stop(); show('menu'); refreshMenu(); showTime(clock.get().tot); fitTitle(); townGrow(); }
+function goHome() { Day.stop(); Read.stop(); Match.stop(); Versus.stop(); Shop.stop(); show('menu'); refreshMenu(); showTime(clock.get().tot); fitTitle(); townGrow(); }
 
 // ---------- 粒子（慶祝用）
 const FX = (() => {
@@ -1348,6 +1385,65 @@ function classifySet(T, A) {
   if (am === tm) return 'hourOff';
   return 'other';
 }
+
+// ---------- 貓頭鷹的修鐘店：鐘掛著標籤，標籤對就按「對」，不對就按「要修」。錯的標籤專挑孩子常犯的錯
+const clock5 = Clock($('#clock5'), { snap: 1, drag: false });
+const Shop = (() => {
+  const N = 10, WHOS = ['owl', 'bear', 'rabbit', 'squirrel'], EMO = { bear: '🐻', rabbit: '🐰', squirrel: '🐿️', owl: '🦉' };
+  let S = null;
+  const key = (h, m) => `r:${h % 12 || 12}:${m}`;
+  // 出題：照讀鐘的權重（錯過的、會誘發弱點的時刻多出）
+  function pick() {
+    const L = DB.set.level, step = L === 1 ? 30 : L === 3 ? 1 : 5, E = DB.errs, c = [];
+    for (let h = 1; h <= 12; h++) for (let m = 0; m < 60; m += step) {
+      let w = 1; const f = DB.facts[key(h, m)]; if (f) w += f.err * 6; else w += 0.5;
+      if (num(E.hourLate) > 0.1 && m >= 35) w += 3 * E.hourLate; if (num(E.minIndex) > 0.1 && m % 30 !== 0) w += 3 * E.minIndex; if (num(E.halfHour) > 0.1 && m === 30) w += 3 * E.halfHour; if (num(E.read12) > 0.1 && h === 12) w += 3 * E.read12;
+      if (S.recent.some(r => r[0] === h && r[1] === m)) w *= 0.05; c.push([h, m, w]);
+    }
+    let r = Math.random() * c.reduce((a, x) => a + x[2], 0); for (const x of c) { r -= x[2]; if (r <= 0) { S.recent.push(x); if (S.recent.length > 4) S.recent.shift(); return x; } } return c[0];
+  }
+  const fmt = (h, m) => `${h}:${String(m).padStart(2, '0')}`;
+  function start() { S = { i: 0, right: 0, recent: [], q: null }; show('shop'); $('#o-sdone').hidden = true; next(); }
+  function stop() { clock5.ghost(null); clock5.countStop(); S = null; }
+  function prog() { $('#shop-prog').innerHTML = `<span aria-hidden="true">🔧</span>${tx('read.prog', { n: S.i, t: N })}`; }
+  function next() {
+    const [h, m] = pick(), who = WHOS[S.i % WHOS.length];
+    let tag = ['ok', h, m];
+    if (Math.random() < 0.55) { const o = Read.options(h, m).filter(x => x[0] !== 'ok'); if (o.length) tag = o[0]; }   // 一半多一點的標籤是錯的：錯法照孩子的弱點挑（同讀鐘的干擾卡）
+    const H = h === 12 ? 12 : h < 6 ? h + 12 : Math.random() < 0.5 ? h : h + 12;
+    S.q = { h, m, tag, who, at: now(), done: false, wrong: false };
+    clock5.set(H, m); clock5.ghost(null); clock5.countStop(); Town.set(H * 60 + m);
+    $('#shop-emo').textContent = EMO[who]; $('#shop-say').textContent = tx('shop.say', { who: tx('who.' + who) });
+    const words = DB.set.level === 1 && LANG !== 'en' && Math.random() < 0.5, el = $('#shop-tag');   // 等級 1 有時候寫成文字（「7 點半」），練看字
+    el.className = 'tag' + (words ? ' words' : ''); el.textContent = words ? timeWords(tag[1] * 60 + tag[2]).main : fmt(tag[1], tag[2]);
+    $('#shop-hint').hidden = true; $('#shop-yes').disabled = false; $('#shop-fix').disabled = false; prog();
+  }
+  function answer(sayOk) {
+    const q = S && S.q; if (!q || q.done) return; ac(); q.done = true; $('#shop-yes').disabled = true; $('#shop-fix').disabled = true;
+    const tagOk = q.tag[0] === 'ok', right = sayOk === tagOk, k = key(q.h, q.m), el = $('#shop-tag'), hint = $('#shop-hint');
+    if (right) {
+      S.right++; record(k, true, now() - q.at, null, tagOk ? inducible(q.h, q.m) : [q.tag[0]]); Pet.earn(1); Quest.add('read'); Quest.add('shop'); Quest.add('star'); SFX.ding();
+      if (!tagOk) { el.classList.add('fixed'); el.classList.remove('words'); el.textContent = fmt(q.h, q.m); SFX.bell(); }   // 修好：標籤換成對的時間
+      hint.className = 'bubble good'; hint.textContent = tx(tagOk ? 'shop.good' : 'shop.fixed'); hint.hidden = false;
+      const r = el.getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 24); const emo = $('#shop-emo'); emo.classList.remove('jump'); void emo.offsetWidth; emo.classList.add('jump');
+      const me = S; setTimeout(() => { if (S !== me) return; if (++S.i < N) next(); else finish(); }, 1100); return;
+    }
+    // 看錯：錯的標籤說「對」→ 記成那一種錯，虛線畫出標籤寫的時間；對的標籤說「要修」→ 提醒再看一次
+    Quest.add('shop');
+    if (!tagOk) { record(k, false, 0, q.tag[0], null); clock5.ghost(q.tag[1], q.tag[2]); hint.textContent = tx('shop.oops') + ' ' + tx(['hourLate', 'halfHour', 'minIndex', 'handSwap', 'minNear', 'hourOff', 'read12'].includes(q.tag[0]) ? 'hint.' + q.tag[0] : 'hint.other', { h1: q.h, h2: q.h % 12 + 1 }); el.classList.add('no'); }
+    else { record(k, false, 0, 'other', null); hint.textContent = tx('shop.wasOk'); }
+    hint.className = 'bubble over'; hint.insertAdjacentHTML('beforeend', `<button type="button" class="btn" id="shop-hint-ok">${esc(tx('hint.ok'))}</button>`); hint.hidden = false;
+    const emo = $('#shop-emo'); emo.classList.remove('tilt'); void emo.offsetWidth; emo.classList.add('tilt'); SFX.hm();
+  }
+  function finish() {
+    const all = S.right === N; $('#sdone-stars').textContent = all ? '🌟' : S.right >= N / 2 ? '⭐' : '🌙'; $('#sdone-h').textContent = all ? tx('shop.doneAll') : tx('shop.done', { n: N });
+    if (all) FX.confetti(70); $('#o-sdone').hidden = false; DB.best.shops = num(DB.best.shops) + 1; save();
+  }
+  $('#shop-yes').addEventListener('click', () => answer(true)); $('#shop-fix').addEventListener('click', () => answer(false));
+  $('#shop-hint').addEventListener('click', e => { if (!e.target.closest('#shop-hint-ok') || !S) return; $('#shop-hint').hidden = true; clock5.ghost(null); if (++S.i < N) next(); else finish(); });
+  $('#sdone-again').addEventListener('click', start); $('#sdone-home').addEventListener('click', () => { $('#o-sdone').hidden = true; goHome(); });
+  return { start, stop, q: () => S && S.q };
+})();
 
 // ---------- 時間線：從 t1 到 t2（一天裡的分鐘），跨過整點就分兩段，先畫到整點、再畫剩下的；每段上面寫幾分
 function timeline(t1, t2) {
@@ -1579,7 +1675,7 @@ const Read = (() => {
     $('#read-in').textContent = fmt(q.typed);
   });
   $('#rdone-again').addEventListener('click', start); $('#rdone-home').addEventListener('click', () => { $('#o-rdone').hidden = true; goHome(); });
-  return { start, stop, q: () => S && S.q, kind, only: k => { forceKind = k || ''; } };
+  return { start, stop, q: () => S && S.q, kind, only: k => { forceKind = k || ''; }, options };
 })();
 
 // ---------- 家長關卡：混合運算（先乘後加），答錯換題，連錯 3 次關掉 30 秒
@@ -1601,7 +1697,7 @@ $('#set-reset').addEventListener('click', () => Gate.open(() => { const lang = D
 
 // ---------- 每日任務：每天 3 個，做完徽章 +1、連續天數；沒有懲罰、沒有過期提醒
 const Quest = (() => {
-  const POOL = [{ id: 'day', n: 1, em: '🏘️' }, { id: 'read', n: 8, em: '⏰' }, { id: 'set', n: 5, em: '🐢' }, { id: 'star', n: 2, em: '⭐' }, { id: 'match', n: 1, em: '🃏' }, { id: 'vs', n: 1, em: '🤝' }];
+  const POOL = [{ id: 'day', n: 1, em: '🏘️' }, { id: 'read', n: 8, em: '⏰' }, { id: 'set', n: 5, em: '🐢' }, { id: 'star', n: 2, em: '⭐' }, { id: 'match', n: 1, em: '🃏' }, { id: 'vs', n: 1, em: '🤝' }, { id: 'shop', n: 6, em: '🔧' }];
   const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const yesterday = () => { const d = new Date(); d.setDate(d.getDate() - 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const stars = () => { let n = 0; for (let h = 1; h <= 12; h++) for (let m = 0; m < 60; m += 5) if (StarMap.stateOf(h, m) === 'star') n++; return n; };
@@ -1991,7 +2087,7 @@ if (DB.hinted) $('#hintline').hidden = true; refreshMenu(); whoChip();
 if (!DB.tut) Tut.start(false);
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock6, Tut, Music, SFX, WHO: () => WHO, keyFor, bkParse, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet, timeline, townPts, townGrow, DECOR };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock5, clock6, Shop, Tut, Music, SFX, WHO: () => WHO, keyFor, bkParse, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet, timeline, townPts, townGrow, DECOR };   // 給測試用
 })();
 </script>
 </body>
