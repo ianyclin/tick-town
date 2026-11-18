@@ -4,7 +4,6 @@ node_modules/
 .claude/settings.local.json
 www/
 android/
-ios/
 *.keystore
 *.jks
 keystore.properties
