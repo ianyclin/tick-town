@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="description" content="滴答小鎮：給小學生看時鐘、撥時鐘、算時間的遊戲。沒有廣告、不用網路。">
 <title>滴答小鎮</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<meta name="theme-color" content="#8fd0ff">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23fffaf0' stroke='%23e8c98f' stroke-width='4'/%3E%3Cpath d='M32 32V14' stroke='%23e8514f' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M32 32l12 7' stroke='%233a7bd5' stroke-width='7' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='32' r='3' fill='%235b4a3a'/%3E%3C/svg%3E">
 <style>
 @font-face{font-family:'Lilita';src:url(assets/fonts/lilita.woff2) format('woff2');font-display:swap}
@@ -194,6 +197,19 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 .ring-b{fill:transparent;transition:fill .15s}.ring-b.on,.ring-b.lit{fill:var(--minute)}
 @media (prefers-reduced-motion:reduce){.ring-n,.ring-b{transition:none}}
 .tk-lit{stroke:var(--minute);stroke-width:3.5}
+#splash{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:linear-gradient(#8fc9ff,#ffe9c9);pointer-events:none;animation:spOut .45s ease 1.25s forwards}
+#splash .sp-clock{width:min(46vw,240px);aspect-ratio:1;animation:spPop .55s cubic-bezier(.3,1.6,.5,1) both}
+#splash img{width:100%;height:100%;display:block;border-radius:22%;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+#splash .sp-title{font-size:clamp(28px,9vw,44px);font-weight:900;color:#fff;letter-spacing:2px;text-shadow:0 3px 0 rgba(0,0,0,.25),0 0 14px rgba(0,0,0,.25);animation:spIn .4s ease .35s both}
+@keyframes spPop{from{transform:scale(.3) rotate(-25deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes spIn{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+@keyframes spOut{to{opacity:0;visibility:hidden}}
+@media (prefers-reduced-motion:reduce){#splash{animation:spOut .3s ease .4s forwards}#splash .sp-clock,#splash .sp-title{animation:none}}
+.mode{position:relative}
+.m-lock{position:absolute;top:-9px;left:50%;transform:translateX(-50%);white-space:nowrap;max-width:calc(100% + 2px);overflow:hidden;text-overflow:ellipsis;padding:1px 6px;border-radius:999px;font-size:10.5px;font-weight:900;line-height:16px;background:var(--mint,#7fd8a6);color:#1b3a2a;box-shadow:0 2px 0 rgba(0,0,0,.15);pointer-events:none}
+.m-lock.locked{background:#e8dccb;color:#7a6a5a}
+.buy-msg{font-size:14px;font-weight:700;color:var(--hour);text-align:center;min-height:1em}
+.rules{margin:0;padding-left:1.2em;text-align:left;line-height:1.6}
 #s-shop .clock-wrap{width:min(66vw,36vh,320px)}
 .tag{position:relative;background:#fff8dc;border:3px solid #d9a441;border-radius:14px;padding:6px 22px 6px 30px;font-family:var(--f-num);font-size:38px;line-height:1.1;box-shadow:0 4px 0 rgba(0,0,0,.1);transform:rotate(-3deg);margin-top:-6px;min-width:120px;text-align:center}
 .tag::before{content:'';position:absolute;left:10px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#fff;border:2px solid #d9a441}
@@ -273,6 +289,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 </head>
 <body>
 <canvas id="town"></canvas>
+<div id="splash" aria-hidden="true"><div class="sp-clock"><img src="assets/icons/icon-512.png" alt=""></div><b class="sp-title" data-t="title"></b></div>
 
 <section class="screen" id="s-menu">
   <div class="top">
@@ -289,9 +306,9 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
   <div class="modes" id="modes">
     <button class="mode" type="button" data-mode="day"><span class="emo">🏘️</span><span data-t="mode.day"></span></button>
     <button class="mode" type="button" data-mode="read"><span class="emo">⏰</span><span data-t="mode.read"></span></button>
-    <button class="mode" type="button" data-mode="match"><span class="emo">🃏</span><span data-t="mode.match"></span></button>
-    <button class="mode" type="button" data-mode="shop"><span class="emo">🔧</span><span data-t="mode.shop"></span></button>
-    <button class="mode" type="button" data-mode="versus"><span class="emo">🤝</span><span data-t="mode.versus"></span></button>
+    <button class="mode" type="button" data-mode="match" id="go-match"><span class="m-lock" hidden></span><span class="emo">🃏</span><span data-t="mode.match"></span></button>
+    <button class="mode" type="button" data-mode="shop" id="go-shop"><span class="m-lock" hidden></span><span class="emo">🔧</span><span data-t="mode.shop"></span></button>
+    <button class="mode" type="button" data-mode="versus" id="go-versus"><span class="m-lock" hidden></span><span class="emo">🤝</span><span data-t="mode.versus"></span></button>
   </div>
 </section>
 
@@ -449,6 +466,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
     <div class="row"><span class="lab"><span data-t="set.chime"></span><small class="sub" data-t="set.chimeD"></small></span><button class="sw" type="button" data-set="chime" aria-pressed="true" data-t="on"></button></div>
     <div class="linkrow"><button class="link-btn" type="button" id="go-tut" data-t="set.tut" style="grid-column:1/-1"></button><button class="link-btn" type="button" id="go-help" data-t="set.help"></button><button class="link-btn" type="button" id="go-about" data-t="set.about"></button></div>
     <div class="lab parent" data-t="set.parent"></div>
+    <div class="row app-only" hidden><span class="lab"><span data-t="set.unlock"></span><small class="sub" id="set-unlockD"></small></span><button class="setbtn" type="button" id="set-unlock" data-t="set.unlockGo"></button></div>
     <div class="row"><span class="lab"><span data-t="set.backup"></span><small class="sub" data-t="set.backupD"></small></span><button class="setbtn" type="button" id="go-backup" data-t="set.backupGo"></button></div>
     <div class="row"><span class="lab" id="set-resetP"></span><button class="danger" type="button" id="set-reset" data-t="set.reset"></button></div>
     <div class="row"><span class="lab"><span data-t="set.del"></span><small class="sub" id="set-delD"></small></span><button class="danger" type="button" id="set-del" data-t="set.delGo"></button></div>
@@ -489,6 +507,26 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
   </div>
 </div>
 
+<div class="overlay" id="o-lock" hidden>
+  <div class="card">
+    <div class="big">🔒</div>
+    <h3 id="lock-title" style="margin:0;text-align:center"></h3>
+    <p id="lock-p" style="margin:0;text-align:center"></p>
+    <div class="btn-col"><button class="btn" type="button" id="lock-ok" data-t="lock.ok"></button><button class="btn alt" type="button" id="lock-ask" data-t="lock.ask"></button></div>
+  </div>
+</div>
+
+<div class="overlay" id="o-buy" hidden style="z-index:7">
+  <div class="card">
+    <h3 data-t="buy.title" style="margin:0"></h3>
+    <ul class="rules" id="buy-list"></ul>
+    <p data-t="buy.thanks" style="margin:0"></p>
+    <div class="btn-col"><button class="btn" type="button" id="buy-go"></button><button class="btn alt" type="button" id="buy-restore" data-t="buy.restore"></button><button class="btn alt" type="button" id="buy-code" data-t="buy.code"></button></div>
+    <div class="buy-msg" id="buy-msg" role="status"></div>
+    <div class="btn-col"><button class="btn alt" type="button" id="buy-close" data-t="buy.later"></button></div>
+  </div>
+</div>
+
 <div class="overlay" id="o-help" hidden>
   <div class="card help">
     <div class="hhead"><h3 data-t="help.title"></h3><button class="xbtn" type="button" id="help-close" data-ta="close">✕</button></div>
@@ -514,6 +552,7 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
     <h4 data-t="about.privT"></h4><p data-t="about.priv"></p>
     <h4 data-t="about.madeT"></h4><p data-t="about.made"></p>
     <div class="legal" data-t="about.fonts"></div>
+    <button class="link-btn" type="button" id="about-privacy" data-t="about.privLink" style="align-self:center"></button>
     <p class="about-ded" data-th="about.ded"></p>
   </div>
 </div>
@@ -566,6 +605,7 @@ const STR = {
     'hint.dur1': '從 {t1} 到 {t2}，數數看兔子走了幾分鐘。', 'help.read3': '<li>選「過了多久」時，還會問 24 小時制（下午 3 點 = 15 點），和「幾點出門、幾點到，走了幾分鐘」。</li>', 'help.day3': '<li>選「過了多久」時，有些時刻會寫成 24 小時制：15:20 就是下午 3:20，烏龜指著 3。</li>', 'about.level3': '選「過了多久」時還會練：24 小時制（讀鐘時寫成 15:20，撥鐘時看到 15:20 要撥到 3:20）、從幾點到幾點過了幾分鐘（跨過整點時，提示會畫一條時間線：先走到整點，再走剩下的）、1 分鐘的小格。',
     'town.new': '小鎮多了{x}！', 'deco.flowers': '一片花', 'deco.tree': '一棵大樹', 'deco.bench': '一張長椅', 'deco.swing': '鞦韆', 'deco.fountain': '噴水池', 'deco.bakery': '麵包店', 'deco.windmill': '風車', 'deco.balloon': '熱氣球', 'help.townT': '小鎮', 'help.town': '<li>撥對時間，動物會從家裡走出去做事。</li><li>每玩完一次，小鎮就長大一點：花、大樹、長椅、鞦韆、噴水池、麵包店、風車、熱氣球。</li><li>鐘樓上的鐘，跟主選單的鐘一起走。</li>',
     'mode.shop': '修鐘店', 'menu.now': '跳到現在的時間', 'shop.say': '{who}的修鐘店：這個鐘的標籤對嗎？', 'shop.yes': '對', 'shop.fix': '要修', 'shop.good': '對！標籤沒錯。', 'shop.fixed': '修好了！', 'shop.oops': '標籤寫的是虛線的時間，跟鐘不一樣喔。', 'shop.wasOk': '這個標籤其實是對的！再看一次烏龜和兔子。', 'shop.done': '今天修了 {n} 個鐘！', 'shop.doneAll': '全部都看對了！好厲害的修鐘師傅！', 'q.shop': '在修鐘店看 {n} 個鐘', 'help.shopT': '修鐘店', 'help.shop': '<li>每個鐘都掛著一張標籤。標籤寫的時間跟鐘一樣，就按「對」；不一樣就按「要修」。</li><li>看錯了也沒關係：虛線會告訴你標籤寫的是哪個時間。</li><li>一輪 10 個鐘。</li>',
+    'lock.trialN': '試玩 {n} 次', 'lock.locked': '🔒', 'lock.title': '{name}的試玩用完囉！', 'lock.p': '小鎮的一天、幾點了、星圖和寵物都可以一直玩喔！', 'lock.ask': '給大人看', 'lock.ok': '好', 'trial.start': '免費試玩！還可以再試玩 {n} 次', 'trial.last': '免費試玩！這是最後一次', 'gate.buy': '要購買或使用優惠碼，請大人先回答這一題。', 'buy.title': '解鎖全部遊戲', 'buy.list': '<li>{g}，三個遊戲都可以一直玩。</li><li><b>一次購買，永久使用</b>：不是訂閱，沒有廣告，也沒有其他要買的東西。</li><li>這台裝置上的每個玩家都能玩。</li>', 'buy.thanks': '你的支持，讓作者能繼續做新的練習遊戲。謝謝！', 'buy.go': '購買 {p}', 'buy.goNoP': '購買', 'buy.restore': '恢復購買', 'buy.code': '使用優惠碼', 'buy.later': '之後再說', 'buy.codeAnd': '按「購買」後，在 Google Play 付款畫面點付款方式，選「兌換代碼」輸入優惠碼。', 'buy.wait': '跟商店連線中…', 'buy.done': '解鎖了！三個遊戲都可以一直玩囉！', 'buy.owned': '已經解鎖了，謝謝你的支持！', 'buy.noProd': '現在讀不到商店的商品，請稍後再試。', 'buy.codeOld': '這台裝置不能在 App 裡兌換，請到 App Store 的帳號頁面兌換代碼。', 'buy.pending': '付款還在處理中，完成後就會解鎖。', 'buy.fail': '購買沒有完成，可以再試一次。', 'buy.none': '這個帳號沒有找到購買紀錄。', 'buy.offline': '連不上商店，等一下再試。', 'set.unlock': '解鎖全部遊戲', 'set.unlockD': '小鎮的一天、幾點了免費；另外三個遊戲一次購買解鎖', 'set.unlockOk': '三個遊戲都解鎖了', 'set.unlockGo': '看看', 'about.privLink': '隱私權政策',
     'p.night': '半夜', 'p.morning': '早上', 'p.noon': '中午', 'p.afternoon': '下午', 'p.evening': '晚上',
     'ampm.am': '上午', 'ampm.pm': '下午',
     // 小鎮的作息
@@ -639,6 +679,7 @@ const STR = {
     'help.day3': '<li>With "How long?", some times are in 24-hour time: 15:20 means 3:20 PM, so Tortoise points at 3.</li>', 'about.level3': 'Level 3 also practices 24-hour time (write 15:20 when reading; set 3:20 when you see 15:20), minutes from one time to another (when it passes the hour, the hint draws a timeline: first to the hour, then the rest), and the little 1-minute ticks.',
     'town.new': 'The town got {x}!', 'deco.flowers': 'some flowers', 'deco.tree': 'a big tree', 'deco.bench': 'a bench', 'deco.swing': 'a swing', 'deco.fountain': 'a fountain', 'deco.bakery': 'a bakery', 'deco.windmill': 'a windmill', 'deco.balloon': 'a hot air balloon', 'help.townT': 'The town', 'help.town': '<li>Set the time right and an animal walks out of its house.</li><li>Every game you finish makes the town grow: flowers, a big tree, a bench, a swing, a fountain, a bakery, a windmill, a hot air balloon.</li><li>The clock tower shows the same time as the menu clock.</li>',
     'mode.shop': 'Fix-it Shop', 'menu.now': 'Jump to the time now', 'shop.say': '{who}\'s Fix-it Shop: Is this clock\'s tag right?', 'shop.yes': 'Right', 'shop.fix': 'Fix it', 'shop.good': 'Yes! The tag is right.', 'shop.fixed': 'Fixed!', 'shop.oops': 'The tag says the dotted time. That is not what the clock says.', 'shop.wasOk': 'This tag was actually right! Look at Tortoise and Rabbit again.', 'shop.done': 'You checked {n} clocks today!', 'shop.doneAll': 'All of them right! What a clock fixer!', 'q.shop': 'Check {n} clocks at the Fix-it Shop', 'help.shopT': 'Fix-it Shop', 'help.shop': '<li>Each clock has a tag. If the tag shows the same time as the clock, tap "Right". If not, tap "Fix it".</li><li>Got it wrong? No problem: the dotted hands show what the tag says.</li><li>10 clocks in a round.</li>',
+    'lock.trialN': v => `${v.n} ${v.n === 1 ? 'try' : 'tries'}`, 'lock.locked': '🔒', 'lock.title': 'No more free tries of {name}!', 'lock.p': 'You can always play Town Day, What time?, the star map and your pet!', 'lock.ask': 'For grown-ups', 'lock.ok': 'OK', 'trial.start': v => `Free try! ${v.n} more ${v.n === 1 ? 'try' : 'tries'} left`, 'trial.last': 'Free try! This is the last one', 'gate.buy': 'To buy or use a promo code, a grown-up needs to answer this first.', 'buy.title': 'Unlock all games', 'buy.list': '<li>Play all three games ({g}) as much as you like.</li><li><b>One purchase, yours to keep</b>: no subscription, no ads, nothing else to buy.</li><li>Every player on this device can play.</li>', 'buy.thanks': 'Your support helps the author keep making new practice games. Thank you!', 'buy.go': 'Buy for {p}', 'buy.goNoP': 'Buy', 'buy.restore': 'Restore purchase', 'buy.code': 'Use a promo code', 'buy.later': 'Not now', 'buy.codeAnd': 'Tap "Buy", then on the Google Play payment screen tap the payment method and choose "Redeem code".', 'buy.wait': 'Talking to the store…', 'buy.done': 'Unlocked! Play all three games anytime!', 'buy.owned': 'All unlocked. Thank you for your support!', 'buy.noProd': 'The store item isn\'t available right now. Please try again later.', 'buy.codeOld': 'This device can\'t redeem codes in the app. Please redeem it from your account page in the App Store.', 'buy.pending': 'The payment is still processing. The games unlock when it goes through.', 'buy.fail': 'The purchase did not go through. You can try again.', 'buy.none': 'No purchase found for this account.', 'buy.offline': 'Cannot reach the store. Try again later.', 'set.unlock': 'Unlock all games', 'set.unlockD': 'Town Day and What time? are free. One purchase unlocks the other three', 'set.unlockOk': 'All three games are unlocked', 'set.unlockGo': 'View', 'about.privLink': 'Privacy policy',
     'p.night': 'night', 'p.morning': 'morning', 'p.noon': 'noon', 'p.afternoon': 'afternoon', 'p.evening': 'evening',
     'ampm.am': 'AM', 'ampm.pm': 'PM',
     back: '‹ Menu', home: 'Back to menu',
@@ -712,6 +753,7 @@ const STR = {
     'hint.minOne': '{m5}分から、小さい めもり 1つが 1分。うさぎが あと いくつ すすんだか かぞえてね！', 'hint.dur1': '{t1}から {t2}まで、うさぎが なん分 すすんだか かぞえてね。', 'help.read3': '<li>「たった時間」では、24時間せい（ごご3時 = 15時）や「なん時に 出て、なん時に ついた？ なん分？」も 出るよ。</li>', 'help.day3': '<li>「たった時間」では、24時間せいで かいて ある 時こくも あるよ：15:20は ごご3:20。かめは 3を さすよ。</li>', 'about.level3': 'レベル3では、24時間制（読むときは 15:20 と書く、15:20 を見たら 3:20 に合わせる）、ある時刻から別の時刻まで何分か（ちょうどの時刻をまたぐときは、まずちょうどの時刻まで、次に残りという時間の線をヒントで描きます）、1分の小さい目もりも練習します。',
     'town.new': 'まちに {x}が できたよ！', 'deco.flowers': 'お花', 'deco.tree': '大きな 木', 'deco.bench': 'ベンチ', 'deco.swing': 'ブランコ', 'deco.fountain': 'ふんすい', 'deco.bakery': 'パンやさん', 'deco.windmill': 'ふうしゃ', 'deco.balloon': 'ききゅう', 'help.townT': 'まち', 'help.town': '<li>時こくを あわせると、どうぶつが おうちから 出かけるよ。</li><li>ゲームを 1つ おえるたびに、まちが 大きく なるよ：お花、大きな 木、ベンチ、ブランコ、ふんすい、パンやさん、ふうしゃ、ききゅう。</li><li>とけいとうの とけいは、メニューの とけいと いっしょに うごくよ。</li>',
     'mode.shop': 'とけいやさん', 'menu.now': 'いまの 時こくに する', 'shop.say': '{who}の とけいやさん：この とけいの ふだ、あってる？', 'shop.yes': 'あってる', 'shop.fix': 'なおす', 'shop.good': 'そう！ ふだは あってるよ。', 'shop.fixed': 'なおったよ！', 'shop.oops': 'ふだに かいて あるのは てんせんの 時こく。とけいと ちがうよ。', 'shop.wasOk': 'この ふだは あってたよ！ かめと うさぎを もういちど 見てね。', 'shop.done': 'きょうは {n}こ なおしたよ！', 'shop.doneAll': 'ぜんぶ せいかい！ すごい とけいやさん！', 'q.shop': 'とけいやさんで {n}こ 見る', 'help.shopT': 'とけいやさん', 'help.shop': '<li>とけいに ふだが ついてるよ。ふだの 時こくが とけいと おなじなら「あってる」、ちがったら「なおす」を おしてね。</li><li>まちがえても だいじょうぶ。てんせんが ふだの 時こくを おしえて くれるよ。</li><li>1かいで とけい 10こ。</li>',
+    'lock.trialN': 'あと{n}', 'lock.locked': '🔒', 'lock.title': '{name}の おためしは おしまい！', 'lock.p': 'まちの一日、いま何時？、星マップ、ペットは いつでも あそべるよ！', 'lock.ask': 'おうちの人むけ', 'lock.ok': 'わかった', 'trial.start': 'おためし！ あと {n}かい ためせるよ', 'trial.last': 'おためし！ これが さいごだよ', 'gate.buy': '購入やコードの入力には、大人の方がこの問題に答えてください。', 'buy.title': 'すべてのゲームを解除', 'buy.list': '<li>{g}の3つのゲームが、いつでも遊べるようになります。</li><li><b>1回の購入でずっと使えます</b>：サブスクリプションではなく、広告もほかの課金もありません。</li><li>この端末のすべてのプレイヤーが遊べます。</li>', 'buy.thanks': 'ご支援が、新しい練習ゲームづくりの力になります。ありがとうございます！', 'buy.go': '{p}で購入', 'buy.goNoP': '購入', 'buy.restore': '購入を復元', 'buy.code': 'コードを使う', 'buy.later': 'あとで', 'buy.codeAnd': '「購入」をタップし、Google Play の支払い画面で支払い方法をタップして「コードを利用」を選んでください。', 'buy.wait': 'ストアに接続中…', 'buy.done': 'ひらいたよ！ 3つの ゲームが いつでも あそべるよ！', 'buy.owned': '解除済みです。ご支援ありがとうございます！', 'buy.noProd': 'いまストアの商品を読み込めません。しばらくしてからお試しください。', 'buy.codeOld': 'この端末ではアプリ内でコードを使えません。App Store のアカウントページから引き換えてください。', 'buy.pending': 'お支払いを処理中です。完了するとゲームが解除されます。', 'buy.fail': '購入が完了しませんでした。もう一度お試しください。', 'buy.none': 'このアカウントの購入履歴が見つかりません。', 'buy.offline': 'ストアに接続できません。しばらくしてからお試しください。', 'set.unlock': 'ぜんぶの ゲームを ひらく', 'set.unlockD': 'まちの一日・いま何時？は むりょう。ほかの 3つは 1かいの 購入で ひらくよ', 'set.unlockOk': '3つの ゲームが ぜんぶ あそべるよ', 'set.unlockGo': 'みる', 'about.privLink': 'プライバシーポリシー',
     'p.night': 'よなか', 'p.morning': 'あさ', 'p.noon': 'ひる', 'p.afternoon': 'ごご', 'p.evening': 'よる',
     'ampm.am': 'ごぜん', 'ampm.pm': 'ごご',
     back: '‹ メニュー', home: 'メニューへ',
@@ -784,6 +826,7 @@ const STR = {
     'hint.minOne': '{m5}분부터 작은 눈금 하나가 1분이야. 토끼가 몇 칸 더 갔는지 세어 봐!', 'hint.dur1': '{t1}부터 {t2}까지 토끼가 몇 분 갔는지 세어 봐.', 'help.read3': '<li>"얼마나 지났지?"를 고르면 24시간제(오후 3시 = 15시)와 "몇 시에 나가서 몇 시에 도착했어? 몇 분?"도 나와.</li>', 'help.day3': '<li>"얼마나 지났지?"에서는 24시간제로 쓴 시각도 있어: 15:20 = 오후 3:20. 거북이 자리는 3이야.</li>', 'about.level3': '3단계에서는 24시간제(읽을 때는 15:20으로 쓰기, 15:20을 보면 3:20으로 맞추기), 어떤 시각부터 다른 시각까지 몇 분인지(정각을 넘어갈 때는 힌트로 먼저 정각까지, 그다음 나머지를 시간 막대로 그려 줍니다), 1분짜리 작은 눈금도 연습합니다.',
     'town.new': '마을에 {x} 생겼어!', 'deco.flowers': '꽃밭이', 'deco.tree': '큰 나무가', 'deco.bench': '벤치가', 'deco.swing': '그네가', 'deco.fountain': '분수가', 'deco.bakery': '빵집이', 'deco.windmill': '풍차가', 'deco.balloon': '열기구가', 'help.townT': '마을', 'help.town': '<li>시간을 맞게 맞추면 동물이 집에서 나와 일하러 가.</li><li>게임을 하나 끝낼 때마다 마을이 조금씩 커져: 꽃밭, 큰 나무, 벤치, 그네, 분수, 빵집, 풍차, 열기구.</li><li>시계탑의 시계는 메뉴의 시계랑 같이 움직여.</li>',
     'mode.shop': '시계 수리점', 'menu.now': '지금 시각으로', 'shop.say': '{who}의 시계 수리점: 이 시계의 이름표가 맞을까?', 'shop.yes': '맞아', 'shop.fix': '고쳐', 'shop.good': '맞아! 이름표가 맞아.', 'shop.fixed': '고쳤다!', 'shop.oops': '이름표에 쓴 건 점선 시각이야. 시계랑 달라.', 'shop.wasOk': '이 이름표는 맞았어! 거북이랑 토끼를 다시 봐.', 'shop.done': '오늘 시계 {n}개를 봤어!', 'shop.doneAll': '다 맞혔어! 최고의 시계 수리공!', 'q.shop': '시계 수리점에서 시계 {n}개 보기', 'help.shopT': '시계 수리점', 'help.shop': '<li>시계마다 이름표가 붙어 있어. 이름표 시각이 시계랑 같으면 "맞아", 다르면 "고쳐"를 눌러.</li><li>틀려도 괜찮아. 점선이 이름표에 쓴 시각을 알려 줘.</li><li>한 판에 시계 10개.</li>',
+    'lock.trialN': '체험 {n}번', 'lock.locked': '🔒', 'lock.title': '{name} 무료 체험이 끝났어!', 'lock.p': '마을의 하루, 몇 시야?, 별 지도, 펫은 언제든 할 수 있어!', 'lock.ask': '어른용', 'lock.ok': '좋아', 'trial.start': '무료 체험! {n}번 더 할 수 있어', 'trial.last': '무료 체험! 이번이 마지막이야', 'gate.buy': '구매하거나 프로모션 코드를 쓰려면 먼저 어른이 이 문제를 풀어 주세요.', 'buy.title': '모든 게임 열기', 'buy.list': '<li>세 게임({g})을 마음껏 할 수 있습니다.</li><li><b>한 번 구매로 계속 이용</b>: 구독 없음, 광고 없음, 추가 구매 없음.</li><li>이 기기의 모든 플레이어가 이용할 수 있습니다.</li>', 'buy.thanks': '구매해 주시면 제작자가 새 연습 게임을 계속 만드는 데 큰 힘이 됩니다. 감사합니다!', 'buy.go': '{p}에 구매', 'buy.goNoP': '구매', 'buy.restore': '구매 복원', 'buy.code': '프로모션 코드 사용', 'buy.later': '다음에', 'buy.codeAnd': '"구매"를 누른 뒤 Google Play 결제 화면에서 결제 수단을 누르고 "코드 사용"을 선택하세요.', 'buy.wait': '스토어에 연결 중…', 'buy.done': '열렸어! 세 게임을 언제든 할 수 있어!', 'buy.owned': '모두 열려 있습니다. 응원해 주셔서 감사합니다!', 'buy.noProd': '지금은 스토어 상품을 이용할 수 없습니다. 잠시 후 다시 시도해 주세요.', 'buy.codeOld': '이 기기에서는 앱 안에서 코드를 사용할 수 없습니다. App Store의 계정 페이지에서 사용해 주세요.', 'buy.pending': '결제가 아직 처리 중입니다. 완료되면 게임이 열립니다.', 'buy.fail': '구매가 완료되지 않았습니다. 다시 시도할 수 있습니다.', 'buy.none': '이 계정의 구매 내역이 없습니다.', 'buy.offline': '스토어에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.', 'set.unlock': '모든 게임 열기', 'set.unlockD': '마을의 하루, 몇 시야?는 무료예요. 한 번 구매하면 나머지 세 게임이 열려요', 'set.unlockOk': '세 게임이 모두 열렸어요', 'set.unlockGo': '보기', 'about.privLink': '개인정보 처리방침',
     'p.night': '밤', 'p.morning': '아침', 'p.noon': '낮', 'p.afternoon': '오후', 'p.evening': '저녁',
     'ampm.am': '오전', 'ampm.pm': '오후',
     back: '‹ 메뉴', home: '메뉴로',
@@ -856,6 +899,7 @@ const STR = {
     'help.day3': '<li>En "¿Cuánto tiempo?" algunas horas están en formato de 24 horas: 15:20 son las 3:20 p. m., así que la tortuga apunta al 3.</li>', 'about.level3': 'El nivel 3 también practica el formato de 24 horas (escribir 15:20 al leer; poner 3:20 al ver 15:20), los minutos entre dos horas (si pasa por la hora en punto, la pista dibuja una línea de tiempo: primero hasta la hora en punto y luego el resto) y las rayitas de 1 minuto.',
     'town.new': '¡El pueblo tiene {x}!', 'deco.flowers': 'flores', 'deco.tree': 'un árbol grande', 'deco.bench': 'una banca', 'deco.swing': 'un columpio', 'deco.fountain': 'una fuente', 'deco.bakery': 'una panadería', 'deco.windmill': 'un molino', 'deco.balloon': 'un globo aerostático', 'help.townT': 'El pueblo', 'help.town': '<li>Si pones bien la hora, un animal sale de su casa.</li><li>Cada juego que terminas hace crecer el pueblo: flores, un árbol grande, una banca, un columpio, una fuente, una panadería, un molino y un globo aerostático.</li><li>El reloj de la torre marca la misma hora que el reloj del menú.</li>',
     'mode.shop': 'El taller', 'menu.now': 'Ir a la hora de ahora', 'shop.say': 'El taller de {who}: ¿la etiqueta de este reloj está bien?', 'shop.yes': 'Bien', 'shop.fix': 'Arreglar', 'shop.good': '¡Sí! La etiqueta está bien.', 'shop.fixed': '¡Arreglado!', 'shop.oops': 'La etiqueta dice la hora punteada. No es la del reloj.', 'shop.wasOk': '¡Esta etiqueta estaba bien! Mira otra vez la tortuga y el conejo.', 'shop.done': '¡Revisaste {n} relojes hoy!', 'shop.doneAll': '¡Todos bien! ¡Qué buen relojero!', 'q.shop': 'Revisa {n} relojes en el taller', 'help.shopT': 'El taller', 'help.shop': '<li>Cada reloj tiene una etiqueta. Si la etiqueta dice la misma hora que el reloj, toca "Bien". Si no, toca "Arreglar".</li><li>¿Te equivocaste? No pasa nada: las agujas punteadas muestran lo que dice la etiqueta.</li><li>10 relojes por partida.</li>',
+    'lock.trialN': v => `${v.n} gratis`, 'lock.locked': '🔒', 'lock.title': '¡Ya probaste {name}!', 'lock.p': '¡Siempre puedes jugar Día del pueblo, ¿Qué hora es?, el mapa y tu mascota!', 'lock.ask': 'Para adultos', 'lock.ok': 'OK', 'trial.start': v => `¡Prueba gratis! ${v.n === 1 ? 'Te queda' : 'Te quedan'} ${v.n}`, 'trial.last': '¡Prueba gratis! Es la última', 'gate.buy': 'Para comprar o usar un código promocional, primero un adulto debe responder esto.', 'buy.title': 'Desbloquear todos los juegos', 'buy.list': '<li>Juegue los tres juegos ({g}) todo lo que quiera.</li><li><b>Una sola compra, para siempre</b>: sin suscripción, sin anuncios, nada más que comprar.</li><li>Todos los jugadores de este dispositivo pueden jugar.</li>', 'buy.thanks': 'Su apoyo ayuda al autor a seguir creando juegos de práctica. ¡Gracias!', 'buy.go': 'Comprar por {p}', 'buy.goNoP': 'Comprar', 'buy.restore': 'Restaurar compra', 'buy.code': 'Usar código promocional', 'buy.later': 'Ahora no', 'buy.codeAnd': 'Toque "Comprar" y, en la pantalla de pago de Google Play, toque el método de pago y elija "Canjear código".', 'buy.wait': 'Conectando con la tienda…', 'buy.done': '¡Desbloqueado! Los tres juegos ya están disponibles.', 'buy.owned': 'Todo desbloqueado. ¡Gracias por su apoyo!', 'buy.noProd': 'El artículo no está disponible en la tienda en este momento. Inténtelo más tarde.', 'buy.codeOld': 'Este dispositivo no puede canjear códigos en la app. Canjéelo desde la página de su cuenta en el App Store.', 'buy.pending': 'El pago aún se está procesando. Los juegos se desbloquean cuando se complete.', 'buy.fail': 'La compra no se completó. Puede intentarlo de nuevo.', 'buy.none': 'No se encontró ninguna compra en esta cuenta.', 'buy.offline': 'No se puede conectar con la tienda. Inténtelo más tarde.', 'set.unlock': 'Desbloquear todos los juegos', 'set.unlockD': 'Día del pueblo y ¿Qué hora es? son gratis. Una compra desbloquea los otros tres', 'set.unlockOk': 'Los tres juegos están desbloqueados', 'set.unlockGo': 'Ver', 'about.privLink': 'Política de privacidad',
     'p.night': 'de la noche', 'p.morning': 'de la mañana', 'p.noon': 'del mediodía', 'p.afternoon': 'de la tarde', 'p.evening': 'de la noche',
     'ampm.am': 'a. m.', 'ampm.pm': 'p. m.',
     back: '‹ Menú', home: 'Volver al menú',
@@ -939,7 +983,7 @@ function fitTitle() {
   h.style.visibility = h.scrollWidth > h.clientWidth + 1 ? 'hidden' : '';   // 兩行也放不下（窄手機又有名字鈕）：標題藏起來，名字鈕和其他鈕優先
 }
 addEventListener('resize', fitTitle); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitle);
-function setLang() { LANG = STR[DB.set.lang] ? DB.set.lang : langAuto(); applyStr(); }
+function setLang() { LANG = STR[DB.set.lang] ? DB.set.lang : langAuto(); applyStr(); if (typeof renderLocks === 'function' && $('#go-match')) try { renderLocks(); } catch (e) {} }
 
 // ---------- 存檔
 // 多人（照九九）：WHO = { cur, list:[{id, name}] } 存在 tick-town-who；每個人一把存檔 key，第一個人 id 是空字串（沿用舊 key，舊存檔自動變成第一個人）
@@ -1183,7 +1227,7 @@ const Town = (() => {
     if (im) { const w = sz * im.width / im.height; g.save(); g.translate(x, y); if (dir < 0) g.scale(-1, 1); if (br < 0.9) g.filter = `brightness(${Math.max(0.45, br)})`; g.drawImage(im, -w / 2, -sz, w, sz); g.restore(); }
     else { g.save(); g.font = `${sz * 0.8}px system-ui,sans-serif`; g.textAlign = 'center'; g.textBaseline = 'bottom'; if (br < 0.9) g.globalAlpha = Math.max(0.55, br); g.fillText(EMO[k] || '', x, y); g.restore(); }
   }
-  function critter(k, x, y, sz, br, prop, dir) { thing(k, x, y, sz, br, dir); if (prop) { g.save(); g.font = `${sz * 0.42}px system-ui,sans-serif`; g.textAlign = 'center'; g.textBaseline = 'bottom'; g.fillText(prop, x + sz * 0.45, y - sz * 0.05); g.restore(); } }
+  function critter(k, x, y, sz, br, prop, dir) { thing(k, x, y, k === 'bunny' && IMG.bunny ? sz * 0.82 : sz, br, dir); if (prop) { g.save(); g.font = `${sz * 0.42}px system-ui,sans-serif`; g.textAlign = 'center'; g.textBaseline = 'bottom'; g.fillText(prop, x + sz * 0.45, y - sz * 0.05); g.restore(); } }
   // 鐘樓：鐘面跟著現在的時刻
   function tower(x, gy, tw, br, night) {
     const th = tw * 2.0, y = gy - th;
@@ -1200,15 +1244,15 @@ const Town = (() => {
   function deco(gy, hw, br, layer) {
     const k = DECOR.filter(d => townPts() >= d.at).map(d => d.id), has = id => k.includes(id);
     if (layer === 'back') {
-      if (has('tree')) thing('tree', W * 0.035 + hw * 0.4, gy + 2, hw * 1.5, br);
-      if (has('windmill')) thing('windmill', W - hw * 0.55, gy + 2, hw * 1.9, br);
-      if (has('bakery')) thing('bakery', W * 0.5 - hw * 1.55, gy + 4, hw * 1.15, br);
+      if (has('windmill')) thing('windmill', W - hw * 0.3, gy + 2, hw * 2.3, br);
       return;
     }
     if (has('flowers')) { thing('flowers', W * 0.07, gy + hw * 0.45, hw * 0.7, br); thing('flowers', W * 0.93, gy + hw * 0.45, hw * 0.7, br); }
-    if (has('bench')) thing('bench', W * 0.68, gy + hw * 1.35, hw * 0.85, br);
-    if (has('swing')) thing('swing', W * 0.86, gy + hw * 1.6, hw * 1.3, br);
-    if (has('fountain')) thing('fountain', W * 0.5, gy + hw * 1.45, hw * 1.15, br);
+    if (has('tree')) thing('tree', W * 0.1, gy + hw * 1.55, hw * 1.35, br);
+    if (has('bakery')) thing('bakery', W * 0.28, gy + hw * 1.6, hw * 0.95, br);
+    if (has('bench')) thing('bench', W * 0.68, gy + hw * 1.35, hw * 0.5, br);
+    if (has('swing')) thing('swing', W * 0.86, gy + hw * 1.6, hw * 0.85, br);
+    if (has('fountain')) thing('fountain', W * 0.5, gy + hw * 1.45, hw * 0.95, br);
     if (has('balloon')) thing('balloon', W * 0.16, H * 0.3 + Math.sin(t / 37) * 8, hw * 1.1, Math.max(br, 0.7));
   }
   function draw() {
@@ -1252,7 +1296,7 @@ const Town = (() => {
     deco(gy, hw, br, 'front');   // 房子前面的（花、長椅、鞦韆、噴水池）與天上的（熱氣球）
     // 動物：依作息站在自己家門口（小熊住第 2 間、小兔第 5 間、松鼠第 6 間），晚上貓頭鷹在鐘樓上
     const sc = scene(t), sz = hw * 1.3, door = i => HX[i] + hw / 2;
-    const AT = { wake: ['bear', door(1), ''], breakfast: ['bear', door(1), '🥣'], school: ['bunny', door(4) + hw * 0.7, '🎒'], lunch: ['squirrel', door(5), '🍙'], class: ['bunny', door(4), '📖'], park: ['bear', W * 0.36, '⚽'], dinner: ['squirrel', door(5), '🍲'], bath: ['bunny', door(4), '🛁'], story: ['bear', door(1), '📚'] }[sc];
+    const AT = { wake: ['bear', door(1), ''], breakfast: ['bear', door(1), '🥣'], school: ['bunny', door(4) + hw * 0.7, IMG.bunny ? '' : '🎒'], lunch: ['squirrel', door(5), '🍙'], class: ['bunny', door(4), '📖'], park: ['bear', W * 0.36, '⚽'], dinner: ['squirrel', door(5), '🍲'], bath: ['bunny', door(4), '🛁'], story: ['bear', door(1), '📚'] }[sc];
     const walking = walks.map(w => w.who);
     if (AT && !walking.includes(AT[0])) critter(AT[0], AT[1], gy + hw * 0.45, sz, br, AT[2]);
     if (sc === 'sleep' || sc === 'owl') critter('owl', W / 2, gy - tw * 2.05, hw * 0.9, 1, '');
@@ -1335,12 +1379,12 @@ $('.sw[data-set=sound]').addEventListener('click', () => { DB.set.sound = !DB.se
 $('.sw[data-set=music]').addEventListener('click', () => { DB.set.music = !DB.set.music; save(); DB.set.music ? Music.start() : Music.stop(); renderSet(); SFX.ding(); });
 $('.sw[data-set=chime]').addEventListener('click', () => { DB.set.chime = !DB.set.chime; save(); renderSet(); if (DB.set.chime) SFX.chime(1); else SFX.chimeStop(); });   // 打開時敲一下讓大人聽聽看
 $('.sw[data-set=ring]').addEventListener('click', () => { DB.set.ring = !DB.set.ring; save(); setRingAll(DB.set.ring); renderSet(); SFX.ding(); });
-document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for (const id of ['#o-gate', '#o-who', '#o-bk', '#o-help', '#o-about', '#o-quest', '#o-set']) if (!$(id).hidden) { $(id).hidden = true; if (id === '#o-gate') { $('#gate-cancel').click(); return; } if (id === '#o-help' || id === '#o-about' || id === '#o-bk') $('#o-set').hidden = false; return; } });
+document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for (const id of ['#o-gate', '#o-buy', '#o-lock', '#o-who', '#o-bk', '#o-help', '#o-about', '#o-quest', '#o-set']) if (!$(id).hidden) { $(id).hidden = true; if (id === '#o-gate') { $('#gate-cancel').click(); return; } if (id === '#o-help' || id === '#o-about' || id === '#o-bk') $('#o-set').hidden = false; return; } });
 
 // ---------- 模式（還在蓋）
 let toastT = 0;
 function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = false; el.classList.toggle('mid', mode === 'versus'); clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, 2200); }
-$('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (!b) return; ac(); if (b.dataset.mode === 'day') { Day.start(); return; } if (b.dataset.mode === 'read') { Read.start(); return; } if (b.dataset.mode === 'match') { Match.start(); return; } if (b.dataset.mode === 'versus') { Versus.open(); return; } if (b.dataset.mode === 'shop') { Shop.start(); return; } toast(tx('soon')); SFX.ding(); });
+$('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (!b) return; ac(); if (!paidGate(b.dataset.mode)) return; if (b.dataset.mode === 'day') { Day.start(); return; } if (b.dataset.mode === 'read') { Read.start(); return; } if (b.dataset.mode === 'match') { Match.start(); return; } if (b.dataset.mode === 'versus') { Versus.open(); return; } if (b.dataset.mode === 'shop') { Shop.start(); return; } toast(tx('soon')); SFX.ding(); });
 
 // ---------- 畫面切換
 function show(name) { $$('.screen').forEach(sc => sc.hidden = sc.id !== 's-' + name); mode = name; $('#toast').hidden = true; if (name !== 'menu') SFX.chimeStop(); Music.track(name === 'menu' ? Music.forTime(clock.get().tot) : name === 'tut' || name === 'map' || name === 'pet' ? 'town' : 'play'); }
@@ -1695,6 +1739,87 @@ const Gate = (() => {
 })();
 $('#set-reset').addEventListener('click', () => Gate.open(() => { const lang = DB.set.lang; DB = fresh(); DB.set.lang = lang; DB.tut = true; save(); setRingAll(DB.set.ring); Music.start(); setLang(); renderSet(); clock.setSnap(5); clock.set(7, 0); showTime(clock.get().tot); Quest.ensure(); refreshMenu(); toast(tx('reset.done')); }, true));   // 只清目前這個人的紀錄（名字和其他人不動）
 
+// ---------- App 版解鎖（網頁版全部免費，照九九）
+// App 裡小鎮的一天、幾點了、星圖、寵物、每日任務免費；配對、修鐘店、兩個人一起各試玩 3 次，之後一次購買 unlock_all（Capgo native-purchases，StoreKit 2／Play Billing，不經過第三方伺服器）。
+// 解鎖是整台裝置的（不分玩家），存在 UL_KEY；真正的依據是商店：每次開啟、回前景都會再問一次（重裝 app 也會自己回來）。購買在家長關卡（a + b × c）後面；孩子看得到的字不提價錢。
+const CAP = window.Capacitor;
+const APP = !!(CAP && CAP.isNativePlatform && CAP.isNativePlatform());
+const IOS = APP && CAP.getPlatform && CAP.getPlatform() === 'ios';
+const PAID = ['match', 'shop', 'versus'], UL_KEY = 'tick-town-unlock', IAP_ID = 'unlock_all', TRIALS = 3;
+let UL = { ok: false, trial: {} };
+try { const u = JSON.parse(localStorage.getItem(UL_KEY) || 'null'); if (u && typeof u === 'object' && !Array.isArray(u)) { const tr = {}; if (u.trial && typeof u.trial === 'object') PAID.forEach(m => { const v = Math.round(num(u.trial[m])); if (v > 0) tr[m] = Math.min(TRIALS, v); }); UL = { ok: u.ok === true, trial: tr }; } } catch (e) {}
+const saveUL = () => { try { localStorage.setItem(UL_KEY, JSON.stringify(UL)); } catch (e) {} };
+const unlocked = () => !APP || UL.ok;
+const trialLeft = m => Math.max(0, TRIALS - (UL.trial[m] || 0));
+const mustBuy = m => PAID.includes(m) && !unlocked() && !trialLeft(m);
+const famOK = m => !PAID.includes(m) || unlocked() || trialLeft(m) > 0;   // 每日任務只出玩得到的遊戲
+document.documentElement.classList.toggle('app', APP);
+function renderLocks() {
+  PAID.forEach(m => { const e = $(`#go-${m} .m-lock`); if (!e) return; const show = !unlocked(); e.hidden = !show; if (!show) return; const n = trialLeft(m); e.textContent = n ? tx('lock.trialN', { n }) : tx('lock.locked'); e.classList.toggle('locked', !n); });
+  $$('.app-only').forEach(e => e.hidden = !APP); renderSetUnlock();
+}
+// 開付費遊戲：試玩用完就給鎖卡（孩子看的只說「試玩用完囉，其他的都可以一直玩」，大人按「給大人看」才進家長關卡）；還有試玩就扣一次
+function paidGate(m) {
+  if (!PAID.includes(m) || unlocked()) return true;
+  if (mustBuy(m)) { openLock(m); return false; }
+  UL.trial[m] = (UL.trial[m] || 0) + 1; saveUL(); renderLocks(); const n = trialLeft(m); setTimeout(() => toast(n ? tx('trial.start', { n }) : tx('trial.last')), 0); return true;   // 等遊戲畫面開好再說（換畫面會把 toast 收掉）
+}
+function openLock(m) { $('#lock-title').textContent = tx('lock.title', { name: tx('mode.' + m) }); $('#lock-p').textContent = tx('lock.p'); $('#o-lock').hidden = false; }
+const askBuy = () => Gate.open(openBuy, false);   // 購買用簡單的那種（a + b × c）
+const paidNames = () => PAID.map(m => tx('mode.' + m)).join(tx('sep'));
+const IAP = APP && CAP.nativePromise ? (m, o) => CAP.nativePromise('NativePurchases', m, o || {}) : null;
+let iapPrice = '', iapBusy = false, iapNoProd = false, iapPend = false, buyTok = 0;
+const buyMsg = t => { $('#buy-msg').textContent = t || ''; };
+function renderBuy() {
+  const ok = unlocked();
+  $('#buy-list').innerHTML = tx('buy.list', { g: esc(paidNames()) });
+  $('#buy-go').textContent = iapPrice ? tx('buy.go', { p: iapPrice }) : tx('buy.goNoP');
+  ['#buy-go', '#buy-restore', '#buy-code'].forEach(id => { $(id).hidden = ok; $(id).disabled = iapBusy; });
+  if (!ok && iapNoProd && !iapPrice) { $('#buy-go').disabled = true; if (!iapBusy) buyMsg(tx('buy.noProd')); }
+  if (!ok && iapPend) { $('#buy-go').disabled = true; if (!iapBusy) buyMsg(tx('buy.pending')); }
+  if (ok) buyMsg(tx('buy.owned'));
+  $('#buy-close').textContent = tx(ok ? 'lock.ok' : 'buy.later');
+}
+function openBuy() { buyMsg(''); renderBuy(); $('#o-buy').hidden = false; loadProd(++buyTok, 1); }
+function loadProd(tok, retry) {   // 問商店價錢；讀不到就 2.5 秒後自動再問一次
+  if (!IAP || iapPrice) return;
+  const fail = () => { iapNoProd = true; renderBuy(); if (retry && tok === buyTok) setTimeout(() => { if (tok === buyTok && !$('#o-buy').hidden) loadProd(tok, retry - 1); }, 2500); };
+  IAP('getProducts', { productIdentifiers: [IAP_ID], productType: 'inapp' }).then(r => { const p = r && r.products && r.products[0]; if (p && p.priceString) { iapPrice = String(p.priceString); iapNoProd = false; renderBuy(); if (!unlocked() && !iapBusy && !iapPend) buyMsg(''); } else fail(); }).catch(fail);
+}
+function setUnlocked(quiet) { if (UL.ok) return; UL.ok = true; saveUL(); renderLocks(); Quest.ensure(); if (!$('#o-buy').hidden) renderBuy(); if (!quiet) { toast(tx('buy.done')); SFX.ding(); FX.confetti(60); } }
+const ownedTx = p => p && p.productIdentifier === IAP_ID && (IOS || p.purchaseState === '1');   // Android 只有 "1" 是付完款
+async function iapCheck(quiet) {   // 問商店這個帳號買過沒有：true 有、false 沒有、null 問不到；Android 的優惠碼購買要在 3 天內確認
+  if (!IAP) return null;
+  try { const r = await IAP('getPurchases', IOS ? { onlyCurrentEntitlements: true } : { productType: 'inapp' }); const p = ((r && r.purchases) || []).find(ownedTx); if (!p) return false; if (!IOS && p.isAcknowledged === false && p.purchaseToken) IAP('acknowledgePurchase', { purchaseToken: p.purchaseToken }).catch(() => {}); setUnlocked(quiet); return true; } catch (e) { return null; }
+}
+const cancelled = e => /cancel/i.test(String((e && (e.code || e.message)) || e));
+async function iapBuy() {
+  if (!IAP || iapBusy || UL.ok) return;
+  iapBusy = true; renderBuy(); buyMsg(tx('buy.wait'));
+  try {
+    const t = await IAP('purchaseProduct', { productIdentifier: IAP_ID, productType: 'inapp', isConsumable: false });
+    if (IOS || ownedTx(t)) { if (!IOS && t.isAcknowledged === false && t.purchaseToken) IAP('acknowledgePurchase', { purchaseToken: t.purchaseToken }).catch(() => {}); setUnlocked(); buyMsg(tx('buy.owned')); }
+    else if (t && t.purchaseState === '2') { iapPend = true; buyMsg(tx('buy.pending')); }
+    else if (await iapCheck()) buyMsg(tx('buy.owned')); else buyMsg(tx('buy.fail'));
+  } catch (e) {
+    const m = String((e && (e.code || e.message)) || e);
+    if (cancelled(e)) buyMsg(''); else if (/pending/i.test(m)) { iapPend = true; buyMsg(tx('buy.pending')); } else buyMsg((await iapCheck()) ? tx('buy.owned') : tx('buy.fail'));
+  }
+  iapBusy = false; renderBuy();
+}
+async function iapRestore() { if (!IAP || iapBusy) return; iapBusy = true; renderBuy(); buyMsg(tx('buy.wait')); if (IOS) { try { await IAP('restorePurchases'); } catch (e) {} } const r = await iapCheck(); iapBusy = false; renderBuy(); buyMsg(r ? tx('buy.owned') : r === false ? tx('buy.none') : tx('buy.offline')); }
+function iapCode() { if (!IOS) { buyMsg(tx('buy.codeAnd')); return; } IAP('presentOfferCodeRedeemSheet').then(() => setTimeout(() => iapCheck(), 1500)).catch(() => buyMsg(tx('buy.codeOld'))); }
+function renderSetUnlock() { if (!APP) return; $('#set-unlockD').textContent = tx(UL.ok ? 'set.unlockOk' : 'set.unlockD'); $('#set-unlock').hidden = UL.ok; }
+$('#lock-ok').addEventListener('click', () => { $('#o-lock').hidden = true; });
+$('#lock-ask').addEventListener('click', () => { $('#o-lock').hidden = true; askBuy(); });
+$('#buy-close').addEventListener('click', () => { $('#o-buy').hidden = true; });
+$('#buy-go').addEventListener('click', iapBuy); $('#buy-restore').addEventListener('click', iapRestore); $('#buy-code').addEventListener('click', iapCode);
+$('#set-unlock').addEventListener('click', () => { $('#o-set').hidden = true; askBuy(); });
+if (IAP) { if (CAP.addListener) try { CAP.addListener('NativePurchases', 'transactionUpdated', () => iapCheck()); } catch (e) {} document.addEventListener('visibilitychange', () => { if (!document.hidden && !UL.ok) iapCheck(); }); iapCheck(true); }
+// 隱私權政策：外部連結，家長關卡（簡單的）後才打開；App 裡用系統瀏覽器
+const PRIVACY_URL = { 'zh-Hant': 'https://ianyclin.github.io/tick-town/privacy/', en: 'https://ianyclin.github.io/tick-town/privacy/en.html', ja: 'https://ianyclin.github.io/tick-town/privacy/ja.html', ko: 'https://ianyclin.github.io/tick-town/privacy/ko.html', es: 'https://ianyclin.github.io/tick-town/privacy/es.html' };
+$('#about-privacy').addEventListener('click', () => Gate.open(() => { window.open(PRIVACY_URL[LANG] || PRIVACY_URL.en, '_blank', 'noopener'); }, false));
+
 // ---------- 每日任務：每天 3 個，做完徽章 +1、連續天數；沒有懲罰、沒有過期提醒
 const Quest = (() => {
   const POOL = [{ id: 'day', n: 1, em: '🏘️' }, { id: 'read', n: 8, em: '⏰' }, { id: 'set', n: 5, em: '🐢' }, { id: 'star', n: 2, em: '⭐' }, { id: 'match', n: 1, em: '🃏' }, { id: 'vs', n: 1, em: '🤝' }, { id: 'shop', n: 6, em: '🔧' }];
@@ -1703,7 +1828,7 @@ const Quest = (() => {
   const stars = () => { let n = 0; for (let h = 1; h <= 12; h++) for (let m = 0; m < 60; m += 5) if (StarMap.stateOf(h, m) === 'star') n++; return n; };
   function ensure() {
     const D = DB.daily, t = today(); if (D.date === t && Array.isArray(D.tasks) && D.tasks.length === 3) return;
-    const pool = POOL.slice().sort(() => Math.random() - 0.5).slice(0, 3);
+    const pool = POOL.filter(q => famOK(q.id === 'vs' ? 'versus' : q.id)).sort(() => Math.random() - 0.5).slice(0, 3);
     D.date = t; D.tasks = pool.map(q => ({ id: q.id, n: q.n, p: 0, done: false })); D.starBase = stars(); D.badges = num(D.badges); D.streak = num(D.streak); save();
   }
   function text(q) { return tx('q.' + q.id, { n: q.n }); }
@@ -2083,11 +2208,12 @@ try { if (sessionStorage.getItem(BK_DONE)) { sessionStorage.removeItem(BK_DONE);
 
 // ---------- 開始
 loadDB(); setLang(); setRingAll(DB.set.ring); Town.resize(); Music.track(Music.forTime(DB.free)); Music.start();
-if (DB.hinted) $('#hintline').hidden = true; refreshMenu(); whoChip();
+if (DB.hinted) $('#hintline').hidden = true; refreshMenu(); whoChip(); renderLocks();
+setTimeout(() => { const sp = $('#splash'); if (sp) sp.remove(); }, 1900);
 if (!DB.tut) Tut.start(false);
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
-window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock5, clock6, Shop, Tut, Music, SFX, WHO: () => WHO, keyFor, bkParse, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet, timeline, townPts, townGrow, DECOR };   // 給測試用
+window.__tt = { clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock5, clock6, Shop, Tut, Music, SFX, WHO: () => WHO, keyFor, bkParse, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet, timeline, townPts, townGrow, DECOR, UL: () => UL, APP };   // 給測試用
 })();
 </script>
 </body>

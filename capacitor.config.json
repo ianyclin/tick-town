@@ -1,0 +1,19 @@
+{
+  "appId": "io.github.ianyclin.ticktown",
+  "appName": "滴答小鎮",
+  "webDir": "www",
+  "backgroundColor": "#8fd0ff",
+  "server": {
+    "hostname": "localhost",
+    "androidScheme": "https",
+    "iosScheme": "capacitor"
+  },
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#8fd0ff"
+  },
+  "android": {
+    "backgroundColor": "#8fd0ff",
+    "allowMixedContent": false
+  }
+}

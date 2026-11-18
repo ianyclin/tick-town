@@ -40,6 +40,10 @@
    - **教學** `Tut`（`#s-tut`、`clock6`）：全新的第一次打開（沒有存檔）先動手撥三下：兔子跑一圈（7:00 起，離開 50 分以上才算）→ 烏龜拖到 3 → 兔子拖到 6（半），最後三張大卡選「要練什麼」＝ `set.level`（全遊戲唯一決定難度的地方，設定頁同一個）。選了才存 `DB.tut = true`；沒選就關掉下次還是教學。有教學以前的舊存檔（`loadDB()` 的 `had`）當作看過；清除紀錄後也不再跳。「我會了」直接到選等級；設定頁「再看一次怎麼玩」`Tut.start(true)`（現在的等級先亮著）。鐘面為教學加了 `clock.only = 'm'／'h'`（只准拖一根，碰另一根呼叫 `onWrong` → 提醒「那是烏龜喔」並讓對的那根閃 `nudge()`）、`mark(n)` 圈出數字；手指 👆 用 CSS 變數 `--a0`／`--a1`／`--r` 沿著把手的路徑示範，孩子一拖就消失、放手沒做到 1.8 秒後再示範並出虛線（不說錯）。
    - **誰在玩**（照九九）：`WHO = { cur, list:[{id, name}] }` 存在 `tick-town-who`，最多 4 人；每個人一把存檔 `keyFor(id)`（第一個人 id 是空字串＝舊的 `tick-town-v1`，舊存檔自動變成第一個人；之後的人 `tick-town-v1:p…`）。語言、難度、外圈、聲音、紀錄、星圖、寵物、每日任務都跟著人。主選單的名字鈕 `#go-who` 只在有名字或兩個人以上才出現（一個孩子的家庭不多一顆鈕）；設定頁最上面「誰在玩」一定有。沒名字時先取名才能新增；新增的人先存一份 `tut:false`（沿用語言和聲音），`switchWho` 後跑教學選等級。上排放不下時 `fitTitle()` 先縮、再兩行、再把標題藏起來（`visibility:hidden`），名字鈕在 375px 以下只剩圖示。
    - **家長區**：備份紀錄（`#o-bk`，匯出不用關卡；匯入取代所有人，要難的家長關卡）、清除紀錄（只清目前這個人，名字留著）、刪除玩家（名字和存檔一起刪，`switchWho(next, true)` 不要先存回去；只有一個沒名字的人時不顯示）。備份格式照九九：`{ app:'tick-town', v:1, at, who, saves:{ key: 存檔 } }`，檔案 `tick-town-backup-日期.json` 或備份碼 `TTWN1:` + base64；`bkParse()` 檢查 app、id 格式、最多 4 人，前後多貼了字也讀得懂；`bkApply()` 寫完 `location.reload()`，期間 `bkFrozen` 擋住 `save()`。關於頁最後有獻詞 `about.ded`。
+   - **App 版**（`APP` = Capacitor 原生殼才是 true；網頁版永遠全部免費）：`PAID = ['match','shop','versus']`，各試玩 `TRIALS = 3` 次（`paidGate(m)`，主選單鈕上 `.m-lock` 標籤「試玩 n 次」／🔒），用完出鎖卡 `#o-lock`（孩子看的不提價錢），「給大人看」→ 家長關卡（簡單的）→ 購買卡 `#o-buy`（價錢從商店讀）。購買照九九用 Capgo native-purchases（`IAP_ID = 'unlock_all'`，Android 要 acknowledge），每次開啟、回前景都問商店，`UL` 存在 `tick-town-unlock`（整台裝置共用）。每日任務 `famOK()` 只出玩得到的遊戲。測試用假的 `window.Capacitor`（`tests/app.js`）。
+   - **開場動畫** `#splash`：圖示跳出來＋標題，1.3 秒淡出，`pointer-events:none` 不擋點擊，1.9 秒後拿掉；`RM` 只淡出。
+   - **隱私權政策**：關於頁的鈕 → 家長關卡（簡單的）→ `window.open(PRIVACY_URL[LANG])`。頁面在 `privacy/`、`support/`，`tools/make-privacy.py` 產生（改政策改那個檔）。
+   - **打包**：`npm run www`（`tools/make-www.mjs` 複製 index.html、manifest、assets 到 `www/`）；`android/`、`ios/` 不進版控，GitHub Actions `android-apk.yml` 每次 `npx cap add android` 再建 debug APK，檢查權限只准 BILLING／網路，放到 Release `android-latest`。圖示 `tools/make-icon.py`；商店圖 `tools/store-art.cjs`；上架步驟 `docs/launch.md`。
    - **修鐘店** `Shop`（`#s-shop`、`clock5`）：一輪 10 個鐘，每個掛一張標籤（等級 1 有一半寫成文字），孩子按「對」或「要修」。出題照讀鐘的權重；標籤 55% 是錯的，錯法用 `Read.options()`（跟讀鐘干擾卡同一套，照孩子的弱點挑）。看對：記 `r:h:m` 對（錯的標籤看出來＝那一種錯法衰減）、標籤修好變綠；錯的標籤按「對」：記那一種錯、虛線畫出標籤寫的時間＋該錯法的提示（`.bubble.over`、按「知道了」下一題）；對的標籤按「要修」：記 other。`DB.best.shops`、每日任務 `shop`（看 6 個）、小鎮長大也算。主選單 5 個鈕（≤ 420px 字縮小、西班牙文「A dos」）。
    - **「現在」鈕** `#go-now`（主選單鐘的右下角）：跳到裝置現在的時刻（照吸附的格子），整點也會報時。
    - **三年級（等級 3）**：讀鐘每題先 `kind()` 抽種類：一般讀鐘、`h24`（鐘上 15:20，打 24 小時制，鍵 `a:H:m`；下午沒加 12／早上多加 12 → `ampm`，提示 `hint.ampm`／`hint.ampmAm`）、`dur`（旁邊寫出發時刻、鐘上是到的時刻，打分鐘數，鍵 `g:出發:分鐘`；跨整點時「只算分鐘相減／只算到整點／只算整點後」→ `carry`，差 1～4 → `minOne`）。權重 h24 = 1 + 3×`errs.ampm`、dur = 1 + 3×`errs.carry`，上一題同種 ×0.5；`Read.only(k)` 測試用。小鎮的一天等級 3 下午以後的事有 40～80% 寫成 24 小時制（`task.h24`，目標寫 15:20＋「24 小時制」），分鐘對、小時錯 → `ampm`、提示 `hint.ampmSet`。`classifySet` 差 1～4 分 → `minOne`，提示 `clock.countOne(m)` 從 5 的倍數開始小格一格一格亮（`.tk-lit`）。**時間線** `timeline(t1, t2)`：SVG，跨整點分兩段（橘：到整點、紅：剩下的），每段上面寫 +幾分，一段一段畫（`RM` 就直接出現）；用在讀鐘 dur 的提示與答對、小鎮的一天「走了幾分鐘」撥錯。打數字時的提示 `.bubble.over` 蓋在鍵盤上（不擠掉鐘），按「知道了」收起來；`fitRead()` 題目長時把鐘縮小到鍵盤放得下（最小 110px）。
@@ -78,9 +82,10 @@
 - [x] 教學（`Tut`：第一次打開動手撥三下、選要練什麼；設定可再看）
 - [x] 鐘面外圈（`setRing`：00～55、兔子指到的亮、提示一格一格亮；設定可關）
 - [x] 韓文、西班牙文（`STR.ko`／`STR.es`，`timePhrase`）
+- [x] App 版準備（開場動畫、圖示與 manifest、隱私權與支援頁、解鎖與購買、Capacitor 設定、自動建 APK、商店文案與圖；`tests/app.js`）— 剩下要 Ian 操作的在 `docs/launch.md`
 - [x] 修鐘店（`Shop`：標籤對不對，錯的標籤照弱點挑；`tests/shop.js`）、「現在」鈕
-- [x] 小鎮像小鎮（鐘樓、動物站在家門口、撥對時走出門、玩越多小鎮越大；`tests/town.js`）— 小兔與裝飾的插畫等本機 session 用 ChatGPT 生（`art/town-raw/`），還沒到之前用 emoji
+- [x] 小鎮像小鎮（鐘樓、動物站在家門口、撥對時走出門、玩越多小鎮越大；`tests/town.js`）；小兔與裝飾插畫（ChatGPT 生，原圖 `art/town-raw/`，`tools/cut-town.py` 切）
 - [x] 三年級內容（24 小時制、走了幾分鐘、時間線提示、1 分的小格；`tests/grade3.js`）
 - [x] 誰在玩（最多 4 人）、備份紀錄、家長區（備份／清除／刪除玩家）、獻詞（`tests/who.js`）
 - [x] 音樂、報時（`Music` 三首、`SFX.chime`；設定頁音樂／音效／報時三個開關；`tests/sound.js`）
-- [ ] 其餘待辦與順序見 `ROADMAP.md`（插畫、新玩法、App 版）
+- [ ] 其餘待辦與順序見 `ROADMAP.md`（上架操作，見 `docs/launch.md`）

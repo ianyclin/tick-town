@@ -1,0 +1,115 @@
+# 自動建 Android 測試 APK（debug 版，只能自己安裝測試，不能上架）。照九九流星隊。
+# 什麼時候跑：推到 main（改到遊戲或打包相關檔案時），或在 Actions 頁面手動按「Run workflow」。
+# Android 專案（android/）不放在 repo 裡，每次用 `npx cap add android` 重新產生，所以不用維護一大堆原生檔。
+# 成品：
+#   - 每次 run 的頁面最下面「Artifacts」→ tick-town-apk-<編號>（zip，裡面是 APK），保留 30 天，要登入 GitHub。
+#   - main 上的版本另外放到固定的 Release「android-latest」（測試版），手機點這個網址就直接下載 APK，不用登入：
+#     https://github.com/ianyclin/tick-town/releases/download/android-latest/tick-town.apk
+name: Android APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'manifest.json'
+      - 'assets/**'
+      - 'capacitor.config.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tools/make-www.mjs'
+      - '.github/workflows/android-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: 安裝 Capacitor
+        run: npm ci
+
+      - name: 產生 Android 專案、複製遊戲檔
+        run: |
+          node tools/make-www.mjs
+          npx cap add android
+          npx cap sync android
+
+      - name: 建 debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: 檢查 APK（套件名、權限、遊戲檔一樣）
+        run: |
+          APK=android/app/build/outputs/apk/debug/app-debug.apk
+          AAPT2=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -1)
+          "$AAPT2" dump badging "$APK" | grep -E "^package:|^minSdkVersion|^targetSdkVersion|^application-label:|uses-permission"
+          # 只准這幾個權限：付款（BILLING）、Google 付款程式庫帶進來的網路權限（遊戲本身不連網）、androidx 給本 app 的內部權限。多出任何一個就失敗
+          EXTRA=$("$AAPT2" dump permissions "$APK" | sed -n "s/^uses-permission: name='\([^']*\)'.*/\1/p" | grep -v -x -E "com.android.vending.BILLING|android.permission.INTERNET|android.permission.ACCESS_NETWORK_STATE|io.github.ianyclin.ticktown.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" || true)
+          if [ -n "$EXTRA" ]; then echo "::error::APK 多了沒預期的權限：$EXTRA"; exit 1; fi
+          unzip -p "$APK" assets/public/index.html | cmp - index.html
+          mv "$APK" "tick-town-${{ github.run_number }}.apk"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tick-town-apk-${{ github.run_number }}
+          path: tick-town-${{ github.run_number }}.apk
+          retention-days: 30
+          if-no-files-found: error
+
+  # 只有 main 才更新「最新測試版」
+  release:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    concurrency:
+      group: android-latest-release
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: tick-town-apk-${{ github.run_number }}
+
+      - name: 更新 Release「android-latest」
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          cp "tick-town-${{ github.run_number }}.apk" tick-town.apk
+          cat > notes.md <<NOTES
+          **滴答小鎮 Android 測試版**（自動建置第 ${{ github.run_number }} 次，commit ${GITHUB_SHA::7}）
+
+          這是 debug 測試版，只給自己和測試的人安裝，不能上架。每次 main 更新都會換成最新的一版，網址不變。
+
+          **安裝**：用 Android 手機點下面的 \`tick-town.apk\` 下載 → 打開 → 第一次會問是否允許安裝，允許 → 安裝。已經裝過的，直接安裝就會覆蓋更新，紀錄保留。
+          NOTES
+          gh release delete android-latest --yes --cleanup-tag || true
+          gh release create android-latest tick-town.apk \
+            --prerelease \
+            --target "$GITHUB_SHA" \
+            --title "Android 測試版（最新）" \
+            --notes-file notes.md
