@@ -401,7 +401,7 @@ h1{color:#fff;text-shadow:0 2px 0 #e58aa2,0 4px 0 rgba(150,70,95,.35),0 6px 10px
 @media (prefers-reduced-motion:reduce){.menu-pet,.menu-pet span,.menu-pet svg{animation:none!important}}
 /* 平板（iPad）：整個介面等比例放大。畫面和卡片先排成「寬高 ÷ k」的大小（容器單位 cqw/cqh 跟著這個大小），再整個放大 k 倍；
    滑鼠／手指的座標和 getBoundingClientRect 都是放大後的，拖指針的角度算法不受影響 */
-.screen,.overlay{container-type:size}
+:root.big .screen,:root.big .overlay{container-type:size}   /* 只有放大時才當容器；手機上沒有容器，cqw/cqh 就等於畫面大小（跟原本的 vw/vh 一樣，不會被上下留白扣掉） */
 :root.big .screen,:root.big .overlay{inset:0 auto auto 0;width:calc(100vw / var(--k));height:calc(100vh / var(--k));transform:scale(var(--k));transform-origin:0 0}
 :root.big .toast{transform:translateX(-50%) scale(var(--k));transform-origin:50% 100%}
 :root.big .half .clock-wrap{width:min(62cqw,27cqh,280px)}:root.big .robot{font-size:48px}
