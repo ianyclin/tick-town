@@ -2210,7 +2210,7 @@ $('#buy-go').addEventListener('click', iapBuy); $('#buy-restore').addEventListen
 $('#set-unlock').addEventListener('click', () => { $('#o-set').hidden = true; askBuy(); });
 if (IAP) { if (CAP.addListener) try { CAP.addListener('NativePurchases', 'transactionUpdated', () => iapCheck()); } catch (e) {} document.addEventListener('visibilitychange', () => { if (!document.hidden && !UL.ok) iapCheck(); }); iapCheck(true); }
 // 隱私權政策：外部連結，家長關卡（簡單的）後才打開；App 裡用系統瀏覽器
-const PRIVACY_URL = { 'zh-Hant': 'https://ianyclin.github.io/tick-town/privacy/', en: 'https://ianyclin.github.io/tick-town/privacy/en.html', ja: 'https://ianyclin.github.io/tick-town/privacy/ja.html', ko: 'https://ianyclin.github.io/tick-town/privacy/ko.html', es: 'https://ianyclin.github.io/tick-town/privacy/es.html' };
+const PRIVACY_URL = { 'zh-Hant': 'https://tick-town.sanbaofang.com/privacy/', en: 'https://tick-town.sanbaofang.com/privacy/en.html', ja: 'https://tick-town.sanbaofang.com/privacy/ja.html', ko: 'https://tick-town.sanbaofang.com/privacy/ko.html', es: 'https://tick-town.sanbaofang.com/privacy/es.html' };
 $('#about-privacy').addEventListener('click', () => Gate.open(() => { window.open(PRIVACY_URL[LANG] || PRIVACY_URL.en, '_blank', 'noopener'); }, false));
 
 // ---------- 每日任務：每天 3 個，做完徽章 +1、連續天數；沒有懲罰、沒有過期提醒
@@ -2345,7 +2345,7 @@ const Versus = (() => {
 // ---------- 家長報告（設定的家長區）：這 7 天練了多少、最常搞混的是哪幾種錯（每一種附例子、遊戲裡怎麼練、在家怎麼練）、星圖點亮多少。只看這台裝置的紀錄
 const REP_ERRS = ['hourLate', 'minIndex', 'handSwap', 'halfHour', 'minOne', 'carry', 'ampm', 'read12'];   // 報告會講的錯法（差一格、小時看錯、判不出來的不講，沒有具體的建議）
 const REP_EX = { hourLate: [7, 50], minIndex: [7, 20], handSwap: [3, 40], halfHour: [6, 30], minOne: [4, 23], carry: [2, 50], ampm: [15, 20], read12: [12, 30] };   // 每種錯法旁邊那座小鐘的時刻
-const JIUJIU_URL = 'https://ianyclin.github.io/jiujiu-game/';   // 九九流星隊（同一位作者）；打開前要過家長關卡；名字和一句話用 App Store 上各語言的名稱和副標題（九九 repo 的 store/listing.json）
+const JIUJIU_URL = 'https://jiujiu.sanbaofang.com/';   // 九九流星隊（同一位作者）；打開前要過家長關卡；名字和一句話用 App Store 上各語言的名稱和副標題（九九 repo 的 store/listing.json）
 const Report = (() => {
   function data(now = new Date()) {
     const key = i => { const d = new Date(now); d.setDate(d.getDate() - i); return dayKey(d); };

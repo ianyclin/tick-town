@@ -66,7 +66,7 @@ jobs:
           AAPT2=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -1)
           "$AAPT2" dump badging "$APK" | grep -E "^package:|^minSdkVersion|^targetSdkVersion|^application-label:|uses-permission"
           # 只准這幾個權限：付款（BILLING）、Google 付款程式庫帶進來的網路權限（遊戲本身不連網）、androidx 給本 app 的內部權限。多出任何一個就失敗
-          EXTRA=$("$AAPT2" dump permissions "$APK" | sed -n "s/^uses-permission: name='\([^']*\)'.*/\1/p" | grep -v -x -E "com.android.vending.BILLING|android.permission.INTERNET|android.permission.ACCESS_NETWORK_STATE|io.github.ianyclin.ticktown.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" || true)
+          EXTRA=$("$AAPT2" dump permissions "$APK" | sed -n "s/^uses-permission: name='\([^']*\)'.*/\1/p" | grep -v -x -E "com.android.vending.BILLING|android.permission.INTERNET|android.permission.ACCESS_NETWORK_STATE|com.sanbaofang.ticktown.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" || true)
           if [ -n "$EXTRA" ]; then echo "::error::APK 多了沒預期的權限：$EXTRA"; exit 1; fi
           unzip -p "$APK" assets/public/index.html | cmp - index.html
           mv "$APK" "tick-town-${{ github.run_number }}.apk"

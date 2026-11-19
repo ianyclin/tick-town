@@ -115,7 +115,7 @@ DB = {
 | 鐘樓小隊：看時鐘練習 | Clock Tower Squad | とけいとうたい |
 | 烏龜與兔子的時鐘 | Tortoise & Hare Clock | かめとうさぎのとけい |
 
-repo 建議 `ianyclin/tick-town`，Bundle ID `io.github.ianyclin.ticktown`。
+repo 建議 `ianyclin/tick-town`，Bundle ID `com.sanbaofang.ticktown`。
 
 ## 10. 開發順序
 1. 新 repo、CLAUDE.md（兒童規範、上架經驗、本文件）。

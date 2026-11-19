@@ -45,7 +45,7 @@ const KEY = `(i => { const d = new Date(); d.setDate(d.getDate() - i); return d.
     await p.click('#o-report [data-promo]'); await p.waitForTimeout(200); ok(await p.isVisible('#o-gate') && !(await p.evaluate(() => window.__opened)), '按「去看看」先出家長關卡，還沒打開網頁');
     const q = await p.textContent('#gate-q'), m = q.match(/(\d+)\s*\+\s*(\d+)\s*×\s*(\d+)/), ans = String(+m[1] + m[2] * m[3]);
     for (const ch of ans) await p.click(`#gate-keys [data-k="${ch}"]`); await p.waitForTimeout(300);
-    ok(/jiujiu-game/.test(await p.evaluate(() => window.__opened || '')), `算對才打開 ${await p.evaluate(() => window.__opened)}`);
+    ok(/jiujiu\.sanbaofang\.com/.test(await p.evaluate(() => window.__opened || '')), `算對才打開 ${await p.evaluate(() => window.__opened)}`);
     await p.click('#rep-close'); ok(await p.isHidden('#o-report') && await p.isVisible('#o-set'), '關掉回到設定');
     await p.click('#go-report'); await p.keyboard.press('Escape'); ok(await p.isHidden('#o-report') && await p.isVisible('#o-set'), 'Esc 也回到設定');
     ok(p.errs.length === 0, `無錯誤 ${p.errs.join(' | ')}`); await p.close(); }

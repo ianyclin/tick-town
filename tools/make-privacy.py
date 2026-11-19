@@ -3,7 +3,7 @@
 
 用法：python3 tools/make-privacy.py
 內容在這個檔案裡（改政策就改這裡再跑一次）。頁面跟遊戲一起放在 GitHub Pages：
-https://ianyclin.github.io/tick-town/privacy/（中文）、en.html、ja.html、ko.html、es.html；支援頁 support/。
+https://tick-town.sanbaofang.com/privacy/（中文）、en.html、ja.html、ko.html、es.html；支援頁 support/。
 """
 import os, html
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
