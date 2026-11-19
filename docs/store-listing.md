@@ -510,15 +510,19 @@ Acorns (used to feed the pet) are earned only by answering questions and cannot 
 
 ## 四、內購項目 `ticktown.unlock_all`
 
-| 語言 | 顯示名稱 | 說明 |
+| 語言 | 顯示名稱（上限 30） | 說明（上限 45 字元） |
 |---|---|---|
 | 繁體中文 | 解鎖全部遊戲 | 配對、修鐘店、兩個人一起可以一直玩，學習報告多出例子和建議。 |
-| English | Unlock all games | Play Match, Fix-it Shop and Two players any time, plus tips in the report. |
+| English | Unlock all games | Play all 3 games anytime, plus report tips |
 | 日本語 | すべてのゲームをアンロック | 3つのゲームがいつでも遊べて、学習レポートに例とアドバイスが出ます。 |
 | 한국어 | 모든 게임 잠금 해제 | 세 게임을 마음껏 하고 학습 보고서에 예시와 조언이 나옵니다. |
-| Español | Desbloquear todo | Juega Parejas, El taller y A dos cuando quieras, con consejos en el informe. |
+| Español | Desbloquear todo | Los 3 juegos sin límite y consejos |
 
-審查用截圖：**在 TestFlight 買之前**先截購買卡（買過就還原不了）。
+審查用截圖：`store/iap/purchase-zh-Hant.png`（1206 × 2622，`tools/iap-shot.cjs` 用遊戲本身產生，價錢是示意）。審查備註見下。
+
+```text
+One non-consumable purchase that unlocks Match, Fix-it Shop and Two players (each can be tried 3 times for free) and adds the detailed advice to the parents' Progress report. To reach it: Settings (gear, top right) -> For grown-ups -> Unlock all games -> View -> solve the parental gate (e.g. 5 + 2 x 13 = 31). Restore purchase is on the same card.
+```
 
 ## 五、截圖與圖形
 
