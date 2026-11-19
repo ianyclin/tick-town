@@ -4,6 +4,13 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
 const SHOT = process.argv[2];
 (async () => {
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox'] });
+  // 鐘樓不能洩漏答案：小鎮的一天裡鐘樓的指針跟著孩子撥的鐘，不是目標時刻；回主選單後恢復跟著小鎮
+  { const p = await b.newPage(); await p.addInitScript(`localStorage.setItem('tick-town-v1', JSON.stringify({ tut: true, hinted: true, set: { lang: 'zh-Hant', sound: false, music: false, level: 2 } }));`); await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(400);
+    await p.click('[data-mode=day]'); await p.waitForTimeout(200);
+    const r = await p.evaluate(() => ({ h: window.__tt.Town.handsAt(), c: window.__tt.clock2.get().tot, T: window.__tt.Day.target() })); ok(r.h === r.c, `一開始鐘樓跟著孩子的鐘（${r.h}，目標 ${r.T}）`);
+    const r2 = await p.evaluate(() => { const c = window.__tt.clock2, T = window.__tt.Day.target(), A = (T + 135) % 1440; c.set(Math.floor(A / 60), A % 60); c.onChange(c.get().tot, true); return { h: window.__tt.Town.handsAt(), A, T }; });
+    ok(r2.h === r2.A && r2.h !== r2.T, `拖指針時鐘樓跟著動（${r2.h}），不是答案 ${r2.T}`);
+    await p.click('#s-day [data-home]'); await p.waitForTimeout(150); ok(await p.evaluate(() => window.__tt.Town.handsAt()) === null, '回主選單：鐘樓又跟著小鎮的時刻'); await p.close(); }
   // 錯誤分類
   { const p = await b.newPage(); await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(300);
     const cs = (T, A) => p.evaluate(([T, A]) => window.__tt.classifySet(T, A), [T, A]);

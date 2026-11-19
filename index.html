@@ -1671,7 +1671,7 @@ const Town = (() => {
       if (night) glow(tcx, tcy, tcr * 2.8, 0.5); g.fillStyle = night ? '#fff6cf' : '#fffaf0'; g.beginPath(); g.arc(tcx, tcy, tcr, 0, 7); g.fill();
       const eg = g.createRadialGradient(tcx, tcy, tcr * 0.7, tcx, tcy, tcr); eg.addColorStop(0, 'rgba(200,150,90,0)'); eg.addColorStop(1, 'rgba(200,150,90,.28)'); g.fillStyle = eg; g.beginPath(); g.arc(tcx, tcy, tcr, 0, 7); g.fill();
       for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; g.fillStyle = '#b89a82'; g.beginPath(); g.arc(tcx + Math.sin(a) * tcr * 0.82, tcy - Math.cos(a) * tcr * 0.82, Math.max(0.9, tcr * (i % 3 ? 0.045 : 0.075)), 0, 7); g.fill(); }
-      const mA = (t % 60) / 60 * Math.PI * 2, hA = ((t / 60) % 12) / 12 * Math.PI * 2; g.lineCap = 'round';
+      const tt = ht === null ? t : ht, mA = (tt % 60) / 60 * Math.PI * 2, hA = ((tt / 60) % 12) / 12 * Math.PI * 2; g.lineCap = 'round';   // 鐘樓的指針：平常跟著小鎮的時刻；小鎮的一天跟著孩子撥的鐘（ht），不然就把答案告訴孩子了
       g.strokeStyle = '#3f86dc'; g.lineWidth = Math.max(2.6, tcr * 0.2); g.beginPath(); g.moveTo(tcx, tcy); g.lineTo(tcx + Math.sin(hA) * tcr * 0.48, tcy - Math.cos(hA) * tcr * 0.48); g.stroke();
       g.strokeStyle = '#ee5a58'; g.lineWidth = Math.max(2, tcr * 0.14); g.beginPath(); g.moveTo(tcx, tcy); g.lineTo(tcx + Math.sin(mA) * tcr * 0.76, tcy - Math.cos(mA) * tcr * 0.76); g.stroke();
       g.fillStyle = '#ffc64f'; g.beginPath(); g.arc(tcx, tcy, Math.max(1.8, tcr * 0.12), 0, 7); g.fill();
@@ -1707,7 +1707,8 @@ const Town = (() => {
   function scene(min) { const h = min / 60; return h < 6 ? 'sleep' : h < 7 ? 'wake' : h < 8 ? 'breakfast' : h < 12 ? 'school' : h < 13 ? 'lunch' : h < 15.5 ? 'class' : h < 17.5 ? 'park' : h < 19 ? 'dinner' : h < 20 ? 'bath' : h < 21 ? 'story' : 'owl'; }
   addEventListener('resize', resize); kick();
   let rq = 0; const later = () => { if (!rq) rq = requestAnimationFrame(() => { rq = 0; draw(); }); };   // 換畫面、換題目後版面變了：下一格再畫一次（地平線要跟著字框的位置）
-  return { set(min) { t = min; draw(); if (mode !== 'menu') later(); }, redraw: later, resize, scene, lit(n, tot) { litN = n; litT = tot; draw(); }, walk, walking: () => walks.map(w => w.who), anim: () => !!idleT, img: () => Object.keys(SPR).filter(k => SPR[k].ok) };
+  let ht = null;
+  return { set(min) { t = min; draw(); if (mode !== 'menu') later(); }, hands(min) { ht = min; later(); }, handsAt: () => ht, redraw: later, resize, scene, lit(n, tot) { litN = n; litT = tot; draw(); }, walk, walking: () => walks.map(w => w.who), anim: () => !!idleT, img: () => Object.keys(SPR).filter(k => SPR[k].ok) };
 })();
 
 // ---------- 小鎮會長大：玩完幾次就多一樣東西
@@ -1931,7 +1932,7 @@ const Day = (() => {
     lastDay = day.map(k => k.t); return day;
   }
   function start() { S = { tasks: makeDay(), i: 0, lit: 0, tries: 0 }; hintN = 0; show('day'); $('#o-done').hidden = true; next(); }
-  function stop() { clearTimeout(judgeT); clock2.ghost(null); clock2.countStop(); S = null; }
+  function stop() { clearTimeout(judgeT); clock2.ghost(null); clock2.countStop(); Town.hands(null); S = null; }
   function lights() { const t = S ? S.tasks.length : 7, n = S ? S.lit : 0; $('#day-lights').innerHTML = `<span aria-hidden="true">${ic('bulb')}</span>${tx('day.lights', { n, t })}`; $('#day-lights').setAttribute('aria-label', tx('day.aria', { n, t })); Town.lit(n, t); }
   function next() {
     const k = S.tasks[S.i]; S.tries = 0; clearTimeout(judgeT); clock2.ghost(null); clock2.countStop(); $('#day-hint').hidden = true;
@@ -1943,7 +1944,7 @@ const Day = (() => {
     else { $('#day-say').textContent = tx('say.' + k.sc, { who, t: tw }); $('#day-target').innerHTML = `${w.digital}<small>${w.ampm}</small>`; }
     const startAt = k.from !== undefined ? k.from : S.i ? S.tasks[S.i - 1].t : (k.t === 360 ? 5 * 60 : 6 * 60);   // 鐘從上一件事的時刻開始（「走了幾分鐘」的題從出發時刻開始；第一題剛好 6:00 就從 5:00）
     S.ok = false; S.lastA = -1;
-    clock2.setSnap(DB.set.level === 3 ? 1 : 5); clock2.set(Math.floor(startAt / 60), startAt % 60); words(startAt); Town.set(k.t); lights();
+    clock2.setSnap(DB.set.level === 3 ? 1 : 5); clock2.set(Math.floor(startAt / 60), startAt % 60); words(startAt); Town.hands(startAt); Town.set(k.t); lights();
   }
   function words(tot) { const w = timeWords(tot); $('#day-words').textContent = LANG === 'en' ? w.digital : LANG === 'es' ? w.main[0].toUpperCase() + w.main.slice(1) : w.main; }   // 西班牙文自己一行，第一個字大寫（Las 6 en punto）
   function judge() {
@@ -1972,7 +1973,7 @@ const Day = (() => {
     const me = S; setTimeout(() => { if (S !== me) return; if (S.i + 1 < S.tasks.length) { S.i++; next(); } else finish(); }, 1500);
   }
   function finish() { FX.fireworks(); FX.confetti(80); $('#done-p').textContent = tx('day.doneP', { who: tx('who.bear') }); $('#o-done').hidden = false; DB.best.days = num(DB.best.days) + 1; save(); Quest.add('day'); }
-  clock2.onChange = (tot, dragging) => { if (!S || S.ok) return; words(tot); clearTimeout(judgeT); $('#day-hint').hidden = true; clock2.countStop(); if (dragging) return; if (tot % 720 === S.tasks[S.i].t % 720) { S.ok = true; good(); } else judgeT = setTimeout(judge, 2000); };   // 撥對後再碰指針不再算一次   // 鐘面是 12 小時的，上下午不管
+  clock2.onChange = (tot, dragging) => { if (!S || S.ok) return; words(tot); Town.hands(tot); clearTimeout(judgeT); $('#day-hint').hidden = true; clock2.countStop(); if (dragging) return; if (tot % 720 === S.tasks[S.i].t % 720) { S.ok = true; good(); } else judgeT = setTimeout(judge, 2000); };   // 撥對後再碰指針不再算一次   // 鐘面是 12 小時的，上下午不管
   clock2.onSnap = (tot, bell) => { SFX.tick(); };
   $('#day-hint').addEventListener('click', e => { if (e.target.closest('#day-hint-ok')) { $('#day-hint').hidden = true; SFX.tick(); } });
   $('#done-again').addEventListener('click', start); $('#done-home').addEventListener('click', () => { $('#o-done').hidden = true; goHome(); });
