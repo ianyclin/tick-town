@@ -382,6 +382,19 @@ h1{color:#fff;text-shadow:0 2px 0 #e58aa2,0 4px 0 rgba(150,70,95,.35),0 6px 10px
 .promo{display:flex;align-items:center;gap:10px;background:var(--pan);box-shadow:var(--clay-s);border-radius:18px;padding:10px 12px;text-align:left}
 .promo img{width:56px;height:56px;border-radius:13px;flex:none;box-shadow:0 3px 6px rgba(110,70,60,.25)}
 .promo div{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}.promo small{font-size:12px;color:var(--muted);font-weight:700}.promo b{font-size:17px}.promo span{font-size:13px;color:var(--muted)}
+#pet-show,#pet-pick{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%}   /* 寵物頁：蛋、名字、進度條、餵食鈕都置中 */
+.pet-nm{display:flex;align-items:center;justify-content:center;gap:8px}.pet-nm .link-btn{min-height:44px;padding:0 14px;font-size:14px;color:var(--ink);text-shadow:none}
+.pname-egg{width:120px;height:120px;margin:0 auto}.pname-egg svg{width:100%;height:100%;overflow:visible}
+/* 主選單：寵物在小鎮的草地上走來走去（照九九），點牠進寵物頁；減少動態效果時站著不動 */
+.menu-pet{position:absolute;left:0;width:var(--ps,88px);height:var(--ps,88px);padding:0;border:0;background:none;z-index:0;animation:petWalk 18s ease-in-out infinite alternate}
+.menu-pet span{display:block;width:100%;height:100%;animation:petFace 36s steps(1) infinite}   /* 翻面和上下跳分兩層，疊在同一個 transform 會被壓扁 */
+.menu-pet svg{width:100%;height:100%;overflow:visible;animation:petBob .7s ease-in-out infinite alternate}
+.menu-pet.egg{animation:none}.menu-pet.egg span{animation:none}.menu-pet.egg svg{animation:eggRock 1.6s ease-in-out infinite;transform-origin:50% 92%}
+@keyframes petWalk{to{transform:translateX(var(--walk,calc(100vw - 96px)))}}
+@keyframes petFace{0%{transform:scaleX(1)}50%{transform:scaleX(-1)}}
+@keyframes petBob{to{transform:translateY(-4px)}}
+@keyframes eggRock{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+@media (prefers-reduced-motion:reduce){.menu-pet,.menu-pet span,.menu-pet svg{animation:none!important}}
 /* 圖示與插畫 */
 .ic{width:1.15em;height:1.15em;display:inline-block;vertical-align:-0.2em;flex:none;object-fit:contain}
 img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px 2px rgba(90,50,40,.25))}
@@ -409,6 +422,7 @@ img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px
     <div class="scene" id="scene"></div>
   </div>
   <div class="hintline" id="hintline" data-t="menu.hint"></div>
+  <button class="menu-pet" id="menu-pet" type="button" data-ta="menu.pet" hidden><span id="menu-pet-img"></span></button>
   <div class="modes" id="modes">
     <button class="mode" type="button" data-mode="day"><span class="emo" data-ic="house"></span><span data-t="mode.day"></span></button>
     <button class="mode" type="button" data-mode="read"><span class="emo" data-ic="alarm"></span><span data-t="mode.read"></span></button>
@@ -642,6 +656,16 @@ img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px
     <p class="legal" data-t="rep.note"></p>
   </div>
 </div>
+<div class="overlay" id="o-pname" hidden>
+  <div class="card">
+    <h3 data-t="pname.t" style="margin:0;text-align:center"></h3>
+    <div class="pname-egg" id="pname-egg"></div>
+    <p data-t="pname.p"></p>
+    <input class="name-in" id="pname-in" type="text" maxlength="8" autocomplete="off" enterkeyhint="done">
+    <div class="name-sug" id="pname-sug"></div>
+    <div class="btn-col"><button class="btn" type="button" id="pname-ok" data-t="pname.ok"></button><button class="btn alt" type="button" id="pname-back" data-t="pname.back"></button></div>
+  </div>
+</div>
 <div class="overlay" id="o-help" hidden>
   <div class="card help">
     <div class="hhead"><h3 data-t="help.title"></h3><button class="xbtn" type="button" id="help-close" data-ta="close" data-ic="close"></button></div>
@@ -745,7 +769,7 @@ const STR = {
     'gear.title': '配件（集到幾個徽章就能戴）', 'gear.need': '完成每日任務，收集徽章就能戴喔！（還差 {n} 個）', 'gear.badges': '徽章 ×{n}',
     'gear.bow': '蝴蝶結', 'gear.scarf': '圍巾', 'gear.glasses': '墨鏡', 'gear.hat': '帽子', 'gear.star': '星星髮夾', 'gear.crown': '皇冠',
     'q.acorn': '橡果 +{n}',
-    'help.petT': '寵物', 'help.pet': '<li>答對題目會掉<b>橡果</b>，到寵物頁餵牠，餵夠了牠就長大：蛋 → 幼體 → 少年 → 成體 → 究極。</li><li>每日任務的徽章集到幾個，就能給牠戴配件。</li><li>不餵也不會怎樣，牠會乖乖等你。</li>',
+    'help.petT': '寵物', 'help.pet': '<li>答對題目會掉<b>橡果</b>，到寵物頁餵牠，餵夠了牠就長大：蛋 → 幼體 → 少年 → 成體 → 究極。</li><li>每日任務的徽章集到幾個，就能給牠戴配件。</li><li>不餵也不會怎樣，牠會乖乖等你。</li><li>選蛋的時候可以幫牠<b>取名字</b>，之後按名字旁邊的「改名字」也能改。</li>',
     'match.say': '翻兩張牌，找出一樣的時刻！', 'match.prog': '{n}/{t}', 'match.done': '全部配對好了！', 'match.p': '翻了 {n} 次牌。', 'q.match': '完成一次「配對」',
     'quest.title': '今日任務', 'quest.badges': '徽章 ×{n}', 'quest.streak': '連續 {n} 天', 'quest.doneOne': '任務完成！', 'quest.doneAll': '今天的任務都完成了！徽章 +1',
     'q.day': '做完「小鎮的一天」', 'q.read': '讀對 {n} 個時刻', 'q.set': '幫動物撥對 {n} 次', 'q.star': '點亮 {n} 顆新星星',
@@ -773,6 +797,7 @@ const STR = {
     'set.report': "學習報告", 'set.reportD': "最常搞混的地方、建議怎麼練", 'set.reportGo': "看看", 'rep.title': "{name}的學習報告", 'rep.title0': "學習報告", 'rep.week': "這 7 天", 'rep.days': "練了幾天", 'rep.n': "答了幾次", 'rep.acc': "一次就答對", 'rep.up': "比前一週進步了（前一週一次就答對 {p}%）。", 'rep.same': "跟前一週差不多（前一週一次就答對 {p}%）。", 'rep.down': "這週錯得比前一週多一點（前一週一次就答對 {p}%）。常常是題目變難了，不用擔心。", 'rep.none': "這 7 天還沒有紀錄。讓孩子玩幾輪「小鎮的一天」或「幾點了？」，這裡就會出現他最常搞混的地方。", 'rep.errT': "最常搞混的地方", 'rep.errNone': "目前沒有特別常犯的錯。繼續玩就好，遊戲會自己挑還不熟的時刻來出題。", 'rep.cnt': "這兩週 {n} 次", 'rep.ex': "例如", 'rep.game': "遊戲裡", 'rep.home': "在家可以", 'rep.hourLate.x': "鐘上是 7:50，孩子說成 8:50。短針快走到 8，看起來像 8 點。", 'rep.hourLate.g': "多玩「幾點了？」。遊戲發現這個錯，會多出 40 分到 55 分的時刻，答錯時會提醒「烏龜還沒走到 8」。", 'rep.hourLate.h': "看家裡的鐘，在快要整點的時候問：「短針過了 8 沒有？」還沒過，就還是 7 點多。", 'rep.minIndex.x': "鐘上是 7:20，孩子說成 7:04。長針指著 4，就說 4 分。", 'rep.minIndex.g': "到設定把「外圈的分鐘數字」打開，再玩「小鎮的一天」。撥錯時鐘會從 12 開始 5、10、15 一格一格數給他看。", 'rep.minIndex.h': "指著鐘面的數字一起 5 個 5 個數：1 是 5 分、2 是 10 分、3 是 15 分。", 'rep.handSwap.x': "鐘上是 3:40，孩子說成 8:15。把長針當成幾點、短針當成幾分。", 'rep.handSwap.g': "到設定按「再看一次怎麼玩」：烏龜是短針（幾點），兔子是長針（幾分）。再玩「小鎮的一天」。", 'rep.handSwap.h': "每次都用同一個順序：先找短針說「幾點」，再找長針說「幾分」。", 'rep.halfHour.x': "鐘上是 6:30，孩子說成 7:30，或把短針撥在正 6 的位置。半點時短針其實在 6 和 7 中間。", 'rep.halfHour.g': "到設定把「要練什麼」調成「整點、半點」練幾天，再調回來。", 'rep.halfHour.h': "半點的時候一起看短針：「它走到 6 和 7 的中間，還沒到 7，所以是 6 點半。」", 'rep.minOne.x': "鐘上是 4:23，孩子說成 4:25 或 4:20。小格沒有數清楚。", 'rep.minOne.g': "「要練什麼」選「過了多久」時才會出 1 分的小格。撥錯時鐘會從最近的 5 的倍數開始，一小格一小格亮給他看。", 'rep.minOne.h': "先說最近的「5 的倍數」（20 分），再一小格一小格往上加：21、22、23。", 'rep.carry.x': "2:50 出發、走了 25 分鐘，孩子算成 2:75，或只算到 3:00 就停了。", 'rep.carry.g': "玩「幾點了？」裡「走了幾分鐘」的題目。答錯時會畫一條時間線：先走到整點，再走剩下的。", 'rep.carry.h': "用兩步算：「2:50 再 10 分鐘到 3:00，還剩 15 分鐘，所以是 3:15。」出門、等公車時都可以問。", 'rep.ampm.x': "下午 3:20 用 24 小時制要寫 15:20，孩子寫成 3:20；或早上 9 點寫成 21:00。", 'rep.ampm.g': "玩「幾點了？」的 24 小時制題目。遊戲發現這個錯，會多出下午的時刻。", 'rep.ampm.h': "下午的時刻加 12：下午 3 點是 15 點。看火車時刻表、電影場次時一起讀。", 'rep.read12.x': "鐘上是 12:30，孩子說成 1:30 或 0:30。", 'rep.read12.g': "在主畫面的大鐘，把烏龜從 11 慢慢拖過 12 再到 1，看下面的字怎麼變。", 'rep.read12.h': "中午吃飯前後看鐘：12 點之後是 1 點。短針在 12 和 1 中間時，還是 12 點多。", 'rep.starT': "已經會的時刻", 'rep.star': "{s} 個已點亮、{l} 個熟悉中、{w} 個容易錯（一共 144 個，每 5 分一個）。在主畫面按星星的圖示可以看星圖。", 'rep.note': "報告只看這台裝置上的紀錄，不會上傳到任何地方。", 'promo.t': "同一位作者的另一個遊戲", 'promo.name': "九九流星隊：九九乘法表練習", 'promo.d': "打流星練心算，錯題自動多練，也能練加減", 'promo.go': "去看看",
     'help.repT': "給大人：學習報告", 'help.rep': "<li>設定最下面的家長區有<b>學習報告</b>：這 7 天練了多少、最常搞混的是哪一種、在家可以怎麼練。</li><li>報告只看這台裝置上的紀錄。</li>",
     'rep.lock': "解鎖全部遊戲後，這裡會多出每一種錯的例子，還有「遊戲裡怎麼練」和「在家可以怎麼做」。", 'rep.unlockGo': "看看解鎖", 'buy.rep': "<li><b>學習報告的完整內容</b>：每一種錯的例子、遊戲裡和在家怎麼練。</li>",
+    'pname.t': "幫牠取個名字", 'pname.p': "可以用下面的名字，也可以自己打。", 'pname.ok': "就叫這個名字", 'pname.back': "再想想", 'pname.edit': "改名字", 'pet.renamed': "牠現在叫{name}了！", 'pname.owl': "咕咕|圓圓|小紫|嘟嘟", 'pname.squirrel': "小松|栗栗|跳跳|毛毛", 'pname.bear': "熊熊|蜜蜜|球球|胖胖",
     'gate.title': '請大人來', 'gate.p': '請大人算這一題，才能繼續。', 'gate.cancel': '取消', 'gate.wait': '錯太多次了，等 30 秒再試',
     'menu.map': '星圖', 'map.count': '{n}/{t}', 'map.aria': '亮了 {n} 顆星，一共 {t} 顆', 'map.legend': '裡面那圈是 1 點，外面是 12 點；一片是 5 分',
     'map.info': '每個時刻一顆星，讀對、撥對幾次就會亮。<b>裡面那圈是 1 點，最外面是 12 點</b>，一片是 5 分。點一片看看。', 'map.weak': '最常搞混的是：<b>{e}</b>。多玩幾次就會了！', 'map.sector': '<b>{m} 分</b>的題（1 點到 12 點）：',
@@ -821,7 +846,7 @@ const STR = {
     'gear.title': 'Outfits (unlock with badges)', 'gear.need': 'Finish daily missions to collect badges! ({n} more to go)', 'gear.badges': 'Badges ×{n}',
     'gear.bow': 'Bow', 'gear.scarf': 'Scarf', 'gear.glasses': 'Sunglasses', 'gear.hat': 'Hat', 'gear.star': 'Star clip', 'gear.crown': 'Crown',
     'q.acorn': 'Acorns +{n}',
-    'help.petT': 'Pet', 'help.pet': '<li>Right answers drop <b>acorns</b>. Feed your pet on the pet page and it grows: Egg → Baby → Kid → Grown-up → Ultimate.</li><li>Collect badges from daily missions to unlock outfits.</li><li>Nothing bad happens if you don\'t feed it. It will wait for you.</li>',
+    'help.petT': 'Pet', 'help.pet': '<li>Right answers drop <b>acorns</b>. Feed your pet on the pet page and it grows: Egg → Baby → Kid → Grown-up → Ultimate.</li><li>Collect badges from daily missions to unlock outfits.</li><li>Nothing bad happens if you don\'t feed it. It will wait for you.</li><li>You can <b>name</b> your pet when you pick its egg, and rename it later with the button next to its name.</li>',
     'match.say': 'Flip two cards and find the same time!', 'match.prog': '{n}/{t}', 'match.done': 'All matched!', 'match.p': 'You flipped {n} times.', 'q.match': 'Finish a round of Match',
     'quest.title': "Today's missions", 'quest.badges': 'Badges ×{n}', 'quest.streak': '{n} days in a row', 'quest.doneOne': 'Mission done!', 'quest.doneAll': 'All missions done today! Badge +1',
     'q.day': "Finish a Town's Day", 'q.read': 'Read {n} times right', 'q.set': 'Set the clock right {n} times', 'q.star': 'Light {n} new stars',
@@ -851,6 +876,7 @@ const STR = {
     'set.report': "Progress report", 'set.reportD': "Most common mix-ups and how to practice", 'set.reportGo': "Open", 'rep.title': "{name}'s progress report", 'rep.title0': "Progress report", 'rep.week': "Last 7 days", 'rep.days': "days played", 'rep.n': "tries", 'rep.acc': "right first try", 'rep.up': "Better than the week before ({p}% right first try then).", 'rep.same': "About the same as the week before ({p}% right first try then).", 'rep.down': "A few more misses than the week before ({p}% right first try then). Often that just means the questions got harder.", 'rep.none': "Nothing recorded in the last 7 days. After a few rounds of Town Day or What time?, the most common mix-ups will show up here.", 'rep.errT': "Most common mix-ups", 'rep.errNone': "No mix-up stands out right now. Just keep playing. The game picks the times that still need work.", 'rep.ex': "Example", 'rep.game': "In the game", 'rep.home': "At home", 'rep.hourLate.x': "The clock shows 7:50 and your child says 8:50. The short hand is almost at 8, so it looks like 8 o'clock.", 'rep.hourLate.g': "Play What time? more. When the game sees this mix-up it gives more times from :40 to :55, and reminds your child that Turtle has not reached the 8 yet.", 'rep.hourLate.h': "Look at a real clock shortly before the hour and ask, \"Has the short hand passed the 8 yet?\" If not, it is still 7-something.", 'rep.minIndex.x': "The clock shows 7:20 and your child says 7:04. The long hand points at the 4, so they say 4 minutes.", 'rep.minIndex.g': "Turn on Minute ring in Settings, then play Town Day. After a miss, the clock counts 5, 10, 15 from the 12, one number at a time.", 'rep.minIndex.h': "Point at the numbers and count by fives together: 1 is 5 minutes, 2 is 10, 3 is 15.", 'rep.handSwap.x': "The clock shows 3:40 and your child says 8:15. They read the long hand as the hour and the short hand as the minutes.", 'rep.handSwap.g': "Tap How to play (again) in Settings: Turtle is the short hand (hours), Rabbit is the long hand (minutes). Then play Town Day.", 'rep.handSwap.h': "Always use the same order: find the short hand and say the hour, then find the long hand and say the minutes.", 'rep.halfHour.x': "The clock shows 6:30 and your child says 7:30, or puts the short hand right on the 6. At half past, the short hand is halfway between 6 and 7.", 'rep.halfHour.g': "In Settings, set Practice to O'clock, half for a few days, then switch back.", 'rep.halfHour.h': "At half past, look at the short hand together: \"It is halfway between 6 and 7. It has not reached 7, so it is half past 6.\"", 'rep.minOne.x': "The clock shows 4:23 and your child says 4:25 or 4:20. The little ticks were not counted.", 'rep.minOne.g': "The 1-minute ticks only appear when Practice is set to How long?. After a miss, the clock lights the little ticks one by one from the nearest five.", 'rep.minOne.h': "Say the nearest five first (20 minutes), then count on one tick at a time: 21, 22, 23.", 'rep.carry.x': "Leaving at 2:50 and walking 25 minutes, your child says 2:75, or stops at 3:00.", 'rep.carry.g': "Play the \"how many minutes\" questions in What time?. After a miss, the game draws a timeline: first up to the hour, then the rest.", 'rep.carry.h': "Do it in two steps: \"From 2:50, 10 minutes gets us to 3:00. 15 minutes are left, so it is 3:15.\" Try it while waiting for the bus.", 'rep.ampm.x': "3:20 in the afternoon is 15:20 on a 24-hour clock, but your child writes 3:20. Or 9 in the morning becomes 21:00.", 'rep.ampm.g': "Play the 24-hour questions in What time?. When the game sees this mix-up it gives more afternoon times.", 'rep.ampm.h': "Add 12 to afternoon hours: 3 p.m. is 15:00. Read train timetables or movie times together.", 'rep.read12.x': "The clock shows 12:30 and your child says 1:30 or 0:30.", 'rep.read12.g': "On the big clock on the main screen, drag Turtle slowly from 11 past 12 to 1 and watch the words below change.", 'rep.read12.h': "Look at the clock around lunchtime: after 12 comes 1. While the short hand is between 12 and 1, it is still 12-something.", 'rep.starT': "Times your child knows", 'rep.star': "{s} lit up, {l} getting there, {w} tricky (144 in all, one for every 5 minutes). Tap the star icon on the main screen to see the star map.", 'rep.note': "This report only uses the records on this device. Nothing is uploaded anywhere.", 'promo.t': "Another game by the same author", 'promo.name': "9×9 Meteor Squad: Times Tables", 'promo.d': "Multiply, add & subtract game", 'promo.go': "Take a look", 'rep.cnt': "{n} times in 2 weeks",
     'help.repT': "For grown-ups: progress report", 'help.rep': "<li>Under For grown-ups in Settings there is a <b>Progress report</b>: how much practice in the last 7 days, the most common mix-ups, and what to try at home.</li><li>The report only uses the records on this device.</li>",
     'rep.lock': "After you unlock all games, this report also shows an example of each mix-up, plus what to do in the game and at home.", 'rep.unlockGo': "See unlock", 'buy.rep': "<li><b>The full progress report</b>: an example of each mix-up, plus what to do in the game and at home.</li>",
+    'pname.t': "Give it a name", 'pname.p': "Pick a name below or type your own.", 'pname.ok': "That's its name", 'pname.back': "Not yet", 'pname.edit': "Rename", 'pet.renamed': "Now it's called {name}!", 'pname.owl': "Hoot|Plum|Pip|Luna", 'pname.squirrel': "Nutty|Acorn|Zippy|Fluff", 'pname.bear': "Bruno|Honey|Teddy|Bun",
     'gate.title': 'Ask a grown-up', 'gate.p': 'A grown-up needs to solve this to continue.', 'gate.cancel': 'Cancel', 'gate.wait': 'Too many misses. Try again in 30 seconds',
     'menu.map': 'Star map', 'map.count': '{n}/{t}', 'map.aria': '{n} of {t} stars lit', 'map.legend': 'Inner ring is 1 o\'clock, outer is 12; each slice is 5 minutes',
     'map.info': 'Every time has a star. Read it or set it right a few times and it lights up. <b>The inner ring is 1 o\'clock, the outer ring is 12.</b> Each slice is 5 minutes. Tap a slice!', 'map.weak': 'Mixed up most often: <b>{e}</b>. A few more tries and you\'ll get it!', 'map.sector': '<b>{m} minutes</b> (1 to 12 o\'clock):',
@@ -898,7 +924,7 @@ const STR = {
     'gear.title': 'きせかえ（バッジが 集まると つけられる）', 'gear.need': '毎日の ミッションを クリアして、バッジを 集めよう！（あと {n}こ）', 'gear.badges': 'バッジ ×{n}',
     'gear.bow': 'リボン', 'gear.scarf': 'マフラー', 'gear.glasses': 'サングラス', 'gear.hat': 'ぼうし', 'gear.star': '星の ヘアピン', 'gear.crown': 'かんむり',
     'q.acorn': 'どんぐり +{n}',
-    'help.petT': 'ペット', 'help.pet': '<li>正かいすると <b>どんぐり</b>が もらえるよ。ペットの ページで あげると 大きくなるよ：たまご → あかちゃん → こども → おとな → きゅうきょく。</li><li>毎日の ミッションで バッジを 集めると、きせかえが つけられるよ。</li><li>あげなくても だいじょうぶ。ちゃんと まっていてくれるよ。</li>',
+    'help.petT': 'ペット', 'help.pet': '<li>正かいすると <b>どんぐり</b>が もらえるよ。ペットの ページで あげると 大きくなるよ：たまご → あかちゃん → こども → おとな → きゅうきょく。</li><li>毎日の ミッションで バッジを 集めると、きせかえが つけられるよ。</li><li>あげなくても だいじょうぶ。ちゃんと まっていてくれるよ。</li><li>たまごを えらぶ ときに <b>名前</b>を つけられるよ。名前の よこの ボタンで あとから かえられるよ。</li>',
     'match.say': '2まい めくって、おなじ 時こくを さがそう！', 'match.prog': '{n}/{t}', 'match.done': 'ぜんぶ そろったよ！', 'match.p': '{n}回 めくったよ。', 'q.match': '「ペアさがし」を 1回',
     'quest.title': '今日の ミッション', 'quest.badges': 'バッジ ×{n}', 'quest.streak': '{n}日 つづけて', 'quest.doneOne': 'ミッション クリア！', 'quest.doneAll': '今日の ミッションは ぜんぶ クリア！ バッジ +1',
     'q.day': '「まちの一日」を さいごまで', 'q.read': '{n}こ よむ', 'q.set': 'とけいを {n}回 あわせる', 'q.star': '新しい 星を {n}こ つける',
@@ -927,6 +953,7 @@ const STR = {
     'set.report': "学習レポート", 'set.reportD': "よく まちがえる ところと 練習の しかた", 'set.reportGo': "見る", 'rep.title': "{name}の 学習レポート", 'rep.title0': "学習レポート", 'rep.week': "この7日間", 'rep.days': "練習した日数", 'rep.n': "答えた回数", 'rep.acc': "1回で正解", 'rep.up': "前の週より よくなりました（前の週の 1回で正解は {p}%）。", 'rep.same': "前の週と 同じくらいです（前の週の 1回で正解は {p}%）。", 'rep.down': "前の週より 少し まちがいが 多めです（前の週の 1回で正解は {p}%）。問題が むずかしくなっただけの ことが 多いので、心配いりません。", 'rep.none': "この7日間の 記録は まだ ありません。「まちの一日」や「いま何時？」を 何回か あそぶと、よく まちがえる ところが ここに 出ます。", 'rep.errT': "よく まちがえる ところ", 'rep.errNone': "今は 目立つ まちがいは ありません。このまま あそべば、ゲームが まだ なれていない 時こくを えらんで 出します。", 'rep.cnt': "この2週間で {n}回", 'rep.ex': "例", 'rep.game': "ゲームで", 'rep.home': "おうちで", 'rep.hourLate.x': "時計は 7:50 なのに「8:50」と 言います。短い針が 8に 近いので、8時に 見えます。", 'rep.hourLate.g': "「いま何時？」を 多めに あそびましょう。この まちがいが あると、40分〜55分の 時こくが 多く 出て、「カメは まだ 8に ついていないよ」と 教えます。", 'rep.hourLate.h': "おうちの 時計で、ちょうどの 時間の 少し前に「短い針は 8を すぎた？」と 聞きます。まだなら 7時何分です。", 'rep.minIndex.x': "時計は 7:20 なのに「7:04」と 言います。長い針が 4を さしているので、4分と 言います。", 'rep.minIndex.g': "せっていで「そとの 分の 数字」を オンにして「まちの一日」を あそびます。まちがえると、12から 5、10、15と 一つずつ 数えて 見せます。", 'rep.minIndex.h': "時計の 数字を 指さして、いっしょに 5ずつ 数えます。1は 5分、2は 10分、3は 15分。", 'rep.handSwap.x': "時計は 3:40 なのに「8:15」と 言います。長い針を「何時」、短い針を「何分」と 読んでいます。", 'rep.handSwap.g': "せっていで「あそびかたを もういちど 見る」を おします。カメが 短い針（何時）、ウサギが 長い針（何分）です。そのあと「まちの一日」を あそびます。", 'rep.handSwap.h': "いつも 同じ じゅんばんで 読みます。まず 短い針で「何時」、つぎに 長い針で「何分」。", 'rep.halfHour.x': "時計は 6:30 なのに「7:30」と 言ったり、短い針を 6の 真上に おいたり します。何時半の とき、短い針は 6と 7の 間です。", 'rep.halfHour.g': "せっていの「なにを れんしゅうする？」を 何日か「何時・何時半」に して、あとで もどします。", 'rep.halfHour.h': "何時半の ときに いっしょに 短い針を 見ます。「6と 7の 間で、まだ 7に ついていないから 6時半。」", 'rep.minOne.x': "時計は 4:23 なのに「4:25」や「4:20」と 言います。小さい 目もりを 数えていません。", 'rep.minOne.g': "1分の 目もりは「なにを れんしゅうする？」が「たった時間」の ときだけ 出ます。まちがえると、近い 5の ばいすうから 目もりが 一つずつ 光ります。", 'rep.minOne.h': "まず 近い「5の ばいすう」（20分）を 言って、そこから 一つずつ たします。21、22、23。", 'rep.carry.x': "2:50に 出て 25分 歩くと、「2:75」と 言ったり、3:00で 止まったり します。", 'rep.carry.g': "「いま何時？」の「何分 たった？」の 問題を あそびます。まちがえると 時間の 線が 出ます。まず ちょうどの 時間まで、つぎに のこり。", 'rep.carry.h': "2回に 分けて 考えます。「2:50から 10分で 3:00。のこり 15分だから 3:15。」バスを 待つ ときなどに 聞いてみましょう。", 'rep.ampm.x': "午後 3:20 は 24時間せいで 15:20 ですが、3:20と 書きます。または 朝の 9時を 21:00と 書きます。", 'rep.ampm.g': "「いま何時？」の 24時間せいの 問題を あそびます。この まちがいが あると、午後の 時こくが 多く 出ます。", 'rep.ampm.h': "午後の 時こくには 12を たします。午後 3時は 15時。電車の 時こく表や えいがの 時間を いっしょに 読みましょう。", 'rep.read12.x': "時計は 12:30 なのに「1:30」や「0:30」と 言います。", 'rep.read12.g': "さいしょの 画面の 大きい 時計で、カメを 11から 12を こえて 1まで ゆっくり 動かして、下の 文字が どう かわるか 見ます。", 'rep.read12.h': "お昼ごろに 時計を 見ます。12時の つぎは 1時。短い針が 12と 1の 間なら、まだ 12時何分です。", 'rep.starT': "もう わかる 時こく", 'rep.star': "光っている {s}こ、なれてきた {l}こ、まちがえやすい {w}こ（ぜんぶで 144こ、5分ごと）。さいしょの 画面の 星の ボタンで 星マップが 見られます。", 'rep.note': "この レポートは この たんまつの 記録だけを 使います。どこにも 送りません。", 'promo.t': "同じ 作者の もう一つの ゲーム", 'promo.name': "九九流星隊：九九れんしゅう", 'promo.d': "九九とたし算ひき算、まちがいを自動で復習", 'promo.go': "見てみる",
     'help.repT': "おうちの人へ：学習レポート", 'help.rep': "<li>せっていの「おうちの人へ」に <b>学習レポート</b>が あります。この7日間の 練習、よく まちがえる ところ、おうちでの 練習の しかたが 見られます。</li><li>この たんまつの 記録だけを 使います。</li>",
     'rep.lock': "すべてのゲームを アンロックすると、まちがいごとの 例と、「ゲームで」「おうちで」の 練習の しかたも 見られます。", 'rep.unlockGo': "アンロックを 見る", 'buy.rep': "<li><b>学習レポートの すべての内容</b>：まちがいごとの例、ゲームと おうちでの 練習の しかた。</li>",
+    'pname.t': "名前を つけてね", 'pname.p': "下から えらんでも、自分で うっても いいよ。", 'pname.ok': "この名前にする", 'pname.back': "もうすこし かんがえる", 'pname.edit': "名前を かえる", 'pet.renamed': "{name}って よばれるように なったよ！", 'pname.owl': "ホーホー|まるまる|むらさき|ぽぽ", 'pname.squirrel': "リスリス|くりくり|ぴょんた|ふわり", 'pname.bear': "クマタ|はちみつ|ころん|もこ",
     'gate.title': 'おうちの人を よんでね', 'gate.p': 'つづけるには、おうちの人が この もんだいを といてください。', 'gate.cancel': 'やめる', 'gate.wait': 'まちがいが おおいので、30びょう まってね',
     'menu.map': '星マップ', 'map.count': '{n}/{t}', 'map.aria': '星が {t}こ中 {n}こ ついた', 'map.legend': '内がわが 1時、外がわが 12時。1まいが 5分',
     'map.info': 'どの時こくにも 星が 1つ。何回か 正かいすると 光るよ。<b>内がわの わが 1時、いちばん外が 12時</b>。1まいが 5分だよ。タップしてみてね。', 'map.weak': 'いちばん まちがえやすいのは：<b>{e}</b>。もう少し あそべば できるよ！', 'map.sector': '<b>{m}分</b>の もんだい（1時から 12時）：',
@@ -974,7 +1001,7 @@ const STR = {
     'gear.title': '꾸미기 (배지로 열기)', 'gear.need': '오늘의 미션을 끝내고 배지를 모아 봐! ({n}개 더)', 'gear.badges': '배지 ×{n}',
     'gear.bow': '리본', 'gear.scarf': '목도리', 'gear.glasses': '선글라스', 'gear.hat': '모자', 'gear.star': '별 핀', 'gear.crown': '왕관',
     'q.acorn': '도토리 +{n}',
-    'help.petT': '펫', 'help.pet': '<li>맞히면 <b>도토리</b>가 나와. 펫 화면에서 먹이면 자라: 알 → 아기 → 어린이 → 어른 → 최강.</li><li>오늘의 미션으로 배지를 모으면 꾸미기가 열려.</li><li>먹이를 안 줘도 괜찮아. 기다려 줄 거야.</li>',
+    'help.petT': '펫', 'help.pet': '<li>맞히면 <b>도토리</b>가 나와. 펫 화면에서 먹이면 자라: 알 → 아기 → 어린이 → 어른 → 최강.</li><li>오늘의 미션으로 배지를 모으면 꾸미기가 열려.</li><li>먹이를 안 줘도 괜찮아. 기다려 줄 거야.</li><li>알을 고를 때 <b>이름</b>을 지어 줄 수 있어. 나중에 이름 옆 버튼으로 바꿀 수도 있어.</li>',
     'match.say': '두 장을 뒤집어서 같은 시각을 찾아!', 'match.prog': '{n}/{t}', 'match.done': '다 찾았어!', 'match.p': '{n}번 뒤집었어.', 'q.match': '짝 맞추기 한 판 하기',
     'quest.title': '오늘의 미션', 'quest.badges': '배지 ×{n}', 'quest.streak': '{n}일 연속', 'quest.doneOne': '미션 완료!', 'quest.doneAll': '오늘 미션을 다 했어! 배지 +1',
     'q.day': '마을의 하루 끝내기', 'q.read': '{n}번 맞게 읽기', 'q.set': '시계를 {n}번 맞게 맞추기', 'q.star': '새 별 {n}개 켜기',
@@ -1002,6 +1029,7 @@ const STR = {
     'set.report': "학습 보고서", 'set.reportD': "자주 헷갈리는 부분과 연습 방법", 'set.reportGo': "보기", 'rep.title': "{name}의 학습 보고서", 'rep.title0': "학습 보고서", 'rep.week': "최근 7일", 'rep.days': "연습한 날", 'rep.n': "푼 횟수", 'rep.acc': "한 번에 정답", 'rep.up': "지난주보다 좋아졌습니다(지난주 한 번에 정답 {p}%).", 'rep.same': "지난주와 비슷합니다(지난주 한 번에 정답 {p}%).", 'rep.down': "지난주보다 조금 더 틀렸습니다(지난주 한 번에 정답 {p}%). 문제가 어려워져서 그런 경우가 많으니 걱정하지 않으셔도 됩니다.", 'rep.none': "최근 7일 동안의 기록이 아직 없습니다. 「마을의 하루」나 「몇 시야?」를 몇 번 하면 자주 헷갈리는 부분이 여기에 나옵니다.", 'rep.errT': "자주 헷갈리는 부분", 'rep.errNone': "지금은 특별히 자주 틀리는 부분이 없습니다. 계속 놀기만 하면 게임이 아직 익숙하지 않은 시각을 골라서 냅니다.", 'rep.cnt': "최근 2주 동안 {n}번", 'rep.ex': "예", 'rep.game': "게임에서", 'rep.home': "집에서", 'rep.hourLate.x': "시계는 7:50인데 8:50이라고 합니다. 짧은바늘이 8에 거의 가 있어서 8시처럼 보입니다.", 'rep.hourLate.g': "「몇 시야?」를 더 많이 해 보세요. 이 실수가 보이면 40분~55분 시각이 더 많이 나오고, \"거북이가 아직 8에 안 왔어\"라고 알려 줍니다.", 'rep.hourLate.h': "집에 있는 시계로 정각이 되기 조금 전에 \"짧은바늘이 8을 지났어?\" 하고 물어보세요. 아직 안 지났으면 7시 몇 분입니다.", 'rep.minIndex.x': "시계는 7:20인데 7:04라고 합니다. 긴바늘이 4를 가리키니까 4분이라고 합니다.", 'rep.minIndex.g': "설정에서 「바깥쪽 분 숫자」를 켜고 「마을의 하루」를 해 보세요. 틀리면 시계가 12부터 5, 10, 15 하고 하나씩 세어 보여 줍니다.", 'rep.minIndex.h': "시계의 숫자를 짚으면서 함께 5씩 세어 보세요. 1은 5분, 2는 10분, 3은 15분.", 'rep.handSwap.x': "시계는 3:40인데 8:15라고 합니다. 긴바늘을 \"몇 시\", 짧은바늘을 \"몇 분\"으로 읽습니다.", 'rep.handSwap.g': "설정에서 「노는 방법 다시 보기」를 눌러 보세요. 거북이가 짧은바늘(몇 시), 토끼가 긴바늘(몇 분)입니다. 그다음 「마을의 하루」를 해 보세요.", 'rep.handSwap.h': "항상 같은 순서로 읽습니다. 먼저 짧은바늘을 찾아 \"몇 시\", 그다음 긴바늘을 찾아 \"몇 분\".", 'rep.halfHour.x': "시계는 6:30인데 7:30이라고 하거나, 짧은바늘을 6에 딱 맞춰 놓습니다. 반일 때 짧은바늘은 6과 7 사이에 있습니다.", 'rep.halfHour.g': "설정의 「무엇을 연습할까?」를 며칠 동안 「정각・반」으로 바꿨다가 다시 돌려놓으세요.", 'rep.halfHour.h': "반일 때 짧은바늘을 함께 보세요. \"6과 7 사이에 있고 아직 7에 안 왔으니까 6시 반이야.\"", 'rep.minOne.x': "시계는 4:23인데 4:25나 4:20이라고 합니다. 작은 눈금을 세지 않았습니다.", 'rep.minOne.g': "1분짜리 눈금은 「무엇을 연습할까?」가 「얼마나 지났지?」일 때만 나옵니다. 틀리면 가까운 5의 배수부터 작은 눈금이 하나씩 켜집니다.", 'rep.minOne.h': "먼저 가까운 \"5의 배수\"(20분)를 말하고, 거기서 한 칸씩 더합니다. 21, 22, 23.", 'rep.carry.x': "2:50에 출발해서 25분 걸으면 2:75라고 하거나 3:00에서 멈춥니다.", 'rep.carry.g': "「몇 시야?」의 \"몇 분 지났지?\" 문제를 해 보세요. 틀리면 시간 선이 그려집니다. 먼저 정각까지, 그다음 나머지.", 'rep.carry.h': "두 번에 나눠 계산합니다. \"2:50에서 10분이면 3:00. 15분 남았으니까 3:15.\" 버스를 기다릴 때 물어보세요.", 'rep.ampm.x': "오후 3:20은 24시간제로 15:20인데 3:20이라고 씁니다. 또는 오전 9시를 21:00이라고 씁니다.", 'rep.ampm.g': "「몇 시야?」의 24시간제 문제를 해 보세요. 이 실수가 보이면 오후 시각이 더 많이 나옵니다.", 'rep.ampm.h': "오후 시각에는 12를 더합니다. 오후 3시는 15시. 기차 시간표나 영화 시간을 함께 읽어 보세요.", 'rep.read12.x': "시계는 12:30인데 1:30이나 0:30이라고 합니다.", 'rep.read12.g': "첫 화면의 큰 시계에서 거북이를 11에서 12를 지나 1까지 천천히 끌면서 아래 글자가 어떻게 바뀌는지 보세요.", 'rep.read12.h': "점심때쯤 시계를 보세요. 12시 다음은 1시입니다. 짧은바늘이 12와 1 사이에 있으면 아직 12시 몇 분입니다.", 'rep.starT': "이미 아는 시각", 'rep.star': "불이 켜진 것 {s}개, 익숙해지는 중 {l}개, 헷갈리는 것 {w}개(모두 144개, 5분마다 하나). 첫 화면의 별 버튼을 누르면 별 지도를 볼 수 있습니다.", 'rep.note': "이 보고서는 이 기기에 있는 기록만 사용합니다. 어디에도 보내지 않습니다.", 'promo.t': "같은 제작자의 다른 게임", 'promo.name': "구구 유성대: 구구단 연습 게임", 'promo.d': "곱셈·덧셈·뺄셈 수학 놀이", 'promo.go': "보러 가기",
     'help.repT': "어른용: 학습 보고서", 'help.rep': "<li>설정의 어른용에 <b>학습 보고서</b>가 있습니다. 최근 7일 동안의 연습, 자주 헷갈리는 부분, 집에서 연습하는 방법을 볼 수 있습니다.</li><li>이 기기에 있는 기록만 사용합니다.</li>",
     'rep.lock': "모든 게임을 잠금 해제하면 실수마다 예시와 \"게임에서\", \"집에서\" 연습하는 방법도 볼 수 있습니다.", 'rep.unlockGo': "잠금 해제 보기", 'buy.rep': "<li><b>학습 보고서 전체 내용</b>: 실수마다 예시, 게임과 집에서 연습하는 방법.</li>",
+    'pname.t': "이름을 지어 줘", 'pname.p': "아래에서 골라도 되고, 직접 써도 돼.", 'pname.ok': "이 이름으로 할래", 'pname.back': "좀 더 생각할래", 'pname.edit': "이름 바꾸기", 'pet.renamed': "이제 이름이 {name}야!", 'pname.owl': "부리|보라|동동이|포포", 'pname.squirrel': "다래|도토|깡총이|보리", 'pname.bear': "곰이|꿀이|뭉치|코코",
     'gate.title': '어른 확인', 'gate.p': '계속하려면 어른이 이 문제를 풀어 주세요.', 'gate.cancel': '취소', 'gate.wait': '너무 많이 틀렸습니다. 30초 후에 다시 해 주세요',
     'menu.map': '별 지도', 'map.count': '{n}/{t}', 'map.aria': '별 {t}개 중 {n}개 켜짐', 'map.legend': '안쪽 고리가 1시, 바깥쪽이 12시. 한 조각이 5분',
     'map.info': '시각마다 별이 하나씩 있어. 몇 번 맞게 읽거나 맞추면 별이 켜져. <b>안쪽 고리가 1시, 바깥쪽 고리가 12시.</b> 한 조각이 5분이야. 조각을 눌러 봐!', 'map.weak': '가장 많이 헷갈린 것: <b>{e}</b>. 몇 번만 더 하면 알게 될 거야!', 'map.sector': '<b>{m}분</b> (1시부터 12시까지):',
@@ -1050,7 +1078,7 @@ const STR = {
     'gear.title': 'Accesorios (se abren con medallas)', 'gear.need': '¡Termina las misiones del día para ganar medallas! (faltan {n})', 'gear.badges': 'Medallas ×{n}',
     'gear.bow': 'Moño', 'gear.scarf': 'Bufanda', 'gear.glasses': 'Gafas de sol', 'gear.hat': 'Sombrero', 'gear.star': 'Broche de estrella', 'gear.crown': 'Corona',
     'q.acorn': 'Bellotas +{n}',
-    'help.petT': 'Mascota', 'help.pet': '<li>Las respuestas correctas dan <b>bellotas</b>. Dale de comer a tu mascota en su página y crecerá: Huevo → Bebé → Pequeño → Grande → Súper.</li><li>Gana medallas con las misiones del día para abrir accesorios.</li><li>Si no le das de comer, no pasa nada. Te va a esperar.</li>',
+    'help.petT': 'Mascota', 'help.pet': '<li>Las respuestas correctas dan <b>bellotas</b>. Dale de comer a tu mascota en su página y crecerá: Huevo → Bebé → Pequeño → Grande → Súper.</li><li>Gana medallas con las misiones del día para abrir accesorios.</li><li>Si no le das de comer, no pasa nada. Te va a esperar.</li><li>Puedes ponerle <b>nombre</b> al elegir su huevo, y cambiarlo después con el botón junto a su nombre.</li>',
     'match.say': '¡Voltea dos cartas y busca la misma hora!', 'match.prog': '{n}/{t}', 'match.done': '¡Todas las parejas!', 'match.p': 'Volteaste {n} veces.', 'q.match': 'Termina una partida de Parejas',
     'quest.title': 'Misiones de hoy', 'quest.badges': 'Medallas ×{n}', 'quest.streak': '{n} días seguidos', 'quest.doneOne': '¡Misión cumplida!', 'quest.doneAll': '¡Todas las misiones de hoy! Medalla +1',
     'q.day': 'Termina un Día del pueblo', 'q.read': 'Lee bien la hora {n} veces', 'q.set': 'Pon bien el reloj {n} veces', 'q.star': 'Enciende {n} estrellas nuevas',
@@ -1081,6 +1109,7 @@ const STR = {
     'set.report': "Informe de avance", 'set.reportD': "En qué se confunde más y cómo practicar", 'set.reportGo': "Ver", 'rep.title': "Informe de avance de {name}", 'rep.title0': "Informe de avance", 'rep.week': "Últimos 7 días", 'rep.days': "días de práctica", 'rep.n': "intentos", 'rep.acc': "a la primera", 'rep.up': "Mejor que la semana anterior ({p}% a la primera entonces).", 'rep.same': "Más o menos igual que la semana anterior ({p}% a la primera entonces).", 'rep.down': "Algunos errores más que la semana anterior ({p}% a la primera entonces). Muchas veces solo significa que las preguntas se volvieron más difíciles.", 'rep.none': "No hay registros de los últimos 7 días. Después de unas rondas de Día del pueblo o ¿Qué hora es?, aquí aparecerá en qué se confunde más.", 'rep.errT': "En qué se confunde más", 'rep.errNone': "Por ahora no destaca ningún error. Basta con seguir jugando: el juego elige las horas que todavía cuestan.", 'rep.cnt': "{n} veces en 2 semanas", 'rep.ex': "Ejemplo", 'rep.game': "En el juego", 'rep.home': "En casa", 'rep.hourLate.x': "El reloj marca las 7:50 y dice 8:50. La aguja corta casi llega al 8 y parece que son las 8.", 'rep.hourLate.g': "Jueguen más a ¿Qué hora es?. Cuando el juego ve este error, pone más horas entre :40 y :55 y recuerda que Tortuga todavía no llega al 8.", 'rep.hourLate.h': "Miren un reloj de verdad poco antes de la hora en punto y pregunte: \"¿La aguja corta ya pasó el 8?\". Si no, todavía son las 7 y algo.", 'rep.minIndex.x': "El reloj marca las 7:20 y dice 7:04. La aguja larga apunta al 4 y dice 4 minutos.", 'rep.minIndex.g': "Active Aro de minutos en Ajustes y jueguen a Día del pueblo. Después de un error, el reloj cuenta 5, 10, 15 desde el 12, número por número.", 'rep.minIndex.h': "Señalen los números y cuenten juntos de cinco en cinco: el 1 son 5 minutos, el 2 son 10, el 3 son 15.", 'rep.handSwap.x': "El reloj marca las 3:40 y dice 8:15. Lee la aguja larga como la hora y la corta como los minutos.", 'rep.handSwap.g': "Toque Cómo se juega (otra vez) en Ajustes: Tortuga es la aguja corta (horas) y Conejo es la aguja larga (minutos). Luego jueguen a Día del pueblo.", 'rep.handSwap.h': "Usen siempre el mismo orden: primero la aguja corta para decir la hora, después la aguja larga para decir los minutos.", 'rep.halfHour.x': "El reloj marca las 6:30 y dice 7:30, o pone la aguja corta justo en el 6. A la media, la aguja corta está entre el 6 y el 7.", 'rep.halfHour.g': "En Ajustes, ponga ¿Qué quieres practicar? en En punto y media durante unos días y luego vuelva a cambiarlo.", 'rep.halfHour.h': "A la media, miren juntos la aguja corta: \"Está entre el 6 y el 7. Todavía no llega al 7, así que son las 6 y media\".", 'rep.minOne.x': "El reloj marca las 4:23 y dice 4:25 o 4:20. No contó las rayitas.", 'rep.minOne.g': "Las rayitas de 1 minuto solo aparecen cuando ¿Qué quieres practicar? está en ¿Cuánto tiempo?. Después de un error, las rayitas se encienden una por una desde el múltiplo de cinco más cercano.", 'rep.minOne.h': "Primero digan el múltiplo de cinco más cercano (20 minutos) y luego sumen de rayita en rayita: 21, 22, 23.", 'rep.carry.x': "Sale a las 2:50 y camina 25 minutos: dice 2:75, o se detiene en las 3:00.", 'rep.carry.g': "Jueguen las preguntas de \"cuántos minutos\" en ¿Qué hora es?. Después de un error, el juego dibuja una línea del tiempo: primero hasta la hora en punto y luego lo que falta.", 'rep.carry.h': "Háganlo en dos pasos: \"De las 2:50, con 10 minutos llegamos a las 3:00. Faltan 15, así que son las 3:15\". Pruébenlo mientras esperan el autobús.", 'rep.ampm.x': "Las 3:20 de la tarde son las 15:20 en el reloj de 24 horas, pero escribe 3:20. O las 9 de la mañana se vuelven las 21:00.", 'rep.ampm.g': "Jueguen las preguntas de 24 horas en ¿Qué hora es?. Cuando el juego ve este error, pone más horas de la tarde.", 'rep.ampm.h': "A las horas de la tarde se les suma 12: las 3 de la tarde son las 15:00. Lean juntos horarios de autobús o de cine.", 'rep.read12.x': "El reloj marca las 12:30 y dice 1:30 o 0:30.", 'rep.read12.g': "En el reloj grande de la pantalla principal, arrastre a Tortuga despacio del 11 al 1 pasando por el 12 y miren cómo cambian las palabras de abajo.", 'rep.read12.h': "Miren el reloj a la hora del almuerzo: después de las 12 viene la 1. Mientras la aguja corta esté entre el 12 y el 1, todavía son las 12 y algo.", 'rep.starT': "Horas que ya sabe", 'rep.star': "{s} encendidas, {l} en camino, {w} difíciles (144 en total, una cada 5 minutos). Toque la estrella en la pantalla principal para ver el mapa de estrellas.", 'rep.note': "Este informe solo usa los registros de este dispositivo. No se envía nada a ningún lado.", 'promo.t': "Otro juego del mismo autor", 'promo.name': "Escuadrón Meteoro: Tablas 9×9", 'promo.d': "Multiplica, suma y resta", 'promo.go': "Ver",
     'help.repT': "Para adultos: informe de avance", 'help.rep': "<li>En Para adultos, dentro de Ajustes, hay un <b>Informe de avance</b>: cuánto practicó en los últimos 7 días, en qué se confunde más y qué probar en casa.</li><li>El informe solo usa los registros de este dispositivo.</li>",
     'rep.lock': "Al desbloquear todos los juegos, este informe también muestra un ejemplo de cada confusión y qué hacer en el juego y en casa.", 'rep.unlockGo': "Ver desbloqueo", 'buy.rep': "<li><b>El informe de avance completo</b>: un ejemplo de cada confusión y qué hacer en el juego y en casa.</li>",
+    'pname.t': "Ponle un nombre", 'pname.p': "Elige uno de abajo o escribe el tuyo.", 'pname.ok': "Ese es su nombre", 'pname.back': "Todavía no", 'pname.edit': "Cambiar nombre", 'pet.renamed': "¡Ahora se llama {name}!", 'pname.owl': "Hu|Lila|Pipo|Luna", 'pname.squirrel': "Nuez|Bellota|Saltín|Pelusa", 'pname.bear': "Bruno|Miel|Osito|Bombón",
     'gate.title': 'Para un adulto', 'gate.p': 'Un adulto debe resolver esto para continuar.', 'gate.cancel': 'Cancelar', 'gate.wait': 'Demasiados intentos. Espere 30 segundos',
     'menu.map': 'Mapa de estrellas', 'map.count': '{n}/{t}', 'map.aria': '{n} de {t} estrellas encendidas', 'map.legend': 'El aro de adentro es la 1, el de afuera son las 12; cada porción son 5 minutos',
     'map.info': 'Cada hora tiene una estrella. Léela o ponla bien varias veces y se enciende. <b>El aro de adentro es la 1, el de afuera son las 12.</b> Cada porción son 5 minutos. ¡Toca una porción!', 'map.weak': 'Lo que más confundes: <b>{e}</b>. ¡Unas veces más y te saldrá!', 'map.sector': '<b>{m} minutos</b> (de la 1 a las 12):',
@@ -1097,7 +1126,16 @@ const langAuto = () => { for (const l of (navigator.languages && navigator.langu
 function tx(key, p) {
   let s = STR[LANG][key]; if (s === undefined) s = STR['zh-Hant'][key]; if (s === undefined) return key;
   if (typeof s === 'function') s = s(p || {});
-  return p ? String(s).replace(/\{(\w+)\}/g, (_, k) => k in p ? p[k] : `{${k}}`) : s;
+  if (!p) return s;
+  let out = String(s).replace(/\{(\w+)\}/g, (_, k) => k in p ? p[k] : `{${k}}`);
+  if (LANG === 'ko' && typeof p.name === 'string' && p.name) out = koJosa(out, p.name);
+  return out;
+}
+// 韓文助詞：名字（孩子自己打的）最後一個字有收尾音時，「가→이、와→과、는→은、를→을、야→아」
+function koJosa(text, nm) {
+  const c = nm.charCodeAt(nm.length - 1), bat = c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 !== 0; if (!bat) return text;
+  const P = { '가': '이', '와': '과', '는': '은', '를': '을', '야': '아' }, e = nm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return text.replace(new RegExp(e + '(가|와|는|를|야)(?![가-힣])', 'g'), (_, j) => nm + P[j]);
 }
 function applyStr() {
   document.documentElement.lang = LANG;
@@ -1338,7 +1376,7 @@ const petStage = fed => PET_STAGES.reduce((st, at, i) => fed >= at ? i : st, 0);
 // 配件：徽章門檻、戴在哪裡（圖在 ART 的 G，位置在 FIT）
 const GEAR = [{ id: 'bow', at: 1, slot: 'head' }, { id: 'scarf', at: 2, slot: 'neck' }, { id: 'glasses', at: 4, slot: 'face' }, { id: 'hat', at: 6, slot: 'head' }, { id: 'star', at: 8, slot: 'head' }, { id: 'crown', at: 12, slot: 'head' }];
 const GEAR_BY = Object.create(null); GEAR.forEach(g => { GEAR_BY[g.id] = g; });
-const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, music: true, chime: true, level: 2, ring: true }, daily: {}, pet: { kind: '', fed: 0, acorn: 0, wear: { head: '', face: '', neck: '' } }, retest: [], town: { lit: [] }, log: {}, free: 7 * 60, hinted: false, tut: false });
+const fresh = () => ({ facts: {}, errs: {}, best: {}, set: { lang: '', sound: true, music: true, chime: true, level: 2, ring: true }, daily: {}, pet: { kind: '', name: '', fed: 0, acorn: 0, wear: { head: '', face: '', neck: '' } }, retest: [], town: { lit: [] }, log: {}, free: 7 * 60, hinted: false, tut: false });
 let DB = fresh();
 const num = (v, d = 0) => (typeof v === 'number' && Number.isFinite(v)) ? v : d;
 function loadDB() {
@@ -1360,7 +1398,7 @@ function loadDB() {
   if (!Array.isArray(D.tasks) || D.tasks.length !== 3 || !D.tasks.every(q => q && typeof q === 'object' && QIDS.includes(q.id) && num(q.n) > 0)) D.date = ''; else D.tasks = D.tasks.map(q => ({ id: q.id, n: num(q.n), p: clamp(num(q.p), 0, num(q.n)), done: !!q.done }));
   D.badges = clamp(num(D.badges), 0, 1e6); D.streak = clamp(num(D.streak), 0, 1e6); D.starBase = num(D.starBase); if (typeof D.date !== 'string') D.date = ''; if (typeof D.lastDone !== 'string') D.lastDone = '';
   if (!Object.prototype.hasOwnProperty.call(STR, f.set.lang)) f.set.lang = '';
-  const P = f.pet; if (!PET_KINDS[P.kind]) P.kind = ''; P.fed = clamp(num(P.fed), 0, 1e6); P.acorn = clamp(num(P.acorn), 0, 1e6); if (!P.wear || typeof P.wear !== 'object') P.wear = {}; for (const sl of ['head', 'face', 'neck']) if (typeof P.wear[sl] !== 'string' || (P.wear[sl] && !GEAR_BY[P.wear[sl]])) P.wear[sl] = '';
+  const P = f.pet; if (!PET_KINDS[P.kind]) P.kind = ''; P.name = typeof P.name === 'string' ? P.name.trim().slice(0, 8) : ''; P.fed = clamp(num(P.fed), 0, 1e6); P.acorn = clamp(num(P.acorn), 0, 1e6); if (!P.wear || typeof P.wear !== 'object') P.wear = {}; for (const sl of ['head', 'face', 'neck']) if (typeof P.wear[sl] !== 'string' || (P.wear[sl] && !GEAR_BY[P.wear[sl]])) P.wear[sl] = '';
   DB = f;
 }
 function save() { if (bkFrozen) return; try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
@@ -1772,7 +1810,7 @@ $('.sw[data-set=sound]').addEventListener('click', () => { DB.set.sound = !DB.se
 $('.sw[data-set=music]').addEventListener('click', () => { DB.set.music = !DB.set.music; save(); DB.set.music ? Music.start() : Music.stop(); renderSet(); SFX.ding(); });
 $('.sw[data-set=chime]').addEventListener('click', () => { DB.set.chime = !DB.set.chime; save(); renderSet(); if (DB.set.chime) SFX.chime(1); else SFX.chimeStop(); });   // 打開時敲一下讓大人聽聽看
 $('.sw[data-set=ring]').addEventListener('click', () => { DB.set.ring = !DB.set.ring; save(); setRingAll(DB.set.ring); renderSet(); SFX.ding(); });
-document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for (const id of ['#o-gate', '#o-buy', '#o-lock', '#o-who', '#o-bk', '#o-report', '#o-help', '#o-about', '#o-quest', '#o-set']) if (!$(id).hidden) { $(id).hidden = true; if (id === '#o-gate') { $('#gate-cancel').click(); return; } if (id === '#o-help' || id === '#o-about' || id === '#o-bk' || id === '#o-report') $('#o-set').hidden = false; return; } });
+document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; for (const id of ['#o-gate', '#o-buy', '#o-lock', '#o-pname', '#o-who', '#o-bk', '#o-report', '#o-help', '#o-about', '#o-quest', '#o-set']) if (!$(id).hidden) { $(id).hidden = true; if (id === '#o-gate') { $('#gate-cancel').click(); return; } if (id === '#o-help' || id === '#o-about' || id === '#o-bk' || id === '#o-report') $('#o-set').hidden = false; return; } });
 
 // ---------- 模式（還在蓋）
 let toastT = 0;
@@ -2245,7 +2283,19 @@ const Quest = (() => {
   $('#about-close').addEventListener('click', () => { $('#o-about').hidden = true; $('#o-set').hidden = false; });
   return { ensure, add, render, stars };
 })();
-function refreshMenu() { Quest.ensure(); $('#b-acorn').textContent = DB.pet.acorn; const D = DB.daily, done = D.tasks.filter(q => q.done).length, all = done === 3; const c = $('#go-quest'); c.classList.toggle('todo', !all); c.classList.toggle('ok', all); $('#q-count').innerHTML = all ? ic('check') : `${done}/3`; }
+// 主選單的寵物：選過寵物才出現；走在模式鈕上面那一條草地，蓋到時刻卡就藏起來（矮螢幕）
+function placeMenuPet() {
+  const mp = $('#menu-pet'), has = !!PET_KINDS[DB.pet.kind]; mp.hidden = !has; if (!has || mode !== 'menu') return;
+  const st = petStage(DB.pet.fed), html = petSVG(DB.pet.kind, st, DB.pet.wear); if (mp.dataset.k !== html) { $('#menu-pet-img').innerHTML = html; mp.dataset.k = html; }
+  mp.classList.toggle('egg', st === 0); mp.setAttribute('aria-label', tx('menu.pet'));
+  const sc = $('#s-menu').getBoundingClientRect(), md = $('#modes').getBoundingClientRect(), tc = document.querySelector('#s-menu .timecard').getBoundingClientRect();
+  let ps = 88, top = md.top - sc.top - ps + 6; if (top < tc.bottom - sc.top - 8) { ps = 60; top = md.top - sc.top - ps + 4; }   // 矮螢幕縮小；還是放不下就藏起來
+  mp.style.setProperty('--ps', ps + 'px'); mp.style.top = top + 'px'; mp.style.visibility = top < tc.bottom - sc.top - 8 ? 'hidden' : '';
+  const left = Math.max(8, Math.round(md.left - sc.left)), walk = Math.max(0, Math.round(md.width - ps)) + 'px'; mp.style.left = (st === 0 ? left + md.width * 0.12 : left) + 'px';
+  if (mp.style.getPropertyValue('--walk') !== walk) { mp.style.setProperty('--walk', walk); mp.style.animation = 'none'; void mp.offsetWidth; mp.style.animation = ''; }   // 舊 Safari 的 keyframes 不會跟著 var() 變，重開動畫
+}
+addEventListener('resize', () => { if (mode === 'menu') placeMenuPet(); });
+function refreshMenu() { placeMenuPet(); Quest.ensure(); $('#b-acorn').textContent = DB.pet.acorn; const D = DB.daily, done = D.tasks.filter(q => q.done).length, all = done === 3; const c = $('#go-quest'); c.classList.toggle('todo', !all); c.classList.toggle('ok', all); $('#q-count').innerHTML = all ? ic('check') : `${done}/3`; }
 
 // ---------- 配對（翻牌）：指針鐘、數字鐘、文字三種樣子配成對
 const Match = (() => {
@@ -2401,14 +2451,14 @@ function petSVG(kind, st, wear) {
   return `<svg viewBox="0 0 120 120"><ellipse cx="60" cy="114" rx="${(w * 0.42).toFixed(1)}" ry="4.5" fill="#3a2a55" opacity=".16"/><image href="assets/clay/pet-${kind}-${st}.webp" x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${w.toFixed(1)}" height="${hh}"/>${gear('neck')}${gear('head')}${gear('face')}</svg>`;
 }
 const Pet = (() => {
-  const P = () => DB.pet, name = () => tx('kname.' + P().kind);
+  const P = () => DB.pet, name = () => P().name || tx('kname.' + P().kind);   // 孩子取的名字；沒取過用預設的
   function earn(n) { P().acorn += n; save(); if (mode === 'menu') $('#b-acorn').textContent = P().acorn; }
   function open() { show('pet'); Town.set(clock.get().tot); render(); }
   function render() {
     const p = P(), has = !!PET_KINDS[p.kind]; $('#pet-acorn').textContent = p.acorn; $('#pet-pick').hidden = has; $('#pet-show').hidden = !has;
     if (!has) { $('#pet-cards').innerHTML = Object.keys(PET_KINDS).map(k => `<button type="button" class="pet-card" data-kind="${k}"><span class="emo"><img class="av" src="${artSrc('pet-' + k + '-0')}" alt=""></span>${tx('kind.' + k)}<small>${tx('kname.' + k)}</small></button>`).join(''); return; }
     const st = petStage(p.fed), next = PET_STAGES[st + 1], prev = PET_STAGES[st];
-    $('#pet-stage').innerHTML = petSVG(p.kind, st, p.wear); $('#pet-name').innerHTML = `${name()}<small>${tx('stage.' + st)}</small>`;
+    $('#pet-stage').innerHTML = petSVG(p.kind, st, p.wear); $('#pet-name').innerHTML = `<div class="pet-nm"><span>${esc(name())}</span><button class="link-btn" type="button" id="pet-rename">${esc(tx('pname.edit'))}</button></div><small>${tx('stage.' + st)}</small>`;
     $('#pet-barwrap').hidden = !next; $('#pet-bar').style.width = next ? Math.round((p.fed - prev) / (next - prev) * 100) + '%' : '100%';
     $('#pet-feed').hidden = !next; $('#pet-feed').disabled = p.acorn < FEED; $('#pet-feed').textContent = p.acorn < FEED ? tx('pet.feedLack', { d: FEED - p.acorn }) : tx('pet.feed', { n: FEED });
     const badges = num(DB.daily.badges);
@@ -2419,11 +2469,30 @@ const Pet = (() => {
     const st = petStage(p.fed), el = $('#pet-stage'); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); const r = el.getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 16); SFX.ding();
     if (st > before) setTimeout(() => { if (mode !== 'pet') return; toast(tx('pet.grow', { name: name(), stage: tx('stage.' + st) })); FX.confetti(50); SFX.bell(); }, 350);
   }
-  $('#pet-cards').addEventListener('click', e => { const b = e.target.closest('[data-kind]'); if (!b) return; ac(); DB.pet.kind = b.dataset.kind; DB.pet.fed = 0; save(); render(); toast(tx('pet.hello', { name: name() })); SFX.ding(); });
+  // 取名（照九九）：選了蛋先取名字，預設帶入建議的第一個，孩子可以直接按確定，也可以自己打（這裡要用系統鍵盤）；之後按名字旁邊的鈕可以改
+  let nk = '', renaming = false;
+  function openName(kind, re) {
+    nk = kind; renaming = re; const sug = tx('pname.' + kind).split('|');
+    $('#pname-egg').innerHTML = petSVG(kind, re ? petStage(P().fed) : 0, re ? P().wear : null);
+    $('#pname-in').value = re ? name() : sug[0];
+    $('#pname-sug').innerHTML = sug.map(n => `<button type="button" data-n="${esc(n)}">${esc(n)}</button>`).join('');
+    $('#o-pname').hidden = false;
+  }
+  $('#pet-cards').addEventListener('click', e => { const b = e.target.closest('[data-kind]'); if (!b) return; ac(); openName(b.dataset.kind, false); SFX.tick(); });
+  $('#pet-name').addEventListener('click', e => { if (e.target.closest('#pet-rename')) { ac(); openName(P().kind, true); } });
+  $('#pname-sug').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) { $('#pname-in').value = b.dataset.n; SFX.tick(); } });
+  $('#pname-back').addEventListener('click', () => { $('#o-pname').hidden = true; $('#pname-in').blur(); });
+  $('#pname-ok').addEventListener('click', () => {
+    const v = $('#pname-in').value.replace(/\s+/g, ' ').trim().slice(0, 8) || tx('pname.' + nk).split('|')[0];
+    if (!renaming) { DB.pet.kind = nk; DB.pet.fed = 0; } DB.pet.name = v; save();
+    $('#o-pname').hidden = true; $('#pname-in').blur(); render(); toast(tx(renaming ? 'pet.renamed' : 'pet.hello', { name: v })); SFX.ding();
+  });
+  $('#pname-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#pname-ok').click(); } e.stopPropagation(); });
   $('#pet-feed').addEventListener('click', () => { ac(); feed(); });
   $('#pet-gear').addEventListener('click', e => { const b = e.target.closest('[data-gear]'); if (!b) return; ac(); const g = GEAR_BY[b.dataset.gear]; if (num(DB.daily.badges) < g.at) { toast(tx('gear.need', { n: g.at - num(DB.daily.badges) })); return; } DB.pet.wear[g.slot] = DB.pet.wear[g.slot] === g.id ? '' : g.id; save(); render(); SFX.tick(); });
   $('#pet-stage').addEventListener('click', () => { const el = $('#pet-stage'); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); SFX.tick(); });
   $('#go-pet').addEventListener('click', () => { ac(); open(); });
+  $('#menu-pet').addEventListener('click', () => { ac(); SFX.ding(); open(); });
   return { open, render, earn };
 })();
 
@@ -2631,7 +2700,7 @@ try { if (sessionStorage.getItem(BK_DONE)) { sessionStorage.removeItem(BK_DONE);
 
 // ---------- 開始
 fillIcons(); loadDB(); setLang(); setRingAll(DB.set.ring); Town.resize(); Music.track(Music.forTime(DB.free)); Music.start();
-if (DB.hinted) $('#hintline').hidden = true; refreshMenu(); whoChip(); renderLocks();
+if (DB.hinted) $('#hintline').hidden = true; refreshMenu(); whoChip(); renderLocks(); setTimeout(() => { if (mode === 'menu') placeMenuPet(); }, 400); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (mode === 'menu') placeMenuPet(); });   // 字型載入後版面會動
 setTimeout(() => { const sp = $('#splash'); if (sp) sp.remove(); }, 1900);
 if (!DB.tut) Tut.start(false);
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
