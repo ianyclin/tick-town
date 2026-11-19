@@ -11,7 +11,7 @@ const SHOT = process.argv[2];
     const db = () => p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-v1')));
     ok(await p.textContent('#b-acorn') === '25', `${lang} 主選單橡果 25`);
     await p.click('#go-pet'); await p.waitForTimeout(200);
-    ok(await p.isVisible('#pet-pick') && (await p.$$('#pet-cards .pet-card')).length === 3, `${lang} 壞存檔的 kind 清掉 → 選蛋，3 顆`);
+    ok(await p.isVisible('#pet-pick') && (await p.$$('#pet-cards .pet-card[data-kind]')).length === 3 && (await p.$$('#pet-cards .pet-card[data-lock]')).length === 3, `${lang} 壞存檔的 kind 清掉 → 選蛋，3 顆＋3 顆傳說蛋（鎖著）`);
     if (SHOT) await p.screenshot({ path: `${SHOT}/pet-pick-${lang}.png` });
     await p.click('[data-kind=squirrel]'); await p.waitForTimeout(200);
     ok(await p.isVisible('#o-pname') && /小松|Nutty|リスリス|다래|Nuez/.test(await p.inputValue('#pname-in')) && (await p.$$('#pname-sug button')).length === 4, `${lang} 選了蛋先取名字，預設帶入建議的名字`);

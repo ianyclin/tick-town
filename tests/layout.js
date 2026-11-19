@@ -25,5 +25,17 @@ const SHOT = process.argv[2];
     if (SHOT && w === 320) await p.screenshot({ path: `${SHOT}/lay-vs-${lang}-${w}.png` });
     ok(errs.length === 0, `${w}x${h} ${lang} 無錯誤`); await p.context().close();
   }
+  // 「減少動態效果」打開、主選單上排有橡果和任務（右邊的鈕最多）時，標題也要縮到放得下；兩個人一起的比數在正中間
+  for (const [w, h, lang] of [[320, 568, 'zh-Hant'], [375, 667, 'en'], [360, 640, 'es'], [414, 736, 'ja']]) {
+    const p = await (await b.newContext({ viewport: { width: w, height: h }, reducedMotion: 'reduce' })).newPage();
+    await p.addInitScript(`localStorage.setItem('tick-town-v1', JSON.stringify({ tut: true, hinted: true, set: { lang: '${lang}', sound: false, music: false }, pet: { kind: 'bear', acorn: 60, fed: 260 }, daily: { badges: 20 } }));`);
+    await p.goto('http://localhost:8124/index.html'); await p.waitForTimeout(1500);
+    const t = await p.evaluate(() => { const h = document.querySelector('h1'), r = h.getBoundingClientRect(), n = h.nextElementSibling.getBoundingClientRect(); return { fit: h.scrollWidth <= h.clientWidth + 1, gap: n.left - r.right }; });
+    ok(t.fit && t.gap >= 0, `${w}x${h} ${lang} 減少動態：標題放得下（${JSON.stringify(t)}）`);
+    await p.evaluate(() => { document.querySelector('[data-mode=versus]').click(); }); await p.waitForTimeout(200); await p.evaluate(() => document.querySelector('#vs-start').click()); await p.waitForTimeout(400);
+    const c = await p.evaluate(() => { const r = [...document.querySelectorAll('.vscore > span')].find(e => e.textContent === ':').getBoundingClientRect(); return Math.abs(r.left + r.width / 2 - innerWidth / 2); });
+    ok(c <= 6, `${w}x${h} ${lang} 雙人比數在正中間（差 ${c.toFixed(1)}px）`);
+    await p.context().close();
+  }
   await b.close(); console.log(fails ? `${fails} FAIL` : 'ALL PASS'); process.exit(fails ? 1 : 0);
 })();
