@@ -16,7 +16,7 @@
 2. **註冊 Bundle ID**：Apple Developer → Certificates, Identifiers & Profiles → Identifiers → ＋ → App IDs → `com.sanbaofang.ticktown`（描述可填 Tick-Tock Town）。勾 In-App Purchase（預設就有）。
 3. **建立 App**：App Store Connect →「App」→ ＋ 新增 App：平台 iOS、名稱用 `docs/store-listing.md` 的繁體中文名稱、主要語言繁體中文、Bundle ID 選上面那個、SKU 隨便填（例如 `ticktown`）。
 4. **建立內購**：App 內購買項目 → ＋ → 非消耗型，產品 ID **`ticktown.unlock_all`**（一定要一模一樣；產品 ID 在整個開發者帳號不能重複，九九已經用了 `unlock_all`）。價格（九九是 US$2.99）、各語言顯示名稱與說明照 `docs/store-listing.md` 第四節。打開家人共享。
-5. **上傳 build**（請本機 session 做，或照九九的方式）：Mac 上 `git pull`、`npm ci && npm run www && npx cap sync ios`，Xcode 打開 `ios/App/App.xcodeproj` → Product → Archive → Distribute → App Store Connect。
+5. ✅（2026-11-19 本機 session 用命令列上傳 1.0 (1)，TestFlight 已裝上、購買卡讀得到價錢「購買 $90.00」；買之前的實機截圖 `store/iap/purchase-zh-Hant-iphone.png`，內購審查用這張）**上傳 build**（請本機 session 做，或照九九的方式）：Mac 上 `git pull`、`npm ci && npm run www && npx cap sync ios`，Xcode 打開 `ios/App/App.xcodeproj` → Product → Archive → Distribute → App Store Connect。
 6. **TestFlight 實測**（用沙盒帳號）：
    - 購買鈕上看得到價錢（例如「購買 NT$90」）。**這時先截購買卡的圖**，內購審查要用（買過就還原不了）。
    - 真的買一次：三個遊戲解鎖、學習報告出現例子和建議。

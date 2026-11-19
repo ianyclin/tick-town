@@ -643,7 +643,8 @@ img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px
 <div class="overlay" id="o-who" hidden>
   <div class="card">
     <div class="hhead"><h3 data-t="who.title"></h3><button class="xbtn" type="button" id="who-close" data-ta="close" data-ic="close"></button></div>
-    <p data-t="who.p" style="margin:0"></p>
+    <div class="langs" id="who-lang" hidden></div>
+    <p data-t="who.p" id="who-p" style="margin:0"></p>
     <div class="who-list" id="who-list"></div>
     <div class="who-hint" id="who-hint"></div>
     <input class="name-in" id="who-in" type="text" maxlength="10" autocomplete="off" autocapitalize="off" enterkeyhint="done" data-tp="who.ph" data-ta="who.inAria">
@@ -1461,6 +1462,7 @@ try {
 WHO.list = WHO.list.filter((x, i, a) => a.findIndex(y => y.id === x.id) === i);
 if (!WHO.list.length) WHO.list = [{ id: '', name: '' }];
 if (!WHO.list.some(x => x.id === WHO.cur)) WHO.cur = WHO.list[0].id;
+try { WHO.asked = !!(JSON.parse(localStorage.getItem(PKEY)) || {}).asked; } catch (e) { WHO.asked = false; }   // 第一次打開問過名字了沒（只問一次）
 const keyFor = id => id ? `tick-town-v1:${id}` : 'tick-town-v1';
 const saveWho = () => { if (bkFrozen) return; try { localStorage.setItem(PKEY, JSON.stringify(WHO)); } catch (e) {} };
 const whoCur = () => WHO.list.find(x => x.id === WHO.cur) || WHO.list[0];
@@ -2865,7 +2867,10 @@ function renderWho() {
   $('#who-sug').innerHTML = tx('who.sug').split('|').filter(n => !WHO.list.some(x => x.name === n)).map(n => `<button type="button" data-n="${esc(n)}">${esc(n)}</button>`).join('');
   $('#who-in').maxLength = nameMax();
 }
-function openWho() { renderWho(); $('#who-in').value = ''; $('#o-set').hidden = true; $('#o-who').hidden = false; }
+function whoLangs() { $('#who-lang').innerHTML = Object.keys(LANGS).map(k => `<button type="button" data-lang="${k}" aria-pressed="${LANG === k}">${LANGS[k]}</button>`).join(''); }
+function openWho(first) { renderWho(); $('#who-lang').hidden = !first; $('#who-p').hidden = !!first; if (first) whoLangs(); $('#who-in').value = ''; $('#o-set').hidden = true; $('#o-who').hidden = false; }
+// 第一次打開（全新安裝、還沒有名字）：教學前先問名字，卡片上面可以選語言（手機設英文的台灣家庭不用先找設定）；只問這一次
+$('#who-lang').addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (!b) return; DB.set.lang = b.dataset.lang; save(); setLang(); renderWho(); whoLangs(); SFX.ding(); if (mode === 'tut' && Tut.s() && Tut.s().i === 0) Tut.start(false); });
 // 換人：存好目前的人，載入另一個人的存檔（語言、難度、外圈、音樂都跟著那個人）
 function switchWho(id, noSave) {   // noSave：剛刪掉目前的人，不要把他的紀錄又存回去
   if (!WHO.list.some(x => x.id === id)) return;
@@ -2876,8 +2881,8 @@ function switchWho(id, noSave) {   // noSave：剛刪掉目前的人，不要把
 }
 const whoTaken = name => WHO.list.some(x => x.name === name);
 const whoName = () => $('#who-in').value.trim().slice(0, nameMax());
-$('#go-who').addEventListener('click', openWho);
-$('#set-who').addEventListener('click', openWho);
+$('#go-who').addEventListener('click', () => openWho());
+$('#set-who').addEventListener('click', () => openWho());
 $('#who-close').addEventListener('click', () => { $('#o-who').hidden = true; $('#who-in').blur(); });
 $('#who-sug').addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) { $('#who-in').value = b.dataset.n; SFX.tick(); } });
 $('#who-list').addEventListener('click', e => { const b = e.target.closest('[data-who]'); if (!b) return; $('#o-who').hidden = true; if (b.dataset.who === WHO.cur) return; switchWho(b.dataset.who); SFX.ding(); toast(tx('who.turn', { name: whoLabel(whoCur()) })); });
@@ -2962,7 +2967,9 @@ try { if (sessionStorage.getItem(BK_DONE)) { sessionStorage.removeItem(BK_DONE);
 fillIcons(); loadDB(); setLang(); setRingAll(DB.set.ring); Town.resize(); Music.track(Music.forTime(DB.free)); Music.start();
 if (DB.hinted) $('#hintline').hidden = true; refreshMenu(); whoChip(); renderLocks(); setTimeout(() => { if (mode === 'menu') placeMenuPet(); }, 400); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (mode === 'menu') placeMenuPet(); });   // 字型載入後版面會動
 setTimeout(() => { const sp = $('#splash'); if (sp) sp.remove(); }, 1900);
+const askName = !DB.tut && !WHO.asked && WHO.list.length === 1 && !whoCur().name;
 if (!DB.tut) Tut.start(false);
+if (askName) setTimeout(() => { if (mode !== 'tut' || !$('#o-who').hidden) return; WHO.asked = true; saveWho(); openWho(true); }, RM ? 400 : 1500);   // 開場動畫淡出後才跳出來
 clock.setSnap(DB.set.level === 3 ? 1 : 5); clock.set(Math.floor(DB.free / 60), DB.free % 60); showTime(clock.get().tot);
 document.fonts && document.fonts.ready.then(() => Town.resize());
 window.__tt = { Report, clock, clock2, clock3, DB: () => DB, Town, timeWords, Day, Read, Match, Versus, clockA, clockB, clock5, clock6, Shop, Tut, Music, SFX, WHO: () => WHO, keyFor, bkParse, Map: StarMap, Quest, Gate, Pet, petSVG, classifySet, timeline, townPts, townGrow, DECOR, UL: () => UL, APP };   // 給測試用

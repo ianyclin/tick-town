@@ -21,6 +21,10 @@ const URL = 'http://localhost:8124/index.html';
     const p = await (await b.newContext({ viewport: { width: w, height: h }, hasTouch: true, locale: loc })).newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto(URL); await p.waitForTimeout(500);
     ok(await p.isVisible('#s-tut') && await p.isHidden('#s-menu'), `${tag} 全新的第一次打開是教學`);
+    // 照九九：開場動畫後先問名字（卡片上面有語言），只問這一次；按 ✕ 不取名也可以，接著就是教學
+    await p.waitForTimeout(1300); ok(await p.isVisible('#o-who') && await p.isVisible('#who-lang') && (await p.$$('#who-lang button')).length === 5, `${tag} 第一次打開先問名字，上面有五種語言`);
+    ok(await p.evaluate(() => { const c = document.querySelector('#o-who .card').getBoundingClientRect(), r = document.querySelector('#who-rename').getBoundingClientRect(); return r.bottom <= Math.min(innerHeight, c.bottom) + 1; }), `${tag} 取名卡不用捲就按得到「我就叫這個名字」`);
+    await p.click('#who-close'); await p.waitForTimeout(200); ok(await p.isHidden('#o-who') && await p.evaluate(() => JSON.parse(localStorage.getItem('tick-town-who')).asked === true), `${tag} 關掉取名卡回到教學（記下問過了）`);
     ok(await p.evaluate(() => document.documentElement.lang) === lang, `${tag} 語言跟著裝置`);
     ok(await inView(p, '#clock6 svg') && await inView(p, '#tut-skip') && await inView(p, '#tut-say'), `${tag} 鐘、說明、「我會了」都在畫面內`);
     ok(await p.evaluate(() => { const r = document.querySelector('#tut-skip').getBoundingClientRect(); return r.height >= 44 && r.width >= 44; }), `${tag} 「我會了」≥ 44px`);
@@ -71,7 +75,7 @@ const URL = 'http://localhost:8124/index.html';
     await p.close();
   }
   // 「我會了」直接到選等級；沒選就關掉，下次還是教學
-  { const p = await (await b.newContext({ viewport: { width: 390, height: 844 }, locale: 'zh-TW' })).newPage(); await p.goto(URL); await p.waitForTimeout(400);
+  { const p = await (await b.newContext({ viewport: { width: 390, height: 844 }, locale: 'zh-TW' })).newPage(); await p.addInitScript(`localStorage.setItem('tick-town-who', JSON.stringify({ cur: '', list: [{ id: '', name: '' }], asked: true }));`); await p.goto(URL); await p.waitForTimeout(400);
     await p.click('#tut-skip'); await p.waitForTimeout(200); ok(await p.isVisible('#tut-pick'), '「我會了」直接到選要練什麼');
     await p.reload(); await p.waitForTimeout(400); ok(await p.isVisible('#s-tut'), '還沒選就關掉：下次打開還是教學');
     await p.click('#tut-skip'); await p.click('.pick[data-level="2"]'); await p.waitForTimeout(300); ok(await p.isVisible('#s-menu'), '選了才進主選單');
@@ -88,7 +92,7 @@ const URL = 'http://localhost:8124/index.html';
     else ok(false, `家長關卡題目看不懂：${q}`);
     await p.close(); }
   // 減少動態效果：手指不動但看得到
-  { const p = await (await b.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' })).newPage(); await p.goto(URL); await p.waitForTimeout(400);
+  { const p = await (await b.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' })).newPage(); await p.addInitScript(`localStorage.setItem('tick-town-who', JSON.stringify({ cur: '', list: [{ id: '', name: '' }], asked: true }));`); await p.goto(URL); await p.waitForTimeout(400);
     ok(await p.evaluate(() => getComputedStyle(document.querySelector('#tut-finger')).animationName === 'none' && getComputedStyle(document.querySelector('#tut-finger')).opacity === '1'), '減少動態效果：手指停在把手上');
     await p.close(); }
   await b.close();
