@@ -6,8 +6,8 @@ import json, os, sys
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 L = json.load(open(os.path.join(root, 'store', 'listing.json'), encoding='utf-8'))
 LIM = {'name': 30, 'subtitle': 30, 'promo': 170, 'short': 80, 'keywords': 100, 'whatsNew': 4000, 'description': 4000}
-NAMES = {'zh-Hant': '繁體中文（zh-Hant／台灣）', 'en': 'English（en-US）', 'ja': '日本語（ja）', 'ko': '한국어（ko）', 'es': 'Español（es-MX／中南美）'}
-PRIV = {'zh-Hant': '', 'en': 'en.html', 'ja': 'ja.html', 'ko': 'ko.html', 'es': 'es.html'}
+NAMES = {'zh-Hant': '繁體中文（zh-Hant／台灣）', 'en': 'English（en-US）', 'en-GB': 'English（en-GB／英國）', 'ja': '日本語（ja）', 'ko': '한국어（ko）', 'es': 'Español（es-MX／中南美）'}
+PRIV = {'zh-Hant': '', 'en': 'en.html', 'en-GB': 'en.html', 'ja': 'ja.html', 'ko': 'ko.html', 'es': 'es.html'}
 SITE = 'https://tick-town.sanbaofang.com'
 desc = lambda d, st: d['description'].replace('{store}', d['stores'][st])
 bad = []
@@ -92,6 +92,10 @@ Acorns (used to feed the pet) are earned only by answering questions and cannot 
 | 日本語 | すべてのゲームをアンロック | 3つのゲームがいつでも遊べて、学習レポートに例とアドバイスが出ます。 |
 | 한국어 | 모든 게임 잠금 해제 | 세 게임을 마음껏 하고 학습 보고서에 예시와 조언이 나옵니다. |
 | Español | Desbloquear todo | Los 3 juegos sin límite y consejos |
+| 简体中文（zh-Hans） | 解锁全部游戏 | 配对、修钟店、两个人一起可以一直玩，学习报告多出例子和建议。 |
+| English (U.K.)（en-GB） | Unlock all games | Play all 3 games anytime, plus report tips |
+
+> 簡體中文和英文（英國）只用在內購的顯示名稱與說明（App Store 的這兩種地區看得到）；遊戲本身沒有簡體中文，簡體中文的裝置會看到繁體中文。
 
 審查用截圖：`store/iap/purchase-zh-Hant.png`（1206 × 2622，`tools/iap-shot.cjs` 用遊戲本身產生，價錢是示意）。審查備註見下。
 

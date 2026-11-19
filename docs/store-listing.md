@@ -21,10 +21,18 @@
 | 隱私權政策網址 | | `https://tick-town.sanbaofang.com/privacy/` |
 | 支援網址 | | `https://tick-town.sanbaofang.com/support/` |
 
-**完整說明：Apple 版（App Store Connect）**（1015／4000）
+**完整說明：Apple 版（App Store Connect）**（1275／4000）
 
 ```text
 滴答小鎮是給小學一到三年級練「看時鐘、撥時鐘、算時間」的遊戲。孩子只覺得在幫小鎮的動物做事，遊戲在背後記下「哪一種錯」，多出會那樣錯的時刻。
+
+【作者的話】
+我是三個孩子的爸爸，之前做了練九九乘法的「九九流星隊」。
+看時鐘是孩子每天都用得到的本事，卻很容易搞混：長針短針分不清、2:50 看成 3:50，算「過了多久」又常卡在跨過整點的地方。
+
+所以我做了這個遊戲：時針是慢慢走的烏龜、分針是跑得快的兔子，孩子用手撥鐘、幫小鎮的動物做事，在好玩的小鎮裡把看時鐘練熟。希望它也能幫到你和你的孩子。
+
+免費的「小鎮的一天」和「幾點了？」就能體驗幾乎完整的練習。如果想要更多不一樣的練習方式（介紹在下面），可以解鎖全部遊戲，就當請三寶爸喝杯咖啡，謝謝你的支持與鼓勵。
 
 【時針是烏龜，分針是兔子】
 短短慢慢的時針是烏龜，長長快快的分針是兔子。用手拖兔子，烏龜會跟著慢慢走，孩子親眼看到「3 點半的時候，時針在 3 和 4 中間」。鐘外面有一圈 05、10、15… 的分鐘數字（可以關掉）。
@@ -61,10 +69,18 @@
 ```
 
 
-**完整說明：Google 版（Play Console）**（1017／4000）
+**完整說明：Google 版（Play Console）**（1277／4000）
 
 ```text
 滴答小鎮是給小學一到三年級練「看時鐘、撥時鐘、算時間」的遊戲。孩子只覺得在幫小鎮的動物做事，遊戲在背後記下「哪一種錯」，多出會那樣錯的時刻。
+
+【作者的話】
+我是三個孩子的爸爸，之前做了練九九乘法的「九九流星隊」。
+看時鐘是孩子每天都用得到的本事，卻很容易搞混：長針短針分不清、2:50 看成 3:50，算「過了多久」又常卡在跨過整點的地方。
+
+所以我做了這個遊戲：時針是慢慢走的烏龜、分針是跑得快的兔子，孩子用手撥鐘、幫小鎮的動物做事，在好玩的小鎮裡把看時鐘練熟。希望它也能幫到你和你的孩子。
+
+免費的「小鎮的一天」和「幾點了？」就能體驗幾乎完整的練習。如果想要更多不一樣的練習方式（介紹在下面），可以解鎖全部遊戲，就當請三寶爸喝杯咖啡，謝謝你的支持與鼓勵。
 
 【時針是烏龜，分針是兔子】
 短短慢慢的時針是烏龜，長長快快的分針是兔子。用手拖兔子，烏龜會跟著慢慢走，孩子親眼看到「3 點半的時候，時針在 3 和 4 中間」。鐘外面有一圈 05、10、15… 的分鐘數字（可以關掉）。
@@ -113,10 +129,18 @@
 | 隱私權政策網址 | | `https://tick-town.sanbaofang.com/privacy/en.html` |
 | 支援網址 | | `https://tick-town.sanbaofang.com/support/` |
 
-**完整說明：Apple 版（App Store Connect）**（2739／4000）
+**完整說明：Apple 版（App Store Connect）**（3519／4000）
 
 ```text
 Tick-Tock Town is a game for children in grades 1–3 to practice reading clocks, setting clocks and working out elapsed time. Kids just feel like they are helping the town animals, while the game quietly tracks which kind of mistake happens and shows more of the times that trigger it.
+
+A NOTE FROM THE AUTHOR
+I'm a dad of three, and I also made 9×9 Meteor Squad, a times-tables game.
+Telling time is something kids use every day, yet it's easy to mix up: which hand is which, reading 2:50 as 3:50, and getting stuck when elapsed time passes the hour.
+
+So I made this game. The hour hand is a slow tortoise and the minute hand is a fast rabbit. Kids set the clocks with their own fingers and help the town animals, getting comfortable with clocks while they play. I hope it helps you and your child too.
+
+The free games, Town Day and What time?, already give you almost the full practice experience. If you'd like more ways to practice (described below), you can unlock all games. Think of it as buying this dad of three a cup of coffee. Thank you for your support!
 
 TORTOISE IS THE HOUR HAND, RABBIT IS THE MINUTE HAND
 The short, slow hand is Tortoise; the long, fast hand is Rabbit. Drag Rabbit and Tortoise follows slowly, so kids see for themselves that at half past 3 the hour hand sits between 3 and 4. A ring of 05, 10, 15… around the clock shows the minutes (you can turn it off).
@@ -153,10 +177,18 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 ```
 
 
-**完整說明：Google 版（Play Console）**（2737／4000）
+**完整說明：Google 版（Play Console）**（3517／4000）
 
 ```text
 Tick-Tock Town is a game for children in grades 1–3 to practice reading clocks, setting clocks and working out elapsed time. Kids just feel like they are helping the town animals, while the game quietly tracks which kind of mistake happens and shows more of the times that trigger it.
+
+A NOTE FROM THE AUTHOR
+I'm a dad of three, and I also made 9×9 Meteor Squad, a times-tables game.
+Telling time is something kids use every day, yet it's easy to mix up: which hand is which, reading 2:50 as 3:50, and getting stuck when elapsed time passes the hour.
+
+So I made this game. The hour hand is a slow tortoise and the minute hand is a fast rabbit. Kids set the clocks with their own fingers and help the town animals, getting comfortable with clocks while they play. I hope it helps you and your child too.
+
+The free games, Town Day and What time?, already give you almost the full practice experience. If you'd like more ways to practice (described below), you can unlock all games. Think of it as buying this dad of three a cup of coffee. Thank you for your support!
 
 TORTOISE IS THE HOUR HAND, RABBIT IS THE MINUTE HAND
 The short, slow hand is Tortoise; the long, fast hand is Rabbit. Drag Rabbit and Tortoise follows slowly, so kids see for themselves that at half past 3 the hour hand sits between 3 and 4. A ring of 05, 10, 15… around the clock shows the minutes (you can turn it off).
@@ -192,6 +224,114 @@ FOR PARENTS
 Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 ```
 
+### English（en-GB／英國）
+
+| 欄位 | 字數／上限 | 內容 |
+|---|---|---|
+| 名稱（Apple Name／Google 標題） | 28／30 | Tick-Tock Town: Telling Time |
+| 副標題（Apple Subtitle） | 28／30 | Help town animals set clocks |
+| 宣傳文字（Apple Promotional Text） | 129／170 | Help the town animals set, read and work out the time. Tricky times come back more often. No ads, no internet, no data collected. |
+| 簡短說明（Google Short description） | 70／80 | Help the town animals set and read clocks. No ads, no internet needed. |
+| 關鍵字（Apple Keywords） | 88／100 | clock,analog clock,hour,minute,24-hour,elapsed time,math,kids,year 2,year 3,year 4,learn |
+| 新功能（What's New） | 161／4000 | First release: Town Day, What time?, Match, Fix-it Shop and Two players; 24-hour time and elapsed time for Year 4; a progress report for parents; five languages. |
+| 隱私權政策網址 | | `https://tick-town.sanbaofang.com/privacy/en.html` |
+| 支援網址 | | `https://tick-town.sanbaofang.com/support/` |
+
+**完整說明：Apple 版（App Store Connect）**（3509／4000）
+
+```text
+Tick-Tock Town is a game for children in Years 2–4 to practise reading clocks, setting clocks and working out elapsed time. Kids just feel like they are helping the town animals, while the game quietly tracks which kind of mistake happens and shows more of the times that trigger it.
+
+A NOTE FROM THE AUTHOR
+I'm a dad of three, and I also made 9×9 Meteor Squad, a times-tables game.
+Telling time is something kids use every day, yet it's easy to mix up: which hand is which, reading 2:50 as 3:50, and getting stuck when elapsed time passes the hour.
+
+So I made this game. The hour hand is a slow tortoise and the minute hand is a fast rabbit. Kids set the clocks with their own fingers and help the town animals, getting comfortable with clocks while they play. I hope it helps you and your child too.
+
+The free games, Town Day and What time?, already give you almost the full practice experience. If you'd like more ways to practise (described below), you can unlock all games. Think of it as buying this dad of three a cup of coffee. Thank you for your support!
+
+TORTOISE IS THE HOUR HAND, RABBIT IS THE MINUTE HAND
+The short, slow hand is Tortoise; the long, fast hand is Rabbit. Drag Rabbit and Tortoise follows slowly, so kids see for themselves that at half past 3 the hour hand sits between 3 and 4. A ring of 05, 10, 15… around the clock shows the minutes (you can turn it off).
+
+GAMES (Town Day and What time? are free; in the app, the other three can each be tried 3 times)
+• Town Day: the animals have 7 things to do. Set the clock and they head out, and their house lights up.
+• What time?: read the clock and pick the right time; times you know well switch to typing.
+• Match: flip cards and match clocks, digital times and words.
+• Fix-it Shop: is the clock's tag right? Wrong tags are picked from your child's typical mistakes.
+• Two players: two clocks, first to set it right wins a point; play a friend or the robot.
+
+THREE LEVELS
+• O'clock and half past (about Year 2)
+• Hours and minutes (about Year 3, 5-minute steps)
+• How long? (about Year 4, 1-minute steps, 24-hour time, minutes from one time to another)
+
+MISTAKES ARE OK
+No timers, no lives. A wrong answer just makes the animal tilt its head, and dotted hands show the right spot. If your child keeps reading 2:50 as 3:50, more x:50 and x:55 times appear, with hints aimed at that mistake ("Tortoise hasn't reached 3 yet!", or a timeline when the time passes the hour).
+
+KEEP GETTING BETTER
+• Star map: every time has a star that lights up after a few right answers.
+• Daily missions, badges and a pet; the town grows a little after every game.
+• Up to 4 children with their own records; backup and move to a new device.
+
+FOR PARENTS
+• No ads, no tracking, no data collected. Records stay on this device.
+• Works offline.
+• Progress report (For grown-ups, in Settings): how much your child practised in the last 7 days and which mix-ups come up most.
+• Free to download: Town Day, What time?, the star map, the pet and daily missions are free. Match, Fix-it Shop and Two players can each be tried 3 times. One purchase unlocks everything for good (not a subscription; every child on the device can play), and also adds an example of each mix-up to the progress report, with what to try in the game and at home. Payment is handled by the App Store.
+• Purchases and external links are behind a parent gate; children never see prices.
+• 繁體中文, English, 日本語, 한국어, Español.
+
+Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
+```
+
+
+**完整說明：Google 版（Play Console）**（3507／4000）
+
+```text
+Tick-Tock Town is a game for children in Years 2–4 to practise reading clocks, setting clocks and working out elapsed time. Kids just feel like they are helping the town animals, while the game quietly tracks which kind of mistake happens and shows more of the times that trigger it.
+
+A NOTE FROM THE AUTHOR
+I'm a dad of three, and I also made 9×9 Meteor Squad, a times-tables game.
+Telling time is something kids use every day, yet it's easy to mix up: which hand is which, reading 2:50 as 3:50, and getting stuck when elapsed time passes the hour.
+
+So I made this game. The hour hand is a slow tortoise and the minute hand is a fast rabbit. Kids set the clocks with their own fingers and help the town animals, getting comfortable with clocks while they play. I hope it helps you and your child too.
+
+The free games, Town Day and What time?, already give you almost the full practice experience. If you'd like more ways to practise (described below), you can unlock all games. Think of it as buying this dad of three a cup of coffee. Thank you for your support!
+
+TORTOISE IS THE HOUR HAND, RABBIT IS THE MINUTE HAND
+The short, slow hand is Tortoise; the long, fast hand is Rabbit. Drag Rabbit and Tortoise follows slowly, so kids see for themselves that at half past 3 the hour hand sits between 3 and 4. A ring of 05, 10, 15… around the clock shows the minutes (you can turn it off).
+
+GAMES (Town Day and What time? are free; in the app, the other three can each be tried 3 times)
+• Town Day: the animals have 7 things to do. Set the clock and they head out, and their house lights up.
+• What time?: read the clock and pick the right time; times you know well switch to typing.
+• Match: flip cards and match clocks, digital times and words.
+• Fix-it Shop: is the clock's tag right? Wrong tags are picked from your child's typical mistakes.
+• Two players: two clocks, first to set it right wins a point; play a friend or the robot.
+
+THREE LEVELS
+• O'clock and half past (about Year 2)
+• Hours and minutes (about Year 3, 5-minute steps)
+• How long? (about Year 4, 1-minute steps, 24-hour time, minutes from one time to another)
+
+MISTAKES ARE OK
+No timers, no lives. A wrong answer just makes the animal tilt its head, and dotted hands show the right spot. If your child keeps reading 2:50 as 3:50, more x:50 and x:55 times appear, with hints aimed at that mistake ("Tortoise hasn't reached 3 yet!", or a timeline when the time passes the hour).
+
+KEEP GETTING BETTER
+• Star map: every time has a star that lights up after a few right answers.
+• Daily missions, badges and a pet; the town grows a little after every game.
+• Up to 4 children with their own records; backup and move to a new device.
+
+FOR PARENTS
+• No ads, no tracking, no data collected. Records stay on this device.
+• Works offline.
+• Progress report (For grown-ups, in Settings): how much your child practised in the last 7 days and which mix-ups come up most.
+• Free to download: Town Day, What time?, the star map, the pet and daily missions are free. Match, Fix-it Shop and Two players can each be tried 3 times. One purchase unlocks everything for good (not a subscription; every child on the device can play), and also adds an example of each mix-up to the progress report, with what to try in the game and at home. Payment is handled by Google Play.
+• Purchases and external links are behind a parent gate; children never see prices.
+• 繁體中文, English, 日本語, 한국어, Español.
+
+Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
+```
+
 ### 日本語（ja）
 
 | 欄位 | 字數／上限 | 內容 |
@@ -205,10 +345,18 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 | 隱私權政策網址 | | `https://tick-town.sanbaofang.com/privacy/ja.html` |
 | 支援網址 | | `https://tick-town.sanbaofang.com/support/` |
 
-**完整說明：Apple 版（App Store Connect）**（1267／4000）
+**完整說明：Apple 版（App Store Connect）**（1652／4000）
 
 ```text
 チクタクタウンは、小学1～3年生が時計の読み方・合わせ方・時間の計算を練習するゲームです。子どもは、まちの動物のお手伝いをしているだけ。その裏で、ゲームは「どんなまちがいが多いか」を記録し、そのまちがいが起きやすい時刻を多めに出します。
+
+【作者より】
+私は3人の子どもの父親で、九九を練習するゲーム「九九流星隊」も作りました。
+時計は毎日使うのに、子どもにとってはまちがえやすいものです。長い針と短い針を取りちがえたり、2:50 を 3:50 と読んだり、「何分たったか」は時間をまたぐところでつまずいたりします。
+
+そこで、短い針をゆっくり歩くかめ、長い針を速く走るうさぎにして、指で時計を動かしながら町の動物のお手伝いをするゲームを作りました。楽しく遊びながら時計に慣れてもらえたらと思っています。みなさんのご家庭でもお役に立てばうれしいです。
+
+無料の「まちの一日」と「いま何時？」だけで、練習機能のほとんどを体験できます。ほかの練習方法（下でご紹介します）も試したくなったら、すべてのゲームを解除できます。3児の父にコーヒーを1杯ごちそうするつもりで応援していただけたら、とてもはげみになります。
 
 【短い針はかめ、長い針はうさぎ】
 ゆっくり動く短い針はかめ、速く動く長い針はうさぎ。うさぎを指で動かすと、かめもゆっくりついてきます。「3時半のとき、短い針は3と4の間」が目で見てわかります。時計の外側には 05、10、15… の分の数字（消すこともできます）。
@@ -245,10 +393,18 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 ```
 
 
-**完整說明：Google 版（Play Console）**（1269／4000）
+**完整說明：Google 版（Play Console）**（1654／4000）
 
 ```text
 チクタクタウンは、小学1～3年生が時計の読み方・合わせ方・時間の計算を練習するゲームです。子どもは、まちの動物のお手伝いをしているだけ。その裏で、ゲームは「どんなまちがいが多いか」を記録し、そのまちがいが起きやすい時刻を多めに出します。
+
+【作者より】
+私は3人の子どもの父親で、九九を練習するゲーム「九九流星隊」も作りました。
+時計は毎日使うのに、子どもにとってはまちがえやすいものです。長い針と短い針を取りちがえたり、2:50 を 3:50 と読んだり、「何分たったか」は時間をまたぐところでつまずいたりします。
+
+そこで、短い針をゆっくり歩くかめ、長い針を速く走るうさぎにして、指で時計を動かしながら町の動物のお手伝いをするゲームを作りました。楽しく遊びながら時計に慣れてもらえたらと思っています。みなさんのご家庭でもお役に立てばうれしいです。
+
+無料の「まちの一日」と「いま何時？」だけで、練習機能のほとんどを体験できます。ほかの練習方法（下でご紹介します）も試したくなったら、すべてのゲームを解除できます。3児の父にコーヒーを1杯ごちそうするつもりで応援していただけたら、とてもはげみになります。
 
 【短い針はかめ、長い針はうさぎ】
 ゆっくり動く短い針はかめ、速く動く長い針はうさぎ。うさぎを指で動かすと、かめもゆっくりついてきます。「3時半のとき、短い針は3と4の間」が目で見てわかります。時計の外側には 05、10、15… の分の数字（消すこともできます）。
@@ -297,10 +453,18 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 | 隱私權政策網址 | | `https://tick-town.sanbaofang.com/privacy/ko.html` |
 | 支援網址 | | `https://tick-town.sanbaofang.com/support/` |
 
-**完整說明：Apple 版（App Store Connect）**（1386／4000）
+**完整說明：Apple 版（App Store Connect）**（1827／4000）
 
 ```text
 째깍 마을은 초등학교 1~3학년이 시계 읽기, 시계 맞추기, 지난 시간 계산을 연습하는 게임입니다. 아이는 마을 동물을 돕는다고만 느끼고, 게임은 뒤에서 '어떤 종류의 실수'를 하는지 기록해 그 실수가 나오기 쉬운 시각을 더 자주 냅니다.
+
+제작자의 말
+저는 세 아이의 아빠이고, 구구단 연습 게임 「구구 유성대」도 만들었습니다.
+시계 보기는 아이가 매일 쓰는 능력인데도 헷갈리기 쉽습니다. 긴바늘과 짧은바늘을 바꿔 보거나, 2:50을 3:50으로 읽거나, '얼마나 지났는지'를 셀 때 정시를 넘어가는 부분에서 막히곤 하지요.
+
+그래서 짧은바늘은 천천히 걷는 거북이, 긴바늘은 빨리 달리는 토끼로 만들고, 아이가 손으로 시계를 맞추며 마을 동물을 돕는 게임을 만들었습니다. 즐겁게 놀면서 시계 보기에 익숙해지기를 바랍니다. 여러분과 아이에게도 도움이 되기를 바랍니다.
+
+무료인 「마을의 하루」와 「몇 시야?」만으로도 거의 모든 연습을 경험할 수 있습니다. 더 다양한 방법으로 연습하고 싶으시다면(아래 설명 참고) 모든 게임을 열 수 있습니다. 세 아이 아빠에게 커피 한 잔 사 준다고 생각해 주세요. 응원해 주셔서 감사합니다!
 
 【짧은바늘은 거북이, 긴바늘은 토끼】
 짧고 느린 바늘은 거북이, 길고 빠른 바늘은 토끼예요. 토끼를 끌면 거북이가 천천히 따라와서, '3시 반일 때 짧은바늘은 3과 4 사이'라는 걸 눈으로 볼 수 있어요. 시계 바깥에는 05, 10, 15… 분 숫자가 있어요(끌 수 있음).
@@ -337,10 +501,18 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 ```
 
 
-**完整說明：Google 版（Play Console）**（1388／4000）
+**完整說明：Google 版（Play Console）**（1829／4000）
 
 ```text
 째깍 마을은 초등학교 1~3학년이 시계 읽기, 시계 맞추기, 지난 시간 계산을 연습하는 게임입니다. 아이는 마을 동물을 돕는다고만 느끼고, 게임은 뒤에서 '어떤 종류의 실수'를 하는지 기록해 그 실수가 나오기 쉬운 시각을 더 자주 냅니다.
+
+제작자의 말
+저는 세 아이의 아빠이고, 구구단 연습 게임 「구구 유성대」도 만들었습니다.
+시계 보기는 아이가 매일 쓰는 능력인데도 헷갈리기 쉽습니다. 긴바늘과 짧은바늘을 바꿔 보거나, 2:50을 3:50으로 읽거나, '얼마나 지났는지'를 셀 때 정시를 넘어가는 부분에서 막히곤 하지요.
+
+그래서 짧은바늘은 천천히 걷는 거북이, 긴바늘은 빨리 달리는 토끼로 만들고, 아이가 손으로 시계를 맞추며 마을 동물을 돕는 게임을 만들었습니다. 즐겁게 놀면서 시계 보기에 익숙해지기를 바랍니다. 여러분과 아이에게도 도움이 되기를 바랍니다.
+
+무료인 「마을의 하루」와 「몇 시야?」만으로도 거의 모든 연습을 경험할 수 있습니다. 더 다양한 방법으로 연습하고 싶으시다면(아래 설명 참고) 모든 게임을 열 수 있습니다. 세 아이 아빠에게 커피 한 잔 사 준다고 생각해 주세요. 응원해 주셔서 감사합니다!
 
 【짧은바늘은 거북이, 긴바늘은 토끼】
 짧고 느린 바늘은 거북이, 길고 빠른 바늘은 토끼예요. 토끼를 끌면 거북이가 천천히 따라와서, '3시 반일 때 짧은바늘은 3과 4 사이'라는 걸 눈으로 볼 수 있어요. 시계 바깥에는 05, 10, 15… 분 숫자가 있어요(끌 수 있음).
@@ -389,10 +561,18 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 | 隱私權政策網址 | | `https://tick-town.sanbaofang.com/privacy/es.html` |
 | 支援網址 | | `https://tick-town.sanbaofang.com/support/` |
 
-**完整說明：Apple 版（App Store Connect）**（2833／4000）
+**完整說明：Apple 版（App Store Connect）**（3675／4000）
 
 ```text
 Pueblo Tictac es un juego para niños de 1.º a 3.º de primaria para practicar leer la hora, poner el reloj en hora y calcular cuánto tiempo pasó. Los niños solo sienten que ayudan a los animales del pueblo, mientras el juego registra qué tipo de error ocurre y muestra más las horas que lo provocan.
+
+UNA NOTA DEL AUTOR
+Soy papá de tres, y también hice Escuadrón Meteoro, un juego para las tablas de multiplicar.
+Leer la hora es algo que los niños usan todos los días, pero es fácil confundirse: cuál aguja es cuál, leer 2:50 como 3:50, o atorarse al calcular cuánto tiempo pasó cuando se cruza la hora en punto.
+
+Así que hice este juego: la aguja de las horas es una tortuga lenta y la de los minutos un conejo rápido. Los niños mueven el reloj con el dedo y ayudan a los animales del pueblo, y se van acostumbrando al reloj mientras juegan. Ojalá también le sirva a su familia.
+
+Los juegos gratuitos, Día del pueblo y ¿Qué hora es?, ya ofrecen casi toda la práctica. Si quiere más formas de practicar (abajo se describen), puede desbloquear todos los juegos. Piense que le está invitando un café a este papá de tres. ¡Gracias por su apoyo!
 
 LA TORTUGA ES LA AGUJA CORTA, EL CONEJO ES LA LARGA
 La aguja corta y lenta es la tortuga; la larga y rápida es el conejo. Al arrastrar el conejo, la tortuga lo sigue despacio, así los niños ven que a las 3 y media la aguja corta está entre el 3 y el 4. Un aro con 05, 10, 15… alrededor del reloj muestra los minutos (se puede quitar).
@@ -429,10 +609,18 @@ Política de privacidad: https://tick-town.sanbaofang.com/privacy/es.html
 ```
 
 
-**完整說明：Google 版（Play Console）**（2835／4000）
+**完整說明：Google 版（Play Console）**（3677／4000）
 
 ```text
 Pueblo Tictac es un juego para niños de 1.º a 3.º de primaria para practicar leer la hora, poner el reloj en hora y calcular cuánto tiempo pasó. Los niños solo sienten que ayudan a los animales del pueblo, mientras el juego registra qué tipo de error ocurre y muestra más las horas que lo provocan.
+
+UNA NOTA DEL AUTOR
+Soy papá de tres, y también hice Escuadrón Meteoro, un juego para las tablas de multiplicar.
+Leer la hora es algo que los niños usan todos los días, pero es fácil confundirse: cuál aguja es cuál, leer 2:50 como 3:50, o atorarse al calcular cuánto tiempo pasó cuando se cruza la hora en punto.
+
+Así que hice este juego: la aguja de las horas es una tortuga lenta y la de los minutos un conejo rápido. Los niños mueven el reloj con el dedo y ayudan a los animales del pueblo, y se van acostumbrando al reloj mientras juegan. Ojalá también le sirva a su familia.
+
+Los juegos gratuitos, Día del pueblo y ¿Qué hora es?, ya ofrecen casi toda la práctica. Si quiere más formas de practicar (abajo se describen), puede desbloquear todos los juegos. Piense que le está invitando un café a este papá de tres. ¡Gracias por su apoyo!
 
 LA TORTUGA ES LA AGUJA CORTA, EL CONEJO ES LA LARGA
 La aguja corta y lenta es la tortuga; la larga y rápida es el conejo. Al arrastrar el conejo, la tortuga lo sigue despacio, así los niños ven que a las 3 y media la aguja corta está entre el 3 y el 4. Un aro con 05, 10, 15… alrededor del reloj muestra los minutos (se puede quitar).
@@ -517,6 +705,10 @@ Acorns (used to feed the pet) are earned only by answering questions and cannot 
 | 日本語 | すべてのゲームをアンロック | 3つのゲームがいつでも遊べて、学習レポートに例とアドバイスが出ます。 |
 | 한국어 | 모든 게임 잠금 해제 | 세 게임을 마음껏 하고 학습 보고서에 예시와 조언이 나옵니다. |
 | Español | Desbloquear todo | Los 3 juegos sin límite y consejos |
+| 简体中文（zh-Hans） | 解锁全部游戏 | 配对、修钟店、两个人一起可以一直玩，学习报告多出例子和建议。 |
+| English (U.K.)（en-GB） | Unlock all games | Play all 3 games anytime, plus report tips |
+
+> 簡體中文和英文（英國）只用在內購的顯示名稱與說明（App Store 的這兩種地區看得到）；遊戲本身沒有簡體中文，簡體中文的裝置會看到繁體中文。
 
 審查用截圖：`store/iap/purchase-zh-Hant.png`（1206 × 2622，`tools/iap-shot.cjs` 用遊戲本身產生，價錢是示意）。審查備註見下。
 

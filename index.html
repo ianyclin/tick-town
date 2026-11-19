@@ -126,9 +126,10 @@ h1.two{white-space:normal;line-height:1.05;font-size:12px}
 .vtask{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 16px;font-weight:900;font-size:17px;display:flex;align-items:center;gap:8px}
 .vtask b{font-family:var(--f-num);font-size:24px;color:var(--hour);font-weight:400}
 .vtask .emo{font-size:22px}
-.vmid{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px 8px;font-family:var(--f-num);font-size:22px}
+.vmid{width:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px 8px;font-family:var(--f-num);font-size:22px}
 .vmid .dots{display:flex;gap:4px}.vmid .dots i{width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.12)}.vmid .dots i.on{background:var(--sun);box-shadow:0 0 6px var(--sun)}
-.vmid .link-btn{min-height:44px;font-size:14px;padding:0 10px;margin-right:auto;white-space:nowrap}
+.vmid .link-btn{min-height:44px;font-size:14px;padding:0 10px;justify-self:start;white-space:nowrap}
+.vscore{display:flex;align-items:center;gap:8px}   /* 比數放正中間：左右兩欄一樣寬，返回鈕在左欄；太窄時左欄先撐開返回鈕 */
 .robot{font-size:64px;line-height:1;transition:transform .2s}.robot.think{animation:robotThink 1s ease-in-out infinite}
 @keyframes robotThink{50%{transform:rotate(6deg) translateY(-3px)}}
 .vbar{width:160px;height:10px;border-radius:5px;background:rgba(0,0,0,.1);overflow:hidden}.vbar i{display:block;height:100%;background:var(--mint);width:0}
@@ -506,7 +507,7 @@ img.av{height:1.25em;width:auto;display:block;flex:none;filter:drop-shadow(0 2px
     <div class="robot" id="v-robot" data-ic="robot" hidden></div>
     <div class="vbar" id="v-bar" hidden><i></i></div>
   </div>
-  <div class="vmid"><button class="link-btn" type="button" data-home data-t="back"></button><span id="v-emoA" class="emo" data-av="bear"></span><span class="dots" id="v-dotsA"></span><span>:</span><span class="dots" id="v-dotsB"></span><span id="v-emoB" class="emo" data-av="robot"></span></div>
+  <div class="vmid"><button class="link-btn" type="button" data-home data-t="back"></button><div class="vscore"><span id="v-emoA" class="emo" data-av="bear"></span><span class="dots" id="v-dotsA"></span><span>:</span><span class="dots" id="v-dotsB"></span><span id="v-emoB" class="emo" data-av="robot"></span></div><span></span></div>
   <div class="half" id="v-bottom">
     <div class="vtask" id="v-task1"><span class="emo" id="v-emo1" data-av="bear"></span><span data-t="vs.task"></span><b id="v-t1"></b></div>
     <div class="clock-wrap" id="clockA"></div>
