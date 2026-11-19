@@ -5,7 +5,7 @@
 
 ## 下一步（依序）
 
-1. **上架**：程式這邊都準備好了，剩下要 Ian 操作的步驟在 `docs/launch.md`（裝 APK 試玩、母語者校對、定價、Mac 上 Xcode 建 iOS、App Store Connect 建內購 `unlock_all`、TestFlight 沙盒測試、送審）。Android 照九九的決定之後再上。
+1. **上架**：程式這邊都準備好了，剩下要 Ian 操作的步驟在 `docs/launch.md`（裝 APK 試玩、母語者校對、定價、Mac 上 Xcode 建 iOS、App Store Connect 建內購 `ticktown.unlock_all`、TestFlight 沙盒測試、送審）。Android 照九九的決定之後再上。
 
 ## 遲早要面對
 

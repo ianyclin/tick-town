@@ -482,7 +482,7 @@ Política de privacidad: https://tick-town.sanbaofang.com/privacy/es.html
 | 年齡分級問卷 | 七步全部答「無／否」。「分級保護控制」答否（家長關卡只擋購買和外部連結，不算） |
 | 內容版權 | 選「是，且有權使用」（用了 SIL OFL 字型；插畫是 AI 生成、由作者擁有） |
 | 版權（版本頁） | `2026 指數三寶飯`（不要自己打 ©） |
-| 價格 | App **免費**＋一個**非消耗型**內購 `unlock_all`（九九是 US$2.99）。內購的顯示名稱與說明見下面第四節。打開「家人共享」 |
+| 價格 | App **免費**＋一個**非消耗型**內購 `ticktown.unlock_all`（九九是 US$2.99）。內購的顯示名稱與說明見下面第四節。打開「家人共享」 |
 | App Privacy | **不收集資料（Data Not Collected）**、不追蹤。遊戲本身沒有網路請求；購買由 Apple 處理 |
 | Game Center | 不勾 |
 | 版本發佈 | 「手動發佈」，通過後自己按上架 |
@@ -497,7 +497,7 @@ Tick-Tock Town is an offline clock-reading game for children in grades 1-3. It h
 
 First launch: a short hands-on tutorial starts (drag the clock hands three times). Tap "Skip" at the top right to go straight to "What do you want to practice?", pick any level, and the main menu opens.
 
-In-app purchase (one non-consumable, unlock_all): Town Day, What time?, the star map, the pet and daily missions are free. Match, Fix-it Shop and Two players can each be played 3 times for free; after that a card asks the child to show a grown-up. Buying also adds the detailed advice (an example of each mistake, and what to try in the game and at home) to the parents' Progress report.
+In-app purchase (one non-consumable, ticktown.unlock_all): Town Day, What time?, the star map, the pet and daily missions are free. Match, Fix-it Shop and Two players can each be played 3 times for free; after that a card asks the child to show a grown-up. Buying also adds the detailed advice (an example of each mistake, and what to try in the game and at home) to the parents' Progress report.
 
 Fastest path to the purchase screen: Settings (gear icon, top right) -> For grown-ups -> Unlock all games -> "View" -> solve the parental gate -> purchase card (price, Buy, Restore purchase, Use a promo code).
 Parental gate: solve the arithmetic shown, e.g. 5 + 2 x 13 = 31 (multiply first). Three wrong answers lock it for 30 seconds.
@@ -508,7 +508,7 @@ Acorns (used to feed the pet) are earned only by answering questions and cannot 
 
 > 不要在備註裡提「網頁版免費」（4.2 最低功能的風險）。送審前付費協議、銀行、稅表要全部「有效」，而且**要在 TestFlight 看到購買鈕上的價錢**，不然審核員看到讀不到商品會退件。
 
-## 四、內購項目 `unlock_all`
+## 四、內購項目 `ticktown.unlock_all`
 
 | 語言 | 顯示名稱 | 說明 |
 |---|---|---|

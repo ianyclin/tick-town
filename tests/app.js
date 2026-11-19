@@ -5,8 +5,8 @@ const SHOT = process.argv[2];
 const URL = process.env.TT_URL || 'http://localhost:8124/index.html';
 const FAKE = owned => `window.__iap = { owned: ${owned}, calls: [] }; window.Capacitor = { isNativePlatform: () => true, getPlatform: () => 'android', addListener: () => {},
   nativePromise: async (pl, m, o) => { window.__iap.calls.push(m); if (m === 'getProducts') return { products: [{ priceString: 'NT$90' }] };
-    if (m === 'getPurchases') return { purchases: window.__iap.owned ? [{ productIdentifier: 'unlock_all', purchaseState: '1', isAcknowledged: true }] : [] };
-    if (m === 'purchaseProduct') { window.__iap.owned = true; return { productIdentifier: 'unlock_all', purchaseState: '1', isAcknowledged: false, purchaseToken: 't' }; }
+    if (m === 'getPurchases') return { purchases: window.__iap.owned ? [{ productIdentifier: 'ticktown.unlock_all', purchaseState: '1', isAcknowledged: true }] : [] };
+    if (m === 'purchaseProduct') { window.__iap.owned = true; return { productIdentifier: 'ticktown.unlock_all', purchaseState: '1', isAcknowledged: false, purchaseToken: 't' }; }
     return {}; } };`;
 (async () => {
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox'] });
