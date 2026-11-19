@@ -30,7 +30,7 @@
 
 - **母語者看文字**：英、日、韓、西文是 Claude 寫的。可以先上繁體中文和英文，其他語言等看過再加（App Store 的語言之後可以隨時加）。
 - **Android**：照九九的決定，等確認是否登記行號再上 Google Play。GitHub Actions 每次 main 更新都會自動建測試 APK：`https://github.com/ianyclin/tick-town/releases/download/android-latest/tick-town.apk`。
-- **標題和搜尋結果素材**（選填）：本機 session 用 ChatGPT 生了 3D 劇照風主視覺，做好放在 `store/hero/`。
+- **標題和搜尋結果素材**（選填，可以上架時一起傳）：`store/hero/universal-5244x2950.png`（ChatGPT 生成的 3D 劇照風主視覺）。
 
 ## 著作權
 

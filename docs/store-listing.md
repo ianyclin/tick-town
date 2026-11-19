@@ -530,7 +530,7 @@ Acorns (used to feed the pet) are earned only by answering questions and cannot 
 | `store/screenshots/apple-ipad-13/` | 2064 × 2752 | App Store iPad 13 吋（**必填**，專案支援 iPad） |
 | `store/screenshots/google-phone/` | 1080 × 2160 | Google Play 手機 |
 | `store/graphic/feature-<語言>.png` | 1024 × 500 | Google Play 主圖 |
-| `store/hero/` | 見資料夾 | App Store「標題和搜尋結果」素材（選填），ChatGPT 生成的 3D 劇照風主視覺 |
+| `store/hero/universal-5244x2950.png` | 5244 × 2950 | App Store「標題和搜尋結果」素材（選填；傳這一張通用的就好，上傳後用「預覽」看兩種裁切）。另有 `title-3840x1646.png`、`search-3840x2560.png` 可以分開傳。ChatGPT 生成的 3D 劇照風主視覺（原圖 `art/hero-raw/hero.png`，`tools/make-hero.py` 放大、裁切） |
 
 - 英文、日文等沒傳截圖的語言，會沿用主要語言那組。
 - App 圖示：`assets/icons/icon-1024-store.png`（1024 × 1024、不透明）。
