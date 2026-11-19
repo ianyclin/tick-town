@@ -60,6 +60,20 @@ const KEY = `(i => { const d = new Date(); d.setDate(d.getDate() - i); return d.
     ok(ks.length <= 28 && !ks.includes('abc') && ks.every(k => /^\d{4}-\d\d-\d\d$/.test(k)), `只留 28 天、怪的鍵拿掉（${ks.length} 天）`);
     const bad = Object.values(L).find(v => v.e && v.e.minIndex); ok(bad && bad.n === 0 && bad.ok === 0 && bad.e.minIndex === 3 && !('bogus' in bad.e) && !('hourLate' in bad.e), `壞掉的那一天修好了 ${JSON.stringify(bad)}`);
     await p.click('#go-set'); await p.click('#go-report'); await p.waitForTimeout(200); ok(await p.isVisible('#o-report') && p.errs.length === 0, `壞紀錄也打得開報告 ${p.errs.join(' | ')}`); await p.close(); }
+  // App 版還沒解鎖：只列錯法的名字和次數，例子和建議要解鎖；買了馬上出現。網頁版（上面那些）永遠看得到
+  { const FAKE = `window.__iap = { owned: false }; window.Capacitor = { isNativePlatform: () => true, getPlatform: () => 'ios', addListener: () => {}, nativePromise: async (pl, m) => { if (m === 'getProducts') return { products: [{ priceString: 'NT$90' }] }; if (m === 'getPurchases') return { purchases: window.__iap.owned ? [{ productIdentifier: 'unlock_all', purchaseState: '1', isAcknowledged: true }] : [] }; if (m === 'purchaseProduct') { window.__iap.owned = true; return { productIdentifier: 'unlock_all', purchaseState: '1', isAcknowledged: true }; } return {}; } };`;
+    const p = await (await b.newContext({ viewport: { width: 390, height: 844 } })).newPage(); p.errs = []; p.on('pageerror', e => p.errs.push(e.message));
+    await p.addInitScript(FAKE); await p.addInitScript(`if (!sessionStorage.x) { sessionStorage.x = 1; const key = ${KEY}; localStorage.setItem('tick-town-v1', JSON.stringify((${SEED})(key))); }`);
+    await p.goto(URL); await p.waitForTimeout(500); await p.click('#go-set'); await p.click('#go-report'); await p.waitForTimeout(300);
+    const t = await p.textContent('#rep-body');
+    ok((await p.$$('.rep-err[data-err]')).length === 3 && /這兩週 10 次/.test(t) && (await p.$$('.rep-err[data-err] p')).length === 0 && !/7:50/.test(t), 'App 沒解鎖：看得到最常搞混的三種和次數，沒有例子和建議');
+    ok(await p.isVisible('#rep-unlock') && !/NT\$|元/.test(t), '有「看看解鎖」的鈕，報告上不寫價錢');
+    await p.click('#rep-unlock'); await p.waitForTimeout(200); ok(await p.isVisible('#o-gate') && await p.isHidden('#o-buy'), '按了先出家長關卡');
+    const q = await p.textContent('#gate-q'), m = q.match(/(\d+)\s*\+\s*(\d+)\s*×\s*(\d+)/); for (const ch of String(+m[1] + m[2] * m[3])) await p.click(`#gate-keys [data-k="${ch}"]`); await p.waitForTimeout(400);
+    ok(await p.isVisible('#o-buy') && /學習報告/.test(await p.textContent('#buy-list')), '過關才到購買卡，上面寫了會多學習報告的完整內容');
+    await p.click('#buy-go'); await p.waitForTimeout(600); const t2 = await p.textContent('#rep-body');
+    ok((await p.$$('.rep-err[data-err] p')).length === 9 && /7:50/.test(t2) && (await p.$$('#rep-unlock')).length === 0, '買了以後報告馬上出現例子和建議');
+    ok(p.errs.length === 0, `App 無錯誤 ${p.errs.join(' | ')}`); await p.close(); }
   // 五種語言 × 小螢幕：報告卡在畫面內、字沒有跑出卡片、沒有漏翻（看得到 key 的名字就是漏了）
   for (const lang of ['zh-Hant', 'en', 'ja', 'ko', 'es']) for (const [w, h] of [[320, 568], [820, 1180]]) {
     const p = await open(SEED.replace(`lang: 'zh-Hant'`, `lang: '${lang}'`), { width: w, height: h }); await p.click('#go-set'); await p.click('#go-report'); await p.waitForTimeout(300);
