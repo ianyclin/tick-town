@@ -27,18 +27,20 @@ const SAVE = lang => JSON.stringify({ set: { lang, sound: false, music: false, l
         .gr{position:absolute;left:0;right:0;bottom:-60px;height:140px;background:linear-gradient(#b4e89e,#8fd58a);border-radius:50% 50% 0 0}</style></head>
         <body><div class="gr"></div><div class="l"><img class="i" src="${URL.replace('index.html', '')}assets/icons/icon-512.png"><h1>${g.title}</h1><p>${g.tagline}</p><span class="badge">${g.badge}</span></div><div class="ph"><img src="data:image/png;base64,${shot}"></div></body></html>`);
       await p.waitForTimeout(800); fs.mkdirSync(path.join(ROOT, 'store/graphic'), { recursive: true }); await p.screenshot({ path: path.join(ROOT, `store/graphic/feature-${lang}.png`) }); await p.close(); }
-    // 手機截圖：主選單、小鎮的一天、幾點了、修鐘店、星圖
-    for (const [dev, vw, vh, sc] of [['iphone-6.9', 440, 956, 3], ['android-phone', 360, 640, 3]]) {
+    // 截圖（六張：主選單、小鎮的一天、幾點了、配對、修鐘店、寵物；搜尋結果只顯示前三張）。尺寸是 App Store Connect 現在收的：
+    // iPhone（動態島）1206×2622、iPad 13 吋 2064×2752（專案支援 iPad 就必填）；Google 手機 1080×2160（長短邊不超過 2:1）
+    for (const [dev, vw, vh, sc] of [['apple-iphone-6.3', 402, 874, 3], ['apple-ipad-13', 1032, 1376, 2], ['google-phone', 360, 720, 3]]) {
       const dir = path.join(ROOT, 'store/screenshots', dev); fs.mkdirSync(dir, { recursive: true });
       const p = await b.newPage({ viewport: { width: vw, height: vh }, deviceScaleFactor: sc });
       await p.addInitScript(`localStorage.setItem('tick-town-v1', ${JSON.stringify(SAVE(lang))});`);
       await p.goto(URL); await p.waitForTimeout(2300);
       const snap = async n => p.screenshot({ path: path.join(dir, `${lang}-${n}.jpg`), type: 'jpeg', quality: 86 });
       await snap(1);
-      await p.click('[data-mode=day]'); await p.waitForTimeout(400); await snap(2); await p.click('#s-day [data-home]'); await p.waitForTimeout(300);
-      await p.click('[data-mode=read]'); await p.waitForTimeout(400); await snap(3); await p.click('#s-read [data-home]'); await p.waitForTimeout(300);
-      await p.click('[data-mode=shop]'); await p.waitForTimeout(400); await snap(4); await p.click('#s-shop [data-home]'); await p.waitForTimeout(300);
-      await p.click('#go-map'); await p.waitForTimeout(400); await snap(5);
+      await p.click('[data-mode=day]'); await p.waitForTimeout(400); await snap(2); await p.evaluate(() => document.querySelector('#s-day [data-home]').click()); await p.waitForTimeout(300);
+      await p.click('[data-mode=read]'); await p.waitForTimeout(400); await snap(3); await p.evaluate(() => document.querySelector('#s-read [data-home]').click()); await p.waitForTimeout(300);
+      await p.click('[data-mode=match]'); await p.waitForTimeout(500); { const i = await p.evaluate(() => { const c = window.__tt.Match.s().cards; return c.findIndex((x, k) => k > 0 && x.i === c[0].i); }); await p.click('#mgrid .mcard[data-i="0"]'); await p.click(`#mgrid .mcard[data-i="${i}"]`); await p.waitForTimeout(900); } await snap(4); await p.evaluate(() => document.querySelector('#s-match [data-home]').click()); await p.waitForTimeout(300);   // 配對先配好一對，畫面上看得到牌面
+      await p.click('[data-mode=shop]'); await p.waitForTimeout(400); await snap(5); await p.evaluate(() => document.querySelector('#s-shop [data-home]').click()); await p.waitForTimeout(300);
+      await p.click('#go-pet'); await p.waitForTimeout(600); await snap(6);
       await p.close();
     }
     console.log(lang, 'done');

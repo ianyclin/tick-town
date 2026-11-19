@@ -1,6 +1,6 @@
 {
   "name": "tick-town",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "private": true,
   "description": "滴答小鎮：原生外殼（Capacitor）。遊戲本體仍是單檔 index.html，開檔即玩；這個 package 只為了打包 iOS／Android。",
   "scripts": {
