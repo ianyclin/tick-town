@@ -228,7 +228,7 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
-| 名稱（Apple Name／Google 標題） | 30／30 | Tick-Tock Town: Tortoise Clock |
+| 名稱（Apple Name／Google 標題） | 29／30 | Clock Town: Tortoise & Rabbit |
 | 副標題（Apple Subtitle） | 30／30 | Drag the hands, learn the time |
 | 宣傳文字（Apple Promotional Text） | 129／170 | Help the town animals set, read and work out the time. Tricky times come back more often. No ads, no internet, no data collected. |
 | 簡短說明（Google Short description） | 70／80 | Help the town animals set and read clocks. No ads, no internet needed. |
@@ -444,7 +444,7 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
-| 名稱（Apple Name／Google 標題） | 15／30 | 째깍 마을: 시계 보기 연습 |
+| 名稱（Apple Name／Google 標題） | 14／30 | 시계 마을: 거북이와 토끼 |
 | 副標題（Apple Subtitle） | 28／30 | 거북이·토끼 바늘로 시계 보기, 틀린 곳 집중 연습 |
 | 宣傳文字（Apple Promotional Text） | 87／170 | 마을 동물들을 위해 시계를 맞추고, 읽고, 지난 시간을 계산해요. 자주 헷갈리는 시각은 더 자주 나와요. 광고 없음, 인터넷 필요 없음, 데이터 수집 없음. |
 | 簡短說明（Google Short description） | 38／80 | 마을 동물들과 시계를 맞추고 읽어요. 광고 없음, 인터넷 필요 없음. |
