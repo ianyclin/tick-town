@@ -68,6 +68,9 @@ const KEY = `(i => { const d = new Date(); d.setDate(d.getDate() - i); return d.
     const t = await p.textContent('#rep-body');
     ok((await p.$$('.rep-err[data-err]')).length === 3 && /這兩週 10 次/.test(t) && (await p.$$('.rep-err[data-err] p')).length === 0 && !/7:50/.test(t), 'App 沒解鎖：看得到最常搞混的三種和次數，沒有例子和建議');
     ok(await p.isVisible('#rep-unlock') && !/NT\$|元/.test(t), '有「看看解鎖」的鈕，報告上不寫價錢');
+    { const q = await (await b.newContext({ viewport: { width: 390, height: 844 } })).newPage(); await q.addInitScript(FAKE); await q.addInitScript(`localStorage.setItem('tick-town-v1', JSON.stringify({ tut: true, hinted: true, set: { lang: 'zh-Hant', sound: false, music: false } }));`);
+      await q.goto(URL); await q.waitForTimeout(500); await q.click('#go-set'); ok(/學習報告/.test(await q.textContent('#set-unlockD')), `設定的解鎖那一列寫出報告也會多內容：${await q.textContent('#set-unlockD')}`);
+      await q.click('#go-report'); await q.waitForTimeout(300); ok(await q.isVisible('#rep-unlock'), '還沒有紀錄的報告也寫出解鎖後會多出例子和建議'); await q.context().close(); }
     await p.click('#rep-unlock'); await p.waitForTimeout(200); ok(await p.isVisible('#o-gate') && await p.isHidden('#o-buy'), '按了先出家長關卡');
     const q = await p.textContent('#gate-q'), m = q.match(/(\d+)\s*\+\s*(\d+)\s*×\s*(\d+)/); for (const ch of String(+m[1] + m[2] * m[3])) await p.click(`#gate-keys [data-k="${ch}"]`); await p.waitForTimeout(400);
     ok(await p.isVisible('#o-buy') && /學習報告/.test(await p.textContent('#buy-list')), '過關才到購買卡，上面寫了會多學習報告的完整內容');
