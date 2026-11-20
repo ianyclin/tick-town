@@ -13,7 +13,7 @@
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
 | 名稱（Apple Name／Google 標題） | 10／30 | 滴答小鎮：看時鐘練習 |
-| 副標題（Apple Subtitle） | 12／30 | 幫小鎮動物撥鐘，練看時間 |
+| 副標題（Apple Subtitle） | 16／30 | 烏龜兔子帶你看時鐘，錯哪裡練哪裡 |
 | 宣傳文字（Apple Promotional Text） | 46／170 | 幫小鎮的動物撥時鐘、讀時鐘、算時間。錯的時刻會多練幾次。沒有廣告、不用網路、不收集任何資料。 |
 | 簡短說明（Google Short description） | 29／80 | 幫小鎮的動物撥時鐘、讀時鐘、算時間。沒有廣告，也不用網路。 |
 | 關鍵字（Apple Keywords） | 59／100 | 時鐘,看時鐘,認識時鐘,時間,幾點幾分,24小時制,經過時間,小學,國小,一年級,二年級,三年級,數學遊戲,兒童,親子 |
@@ -121,7 +121,7 @@
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
 | 名稱（Apple Name／Google 標題） | 30／30 | Tick-Tock Town: Clock Practice |
-| 副標題（Apple Subtitle） | 28／30 | Help town animals set clocks |
+| 副標題（Apple Subtitle） | 30／30 | Drag the hands, learn the time |
 | 宣傳文字（Apple Promotional Text） | 129／170 | Help the town animals set, read and work out the time. Tricky times come back more often. No ads, no internet, no data collected. |
 | 簡短說明（Google Short description） | 70／80 | Help the town animals set and read clocks. No ads, no internet needed. |
 | 關鍵字（Apple Keywords） | 97／100 | clock,analog clock,hour,minute,24-hour,elapsed time,math,kids,1st grade,2nd grade,3rd grade,learn |
@@ -229,7 +229,7 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
 | 名稱（Apple Name／Google 標題） | 30／30 | Tick-Tock Town: Clock Practice |
-| 副標題（Apple Subtitle） | 28／30 | Help town animals set clocks |
+| 副標題（Apple Subtitle） | 30／30 | Drag the hands, learn the time |
 | 宣傳文字（Apple Promotional Text） | 129／170 | Help the town animals set, read and work out the time. Tricky times come back more often. No ads, no internet, no data collected. |
 | 簡短說明（Google Short description） | 70／80 | Help the town animals set and read clocks. No ads, no internet needed. |
 | 關鍵字（Apple Keywords） | 88／100 | clock,analog clock,hour,minute,24-hour,elapsed time,math,kids,year 2,year 3,year 4,learn |
@@ -337,7 +337,7 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
 | 名稱（Apple Name／Google 標題） | 17／30 | チクタクタウン：とけいのれんしゅう |
-| 副標題（Apple Subtitle） | 20／30 | まちの どうぶつと とけいを あわせよう |
+| 副標題（Apple Subtitle） | 23／30 | カメとウサギの針で時計マスター、苦手を重点練習 |
 | 宣傳文字（Apple Promotional Text） | 68／170 | まちの動物のために、時計を合わせたり読んだり、時間を計算したり。まちがえやすい時刻は多めに出ます。広告なし・ネット不要・データ収集なし。 |
 | 簡短說明（Google Short description） | 35／80 | まちの動物と時計を合わせて、読んで、時間を計算。広告なし・ネット不要。 |
 | 關鍵字（Apple Keywords） | 59／100 | 時計,とけい,時計の読み方,時刻,何時何分,24時間制,時間の計算,小学生,1年生,2年生,3年生,算数,知育,子ども |
@@ -445,7 +445,7 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
 | 名稱（Apple Name／Google 標題） | 15／30 | 째깍 마을: 시계 보기 연습 |
-| 副標題（Apple Subtitle） | 14／30 | 마을 동물들과 시계 맞추기 |
+| 副標題（Apple Subtitle） | 28／30 | 거북이·토끼 바늘로 시계 보기, 틀린 곳 집중 연습 |
 | 宣傳文字（Apple Promotional Text） | 87／170 | 마을 동물들을 위해 시계를 맞추고, 읽고, 지난 시간을 계산해요. 자주 헷갈리는 시각은 더 자주 나와요. 광고 없음, 인터넷 필요 없음, 데이터 수집 없음. |
 | 簡短說明（Google Short description） | 38／80 | 마을 동물들과 시계를 맞추고 읽어요. 광고 없음, 인터넷 필요 없음. |
 | 關鍵字（Apple Keywords） | 55／100 | 시계,시계보기,시각,몇시몇분,24시간제,지난시간,초등학생,1학년,2학년,3학년,수학게임,어린이,교육 |
@@ -553,7 +553,7 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
 | 名稱（Apple Name／Google 標題） | 27／30 | Pueblo Tictac: Leer la hora |
-| 副標題（Apple Subtitle） | 30／30 | Pon en hora relojes del pueblo |
+| 副標題（Apple Subtitle） | 28／30 | La hora con tortuga y conejo |
 | 宣傳文字（Apple Promotional Text） | 145／170 | Ayuda a los animales del pueblo a poner, leer y calcular la hora. Las horas difíciles salen más. Sin anuncios, sin internet, sin recopilar datos. |
 | 簡短說明（Google Short description） | 76／80 | Ayuda a los animales del pueblo a poner y leer relojes. Sin anuncios ni red. |
 | 關鍵字（Apple Keywords） | 97／100 | reloj,reloj analógico,minutos,24 horas,tiempo transcurrido,matemáticas,niños,primaria,1.º,2.º,3.º |
