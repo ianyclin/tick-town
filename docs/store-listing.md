@@ -120,7 +120,7 @@
 
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
-| 名稱（Apple Name／Google 標題） | 30／30 | Tick-Tock Town: Clock Practice |
+| 名稱（Apple Name／Google 標題） | 30／30 | Tick-Tock Town: Tortoise Clock |
 | 副標題（Apple Subtitle） | 30／30 | Drag the hands, learn the time |
 | 宣傳文字（Apple Promotional Text） | 129／170 | Help the town animals set, read and work out the time. Tricky times come back more often. No ads, no internet, no data collected. |
 | 簡短說明（Google Short description） | 70／80 | Help the town animals set and read clocks. No ads, no internet needed. |
@@ -228,7 +228,7 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
-| 名稱（Apple Name／Google 標題） | 30／30 | Tick-Tock Town: Clock Practice |
+| 名稱（Apple Name／Google 標題） | 30／30 | Tick-Tock Town: Tortoise Clock |
 | 副標題（Apple Subtitle） | 30／30 | Drag the hands, learn the time |
 | 宣傳文字（Apple Promotional Text） | 129／170 | Help the town animals set, read and work out the time. Tricky times come back more often. No ads, no internet, no data collected. |
 | 簡短說明（Google Short description） | 70／80 | Help the town animals set and read clocks. No ads, no internet needed. |
