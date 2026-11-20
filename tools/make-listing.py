@@ -70,7 +70,7 @@ w(f'''> 關鍵字不要重複名稱與副標題裡已有的字（Apple 會自己
 ```text
 Tick-Tock Town is an offline clock-reading game for children in grades 1-3. It has no accounts, no ads, no analytics or advertising SDKs, and the game itself makes no network requests. All progress is stored on the device only.
 
-First launch: a short hands-on tutorial starts (drag the clock hands three times). Tap "Skip" at the top right to go straight to "What do you want to practice?", pick any level, and the main menu opens.
+First launch: a "Who's playing?" card asks for a name (type any name, or tap the X to skip; nothing leaves the device). Then a short hands-on tutorial starts (drag the clock hands three times). Tap "Skip" at the top right to go straight to "What do you want to practice?", pick any level, and the main menu opens.
 
 In-app purchase (one non-consumable, ticktown.unlock_all): Town Day, What time?, the star map, the pet and daily missions are free. Match, Fix-it Shop and Two players can each be played 3 times for free; after that a card asks the child to show a grown-up. Buying also adds the detailed advice (an example of each mistake, and what to try in the game and at home) to the parents' Progress report.
 
