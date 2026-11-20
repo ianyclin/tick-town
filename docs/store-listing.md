@@ -336,7 +336,7 @@ Privacy policy: https://tick-town.sanbaofang.com/privacy/en.html
 
 | 欄位 | 字數／上限 | 內容 |
 |---|---|---|
-| 名稱（Apple Name／Google 標題） | 17／30 | チクタクタウン：とけいのれんしゅう |
+| 名稱（Apple Name／Google 標題） | 13／30 | とけいタウン：カメとウサギ |
 | 副標題（Apple Subtitle） | 23／30 | カメとウサギの針で時計マスター、苦手を重点練習 |
 | 宣傳文字（Apple Promotional Text） | 68／170 | まちの動物のために、時計を合わせたり読んだり、時間を計算したり。まちがえやすい時刻は多めに出ます。広告なし・ネット不要・データ収集なし。 |
 | 簡短說明（Google Short description） | 35／80 | まちの動物と時計を合わせて、読んで、時間を計算。広告なし・ネット不要。 |
